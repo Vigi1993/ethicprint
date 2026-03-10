@@ -127,11 +127,12 @@ function RadarChart({ scores, lang }) {
   );
 }
 
-function BrandCard({ brand, onClose, lang }) {
+function BrandCard({ brand, onClose, lang, onSelectAlt }) {
   const categories = useCategories();
   const [fullBrand, setFullBrand] = useState(null);
   const t = UI[lang] || UI.en;
-  const total = getScore(brand);
+  // brand potrebbe essere un oggetto parziale (alternativa) — usiamo score diretto se scores non è disponibile
+  const total = brand.scores ? getScore(brand) : (brand.score || 0);
   const verdict = getVerdict(total, lang);
   const color = getColor(total);
 
@@ -215,9 +216,20 @@ function BrandCard({ brand, onClose, lang }) {
         {b.alternatives && b.alternatives.length > 0 && (
           <div style={{ marginTop: 20, background: "rgba(99,202,183,0.06)", border: "1px solid rgba(99,202,183,0.15)", borderRadius: 12, padding: 16 }}>
             <div style={{ fontSize: 11, color: "#63cab7", letterSpacing: 1, textTransform: "uppercase", marginBottom: 10 }}>{t.alternatives_label}</div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {b.alternatives.map(alt => (
-                <span key={alt} style={{ fontSize: 12, background: "rgba(99,202,183,0.1)", border: "1px solid rgba(99,202,183,0.2)", borderRadius: 99, padding: "4px 12px", color: "rgba(255,255,255,0.7)" }}>{alt}</span>
+                <div key={alt.id} onClick={() => onSelectAlt(alt)} style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(99,202,183,0.15)", borderRadius: 10, padding: "10px 14px", cursor: "pointer", transition: "background 0.15s" }}
+                  onMouseOver={e => e.currentTarget.style.background = "rgba(99,202,183,0.1)"}
+                  onMouseOut={e => e.currentTarget.style.background = "rgba(255,255,255,0.04)"}
+                >
+                  <div style={{ width: 28, height: 28, borderRadius: 7, background: getColor(alt.score) + "22", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, flexShrink: 0 }}>{alt.logo}</div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{alt.name}</div>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>{alt.sector}</div>
+                  </div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: getColor(alt.score) }}>{alt.score}</div>
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>→</div>
+                </div>
               ))}
             </div>
           </div>
@@ -286,11 +298,9 @@ function MyListPanel({ myBrands, onRemove, onClear, onSelect, lang }) {
                   <span style={{ fontSize: 11, background: "rgba(239,68,68,0.15)", color: "#f87171", padding: "2px 8px", borderRadius: 99 }}>{t.below_threshold}</span>
                 </div>
                 <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginBottom: 10 }}>{t.replace_with}</div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                  {b.alternatives.map(alt => (
-                    <span key={alt} style={{ fontSize: 12, background: "rgba(99,202,183,0.08)", border: "1px solid rgba(99,202,183,0.2)", borderRadius: 99, padding: "4px 12px", color: "#63cab7" }}>{alt}</span>
-                  ))}
-                </div>
+                <button onClick={() => onSelect(b)} style={{ background: "rgba(99,202,183,0.08)", border: "1px solid rgba(99,202,183,0.2)", borderRadius: 8, padding: "7px 14px", color: "#63cab7", cursor: "pointer", fontSize: 12, fontFamily: "'DM Sans', sans-serif" }}>
+                  {lang === "it" ? "Vedi alternative →" : "See alternatives →"}
+                </button>
               </div>
             ))}
           </div>
@@ -476,7 +486,7 @@ export default function App() {
           </div>
         </div>
 
-        {selected && <BrandCard brand={selected} onClose={() => setSelected(null)} lang={lang} />}
+        {selected && <BrandCard brand={selected} onClose={() => setSelected(null)} lang={lang} onSelectAlt={(alt) => setSelected(alt)} />}
       </div>
     </CategoriesContext.Provider>
   );
