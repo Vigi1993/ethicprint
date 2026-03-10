@@ -1,13 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, createContext, useContext } from "react";
 
 const API = "https://web-production-14708.up.railway.app";
 
-const CATEGORIES = [
-  { key: "armi", label: "Conflitti & Armi", icon: "⚔️", color: "#ef4444" },
-  { key: "ambiente", label: "Ambiente & CO₂", icon: "🌿", color: "#22c55e" },
-  { key: "diritti", label: "Diritti Umani", icon: "✊", color: "#f59e0b" },
-  { key: "fisco", label: "Fisco & Trasparenza", icon: "⚖️", color: "#3b82f6" },
-];
+// Context globale per le categorie — caricato dall'API /categories
+const CategoriesContext = createContext([]);
+const useCategories = () => useContext(CategoriesContext);
 
 const THRESHOLD = 50;
 
@@ -39,11 +36,12 @@ function ScoreBar({ value, color }) {
 }
 
 function RadarChart({ scores }) {
+  const categories = useCategories();
   const size = 140; const cx = size / 2, cy = size / 2, r = 52;
-  const keys = ["armi", "ambiente", "diritti", "fisco"];
-  const labels = ["Armi", "Ambiente", "Diritti", "Fisco"];
+  const keys = categories.map(c => c.key);
+  const labels = categories.map(c => c.label.split(" ")[0]);
   const angles = keys.map((_, i) => (i * 2 * Math.PI) / keys.length - Math.PI / 2);
-  const points = keys.map((k, i) => { const val = scores[k] / 100; return [cx + r * val * Math.cos(angles[i]), cy + r * val * Math.sin(angles[i])]; });
+  const points = keys.map((k, i) => { const val = (scores[k] || 0) / 100; return [cx + r * val * Math.cos(angles[i]), cy + r * val * Math.sin(angles[i])]; });
   const gridPoints = (scale) => keys.map((_, i) => [cx + r * scale * Math.cos(angles[i]), cy + r * scale * Math.sin(angles[i])]);
   const polyStr = (pts) => pts.map(p => p.join(",")).join(" ");
   return (
@@ -58,10 +56,10 @@ function RadarChart({ scores }) {
 }
 
 function BrandCard({ brand, onClose }) {
+  const categories = useCategories();
   const [fullBrand, setFullBrand] = useState(null);
   const total = getScore(brand); const verdict = getVerdict(total); const color = getColor(total);
 
-  // Carica dettagli completi con fonti dall'API
   useEffect(() => {
     fetch(`${API}/brands/${brand.id}`)
       .then(r => r.json())
@@ -89,7 +87,7 @@ function BrandCard({ brand, onClose }) {
         <div style={{ display: "flex", gap: 20, marginBottom: 28, alignItems: "center" }}>
           <RadarChart scores={b.scores} />
           <div style={{ flex: 1 }}>
-            {CATEGORIES.map(cat => (
+            {categories.map(cat => (
               <div key={cat.key} style={{ marginBottom: 12 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
                   <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>{cat.icon} {cat.label}</span>
@@ -101,10 +99,9 @@ function BrandCard({ brand, onClose }) {
           </div>
         </div>
 
-        {/* Note & Fonti */}
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20 }}>
           <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 14, letterSpacing: 1, textTransform: "uppercase" }}>Note & Fonti</div>
-          {CATEGORIES.map(cat => {
+          {categories.map(cat => {
             const catSources = b.sources?.[cat.key] || [];
             return (
               <div key={cat.key} style={{ marginBottom: 16 }}>
@@ -131,7 +128,6 @@ function BrandCard({ brand, onClose }) {
           })}
         </div>
 
-        {/* Alternative */}
         {b.alternatives && b.alternatives.length > 0 && (
           <div style={{ marginTop: 20, background: "rgba(99,202,183,0.06)", border: "1px solid rgba(99,202,183,0.15)", borderRadius: 12, padding: 16 }}>
             <div style={{ fontSize: 11, color: "#63cab7", letterSpacing: 1, textTransform: "uppercase", marginBottom: 10 }}>✦ Alternative più etiche</div>
@@ -150,11 +146,13 @@ function BrandCard({ brand, onClose }) {
 }
 
 function MyListPanel({ myBrands, onRemove, onClear, onSelect }) {
+  const categories = useCategories();
   if (myBrands.length === 0) return null;
-  const avgScores = { armi: 0, ambiente: 0, diritti: 0, fisco: 0 };
-  myBrands.forEach(b => { Object.keys(avgScores).forEach(k => avgScores[k] += b.scores[k]); });
-  Object.keys(avgScores).forEach(k => avgScores[k] = Math.round(avgScores[k] / myBrands.length));
-  const total = Math.round(Object.values(avgScores).reduce((a, b) => a + b, 0) / 4);
+  const avgScores = {};
+  categories.forEach(c => avgScores[c.key] = 0);
+  myBrands.forEach(b => { categories.forEach(c => avgScores[c.key] += b.scores[c.key] || 0); });
+  categories.forEach(c => avgScores[c.key] = Math.round(avgScores[c.key] / myBrands.length));
+  const total = Math.round(Object.values(avgScores).reduce((a, b) => a + b, 0) / categories.length);
   const verdict = getVerdict(total); const color = getColor(total);
   const problematic = myBrands.filter(b => getScore(b) < THRESHOLD && b.alternatives && b.alternatives.length > 0);
 
@@ -171,7 +169,7 @@ function MyListPanel({ myBrands, onRemove, onClear, onSelect }) {
       </div>
 
       <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
-        {CATEGORIES.map(cat => (
+        {categories.map(cat => (
           <div key={cat.key} style={{ flex: "1 1 120px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "10px 14px" }}>
             <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>{cat.icon} {cat.label}</div>
             <div style={{ fontSize: 22, fontWeight: 700, color: getColor(avgScores[cat.key]) }}>{avgScores[cat.key]}</div>
@@ -220,6 +218,7 @@ function MyListPanel({ myBrands, onRemove, onClear, onSelect }) {
 }
 
 function SectorSection({ sector, brands, myBrands, onAdd, onSelect }) {
+  const categories = useCategories();
   const [expanded, setExpanded] = useState(false);
   const sorted = [...brands].sort((a, b) => getScore(a) - getScore(b));
   const visible = expanded ? sorted : sorted.slice(0, 4);
@@ -249,7 +248,7 @@ function SectorSection({ sector, brands, myBrands, onAdd, onSelect }) {
                 <div style={{ fontSize: 10, color: "rgba(255,255,255,0.22)" }}>{brand.parent}</div>
               </div>
               <div style={{ display: "flex", gap: 5, alignItems: "center", flexShrink: 0 }}>
-                {CATEGORIES.map(cat => <div key={cat.key} title={cat.label} style={{ width: 5, height: 5, borderRadius: 99, background: getColor(brand.scores[cat.key]) }} />)}
+                {categories.map(cat => <div key={cat.key} title={cat.label} style={{ width: 5, height: 5, borderRadius: 99, background: getColor(brand.scores[cat.key]) }} />)}
               </div>
               <div style={{ fontSize: 17, fontWeight: 700, color: getColor(score), width: 32, textAlign: "right", flexShrink: 0 }} onClick={() => onSelect(brand)}>{score}</div>
               <button className="add-btn" onClick={() => onAdd(brand)} style={{ background: inList ? "rgba(99,202,183,0.1)" : "transparent", border: "1px solid rgba(255,255,255,0.08)", color: inList ? "#63cab7" : "rgba(255,255,255,0.3)", padding: "4px 10px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s", flexShrink: 0 }}>{inList ? "✓" : "+"}</button>
@@ -263,6 +262,7 @@ function SectorSection({ sector, brands, myBrands, onAdd, onSelect }) {
 
 export default function App() {
   const [db, setDb] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
@@ -270,12 +270,18 @@ export default function App() {
   const [myBrands, setMyBrands] = useState([]);
   const inputRef = useRef(null);
 
-  // Carica brands dall'API Railway
+  // Carica brands e categorie in parallelo dall'API
   useEffect(() => {
-    fetch(`${API}/brands`)
-      .then(r => r.json())
-      .then(data => { setDb(data); setLoading(false); })
-      .catch(err => { console.error("Errore caricamento brands:", err); setLoading(false); });
+    Promise.all([
+      fetch(`${API}/brands`).then(r => r.json()),
+      fetch(`${API}/categories`).then(r => r.json()),
+    ])
+      .then(([brandsData, categoriesData]) => {
+        setDb(brandsData);
+        setCategories(categoriesData);
+        setLoading(false);
+      })
+      .catch(err => { console.error("Errore caricamento:", err); setLoading(false); });
   }, []);
 
   useEffect(() => {
@@ -306,87 +312,86 @@ export default function App() {
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: "#080814", fontFamily: "'DM Sans', sans-serif", color: "#fff", backgroundImage: "radial-gradient(ellipse at 20% 20%, rgba(99,202,183,0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 80%, rgba(239,68,68,0.04) 0%, transparent 60%)" }}>
-      <style>{`
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        ::selection { background: rgba(99,202,183,0.3); }
-        input:focus { outline: none; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
-        .brand-row:hover { background: rgba(255,255,255,0.05) !important; }
-        .add-btn:hover { background: rgba(99,202,183,0.2) !important; color: #63cab7 !important; }
-      `}</style>
+    <CategoriesContext.Provider value={categories}>
+      <div style={{ minHeight: "100vh", background: "#080814", fontFamily: "'DM Sans', sans-serif", color: "#fff", backgroundImage: "radial-gradient(ellipse at 20% 20%, rgba(99,202,183,0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 80%, rgba(239,68,68,0.04) 0%, transparent 60%)" }}>
+        <style>{`
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          ::selection { background: rgba(99,202,183,0.3); }
+          input:focus { outline: none; }
+          ::-webkit-scrollbar { width: 4px; }
+          ::-webkit-scrollbar-track { background: transparent; }
+          ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
+          .brand-row:hover { background: rgba(255,255,255,0.05) !important; }
+          .add-btn:hover { background: rgba(99,202,183,0.2) !important; color: #63cab7 !important; }
+        `}</style>
 
-      <div style={{ maxWidth: 720, margin: "0 auto", padding: "48px 20px 80px" }}>
+        <div style={{ maxWidth: 720, margin: "0 auto", padding: "48px 20px 80px" }}>
 
-        {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: 52 }}>
-          <div style={{ fontSize: 11, letterSpacing: 4, color: "#63cab7", textTransform: "uppercase", marginBottom: 16 }}>Open Source · Community Driven</div>
-          <h1 style={{ fontSize: "clamp(36px, 8vw, 64px)", fontFamily: "'Playfair Display', serif", fontWeight: 800, lineHeight: 1.05, marginBottom: 16, background: "linear-gradient(135deg, #fff 40%, rgba(255,255,255,0.4))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>EthicPrint</h1>
-          <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 16, maxWidth: 440, margin: "0 auto", lineHeight: 1.6 }}>
-            Scopri l'impatto etico dei brand che usi ogni giorno.<br />
-            <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 14 }}>Armi · Ambiente · Diritti · Fisco</span>
-          </p>
-        </div>
-
-        {/* Search */}
-        <div style={{ position: "relative", marginBottom: 8 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, padding: "14px 18px", transition: "border-color 0.2s", boxShadow: query ? "0 0 0 2px rgba(99,202,183,0.15)" : "none" }}>
-            <svg width="16" height="16" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input ref={inputRef} value={query} onChange={e => setQuery(e.target.value)} placeholder="Cerca brand, piattaforma, fornitore..." style={{ flex: 1, background: "transparent", border: "none", color: "#fff", fontSize: 16, fontFamily: "'DM Sans', sans-serif" }} />
-            {query && <button onClick={() => { setQuery(""); setResults([]); }} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.3)", cursor: "pointer", fontSize: 18 }}>×</button>}
+          <div style={{ textAlign: "center", marginBottom: 52 }}>
+            <div style={{ fontSize: 11, letterSpacing: 4, color: "#63cab7", textTransform: "uppercase", marginBottom: 16 }}>Open Source · Community Driven</div>
+            <h1 style={{ fontSize: "clamp(36px, 8vw, 64px)", fontFamily: "'Playfair Display', serif", fontWeight: 800, lineHeight: 1.05, marginBottom: 16, background: "linear-gradient(135deg, #fff 40%, rgba(255,255,255,0.4))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>EthicPrint</h1>
+            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 16, maxWidth: 440, margin: "0 auto", lineHeight: 1.6 }}>
+              Scopri l'impatto etico dei brand che usi ogni giorno.<br />
+              <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 14 }}>
+                {categories.map(c => c.label.split(" ")[0]).join(" · ")}
+              </span>
+            </p>
           </div>
 
-          {results.length > 0 && (
-            <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, right: 0, background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, overflow: "hidden", zIndex: 50, boxShadow: "0 20px 40px rgba(0,0,0,0.5)" }}>
-              {results.map(brand => {
-                const score = getScore(brand); const inList = myBrands.find(b => b.name === brand.name);
-                return (
-                  <div key={brand.name} className="brand-row" style={{ display: "flex", alignItems: "center", gap: 14, padding: "12px 16px", cursor: "pointer", borderBottom: "1px solid rgba(255,255,255,0.04)", transition: "background 0.15s" }}>
-                    <div style={{ width: 36, height: 36, borderRadius: 10, background: `${getColor(score)}22`, border: `1px solid ${getColor(score)}44`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 700, color: getColor(score) }}>{brand.logo}</div>
-                    <div style={{ flex: 1 }} onClick={() => setSelected(brand)}>
-                      <div style={{ fontSize: 14, fontWeight: 600 }}>{brand.name}</div>
-                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>{brand.sector}</div>
-                    </div>
-                    <div style={{ textAlign: "right", marginRight: 8 }} onClick={() => setSelected(brand)}>
-                      <div style={{ fontSize: 18, fontWeight: 700, color: getColor(score) }}>{score}</div>
-                      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)" }}>/ 100</div>
-                    </div>
-                    <button className="add-btn" onClick={() => addToList(brand)} style={{ background: inList ? "rgba(99,202,183,0.1)" : "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: inList ? "#63cab7" : "rgba(255,255,255,0.5)", padding: "6px 12px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s", whiteSpace: "nowrap" }}>{inList ? "✓ Aggiunto" : "+ Lista"}</button>
-                  </div>
-                );
-              })}
+          <div style={{ position: "relative", marginBottom: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, padding: "14px 18px", transition: "border-color 0.2s", boxShadow: query ? "0 0 0 2px rgba(99,202,183,0.15)" : "none" }}>
+              <svg width="16" height="16" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input ref={inputRef} value={query} onChange={e => setQuery(e.target.value)} placeholder="Cerca brand, piattaforma, fornitore..." style={{ flex: 1, background: "transparent", border: "none", color: "#fff", fontSize: 16, fontFamily: "'DM Sans', sans-serif" }} />
+              {query && <button onClick={() => { setQuery(""); setResults([]); }} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.3)", cursor: "pointer", fontSize: 18 }}>×</button>}
             </div>
-          )}
-        </div>
 
-        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", marginBottom: 40, paddingLeft: 4 }}>
-          {db.length} brand nel database · {sectors.length} settori · open source · dati aggiornati dalla community
-        </div>
+            {results.length > 0 && (
+              <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, right: 0, background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, overflow: "hidden", zIndex: 50, boxShadow: "0 20px 40px rgba(0,0,0,0.5)" }}>
+                {results.map(brand => {
+                  const score = getScore(brand); const inList = myBrands.find(b => b.name === brand.name);
+                  return (
+                    <div key={brand.name} className="brand-row" style={{ display: "flex", alignItems: "center", gap: 14, padding: "12px 16px", cursor: "pointer", borderBottom: "1px solid rgba(255,255,255,0.04)", transition: "background 0.15s" }}>
+                      <div style={{ width: 36, height: 36, borderRadius: 10, background: `${getColor(score)}22`, border: `1px solid ${getColor(score)}44`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 700, color: getColor(score) }}>{brand.logo}</div>
+                      <div style={{ flex: 1 }} onClick={() => setSelected(brand)}>
+                        <div style={{ fontSize: 14, fontWeight: 600 }}>{brand.name}</div>
+                        <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>{brand.sector}</div>
+                      </div>
+                      <div style={{ textAlign: "right", marginRight: 8 }} onClick={() => setSelected(brand)}>
+                        <div style={{ fontSize: 18, fontWeight: 700, color: getColor(score) }}>{score}</div>
+                        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)" }}>/ 100</div>
+                      </div>
+                      <button className="add-btn" onClick={() => addToList(brand)} style={{ background: inList ? "rgba(99,202,183,0.1)" : "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: inList ? "#63cab7" : "rgba(255,255,255,0.5)", padding: "6px 12px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s", whiteSpace: "nowrap" }}>{inList ? "✓ Aggiunto" : "+ Lista"}</button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
 
-        {/* My list */}
-        <MyListPanel myBrands={myBrands} onRemove={(name) => setMyBrands(prev => prev.filter(b => b.name !== name))} onClear={() => setMyBrands([])} onSelect={setSelected} />
+          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", marginBottom: 40, paddingLeft: 4 }}>
+            {db.length} brand nel database · {sectors.length} settori · open source · dati aggiornati dalla community
+          </div>
 
-        {/* Sectors */}
-        <div style={{ marginTop: 52 }}>
-          <div style={{ fontSize: 11, letterSpacing: 2, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 32 }}>Classifica per settore</div>
-          {brandsBySector.map(({ sector, brands }) => (
-            <SectorSection key={sector} sector={sector} brands={brands} myBrands={myBrands} onAdd={addToList} onSelect={setSelected} />
-          ))}
-        </div>
+          <MyListPanel myBrands={myBrands} onRemove={(name) => setMyBrands(prev => prev.filter(b => b.name !== name))} onClear={() => setMyBrands([])} onSelect={setSelected} />
 
-        {/* Footer */}
-        <div style={{ marginTop: 64, textAlign: "center", borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: 32 }}>
-          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", lineHeight: 1.8 }}>
-            EthicPrint è un progetto open source e no-profit.<br />
-            I dati sono raccolti da SIPRI, CDP, KnowTheChain, Oxfam, Ethical Consumer.<br />
-            <span style={{ color: "rgba(99,202,183,0.5)" }}>Contribuisci su GitHub · Segnala un errore · Aggiungi un brand</span>
+          <div style={{ marginTop: 52 }}>
+            <div style={{ fontSize: 11, letterSpacing: 2, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 32 }}>Classifica per settore</div>
+            {brandsBySector.map(({ sector, brands }) => (
+              <SectorSection key={sector} sector={sector} brands={brands} myBrands={myBrands} onAdd={addToList} onSelect={setSelected} />
+            ))}
+          </div>
+
+          <div style={{ marginTop: 64, textAlign: "center", borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: 32 }}>
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", lineHeight: 1.8 }}>
+              EthicPrint è un progetto open source e no-profit.<br />
+              I dati sono raccolti da SIPRI, CDP, KnowTheChain, Oxfam, Ethical Consumer.<br />
+              <span style={{ color: "rgba(99,202,183,0.5)" }}>Contribuisci su GitHub · Segnala un errore · Aggiungi un brand</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      {selected && <BrandCard brand={selected} onClose={() => setSelected(null)} />}
-    </div>
+        {selected && <BrandCard brand={selected} onClose={() => setSelected(null)} />}
+      </div>
+    </CategoriesContext.Provider>
   );
 }
