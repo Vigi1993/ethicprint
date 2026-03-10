@@ -93,9 +93,28 @@ function BrandCard({ brand, onClose }) {
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20 }}>
           <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 10, letterSpacing: 1, textTransform: "uppercase" }}>Note & Fonti</div>
           {CATEGORIES.map(cat => (
-            <div key={cat.key} style={{ marginBottom: 8 }}>
-              <span style={{ fontSize: 11, color: cat.color }}>{cat.icon} </span>
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>{brand.notes[cat.key]}</span>
+            <div key={cat.key} style={{ marginBottom: 12 }}>
+              <div style={{ marginBottom: 4 }}>
+                <span style={{ fontSize: 11, color: cat.color }}>{cat.icon} </span>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>{brand.notes[cat.key]}</span>
+              </div>
+              {brand.sources && brand.sources[cat.key] && (
+                <a
+                  href={brand.sources[cat.key]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    fontSize: 11, color: "rgba(99,202,183,0.6)",
+                    textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4,
+                    borderBottom: "1px solid rgba(99,202,183,0.2)", paddingBottom: 1,
+                    transition: "color 0.15s"
+                  }}
+                  onMouseOver={e => e.currentTarget.style.color = "#63cab7"}
+                  onMouseOut={e => e.currentTarget.style.color = "rgba(99,202,183,0.6)"}
+                >
+                  ↗ Vedi fonte
+                </a>
+              )}
             </div>
           ))}
         </div>
