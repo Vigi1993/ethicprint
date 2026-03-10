@@ -1,294 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 
-const DB = [
-  {
-    name: "Amazon",
-    sector: "E-commerce",
-    category: "E-commerce / Cloud",
-    logo: "A",
-    parent: "Amazon Inc.",
-    scores: { armi: 55, ambiente: 38, diritti: 32, fisco: 20 },
-    notes: {
-      armi: "Contratti con Pentagono e forze armate USA (Project Nimbus, JEDI)",
-      ambiente: "Obiettivo net-zero 2040, ma emissioni in crescita con espansione logistica",
-      diritti: "Denunce diffuse per condizioni nei magazzini, sindacalizzazione ostacolata",
-      fisco: "Strutture in Lussemburgo, pagamenti fiscali minimi in EU"
-    },
-    alternatives: ["Etsy", "eBay (usato)", "negozi locali indipendenti"]
-  },
-  {
-    name: "Google",
-    sector: "Tech & Advertising",
-    category: "Tech / Advertising",
-    logo: "G",
-    parent: "Alphabet Inc.",
-    scores: { armi: 48, ambiente: 62, diritti: 45, fisco: 22 },
-    notes: {
-      armi: "Project Maven (droni militari), contratti DoD nonostante proteste interne",
-      ambiente: "100% rinnovabili dal 2017, ma crescita datacenter ad alto impatto idrico",
-      diritti: "Censura in Cina (Dragonfly), licenziamenti attivisti interni",
-      fisco: "Double Irish, strutture offshore, sede EU in Irlanda"
-    },
-    alternatives: ["DuckDuckGo (ricerca)", "Brave Search", "ProtonMail (email)", "Nextcloud (storage)"]
-  },
-  {
-    name: "Meta",
-    sector: "Social Media",
-    category: "Social Media",
-    logo: "M",
-    parent: "Meta Platforms Inc.",
-    scores: { armi: 70, ambiente: 55, diritti: 28, fisco: 30 },
-    notes: {
-      armi: "Nessun contratto militare diretto noto",
-      ambiente: "Net-zero claims, ma impronta carbonio datacenter significativa",
-      diritti: "Ruolo documentato in violenza Myanmar, profilazione massiva, dipendenza psicologica minori",
-      fisco: "Sede irlandese per ottimizzazione fiscale EU"
-    },
-    alternatives: ["Mastodon (social)", "Signal (messaggistica)", "Pixelfed (foto)"]
-  },
-  {
-    name: "TikTok",
-    sector: "Social Media",
-    category: "Social Media",
-    logo: "T",
-    parent: "ByteDance Ltd.",
-    scores: { armi: 45, ambiente: 40, diritti: 22, fisco: 35 },
-    notes: {
-      armi: "Casa madre cinese con obblighi verso governo PRC, potenziale dual-use dati",
-      ambiente: "Datacenter ad alta intensità energetica, poca trasparenza",
-      diritti: "Censura sistematica contenuti pro-Tibet, Xinjiang, Hong Kong; raccolta dati massiva su minori",
-      fisco: "Struttura con sede Cayman Islands, ottimizzazione aggressiva"
-    },
-    alternatives: ["Mastodon", "YouTube (relativamente migliore)", "PeerTube (open source)"]
-  },
-  {
-    name: "Netflix",
-    sector: "Streaming Video",
-    category: "Streaming",
-    logo: "N",
-    parent: "Netflix Inc.",
-    scores: { armi: 82, ambiente: 60, diritti: 68, fisco: 45 },
-    notes: {
-      armi: "Nessun coinvolgimento diretto nell'industria degli armamenti",
-      ambiente: "Impegni net-zero, produzioni cinematografiche con impatto residuo",
-      diritti: "Politiche lavoro relativamente buone, contenuti diversificati",
-      fisco: "Strutture in Olanda per riduzione fiscale EU"
-    },
-    alternatives: []
-  },
-  {
-    name: "Disney+",
-    sector: "Streaming Video",
-    category: "Streaming",
-    logo: "D",
-    parent: "The Walt Disney Company",
-    scores: { armi: 55, ambiente: 52, diritti: 45, fisco: 38 },
-    notes: {
-      armi: "Casa madre con partecipazioni in media legata a difesa USA",
-      ambiente: "Impegni verdi dichiarati, parchi tematici ad alto consumo energetico",
-      diritti: "Autocensura su temi LGBTQ+ in paesi con leggi repressive per motivi commerciali",
-      fisco: "Strutture offshore, ottimizzazione fiscale aggressiva documentata"
-    },
-    alternatives: ["Netflix", "MUBI (cinema d'autore)", "RaiPlay (gratuito)"]
-  },
-  {
-    name: "Spotify",
-    sector: "Streaming Audio",
-    category: "Streaming Audio",
-    logo: "S",
-    parent: "Spotify AB",
-    scores: { armi: 85, ambiente: 65, diritti: 55, fisco: 50 },
-    notes: {
-      armi: "Nessun coinvolgimento con industria militare",
-      ambiente: "Carbon neutral dal 2021, supply chain ancora da migliorare",
-      diritti: "Royalties basse agli artisti, ma no scandali gravi su diritti umani",
-      fisco: "Sede in Svezia, struttura fiscale relativamente trasparente"
-    },
-    alternatives: []
-  },
-  {
-    name: "Apple",
-    sector: "Tech & Hardware",
-    category: "Tech / Hardware",
-    logo: "A",
-    parent: "Apple Inc.",
-    scores: { armi: 60, ambiente: 70, diritti: 40, fisco: 25 },
-    notes: {
-      armi: "Contratti limitati con settore difesa, principalmente software",
-      ambiente: "Obiettivo carbon neutral 2030, riciclaggio materiali in crescita",
-      diritti: "Supply chain Foxconn con condizioni documentate di sfruttamento, censura in Cina",
-      fisco: "Caso storico evasione Ireland, 13 miliardi recuperati da EU"
-    },
-    alternatives: ["Fairphone (smartphone etico)", "Framework (laptop riparabile)"]
-  },
-  {
-    name: "Microsoft",
-    sector: "Tech & Hardware",
-    category: "Tech / Cloud",
-    logo: "M",
-    parent: "Microsoft Corp.",
-    scores: { armi: 35, ambiente: 60, diritti: 55, fisco: 35 },
-    notes: {
-      armi: "Contratto IVAS con US Army per visori AR militari (480M$), Azure Government DoD",
-      ambiente: "Carbon negative entro 2030, investimenti significativi in rinnovabili",
-      diritti: "Migliorata su diversità, ma contratti con governi autoritari",
-      fisco: "Strutture in Irlanda e Puerto Rico per ottimizzazione"
-    },
-    alternatives: ["LibreOffice (suite office)", "Linux (OS)", "Nextcloud (cloud)"]
-  },
-  {
-    name: "Enel",
-    sector: "Energia",
-    category: "Energia",
-    logo: "E",
-    parent: "Enel SpA",
-    scores: { armi: 75, ambiente: 52, diritti: 65, fisco: 70 },
-    notes: {
-      armi: "Nessun coinvolgimento diretto",
-      ambiente: "Piano di transizione energetica avviato, ancora forte dipendenza da fossili",
-      diritti: "Controversie in America Latina per impatti su comunità locali (dighe)",
-      fisco: "Società italiana quotata, fiscalità relativamente trasparente"
-    },
-    alternatives: ["Plenitude", "Illumia", "Dolomiti Energia (100% rinnovabile)"]
-  },
-  {
-    name: "Eni",
-    sector: "Energia",
-    category: "Energia / Petrolio",
-    logo: "E",
-    parent: "Eni SpA",
-    scores: { armi: 40, ambiente: 22, diritti: 35, fisco: 55 },
-    notes: {
-      armi: "Operazioni in paesi con conflitti attivi (Congo, Nigeria, Libia)",
-      ambiente: "Tra i maggiori emettitori italiani, transizione lenta",
-      diritti: "Denunce per impatto su comunità in Nigeria e Congo, cause pendenti",
-      fisco: "Struttura multinazionale con sussidiarie in paesi a bassa tassazione"
-    },
-    alternatives: ["Dolomiti Energia", "Iren Mercato", "Enercoop (cooperativa)"]
-  },
-  {
-    name: "TIM",
-    sector: "Telecomunicazioni",
-    category: "Telecomunicazioni",
-    logo: "T",
-    parent: "Telecom Italia SpA",
-    scores: { armi: 65, ambiente: 58, diritti: 62, fisco: 72 },
-    notes: {
-      armi: "Forniture infrastrutture a difesa nazionale, non export bellico",
-      ambiente: "Piano green avviato, datacenter con consumo energetico elevato",
-      diritti: "Ristrutturazioni con impatti occupazionali, nessun caso grave noto",
-      fisco: "Società italiana, fiscalità prevalentemente nazionale"
-    },
-    alternatives: ["Fastweb", "CoopVoce (Coop)"]
-  },
-  {
-    name: "Vodafone",
-    sector: "Telecomunicazioni",
-    category: "Telecomunicazioni",
-    logo: "V",
-    parent: "Vodafone Group Plc",
-    scores: { armi: 62, ambiente: 55, diritti: 58, fisco: 38 },
-    notes: {
-      armi: "Contratti con governi per intercettazioni, ceduto dati in paesi autoritari",
-      ambiente: "Target net-zero 2040, transizione in corso",
-      diritti: "Cooperazione con regimi autoritari per sorveglianza utenti (Egitto, Turchia)",
-      fisco: "Struttura UK con ottimizzazioni fiscali aggressive documentate"
-    },
-    alternatives: ["Fastweb", "CoopVoce (Coop)"]
-  },
-  {
-    name: "Fastweb",
-    sector: "Telecomunicazioni",
-    category: "Telecomunicazioni",
-    logo: "F",
-    parent: "Swisscom AG",
-    scores: { armi: 78, ambiente: 68, diritti: 72, fisco: 65 },
-    notes: {
-      armi: "Nessun coinvolgimento militare diretto noto",
-      ambiente: "Impegni clima della casa madre svizzera, buone pratiche energetiche",
-      diritti: "Nessun caso grave documentato, sede in paese con forti tutele",
-      fisco: "Controllata svizzera, fiscalità mediamente trasparente"
-    },
-    alternatives: []
-  },
-  {
-    name: "Leonardo",
-    sector: "Difesa",
-    category: "Difesa / Aerospazio",
-    logo: "L",
-    parent: "Leonardo SpA",
-    scores: { armi: 5, ambiente: 35, diritti: 38, fisco: 60 },
-    notes: {
-      armi: "Principale produttore di armi italiano, export verso zone di conflitto (Arabia Saudita, Yemen)",
-      ambiente: "Settore aerospazio ad alto impatto, limitati impegni verdi",
-      diritti: "Export verso paesi con violazioni documentate dei diritti umani",
-      fisco: "Società italiana quotata, parzialmente pubblica"
-    },
-    alternatives: ["Non esiste alternativa diretta — valuta se il tuo rapporto con questa azienda è necessario"]
-  },
-  {
-    name: "Airbnb",
-    sector: "Travel & Hospitality",
-    category: "Travel / Platform",
-    logo: "A",
-    parent: "Airbnb Inc.",
-    scores: { armi: 80, ambiente: 50, diritti: 55, fisco: 42 },
-    notes: {
-      armi: "Nessun coinvolgimento militare",
-      ambiente: "Impatto turismo difficile da misurare, iniziative verdi limitate",
-      diritti: "Operazioni in insediamenti israeliani in Cisgiordania (poi rimosse dopo pressioni)",
-      fisco: "Strutture irlandesi per ottimizzazione EU"
-    },
-    alternatives: ["Fairbnb.coop (cooperativa)", "Booking.com (comparabile)", "hotel locali indipendenti"]
-  },
-  {
-    name: "Volkswagen",
-    sector: "Automotive",
-    category: "Automotive",
-    logo: "V",
-    parent: "Volkswagen AG",
-    scores: { armi: 45, ambiente: 35, diritti: 42, fisco: 50 },
-    notes: {
-      armi: "Legami storici con industria militare tedesca, forniture veicoli a forze armate",
-      ambiente: "Dieselgate: frode sistematica sulle emissioni, transizione EV in corso",
-      diritti: "Forniture da miniere cobalto Congo, supply chain problematica",
-      fisco: "Struttura multinazionale con ottimizzazioni fiscali"
-    },
-    alternatives: ["Peugeot (punteggio migliore)", "bicicletta / trasporto pubblico", "Citroën"]
-  },
-  {
-    name: "Intesa Sanpaolo",
-    sector: "Banche & Finanza",
-    category: "Banca",
-    logo: "I",
-    parent: "Intesa Sanpaolo SpA",
-    scores: { armi: 42, ambiente: 48, diritti: 60, fisco: 65 },
-    notes: {
-      armi: "Finanziamenti documentati a produttori di armi controverse (bombe a grappolo)",
-      ambiente: "Piano ESG avviato, ma ancora forti esposizioni a fossili",
-      diritti: "Banca italiana, standard lavoro buoni internamente",
-      fisco: "Società italiana quotata, fiscalità prevalentemente nazionale"
-    },
-    alternatives: ["Banca Etica (100% etica)", "Crédit Cooperatif", "banche cooperative locali"]
-  },
-  {
-    name: "Banca Etica",
-    sector: "Banche & Finanza",
-    category: "Banca",
-    logo: "B",
-    parent: "Banca Popolare Etica",
-    scores: { armi: 98, ambiente: 90, diritti: 95, fisco: 92 },
-    notes: {
-      armi: "Statuto vieta esplicitamente finanziamenti a industria bellica",
-      ambiente: "100% finanza etica, solo progetti a impatto positivo",
-      diritti: "Missione sociale esplicita, trasparenza totale su impieghi",
-      fisco: "Cooperativa italiana, massima trasparenza fiscale"
-    },
-    alternatives: []
-  },
-];
+// Dati caricati da /brands.json (nella cartella public/) tramite fetch
+// Per aggiungere o aggiornare brand modifica solo quel file — zero codice
 
-const SECTORS = [...new Set(DB.map(b => b.sector))].sort();
 
 const CATEGORIES = [
   { key: "armi", label: "Conflitti & Armi", icon: "⚔️", color: "#ef4444" },
@@ -514,11 +228,21 @@ function SectorSection({ sector, brands, myBrands, onAdd, onSelect }) {
 }
 
 export default function App() {
+  const [db, setDb] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [selected, setSelected] = useState(null);
   const [myBrands, setMyBrands] = useState([]);
   const inputRef = useRef(null);
+
+  // Carica brands.json dalla cartella public/
+  useEffect(() => {
+    fetch("/brands.json")
+      .then(r => r.json())
+      .then(data => { setDb(data); setLoading(false); })
+      .catch(err => { console.error("Errore caricamento brands:", err); setLoading(false); });
+  }, []);
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -530,15 +254,22 @@ export default function App() {
   useEffect(() => {
     if (query.length < 2) { setResults([]); return; }
     const q = query.toLowerCase();
-    setResults(DB.filter(b => b.name.toLowerCase().includes(q) || b.category.toLowerCase().includes(q) || b.sector.toLowerCase().includes(q)));
-  }, [query]);
+    setResults(db.filter(b => b.name.toLowerCase().includes(q) || b.category.toLowerCase().includes(q) || b.sector.toLowerCase().includes(q)));
+  }, [query, db]);
 
   const addToList = (brand) => {
     if (!myBrands.find(b => b.name === brand.name)) setMyBrands(prev => [...prev, brand]);
     setQuery(""); setResults([]);
   };
 
-  const brandsBySector = SECTORS.map(sector => ({ sector, brands: DB.filter(b => b.sector === sector) }));
+  const sectors = [...new Set(db.map(b => b.sector))].sort();
+  const brandsBySector = sectors.map(sector => ({ sector, brands: db.filter(b => b.sector === sector) }));
+
+  if (loading) return (
+    <div style={{ minHeight: "100vh", background: "#080814", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ color: "rgba(255,255,255,0.3)", fontFamily: "'DM Sans', sans-serif", fontSize: 14, letterSpacing: 2 }}>Caricamento...</div>
+    </div>
+  );
 
   return (
     <div style={{ minHeight: "100vh", background: "#080814", fontFamily: "'DM Sans', sans-serif", color: "#fff", backgroundImage: "radial-gradient(ellipse at 20% 20%, rgba(99,202,183,0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 80%, rgba(239,68,68,0.04) 0%, transparent 60%)" }}>
@@ -597,7 +328,7 @@ export default function App() {
         </div>
 
         <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", marginBottom: 40, paddingLeft: 4 }}>
-          {DB.length} brand nel database · {SECTORS.length} settori · open source · dati aggiornati dalla community
+          {db.length} brand nel database · {sectors.length} settori · open source · dati aggiornati dalla community
         </div>
 
         {/* My list */}
