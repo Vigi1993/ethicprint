@@ -213,9 +213,9 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
           })}
         </div>
 
-        {b.alternatives && b.alternatives.length > 0 && (
-          <div style={{ marginTop: 20, background: "rgba(99,202,183,0.06)", border: "1px solid rgba(99,202,183,0.15)", borderRadius: 12, padding: 16 }}>
-            <div style={{ fontSize: 11, color: "#63cab7", letterSpacing: 1, textTransform: "uppercase", marginBottom: 10 }}>{t.alternatives_label}</div>
+        <div style={{ marginTop: 20, background: b.alternatives && b.alternatives.length > 0 ? "rgba(99,202,183,0.06)" : "rgba(255,255,255,0.02)", border: "1px solid " + (b.alternatives && b.alternatives.length > 0 ? "rgba(99,202,183,0.15)" : "rgba(255,255,255,0.06)"), borderRadius: 12, padding: 16 }}>
+          <div style={{ fontSize: 11, color: "#63cab7", letterSpacing: 1, textTransform: "uppercase", marginBottom: 10 }}>{t.alternatives_label}</div>
+          {b.alternatives && b.alternatives.length > 0 ? (
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {b.alternatives.map(alt => (
                 <div key={alt.id} onClick={() => onSelectAlt(alt)} style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(99,202,183,0.15)", borderRadius: 10, padding: "10px 14px", cursor: "pointer", transition: "background 0.15s" }}
@@ -232,8 +232,12 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                 </div>
               ))}
             </div>
-          </div>
-        )}
+          ) : (
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", fontStyle: "italic" }}>
+              {lang === "it" ? "🏆 Questo brand è tra i più virtuosi nel suo settore." : "🏆 This brand is among the most ethical in its sector."}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
