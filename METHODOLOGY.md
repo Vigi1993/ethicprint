@@ -1,4 +1,4 @@
-# EthicScore — Methodology
+# EthicPrint — Methodology
 
 This document explains how scores are calculated, which sources are accepted, and how the system works. Transparency on methodology is not optional — it is the foundation of the project's credibility.
 
@@ -124,7 +124,7 @@ Every score must be supported by at least one verifiable public source. Accepted
 
 ## Limitations and honest caveats
 
-EthicScore does not claim to have the definitive truth on any brand. Scores reflect the best available public information at a given point in time. We acknowledge the following limitations:
+EthicPrint does not claim to have the definitive truth on any brand. Scores reflect the best available public information at a given point in time. We acknowledge the following limitations:
 
 - **Information asymmetry.** Companies, especially large ones, do not disclose everything. The absence of negative information is not proof of ethical behaviour.
 - **Complexity of supply chains.** Tracing full responsibility across multi-level supply chains is genuinely difficult. Scores reflect what is documentable, not the full picture.
