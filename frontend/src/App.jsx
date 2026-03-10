@@ -7,7 +7,6 @@ const useCategories = () => useContext(CategoriesContext);
 
 const THRESHOLD = 50;
 
-// ─── UI STRINGS ──────────────────────────────────────────────────────────────
 const UI = {
   en: {
     tagline: "Open Source · Community Driven",
@@ -23,7 +22,6 @@ const UI = {
     ranking_title: "Ranking by sector",
     notes_title: "Notes & Sources",
     alternatives_label: "✦ More ethical alternatives",
-    close: "Close",
     parent: "Parent company",
     footer: "EthicPrint is an open source, non-profit project.\nData sourced from SIPRI, CDP, KnowTheChain, Oxfam, Ethical Consumer.",
     footer_cta: "Contribute on GitHub · Report an error · Add a brand",
@@ -46,7 +44,6 @@ const UI = {
     ranking_title: "Classifica per settore",
     notes_title: "Note & Fonti",
     alternatives_label: "✦ Alternative più etiche",
-    close: "Chiudi",
     parent: "Casa madre",
     footer: "EthicPrint è un progetto open source e no-profit.\nI dati sono raccolti da SIPRI, CDP, KnowTheChain, Oxfam, Ethical Consumer.",
     footer_cta: "Contribuisci su GitHub · Segnala un errore · Aggiungi un brand",
@@ -77,6 +74,12 @@ function getVerdict(score, lang) {
   return { label: verdicts[0], emoji: "🔴" };
 }
 
+// Ritorna label categoria nella lingua corretta
+function getCatLabel(cat, lang) {
+  if (lang === "en" && cat.label_en) return cat.label_en;
+  return cat.label;
+}
+
 function ScoreBar({ value, color }) {
   return (
     <div style={{ background: "#1a1a2e", borderRadius: 99, height: 6, width: "100%", overflow: "hidden" }}>
@@ -104,11 +107,11 @@ function LangToggle({ lang, setLang }) {
   );
 }
 
-function RadarChart({ scores }) {
+function RadarChart({ scores, lang }) {
   const categories = useCategories();
   const size = 140; const cx = size / 2, cy = size / 2, r = 52;
   const keys = categories.map(c => c.key);
-  const labels = categories.map(c => c.label.split(" ")[0]);
+  const labels = categories.map(c => getCatLabel(c, lang).split(" ")[0]);
   const angles = keys.map((_, i) => (i * 2 * Math.PI) / keys.length - Math.PI / 2);
   const points = keys.map((k, i) => { const val = (scores[k] || 0) / 100; return [cx + r * val * Math.cos(angles[i]), cy + r * val * Math.sin(angles[i])]; });
   const gridPoints = (scale) => keys.map((_, i) => [cx + r * scale * Math.cos(angles[i]), cy + r * scale * Math.sin(angles[i])]);
@@ -133,6 +136,7 @@ function BrandCard({ brand, onClose, lang }) {
   const color = getColor(total);
 
   useEffect(() => {
+    setFullBrand(null);
     fetch(`${API}/brands/${brand.id}?lang=${lang}`)
       .then(r => r.json())
       .then(data => setFullBrand(data))
@@ -143,8 +147,15 @@ function BrandCard({ brand, onClose, lang }) {
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} onClick={onClose}>
-      <div style={{ background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 32, maxWidth: 520, width: "100%", boxShadow: "0 40px 80px rgba(0,0,0,0.6)", maxHeight: "90vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
+      <div style={{ background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 32, maxWidth: 520, width: "100%", boxShadow: "0 40px 80px rgba(0,0,0,0.6)", maxHeight: "90vh", overflowY: "auto", position: "relative" }} onClick={e => e.stopPropagation()}>
+
+        {/* X chiudi in alto a destra */}
+        <button onClick={onClose} style={{ position: "absolute", top: 16, right: 16, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.4)", width: 32, height: 32, borderRadius: 99, cursor: "pointer", fontSize: 18, lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}
+          onMouseOver={e => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; e.currentTarget.style.color = "#fff"; }}
+          onMouseOut={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "rgba(255,255,255,0.4)"; }}
+        >×</button>
+
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, paddingRight: 40 }}>
           <div>
             <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 12, marginBottom: 4, letterSpacing: 2, textTransform: "uppercase" }}>{b.sector}</div>
             <div style={{ fontSize: 26, fontWeight: 700, color: "#fff", fontFamily: "'Playfair Display', serif" }}>{b.name}</div>
@@ -156,13 +167,14 @@ function BrandCard({ brand, onClose, lang }) {
             <div style={{ fontSize: 13, marginTop: 4 }}>{verdict.emoji} {verdict.label}</div>
           </div>
         </div>
+
         <div style={{ display: "flex", gap: 20, marginBottom: 28, alignItems: "center" }}>
-          <RadarChart scores={b.scores} />
+          <RadarChart scores={b.scores} lang={lang} />
           <div style={{ flex: 1 }}>
             {categories.map(cat => (
               <div key={cat.key} style={{ marginBottom: 12 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>{cat.icon} {cat.label}</span>
+                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>{cat.icon} {getCatLabel(cat, lang)}</span>
                   <span style={{ fontSize: 12, fontWeight: 700, color: getColor(b.scores[cat.key]) }}>{b.scores[cat.key]}</span>
                 </div>
                 <ScoreBar value={b.scores[cat.key]} color={getColor(b.scores[cat.key])} />
@@ -210,8 +222,6 @@ function BrandCard({ brand, onClose, lang }) {
             </div>
           </div>
         )}
-
-        <button onClick={onClose} style={{ marginTop: 20, width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)", padding: "10px", borderRadius: 10, cursor: "pointer", fontSize: 13 }}>{t.close}</button>
       </div>
     </div>
   );
@@ -244,7 +254,7 @@ function MyListPanel({ myBrands, onRemove, onClear, onSelect, lang }) {
       <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
         {categories.map(cat => (
           <div key={cat.key} style={{ flex: "1 1 120px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "10px 14px" }}>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>{cat.icon} {cat.label}</div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>{cat.icon} {getCatLabel(cat, lang)}</div>
             <div style={{ fontSize: 22, fontWeight: 700, color: getColor(avgScores[cat.key]) }}>{avgScores[cat.key]}</div>
           </div>
         ))}
@@ -322,7 +332,7 @@ function SectorSection({ sector, brands, myBrands, onAdd, onSelect, lang }) {
                 <div style={{ fontSize: 10, color: "rgba(255,255,255,0.22)" }}>{brand.parent}</div>
               </div>
               <div style={{ display: "flex", gap: 5, alignItems: "center", flexShrink: 0 }}>
-                {categories.map(cat => <div key={cat.key} title={cat.label} style={{ width: 5, height: 5, borderRadius: 99, background: getColor(brand.scores[cat.key]) }} />)}
+                {categories.map(cat => <div key={cat.key} title={getCatLabel(cat, lang)} style={{ width: 5, height: 5, borderRadius: 99, background: getColor(brand.scores[cat.key]) }} />)}
               </div>
               <div style={{ fontSize: 17, fontWeight: 700, color: getColor(score), width: 32, textAlign: "right", flexShrink: 0 }} onClick={() => onSelect(brand)}>{score}</div>
               <button className="add-btn" onClick={() => onAdd(brand)} style={{ background: inList ? "rgba(99,202,183,0.1)" : "transparent", border: "1px solid rgba(255,255,255,0.08)", color: inList ? "#63cab7" : "rgba(255,255,255,0.3)", padding: "4px 10px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s", flexShrink: 0 }}>{inList ? "✓" : "+"}</button>
@@ -410,7 +420,7 @@ export default function App() {
             <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 16, maxWidth: 440, margin: "0 auto", lineHeight: 1.6 }}>
               {t.subtitle}<br />
               <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 14 }}>
-                {categories.map(c => c.label.split(" ")[0]).join(" · ")}
+                {categories.map(c => getCatLabel(c, lang).split(" ")[0]).join(" · ")}
               </span>
             </p>
           </div>
