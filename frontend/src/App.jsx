@@ -558,7 +558,7 @@ export default function App() {
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 52 }}>
           <div style={{ fontSize: 11, letterSpacing: 4, color: "#63cab7", textTransform: "uppercase", marginBottom: 16 }}>Open Source · Community Driven</div>
-          <h1 style={{ fontSize: "clamp(36px, 8vw, 64px)", fontFamily: "'Playfair Display', serif", fontWeight: 800, lineHeight: 1.05, marginBottom: 16, background: "linear-gradient(135deg, #fff 40%, rgba(255,255,255,0.4))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>EthicScore</h1>
+          <h1 style={{ fontSize: "clamp(36px, 8vw, 64px)", fontFamily: "'Playfair Display', serif", fontWeight: 800, lineHeight: 1.05, marginBottom: 16, background: "linear-gradient(135deg, #fff 40%, rgba(255,255,255,0.4))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>EthicPrint</h1>
           <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 16, maxWidth: 440, margin: "0 auto", lineHeight: 1.6 }}>
             Scopri l'impatto etico dei brand che usi ogni giorno.<br />
             <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 14 }}>Armi · Ambiente · Diritti · Fisco</span>
@@ -614,7 +614,7 @@ export default function App() {
         {/* Footer */}
         <div style={{ marginTop: 64, textAlign: "center", borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: 32 }}>
           <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", lineHeight: 1.8 }}>
-            EthicScore è un progetto open source e no-profit.<br />
+            EthicPrint è un progetto open source e no-profit.<br />
             I dati sono raccolti da SIPRI, CDP, KnowTheChain, Oxfam, Ethical Consumer.<br />
             <span style={{ color: "rgba(99,202,183,0.5)" }}>Contribuisci su GitHub · Segnala un errore · Aggiungi un brand</span>
           </div>
