@@ -374,6 +374,7 @@ export default function App() {
   const [selected, setSelected] = useState(null);
   const [myBrands, setMyBrands] = useState([]);
   const [lang, setLang] = useState("en");
+  const [showHint, setShowHint] = useState(true);
   const inputRef = useRef(null);
   const t = UI[lang] || UI.en;
 
@@ -476,6 +477,13 @@ export default function App() {
             )}
           </div>
 
+          {showHint && (
+            <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(99,202,183,0.07)", border: "1px solid rgba(99,202,183,0.2)", borderRadius: 10, padding: "10px 14px", marginBottom: 12 }}>
+              <span style={{ fontSize: 16 }}>👆</span>
+              <span style={{ flex: 1, fontSize: 13, color: "rgba(255,255,255,0.6)", lineHeight: 1.4 }}>{t.hint}</span>
+              <button onClick={() => setShowHint(false)} style={{ background: "transparent", border: "1px solid rgba(99,202,183,0.3)", color: "#63cab7", padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap" }}>{t.hint_dismiss}</button>
+            </div>
+          )}
           <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", marginBottom: 40, paddingLeft: 4 }}>
             {t.db_info(db.length, sectors.length)}
           </div>
