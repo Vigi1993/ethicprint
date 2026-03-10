@@ -28,8 +28,7 @@ const UI = {
     loading: "Loading...",
     hint: "Add the brands you use with + to discover your personal ethical footprint.",
     hint_dismiss: "Got it",
-    conf_label: { high: "●●●", medium: "●●○", low: "●○○" },
-    conf_tip: (n) => `${n} source${n !== 1 ? "s" : ""}`,
+
     show_less: "Less",
     show_more: (n) => `+${n} more`,
     score_verdicts: ["Strongly discouraged", "Problematic", "Improvable", "Fairly ethical"],
@@ -54,8 +53,7 @@ const UI = {
     loading: "Caricamento...",
     hint: "Aggiungi i brand che usi con + per scoprire la tua impronta etica personale.",
     hint_dismiss: "Capito",
-    conf_label: { high: "●●●", medium: "●●○", low: "●○○" },
-    conf_tip: (n) => `${n} font${n !== 1 ? "i" : "e"}`,
+
     show_less: "Meno",
     show_more: (n) => `+${n} altri`,
     score_verdicts: ["Fortemente sconsigliato", "Problematico", "Migliorabile", "Abbastanza etico"],
@@ -188,23 +186,15 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
         <div style={{ display: "flex", gap: 20, marginBottom: 28, alignItems: "center" }}>
           <RadarChart scores={b.scores} lang={lang} />
           <div style={{ flex: 1 }}>
-            {categories.map(cat => {
-              const conf = b.confidence?.[cat.key] || "low";
-              const srcN = b.source_count?.[cat.key] || 0;
-              const confColor = conf === "high" ? "#4ade80" : conf === "medium" ? "#facc15" : "#f87171";
-              return (
-                <div key={cat.key} style={{ marginBottom: 12 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                    <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>{cat.icon} {getCatLabel(cat, lang)}</span>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <span title={t.conf_tip(srcN)} style={{ fontSize: 8, color: confColor, letterSpacing: 1, cursor: "help" }}>{t.conf_label[conf]}</span>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: getColor(b.scores[cat.key]) }}>{b.scores[cat.key]}</span>
-                    </div>
-                  </div>
-                  <ScoreBar value={b.scores[cat.key]} color={getColor(b.scores[cat.key])} />
+            {categories.map(cat => (
+              <div key={cat.key} style={{ marginBottom: 12 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>{cat.icon} {getCatLabel(cat, lang)}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: getColor(b.scores[cat.key]) }}>{b.scores[cat.key]}</span>
                 </div>
-              );
-            })}
+                <ScoreBar value={b.scores[cat.key]} color={getColor(b.scores[cat.key])} />
+              </div>
+            ))}
           </div>
         </div>
 
@@ -218,6 +208,20 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                   <span style={{ fontSize: 11, color: cat.color }}>{cat.icon} </span>
                   <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>{b.notes?.[cat.key]}</span>
                 </div>
+                {b.confidence?.[cat.key] && (() => {
+                  const c = b.confidence[cat.key];
+                  const label = lang === "it" ? c.label_it : c.label_en;
+                  const confColor = c.level === "high" ? "#4ade80" : c.level === "medium" ? "#facc15" : c.level === "low" ? "#fb923c" : "#f87171";
+                  const srcWord = lang === "it" ? (c.count === 1 ? "fonte" : "fonti") : (c.count === 1 ? "source" : "sources");
+                  return (
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 8, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 6, padding: "3px 9px" }}>
+                      <span style={{ fontSize: 10, color: confColor }}>◆</span>
+                      <span style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>
+                        {c.count} {srcWord} — <span style={{ color: confColor }}>{label}</span>
+                      </span>
+                    </div>
+                  );
+                })()}
                 {catSources.length > 0 && (
                   <div style={{ display: "flex", flexDirection: "column", gap: 4, paddingLeft: 16 }}>
                     {catSources.map((src, i) => (
