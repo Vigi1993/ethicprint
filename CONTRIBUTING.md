@@ -1,6 +1,6 @@
-# Contributing to EthicScore
+# Contributing to EthicPrint
 
-First of all — thank you. EthicScore only works if people who care contribute to making it more accurate, more complete, and more honest. Every contribution matters.
+First of all — thank you. EthicPrint only works if people who care contribute to making it more accurate, more complete, and more honest. Every contribution matters.
 
 This document explains how to contribute, what is expected, and how decisions are made.
 
@@ -142,7 +142,7 @@ If you believe a rejection was unfair, open an Issue to discuss it publicly.
 
 ## A note on pressure from companies
 
-EthicScore has no commercial relationships with any brand. If a company contacts you asking you to improve their score through a contribution, please report it by opening an Issue. Transparency is the only protection this project has.
+EthicPrint has no commercial relationships with any brand. If a company contacts you asking you to improve their score through a contribution, please report it by opening an Issue. Transparency is the only protection this project has.
 
 ---
 
