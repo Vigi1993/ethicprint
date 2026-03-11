@@ -14,16 +14,13 @@
       --text: #e8e8f0;
       --muted: rgba(255,255,255,0.35);
       --accent: #63CAB7;
-      --accent-dim: rgba(99,202,183,0.12);
+      --accent-dim: rgba(99,202,183,0.1);
       --gold: #f0c060;
-      --gold-dim: rgba(240,192,96,0.1);
+      --gold-dim: rgba(240,192,96,0.08);
       --silver: #a0b4c8;
-      --silver-dim: rgba(160,180,200,0.08);
+      --silver-dim: rgba(160,180,200,0.07);
       --bronze: #c08060;
-      --bronze-dim: rgba(192,128,96,0.07);
-      --t1: #63CAB7;
-      --t2: #a0b4c8;
-      --t3: rgba(255,255,255,0.3);
+      --bronze-dim: rgba(192,128,96,0.06);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -36,7 +33,6 @@
       min-height: 100vh;
     }
 
-    /* ── BACK LINK ── */
     .back {
       position: fixed;
       top: 20px; left: 24px;
@@ -50,11 +46,12 @@
     }
     .back:hover { color: var(--accent); }
 
-    /* ── HERO ── */
     .hero {
-      max-width: 760px;
+      max-width: 720px;
       margin: 0 auto;
-      padding: 100px 24px 64px;
+      padding: 100px 24px 56px;
+      opacity: 0;
+      animation: fadeUp .6s .1s forwards;
     }
     .hero-eyebrow {
       font-family: 'DM Mono', monospace;
@@ -63,57 +60,29 @@
       color: var(--accent);
       text-transform: uppercase;
       margin-bottom: 20px;
-      opacity: 0;
-      animation: fadeUp .6s .1s forwards;
     }
     .hero-title {
-      font-size: clamp(32px, 5vw, 52px);
+      font-size: clamp(30px, 5vw, 48px);
       font-weight: 500;
       line-height: 1.1;
       letter-spacing: -1px;
-      margin-bottom: 24px;
-      opacity: 0;
-      animation: fadeUp .6s .2s forwards;
+      margin-bottom: 20px;
     }
     .hero-title span { color: var(--accent); }
     .hero-desc {
-      font-size: 15px;
+      font-size: 14px;
       color: var(--muted);
-      max-width: 560px;
-      line-height: 1.75;
-      opacity: 0;
-      animation: fadeUp .6s .3s forwards;
+      max-width: 520px;
+      line-height: 1.8;
     }
 
-    /* ── TRUST BAR ── */
-    .trust-bar {
-      max-width: 760px;
-      margin: 0 auto 72px;
-      padding: 0 24px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      opacity: 0;
-      animation: fadeUp .6s .4s forwards;
-    }
-    .trust-pill {
-      background: var(--accent-dim);
-      border: 1px solid rgba(99,202,183,0.2);
-      border-radius: 100px;
-      padding: 6px 16px;
-      font-size: 12px;
-      color: var(--accent);
-      font-family: 'DM Mono', monospace;
-      letter-spacing: .5px;
-    }
-
-    /* ── HOW IT WORKS ── */
-    .method {
-      max-width: 760px;
-      margin: 0 auto 80px;
+    /* ── TIER SYSTEM EXPLANATION ── */
+    .section {
+      max-width: 720px;
+      margin: 0 auto 64px;
       padding: 0 24px;
       opacity: 0;
-      animation: fadeUp .6s .5s forwards;
+      animation: fadeUp .6s .25s forwards;
     }
     .section-label {
       font-family: 'DM Mono', monospace;
@@ -121,17 +90,20 @@
       letter-spacing: 3px;
       color: var(--muted);
       text-transform: uppercase;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
+
     .tier-cards {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+      gap: 10px;
+      margin-bottom: 20px;
     }
-    @media (max-width: 600px) { .tier-cards { grid-template-columns: 1fr; } }
+    @media (max-width: 560px) { .tier-cards { grid-template-columns: 1fr; } }
+
     .tier-card {
       border-radius: 12px;
-      padding: 20px;
+      padding: 18px 20px;
       border: 1px solid var(--border);
       position: relative;
       overflow: hidden;
@@ -148,122 +120,71 @@
     .tier-card.t2::before { background: var(--silver); }
     .tier-card.t3 { background: var(--bronze-dim); }
     .tier-card.t3::before { background: var(--bronze); }
+
     .tier-num {
       font-family: 'DM Mono', monospace;
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 500;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
     .tier-card.t1 .tier-num { color: var(--gold); }
     .tier-card.t2 .tier-num { color: var(--silver); }
     .tier-card.t3 .tier-num { color: var(--bronze); }
-    .tier-name {
-      font-size: 12px;
-      font-weight: 500;
-      margin-bottom: 8px;
-      color: var(--text);
-    }
-    .tier-desc {
-      font-size: 11px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
+    .tier-name { font-size: 11px; font-weight: 500; margin-bottom: 6px; }
+    .tier-desc { font-size: 11px; color: var(--muted); line-height: 1.6; }
     .tier-weight {
-      margin-top: 12px;
+      margin-top: 10px;
       font-family: 'DM Mono', monospace;
       font-size: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      display: flex; align-items: center; gap: 6px;
     }
     .tier-card.t1 .tier-weight { color: var(--gold); }
     .tier-card.t2 .tier-weight { color: var(--silver); }
     .tier-card.t3 .tier-weight { color: var(--bronze); }
     .weight-dots { display: flex; gap: 3px; }
-    .weight-dot { width: 6px; height: 6px; border-radius: 50%; }
-    .tier-card.t1 .weight-dot { background: var(--gold); }
-    .tier-card.t2 .weight-dot { background: var(--silver); }
-    .tier-card.t2 .weight-dot.empty { background: transparent; border: 1px solid var(--silver); }
-    .tier-card.t3 .weight-dot.empty { background: transparent; border: 1px solid var(--bronze); }
-    .tier-card.t3 .weight-dot.active { background: var(--bronze); }
+    .wd { width: 6px; height: 6px; border-radius: 50%; }
+    .wd.on.g  { background: var(--gold); }
+    .wd.on.s  { background: var(--silver); }
+    .wd.on.b  { background: var(--bronze); }
+    .wd.off.g { background: transparent; border: 1px solid var(--gold); }
+    .wd.off.s { background: transparent; border: 1px solid var(--silver); }
+    .wd.off.b { background: transparent; border: 1px solid var(--bronze); }
 
     /* confidence legend */
-    .conf-legend {
-      margin-top: 28px;
+    .conf-box {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 20px 24px;
     }
-    .conf-legend-title {
-      font-size: 11px;
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      letter-spacing: 1px;
-      margin-bottom: 16px;
-      text-transform: uppercase;
+    .conf-box-title {
+      font-size: 10px; font-family: 'DM Mono', monospace;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 14px;
     }
     .conf-rows { display: flex; flex-direction: column; gap: 10px; }
-    .conf-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 12px;
-    }
-    .conf-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .conf-dot.high { background: #63CAB7; }
-    .conf-dot.medium { background: #f0c060; }
-    .conf-dot.low { background: #c08060; }
-    .conf-dot.none { background: rgba(255,255,255,0.15); }
-    .conf-label { color: var(--text); font-weight: 500; min-width: 80px; }
-    .conf-desc { color: var(--muted); }
+    .conf-row { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; }
+    .cdot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+    .cdot.high   { background: #63CAB7; }
+    .cdot.medium { background: #f0c060; }
+    .cdot.low    { background: #c08060; }
+    .cdot.none   { background: rgba(255,255,255,0.15); }
+    .clabel { font-weight: 500; min-width: 72px; color: var(--text); }
+    .cdesc  { color: var(--muted); }
 
-    /* ── STATS BAR ── */
-    .stats-bar {
-      max-width: 760px;
-      margin: 0 auto 56px;
-      padding: 0 24px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      opacity: 0;
-      animation: fadeUp .6s .6s forwards;
-    }
-    .stat {
-      background: var(--surface);
-      padding: 20px;
-      text-align: center;
-    }
-    .stat-val {
-      font-family: 'DM Mono', monospace;
-      font-size: 28px;
-      font-weight: 500;
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-    .stat-label { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
-
-    /* ── SOURCE LIST ── */
-    .sources-section {
-      max-width: 760px;
-      margin: 0 auto 56px;
+    /* ── PUBLISHER REGISTRY ── */
+    .pub-section {
+      max-width: 720px;
+      margin: 0 auto 40px;
       padding: 0 24px;
       opacity: 0;
-      animation: fadeUp .6s .7s forwards;
+      animation: fadeUp .6s .4s forwards;
     }
     .tier-header {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 20px;
+      gap: 12px;
+      margin-bottom: 16px;
       cursor: pointer;
       user-select: none;
     }
@@ -274,84 +195,77 @@
       padding: 4px 10px;
       border-radius: 100px;
       border: 1px solid;
+      text-transform: uppercase;
     }
-    .tier-badge.t1 { color: var(--gold); border-color: rgba(240,192,96,0.3); background: var(--gold-dim); }
+    .tier-badge.t1 { color: var(--gold);   border-color: rgba(240,192,96,0.3);  background: var(--gold-dim); }
     .tier-badge.t2 { color: var(--silver); border-color: rgba(160,180,200,0.25); background: var(--silver-dim); }
     .tier-badge.t3 { color: var(--bronze); border-color: rgba(192,128,96,0.25); background: var(--bronze-dim); }
-    .tier-header-title { font-size: 14px; font-weight: 500; }
-    .tier-count { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-left: auto; }
-    .tier-chevron { color: var(--muted); font-size: 12px; transition: transform .25s; }
+    .tier-hcount { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-left: auto; }
+    .tier-chevron { color: var(--muted); font-size: 11px; transition: transform .25s; }
     .tier-chevron.open { transform: rotate(180deg); }
 
-    .source-list { display: flex; flex-direction: column; gap: 2px; }
-    .source-item {
+    .tier-body { overflow: hidden; transition: max-height .35s ease; }
+
+    .pub-grid {
       display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      align-items: center;
-      padding: 14px 16px;
-      background: var(--surface);
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      transition: border-color .2s, background .2s;
-      text-decoration: none;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 8px;
     }
-    .source-item:hover {
-      border-color: rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.02);
-    }
-    .source-main { min-width: 0; }
-    .source-title {
-      font-size: 13px;
-      color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 3px;
-      font-weight: 400;
-    }
-    .source-meta {
+    .pub-card {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 8px;
-      flex-wrap: wrap;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      transition: border-color .2s, background .2s;
     }
-    .source-publisher {
-      font-size: 11px;
-      font-family: 'DM Mono', monospace;
-      color: var(--accent);
+    .pub-card:hover {
+      border-color: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.025);
     }
-    .source-brand {
-      font-size: 11px;
-      color: var(--muted);
+    .pub-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.3;
     }
-    .source-cat {
+    .pub-tag {
       font-size: 10px;
-      padding: 2px 7px;
-      border-radius: 100px;
-      font-family: 'DM Mono', monospace;
-      letter-spacing: .5px;
-    }
-    .cat-armi    { background: rgba(239,68,68,.1);   color: #ef4444; }
-    .cat-ambiente { background: rgba(34,197,94,.1);  color: #22c55e; }
-    .cat-diritti  { background: rgba(251,191,36,.1); color: #fbbf24; }
-    .cat-fisco    { background: rgba(99,202,183,.1); color: #63CAB7; }
-    .source-link {
-      font-size: 16px;
       color: var(--muted);
+      font-family: 'DM Mono', monospace;
       flex-shrink: 0;
-      transition: color .2s;
     }
-    .source-item:hover .source-link { color: var(--accent); }
+    .pub-arrow { font-size: 13px; color: var(--muted); flex-shrink: 0; transition: color .2s; }
+    .pub-card:hover .pub-arrow { color: var(--accent); }
 
-    /* collapsible */
-    .tier-body { overflow: hidden; transition: max-height .35s ease; }
+    /* ── NOTE ── */
+    .note-section {
+      max-width: 720px;
+      margin: 0 auto 80px;
+      padding: 0 24px;
+      opacity: 0;
+      animation: fadeUp .6s .5s forwards;
+    }
+    .note-box {
+      background: var(--accent-dim);
+      border: 1px solid rgba(99,202,183,0.15);
+      border-radius: 12px;
+      padding: 18px 22px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.75;
+    }
+    .note-box strong { color: var(--accent); font-weight: 500; }
 
     /* ── FOOTER ── */
     .page-footer {
-      max-width: 760px;
+      max-width: 720px;
       margin: 0 auto;
-      padding: 32px 24px 64px;
+      padding: 28px 24px 60px;
       border-top: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
@@ -360,173 +274,191 @@
       gap: 12px;
     }
     .page-footer a {
-      font-size: 11px;
-      color: var(--muted);
-      text-decoration: none;
-      font-family: 'DM Mono', monospace;
-      transition: color .2s;
+      font-size: 11px; color: var(--muted); text-decoration: none;
+      font-family: 'DM Mono', monospace; transition: color .2s;
     }
     .page-footer a:hover { color: var(--accent); }
 
-    /* ── LOADING ── */
-    .loading {
-      text-align: center;
-      padding: 60px 24px;
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      letter-spacing: 2px;
-    }
-    .loading::after {
-      content: '';
-      animation: dots 1.2s infinite;
-    }
-    @keyframes dots {
-      0%,20% { content: '.'; }
-      40% { content: '..'; }
-      60%,100% { content: '...'; }
-    }
-
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
+      from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
-    /* ── SEARCH ── */
-    .search-wrap {
-      max-width: 760px;
-      margin: 0 auto 32px;
-      padding: 0 24px;
-      opacity: 0;
-      animation: fadeUp .6s .65s forwards;
-    }
-    .search-input {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 11px 16px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px;
-      outline: none;
-      transition: border-color .2s;
-    }
-    .search-input:focus { border-color: rgba(99,202,183,0.3); }
-    .search-input::placeholder { color: var(--muted); }
   </style>
 </head>
 <body>
 
 <a href="/" class="back">← EthicPrint</a>
 
+<!-- HERO -->
 <div class="hero">
-  <div class="hero-eyebrow">Transparency Report</div>
+  <div class="hero-eyebrow">Transparency · Methodology</div>
   <h1 class="hero-title">Sources &<br><span>Methodology</span></h1>
   <p class="hero-desc">
-    Every score on EthicPrint is backed by verifiable sources.
-    Not all sources carry the same weight — an Amnesty International report
-    means more than a blog post. Here's exactly how we measure it.
+    EthicPrint scores brands using verified, publicly available sources.
+    Not all sources carry the same weight — here's exactly how we decide
+    which publishers we trust and how much.
   </p>
 </div>
 
-<div class="trust-bar">
-  <span class="trust-pill">Open Source</span>
-  <span class="trust-pill">No editorial bias</span>
-  <span class="trust-pill">Human-reviewed</span>
-  <span class="trust-pill">Never auto-updated</span>
-</div>
-
-<div class="method">
-  <div class="section-label">How we weight sources</div>
+<!-- TIER EXPLANATION -->
+<div class="section">
+  <div class="section-label">The tier system</div>
   <div class="tier-cards">
     <div class="tier-card t1">
       <div class="tier-num">T1</div>
-      <div class="tier-name">Primary Sources</div>
-      <div class="tier-desc">International NGOs, investigative media, and recognized research institutes with established editorial standards.</div>
+      <div class="tier-name">Primary sources</div>
+      <div class="tier-desc">International NGOs, investigative media, and recognized research institutes.</div>
       <div class="tier-weight">
         <div class="weight-dots">
-          <div class="weight-dot"></div>
-          <div class="weight-dot"></div>
-          <div class="weight-dot"></div>
+          <div class="wd on g"></div><div class="wd on g"></div><div class="wd on g"></div>
         </div>
         weight ×3
       </div>
     </div>
     <div class="tier-card t2">
       <div class="tier-num">T2</div>
-      <div class="tier-name">Verified Sources</div>
-      <div class="tier-desc">National media outlets, official government data, institutional reports, and certified publications.</div>
+      <div class="tier-name">Verified sources</div>
+      <div class="tier-desc">National media, official government data, institutional and certified reports.</div>
       <div class="tier-weight">
         <div class="weight-dots">
-          <div class="weight-dot"></div>
-          <div class="weight-dot"></div>
-          <div class="weight-dot empty"></div>
+          <div class="wd on s"></div><div class="wd on s"></div><div class="wd off s"></div>
         </div>
         weight ×2
       </div>
     </div>
     <div class="tier-card t3">
       <div class="tier-num">T3</div>
-      <div class="tier-name">Supporting Sources</div>
-      <div class="tier-desc">Blogs, secondary sources, and unverified publications. Valid as supporting evidence only.</div>
+      <div class="tier-name">Supporting sources</div>
+      <div class="tier-desc">Blogs and secondary publications. Valid only as supporting evidence.</div>
       <div class="tier-weight">
         <div class="weight-dots">
-          <div class="weight-dot active"></div>
-          <div class="weight-dot empty"></div>
-          <div class="weight-dot empty"></div>
+          <div class="wd on b"></div><div class="wd off b"></div><div class="wd off b"></div>
         </div>
         weight ×1
       </div>
     </div>
   </div>
 
-  <div class="conf-legend">
-    <div class="conf-legend-title">Confidence levels</div>
+  <div class="conf-box">
+    <div class="conf-box-title">Confidence levels — per category</div>
     <div class="conf-rows">
       <div class="conf-row">
-        <div class="conf-dot high"></div>
-        <div class="conf-label">High</div>
-        <div class="conf-desc">Weighted score ≥ 6 — e.g. two T1 sources, or one T1 + three T3</div>
+        <div class="cdot high"></div>
+        <div class="clabel">High</div>
+        <div class="cdesc">Weighted score ≥ 6 &nbsp;·&nbsp; e.g. 2× Tier 1, or 1× T1 + 3× T3</div>
       </div>
       <div class="conf-row">
-        <div class="conf-dot medium"></div>
-        <div class="conf-label">Medium</div>
-        <div class="conf-desc">Weighted score ≥ 3 — a single T1 source already reaches this level</div>
+        <div class="cdot medium"></div>
+        <div class="clabel">Medium</div>
+        <div class="cdesc">Weighted score ≥ 3 &nbsp;·&nbsp; a single Tier 1 source already qualifies</div>
       </div>
       <div class="conf-row">
-        <div class="conf-dot low"></div>
-        <div class="conf-label">Low</div>
-        <div class="conf-desc">Weighted score ≥ 1 — limited evidence, treat with caution</div>
+        <div class="cdot low"></div>
+        <div class="clabel">Low</div>
+        <div class="cdesc">Weighted score ≥ 1 &nbsp;·&nbsp; limited evidence, treat with caution</div>
       </div>
       <div class="conf-row">
-        <div class="conf-dot none"></div>
-        <div class="conf-label">None</div>
-        <div class="conf-desc">No verified sources yet for this category</div>
+        <div class="cdot none"></div>
+        <div class="clabel">None</div>
+        <div class="cdesc">No verified sources yet for this category</div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="stats-bar" id="stats-bar">
-  <div class="stat"><div class="stat-val" id="s-total" style="color:var(--accent)">–</div><div class="stat-label">Total sources</div></div>
-  <div class="stat"><div class="stat-val" id="s-t1" style="color:var(--gold)">–</div><div class="stat-label">Tier 1</div></div>
-  <div class="stat"><div class="stat-val" id="s-t2" style="color:var(--silver)">–</div><div class="stat-label">Tier 2</div></div>
-  <div class="stat"><div class="stat-val" id="s-t3" style="color:var(--bronze)">–</div><div class="stat-label">Tier 3</div></div>
-</div>
+<!-- PUBLISHER REGISTRY -->
+<div class="pub-section">
+  <div class="section-label">Trusted publishers</div>
 
-<div class="search-wrap">
-  <input class="search-input" type="text" id="search" placeholder="Filter by brand, publisher or category..." oninput="filterSources()" />
-</div>
-
-<div id="sources-container">
-  <div class="loading">Loading sources</div>
-</div>
-
-<footer class="page-footer">
-  <div>
-    <a href="/">← Back to EthicPrint</a>
+  <!-- TIER 1 -->
+  <div style="margin-bottom: 32px;">
+    <div class="tier-header" onclick="toggleTier('t1')">
+      <span class="tier-badge t1">Tier 1 · Primary</span>
+      <span class="tier-hcount" id="count-t1">weight ×3</span>
+      <span class="tier-chevron open" id="chev-t1">▼</span>
+    </div>
+    <div class="tier-body" id="body-t1" style="max-height:99999px"><div class="pub-grid" id="grid-t1"><div style="color:rgba(255,255,255,0.2);font-size:12px;padding:12px">Loading...</div></div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.hrw.org" target="_blank"><div><div class="pub-name">Human Rights Watch</div><div class="pub-tag">Human Rights</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.sipri.org" target="_blank"><div><div class="pub-name">SIPRI</div><div class="pub-tag">Arms & Conflicts</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.paxforpeace.nl" target="_blank"><div><div class="pub-name">PAX for Peace</div><div class="pub-tag">Arms & Conflicts</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://caat.org.uk" target="_blank"><div><div class="pub-name">Campaign Against Arms Trade</div><div class="pub-tag">Arms & Conflicts</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://theintercept.com" target="_blank"><div><div class="pub-name">The Intercept</div><div class="pub-tag">Investigative</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.theguardian.com" target="_blank"><div><div class="pub-name">The Guardian</div><div class="pub-tag">Media</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.reuters.com" target="_blank"><div><div class="pub-name">Reuters</div><div class="pub-tag">Media</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.nytimes.com" target="_blank"><div><div class="pub-name">New York Times</div><div class="pub-tag">Media</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.bbc.com" target="_blank"><div><div class="pub-name">BBC</div><div class="pub-tag">Media</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.oxfam.org" target="_blank"><div><div class="pub-name">Oxfam</div><div class="pub-tag">Tax & Rights</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://taxjustice.net" target="_blank"><div><div class="pub-name">Tax Justice Network</div><div class="pub-tag">Tax & Transparency</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.transparency.org" target="_blank"><div><div class="pub-name">Transparency International</div><div class="pub-tag">Tax & Transparency</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.globalwitness.org" target="_blank"><div><div class="pub-name">Global Witness</div><div class="pub-tag">Investigative</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.cdp.net" target="_blank"><div><div class="pub-name">CDP</div><div class="pub-tag">Environment</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.wwf.org" target="_blank"><div><div class="pub-name">WWF</div><div class="pub-tag">Environment</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.greenpeace.org" target="_blank"><div><div class="pub-name">Greenpeace</div><div class="pub-tag">Environment</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://knowthechain.org" target="_blank"><div><div class="pub-name">KnowTheChain</div><div class="pub-tag">Supply Chain</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.business-humanrights.org" target="_blank"><div><div class="pub-name">Business & Human Rights</div><div class="pub-tag">Human Rights</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.thebureauinvestigates.com" target="_blank"><div><div class="pub-name">Bureau of Investigative Journalism</div><div class="pub-tag">Investigative</div></div><span class="pub-arrow">↗</span></a>
+      </div>
+    </div>
   </div>
+
+  <!-- TIER 2 -->
+  <div style="margin-bottom: 32px;">
+    <div class="tier-header" onclick="toggleTier('t2')">
+      <span class="tier-badge t2">Tier 2 · Verified</span>
+      <span class="tier-hcount" id="count-t2">weight ×2</span>
+      <span class="tier-chevron open" id="chev-t2">▼</span>
+    </div>
+    <div class="tier-body" id="body-t2" style="max-height:99999px"><div class="pub-grid" id="grid-t2"><div style="color:rgba(255,255,255,0.2);font-size:12px;padding:12px">Loading...</div></div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.repubblica.it" target="_blank"><div><div class="pub-name">La Repubblica</div><div class="pub-tag">IT Media</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.corriere.it" target="_blank"><div><div class="pub-name">Corriere della Sera</div><div class="pub-tag">IT Media</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://valori.it" target="_blank"><div><div class="pub-name">Valori.it</div><div class="pub-tag">IT Media</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.ft.com" target="_blank"><div><div class="pub-name">Financial Times</div><div class="pub-tag">Media</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.bloomberg.com" target="_blank"><div><div class="pub-name">Bloomberg</div><div class="pub-tag">Media</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.economist.com" target="_blank"><div><div class="pub-name">The Economist</div><div class="pub-tag">Media</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.europarl.europa.eu" target="_blank"><div><div class="pub-name">European Parliament</div><div class="pub-tag">Institutional</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://ec.europa.eu" target="_blank"><div><div class="pub-name">European Commission</div><div class="pub-tag">Institutional</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.oecd.org" target="_blank"><div><div class="pub-name">OECD</div><div class="pub-tag">Institutional</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.worldbank.org" target="_blank"><div><div class="pub-name">World Bank</div><div class="pub-tag">Institutional</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.istat.it" target="_blank"><div><div class="pub-name">ISTAT</div><div class="pub-tag">IT Stats</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://ec.europa.eu/eurostat" target="_blank"><div><div class="pub-name">Eurostat</div><div class="pub-tag">EU Stats</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://www.bcorporation.net" target="_blank"><div><div class="pub-name">B Corp</div><div class="pub-tag">Certification</div></div><span class="pub-arrow">↗</span></a>
+        <a class="pub-card" href="https://fsc.org" target="_blank"><div><div class="pub-name">FSC</div><div class="pub-tag">Certification</div></div><span class="pub-arrow">↗</span></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIER 3 -->
+  <div>
+    <div class="tier-header" onclick="toggleTier('t3')">
+      <span class="tier-badge t3">Tier 3 · Supporting</span>
+      <span class="tier-hcount">weight ×1</span>
+      <span class="tier-chevron" id="chev-t3">▼</span>
+    </div>
+    <div class="tier-body" id="body-t3" style="max-height:0">
+      <div style="padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px;">
+        <p style="font-size: 13px; color: var(--muted); line-height: 1.7;">
+          Tier 3 includes blogs, specialist publications, and secondary sources not covered by Tier 1 or Tier 2.
+          These are used only as supporting evidence alongside higher-tier sources — never as the sole basis for a score.
+          They are evaluated case-by-case and do not have a fixed whitelist.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NOTE -->
+<div class="note-section">
+  <div class="note-box">
+    <strong>Every score change requires human review.</strong>
+    New sources — whether found automatically or proposed by the community — are never applied directly.
+    They go through a manual approval step before affecting any brand score.
+    If you know a reliable source we're missing, <a href="mailto:info@ethicprint.org" style="color:var(--accent)">write to us</a>.
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <a href="/">← Back to EthicPrint</a>
   <div style="display:flex;gap:20px">
     <a href="https://github.com/Vigi1993/ethicprint" target="_blank">GitHub</a>
     <a href="mailto:info@ethicprint.org">Suggest a source</a>
@@ -535,99 +467,40 @@
 
 <script>
 const API = "https://web-production-14708.up.railway.app";
-const CAT_ICONS = { armi: "⚔️", ambiente: "🌿", diritti: "🤝", fisco: "💰" };
-const CAT_LABELS = { armi: "Arms", ambiente: "Environment", diritti: "Human Rights", fisco: "Tax" };
-let allData = null;
 
-const TIER_CONFIG = {
-  1: { label: "TIER 1 · PRIMARY SOURCES", cls: "t1", bodyId: "body-t1" },
-  2: { label: "TIER 2 · VERIFIED SOURCES", cls: "t2", bodyId: "body-t2" },
-  3: { label: "TIER 3 · SUPPORTING SOURCES", cls: "t3", bodyId: "body-t3" },
-};
-
-function renderSource(s) {
-  const cat = s.category_key;
-  const brand = s.brands?.name || "";
-  const title = s.title || s.url;
-  return `<a class="source-item" href="${s.url}" target="_blank" rel="noopener"
-    data-search="${(brand + ' ' + (s.publisher||'') + ' ' + title + ' ' + cat).toLowerCase()}">
-    <div class="source-main">
-      <div class="source-title">${title}</div>
-      <div class="source-meta">
-        ${s.publisher ? `<span class="source-publisher">${s.publisher}</span>` : ""}
-        <span class="source-brand">${brand}</span>
-        <span class="source-cat cat-${cat}">${CAT_ICONS[cat] || ""} ${CAT_LABELS[cat] || cat}</span>
-      </div>
-    </div>
-    <span class="source-link">↗</span>
-  </a>`;
-}
-
-function renderTierSection(tier, sources, open = true) {
-  const cfg = TIER_CONFIG[tier];
-  const html = sources.map(renderSource).join("");
-  return `<div class="sources-section" id="section-t${tier}">
-    <div class="tier-header" onclick="toggleTier(${tier})">
-      <span class="tier-badge ${cfg.cls}">${cfg.label}</span>
-      <span class="tier-count" id="count-t${tier}">${sources.length} sources</span>
-      <span class="tier-chevron ${open ? 'open' : ''}" id="chevron-t${tier}">▼</span>
-    </div>
-    <div class="tier-body" id="${cfg.bodyId}" style="max-height:${open ? '99999px' : '0'}">
-      <div class="source-list" id="list-t${tier}">${html}</div>
-    </div>
-  </div>`;
-}
-
-function toggleTier(tier) {
-  const body = document.getElementById(TIER_CONFIG[tier].bodyId);
-  const chevron = document.getElementById(`chevron-t${tier}`);
-  const isOpen = chevron.classList.contains("open");
+function toggleTier(id) {
+  const body = document.getElementById(`body-${id}`);
+  const chev = document.getElementById(`chev-${id}`);
+  const isOpen = chev.classList.contains("open");
   body.style.maxHeight = isOpen ? "0" : "99999px";
-  chevron.classList.toggle("open", !isOpen);
+  chev.classList.toggle("open", !isOpen);
 }
 
-function filterSources() {
-  const q = document.getElementById("search").value.toLowerCase().trim();
-  let visible = { 1: 0, 2: 0, 3: 0 };
-  document.querySelectorAll(".source-item").forEach(el => {
-    const match = !q || el.dataset.search.includes(q);
-    el.style.display = match ? "" : "none";
-    if (match) {
-      const tier = el.closest("[id^='section-t']")?.id.replace("section-t","");
-      if (tier) visible[tier]++;
-    }
-  });
-  [1,2,3].forEach(t => {
-    const el = document.getElementById(`count-t${t}`);
-    if (el) el.textContent = `${visible[t]} sources`;
-    // Auto-open tier with results when searching
-    if (q && visible[t] > 0) {
-      const body = document.getElementById(TIER_CONFIG[t].bodyId);
-      const chevron = document.getElementById(`chevron-t${t}`);
-      if (body) body.style.maxHeight = "99999px";
-      if (chevron) chevron.classList.add("open");
-    }
-  });
+function renderPub(p) {
+  const link = p.url ? `href="${p.url}" target="_blank" rel="noopener"` : '';
+  return `<a class="pub-card" ${link}>
+    <div>
+      <div class="pub-name">${p.name}</div>
+      ${p.topic ? `<div class="pub-tag">${p.topic}</div>` : ''}
+    </div>
+    ${p.url ? '<span class="pub-arrow">↗</span>' : ''}
+  </a>`;
 }
 
 async function load() {
   try {
-    const res = await fetch(`${API}/sources/public`);
-    allData = await res.json();
+    const res = await fetch(`${API}/publishers`);
+    const data = await res.json();
 
-    document.getElementById("s-total").textContent = allData.total;
-    document.getElementById("s-t1").textContent = allData.tier1.length;
-    document.getElementById("s-t2").textContent = allData.tier2.length;
-    document.getElementById("s-t3").textContent = allData.tier3.length;
+    // Populate grids
+    document.getElementById('grid-t1').innerHTML = data.tier1.map(renderPub).join('');
+    document.getElementById('grid-t2').innerHTML = data.tier2.map(renderPub).join('');
 
-    const container = document.getElementById("sources-container");
-    container.innerHTML =
-      renderTierSection(1, allData.tier1, true) +
-      renderTierSection(2, allData.tier2, true) +
-      renderTierSection(3, allData.tier3, false);
+    // Update counts
+    document.getElementById('count-t1').textContent = `${data.tier1.length} publishers · weight ×3`;
+    document.getElementById('count-t2').textContent = `${data.tier2.length} publishers · weight ×2`;
   } catch(e) {
-    document.getElementById("sources-container").innerHTML =
-      `<div class="loading" style="color:#ef4444">Failed to load sources. Try refreshing.</div>`;
+    console.error('Failed to load publishers', e);
   }
 }
 
