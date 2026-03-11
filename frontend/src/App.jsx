@@ -423,7 +423,7 @@ function SectorSection({ sector, sectorIcon, brands, myBrands, onAdd, onSelect, 
                 {categories.map(cat => (
                   <div key={cat.key} style={{ display: "flex", alignItems: "center", gap: 3 }}>
                     <div style={{ width: 6, height: 6, borderRadius: 99, background: getColor(best.scores[cat.key]) }} />
-                    <span style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>{cat.key}</span>
+                    <span style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>{getCatLabel(cat, lang).split(" ")[0]}</span>
                   </div>
                 ))}
               </div>
