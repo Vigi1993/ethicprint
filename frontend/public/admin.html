@@ -104,6 +104,11 @@
 
   .job-badge { font-size: 9px; padding: 2px 7px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.5px; }
   .job-new { background: rgba(99,202,183,0.1); color: var(--accent); }
+  .score-arrow { font-size: 18px; font-weight: 700; font-family: 'DM Mono', monospace; }
+  .score-up { color: var(--green); }
+  .score-down { color: var(--red); }
+  .score-same { color: var(--muted); }
+  .score-box { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 8px 14px; margin-bottom: 8px; }
   .job-replacement { background: rgba(251,146,60,0.12); color: var(--orange); }
 </style>
 </head>
@@ -115,15 +120,18 @@
     <button class="tab active" onclick="switchTab('pending')">Pending <span class="badge badge-pending" id="badge-pending">–</span></button>
     <button class="tab" onclick="switchTab('approved')">Approved <span class="badge badge-count" id="badge-approved">–</span></button>
     <button class="tab" onclick="switchTab('rejected')">Rejected <span class="badge badge-count" id="badge-rejected">–</span></button>
+    <div style="width:1px;height:20px;background:rgba(255,255,255,0.08);margin:0 4px"></div>
+    <button class="tab" onclick="switchTab('scores')">Score Updates <span class="badge badge-pending" id="badge-scores">–</span></button>
   </div>
 </header>
 
 <div class="main">
-  <div class="stats" id="stats" style="display:none">
+  <div class="stats" id="stats" style="display:none;grid-template-columns:repeat(5,1fr)">
     <div class="stat"><div class="stat-val" style="color:var(--yellow)" id="s-pending">–</div><div class="stat-label">Pending</div></div>
     <div class="stat"><div class="stat-val" style="color:var(--green)" id="s-approved">–</div><div class="stat-label">Approved</div></div>
     <div class="stat"><div class="stat-val" style="color:var(--red)" id="s-rejected">–</div><div class="stat-label">Rejected</div></div>
     <div class="stat"><div class="stat-val" style="color:var(--accent)" id="s-brands">–</div><div class="stat-label">Brands</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--orange)" id="s-scores">–</div><div class="stat-label">Score Updates</div></div>
   </div>
 
   <div class="filter-bar" id="filter-bar" style="display:none">
@@ -150,18 +158,86 @@ let counts = { pending: 0, approved: 0, rejected: 0 };
 const CAT_LABELS = { armi: "Arms", ambiente: "Environment", diritti: "Rights", fisco: "Tax" };
 const CAT_ICONS = { armi: "⚔️", ambiente: "🌿", diritti: "🤝", fisco: "💰" };
 
+function renderScoreCard(p) {
+  const diff = p.proposed_score - p.current_score;
+  const direction = diff > 0 ? "up" : diff < 0 ? "down" : "same";
+  const arrowClass = `score-${direction}`;
+  const arrow = direction === "up" ? "↑" : direction === "down" ? "↓" : "→";
+  const brand = p.brands?.name || `Brand ${p.brand_id}`;
+  const source = p.sources;
+  const catIcons = { armi: "⚔️", ambiente: "🌿", diritti: "🤝", fisco: "💰" };
+
+  const actions = p.status === "pending"
+    ? `<div class="proposal-actions">
+        <button class="btn btn-approve" onclick="approveScore(${p.id})">✓ Apply</button>
+        <button class="btn btn-reject" onclick="rejectScore(${p.id})">✗ Reject</button>
+       </div>`
+    : `<div class="proposal-actions">
+        <span class="status-chip ${p.status === 'approved' ? 'status-approved' : 'status-rejected'}">${p.status === 'approved' ? '✓ Applied' : '✗ Rejected'}</span>
+       </div>`;
+
+  return `<div class="proposal-card ${p.status}" id="score-card-${p.id}">
+    <span class="cat-badge cat-${p.category_key}">${catIcons[p.category_key] || "•"} ${CAT_LABELS[p.category_key] || p.category_key}</span>
+    <div class="proposal-body">
+      <div class="proposal-title">${brand}</div>
+      <div class="score-box">
+        <span style="font-size:13px;color:var(--muted)">Current:</span>
+        <span class="score-arrow" style="color:var(--text)">${p.current_score}</span>
+        <span style="color:var(--muted);font-size:16px">→</span>
+        <span class="score-arrow ${arrowClass}">${arrow} ${p.proposed_score}</span>
+        <span style="font-size:11px;color:var(--muted);margin-left:4px">(${diff > 0 ? "+" : ""}${diff})</span>
+      </div>
+      ${p.motivation ? `<div class="proposal-summary">${p.motivation}</div>` : ""}
+      ${source ? `<a class="proposal-url" href="${source.url}" target="_blank">↗ ${source.title || source.url}</a>` : ""}
+      <div class="proposal-meta">${new Date(p.created_at).toLocaleDateString("en-GB", {day:"numeric",month:"short",year:"numeric"})}</div>
+    </div>
+    ${actions}
+  </div>`;
+}
+
+async function approveScore(id) {
+  const card = document.getElementById(`score-card-${id}`);
+  card.querySelectorAll("button").forEach(b => b.disabled = true);
+  try {
+    await fetch(`${API}/score-proposals/${id}/approve`, { method: "POST" });
+    card.classList.add("approved");
+    card.querySelector(".proposal-actions").innerHTML = `<span class="status-chip status-approved">✓ Applied</span>`;
+    counts.scores = (counts.scores || 0) - 1;
+    document.getElementById("badge-scores").textContent = counts.scores;
+    document.getElementById("s-scores").textContent = counts.scores;
+    showToast("✓ Score updated in database");
+  } catch(e) { showToast("✗ Error — try again", true); card.querySelectorAll("button").forEach(b => b.disabled = false); }
+}
+
+async function rejectScore(id) {
+  const card = document.getElementById(`score-card-${id}`);
+  card.querySelectorAll("button").forEach(b => b.disabled = true);
+  try {
+    await fetch(`${API}/score-proposals/${id}/reject`, { method: "POST" });
+    card.classList.add("rejected");
+    card.querySelector(".proposal-actions").innerHTML = `<span class="status-chip status-rejected">✗ Rejected</span>`;
+    counts.scores = (counts.scores || 0) - 1;
+    document.getElementById("badge-scores").textContent = counts.scores;
+    document.getElementById("s-scores").textContent = counts.scores;
+    showToast("Score proposal rejected");
+  } catch(e) { showToast("✗ Error — try again", true); card.querySelectorAll("button").forEach(b => b.disabled = false); }
+}
+
 async function loadAll() {
-  const [p, a, r] = await Promise.all([
+  const [p, a, r, s] = await Promise.all([
     fetch(`${API}/source-proposals?status=pending`).then(r => r.json()),
     fetch(`${API}/source-proposals?status=approved`).then(r => r.json()),
     fetch(`${API}/source-proposals?status=rejected`).then(r => r.json()),
+    fetch(`${API}/score-proposals?status=pending`).then(r => r.json()),
   ]);
-  allProposals = { pending: p.proposals, approved: a.proposals, rejected: r.proposals };
-  counts = { pending: p.count, approved: a.count, rejected: r.count };
+  allProposals = { pending: p.proposals, approved: a.proposals, rejected: r.proposals, scores: s.proposals };
+  counts = { pending: p.count, approved: a.count, rejected: r.count, scores: s.count };
 
   document.getElementById("badge-pending").textContent = counts.pending;
   document.getElementById("badge-approved").textContent = counts.approved;
   document.getElementById("badge-rejected").textContent = counts.rejected;
+  document.getElementById("badge-scores").textContent = counts.scores;
+  document.getElementById("s-scores").textContent = counts.scores;
   document.getElementById("s-pending").textContent = counts.pending;
   document.getElementById("s-approved").textContent = counts.approved;
   document.getElementById("s-rejected").textContent = counts.rejected;
@@ -185,6 +261,28 @@ function groupByBrand(proposals) {
 }
 
 function renderTab() {
+  if (currentTab === "scores") {
+    const proposals = allProposals.scores || [];
+    if (proposals.length === 0) {
+      document.getElementById("content").innerHTML = `<div class="empty"><div class="empty-icon">✅</div>No pending score updates</div>`;
+      return;
+    }
+    const groups = groupByBrand(proposals);
+    let html = "";
+    Object.values(groups).forEach(group => {
+      html += `<div class="brand-group">
+        <div class="brand-header">
+          <div class="brand-logo">${group.name[0]}</div>
+          <div class="brand-name">${group.name}</div>
+          <div class="brand-count">${group.proposals.length} update${group.proposals.length !== 1 ? "s" : ""}</div>
+        </div>`;
+      group.proposals.forEach(p => { html += renderScoreCard(p); });
+      html += `</div>`;
+    });
+    document.getElementById("content").innerHTML = html;
+    return;
+  }
+
   const proposals = allProposals[currentTab] || [];
   const filtered = currentCat === "all" ? proposals : proposals.filter(p => p.category_key === currentCat);
   document.getElementById("filter-bar").style.display = currentTab === "pending" ? "flex" : "none";
@@ -271,7 +369,7 @@ async function reject(id) {
 function switchTab(tab) {
   currentTab = tab;
   currentCat = "all";
-  document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", ["pending","approved","rejected"][i] === tab));
+  document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", ["pending","approved","rejected","scores"][i] === tab));
   document.querySelectorAll(".filter-chip").forEach(c => c.classList.toggle("active", c.textContent.trim() === "All"));
   renderTab();
 }
