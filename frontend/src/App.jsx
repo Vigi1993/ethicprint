@@ -397,10 +397,7 @@ function SectorSection({ sector, sectorIcon, brands, myBrands, onAdd, onSelect, 
     <div style={{ marginBottom: 8, border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, overflow: "hidden", background: "rgba(255,255,255,0.01)" }}>
 
       {/* Header settore */}
-      <div onClick={() => setExpanded(!expanded)} style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 18px", cursor: "pointer" }}
-        onMouseOver={e => e.currentTarget.style.background = "rgba(255,255,255,0.03)"}
-        onMouseOut={e => e.currentTarget.style.background = "transparent"}
-      >
+      <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 18px" }}>
         <span style={{ fontSize: 18, flexShrink: 0 }}>{sectorIcon}</span>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{sector}</div>
@@ -412,7 +409,7 @@ function SectorSection({ sector, sectorIcon, brands, myBrands, onAdd, onSelect, 
           <div style={{ fontSize: 18, fontWeight: 700, color: avgColor }}>{avgScore}</div>
           <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)" }}>{lang === "it" ? "media" : "avg"}</div>
         </div>
-        <div style={{ fontSize: 16, color: "rgba(255,255,255,0.2)", flexShrink: 0, transition: "transform 0.2s", transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}>⌄</div>
+
       </div>
 
       {/* Best brand — sempre visibile quando espanso */}
@@ -579,7 +576,7 @@ export default function App() {
           <div style={{ marginTop: 52 }}>
             <div style={{ fontSize: 11, letterSpacing: 2, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 32 }}>{t.ranking_title}</div>
             {brandsBySector.map(({ sector, sectorIcon, brands }, idx) => (
-              <SectorSection key={sector} sector={sector} sectorIcon={sectorIcon} brands={brands} myBrands={myBrands} onAdd={addToList} onSelect={setSelected} lang={lang} defaultOpen={idx === 0} />
+              <SectorSection key={sector} sector={sector} sectorIcon={sectorIcon} brands={brands} myBrands={myBrands} onAdd={addToList} onSelect={setSelected} lang={lang} defaultOpen={true} />
             ))}
           </div>
 
