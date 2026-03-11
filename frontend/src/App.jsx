@@ -25,6 +25,9 @@ const UI = {
     parent: "Parent company",
     footer: "EthicPrint is an open source, non-profit project.\nData sourced from SIPRI, CDP, KnowTheChain, Oxfam, Ethical Consumer.",
     footer_cta: "Contribute on GitHub · Report an error · Add a brand",
+    sources_banner_title: "How do we score brands?",
+    sources_banner_desc: "Every score is backed by verified sources, weighted by publisher authority. Amnesty International counts more than a blog. Everything is public.",
+    sources_banner_cta: "View all sources & methodology →",
     loading: "Loading...",
     hint: "Add the brands you use with + to discover your personal ethical footprint.",
     hint_dismiss: "Got it",
@@ -50,6 +53,9 @@ const UI = {
     parent: "Casa madre",
     footer: "EthicPrint è un progetto open source e no-profit.\nI dati sono raccolti da SIPRI, CDP, KnowTheChain, Oxfam, Ethical Consumer.",
     footer_cta: "Contribuisci su GitHub · Segnala un errore · Aggiungi un brand",
+    sources_banner_title: "Come calcoliamo i punteggi?",
+    sources_banner_desc: "Ogni punteggio è supportato da fonti verificate, pesate per autorevolezza. Amnesty International vale più di un blog. Tutto è pubblico.",
+    sources_banner_cta: "Vedi tutte le fonti e la metodologia →",
     loading: "Caricamento...",
     hint: "Aggiungi i brand che usi con + per scoprire la tua impronta etica personale.",
     hint_dismiss: "Capito",
@@ -580,7 +586,40 @@ export default function App() {
             ))}
           </div>
 
-          <div style={{ marginTop: 64, textAlign: "center", borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: 32 }}>
+          <div style={{ marginTop: 64, textAlign: "center", borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: 40 }}>
+
+            {/* Sources & Methodology banner */}
+            <a href="/sources.html" style={{ textDecoration: "none" }}>
+              <div style={{
+                background: "linear-gradient(135deg, rgba(99,202,183,0.06) 0%, rgba(99,202,183,0.02) 100%)",
+                border: "1px solid rgba(99,202,183,0.15)",
+                borderRadius: 14,
+                padding: "24px 28px",
+                marginBottom: 32,
+                textAlign: "left",
+                cursor: "pointer",
+                transition: "border-color .2s",
+              }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(99,202,183,0.35)"}
+              onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(99,202,183,0.15)"}
+              >
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#e8e8f0", marginBottom: 6 }}>
+                      🔍 {t.sources_banner_title}
+                    </div>
+                    <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", lineHeight: 1.6, maxWidth: 460 }}>
+                      {t.sources_banner_desc}
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 11, color: "#63CAB7", whiteSpace: "nowrap", fontFamily: "monospace", marginTop: 2, flexShrink: 0 }}>
+                    {t.sources_banner_cta}
+                  </div>
+                </div>
+              </div>
+            </a>
+
+            {/* Footer */}
             <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", lineHeight: 1.8 }}>
               {t.footer.split("\n").map((line, i) => <span key={i}>{line}{i === 0 && <br />}</span>)}<br />
               <span style={{ color: "rgba(99,202,183,0.5)" }}>{t.footer_cta}</span>
