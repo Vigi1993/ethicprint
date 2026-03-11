@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sources & Methodology — EthicPrint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #08080f;
+      --surface: #0f0f1a;
+      --border: rgba(255,255,255,0.06);
+      --text: #e8e8f0;
+      --muted: rgba(255,255,255,0.35);
+      --accent: #63CAB7;
+      --accent-dim: rgba(99,202,183,0.12);
+      --gold: #f0c060;
+      --gold-dim: rgba(240,192,96,0.1);
+      --silver: #a0b4c8;
+      --silver-dim: rgba(160,180,200,0.08);
+      --bronze: #c08060;
+      --bronze-dim: rgba(192,128,96,0.07);
+      --t1: #63CAB7;
+      --t2: #a0b4c8;
+      --t3: rgba(255,255,255,0.3);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── BACK LINK ── */
+    .back {
+      position: fixed;
+      top: 20px; left: 24px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 1px;
+      z-index: 100;
+      transition: color .2s;
+    }
+    .back:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 100px 24px 64px;
+    }
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeUp .6s .1s forwards;
+    }
+    .hero-title {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp .6s .2s forwards;
+    }
+    .hero-title span { color: var(--accent); }
+    .hero-desc {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.75;
+      opacity: 0;
+      animation: fadeUp .6s .3s forwards;
+    }
+
+    /* ── TRUST BAR ── */
+    .trust-bar {
+      max-width: 760px;
+      margin: 0 auto 72px;
+      padding: 0 24px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp .6s .4s forwards;
+    }
+    .trust-pill {
+      background: var(--accent-dim);
+      border: 1px solid rgba(99,202,183,0.2);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 12px;
+      color: var(--accent);
+      font-family: 'DM Mono', monospace;
+      letter-spacing: .5px;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .method {
+      max-width: 760px;
+      margin: 0 auto 80px;
+      padding: 0 24px;
+      opacity: 0;
+      animation: fadeUp .6s .5s forwards;
+    }
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .tier-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 600px) { .tier-cards { grid-template-columns: 1fr; } }
+    .tier-card {
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .tier-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .tier-card.t1 { background: var(--gold-dim); }
+    .tier-card.t1::before { background: var(--gold); }
+    .tier-card.t2 { background: var(--silver-dim); }
+    .tier-card.t2::before { background: var(--silver); }
+    .tier-card.t3 { background: var(--bronze-dim); }
+    .tier-card.t3::before { background: var(--bronze); }
+    .tier-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 28px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .tier-card.t1 .tier-num { color: var(--gold); }
+    .tier-card.t2 .tier-num { color: var(--silver); }
+    .tier-card.t3 .tier-num { color: var(--bronze); }
+    .tier-name {
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .tier-desc {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .tier-weight {
+      margin-top: 12px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tier-card.t1 .tier-weight { color: var(--gold); }
+    .tier-card.t2 .tier-weight { color: var(--silver); }
+    .tier-card.t3 .tier-weight { color: var(--bronze); }
+    .weight-dots { display: flex; gap: 3px; }
+    .weight-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .tier-card.t1 .weight-dot { background: var(--gold); }
+    .tier-card.t2 .weight-dot { background: var(--silver); }
+    .tier-card.t2 .weight-dot.empty { background: transparent; border: 1px solid var(--silver); }
+    .tier-card.t3 .weight-dot.empty { background: transparent; border: 1px solid var(--bronze); }
+    .tier-card.t3 .weight-dot.active { background: var(--bronze); }
+
+    /* confidence legend */
+    .conf-legend {
+      margin-top: 28px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+    }
+    .conf-legend-title {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    .conf-rows { display: flex; flex-direction: column; gap: 10px; }
+    .conf-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+    }
+    .conf-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .conf-dot.high { background: #63CAB7; }
+    .conf-dot.medium { background: #f0c060; }
+    .conf-dot.low { background: #c08060; }
+    .conf-dot.none { background: rgba(255,255,255,0.15); }
+    .conf-label { color: var(--text); font-weight: 500; min-width: 80px; }
+    .conf-desc { color: var(--muted); }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      max-width: 760px;
+      margin: 0 auto 56px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp .6s .6s forwards;
+    }
+    .stat {
+      background: var(--surface);
+      padding: 20px;
+      text-align: center;
+    }
+    .stat-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-label { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+    /* ── SOURCE LIST ── */
+    .sources-section {
+      max-width: 760px;
+      margin: 0 auto 56px;
+      padding: 0 24px;
+      opacity: 0;
+      animation: fadeUp .6s .7s forwards;
+    }
+    .tier-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .tier-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      padding: 4px 10px;
+      border-radius: 100px;
+      border: 1px solid;
+    }
+    .tier-badge.t1 { color: var(--gold); border-color: rgba(240,192,96,0.3); background: var(--gold-dim); }
+    .tier-badge.t2 { color: var(--silver); border-color: rgba(160,180,200,0.25); background: var(--silver-dim); }
+    .tier-badge.t3 { color: var(--bronze); border-color: rgba(192,128,96,0.25); background: var(--bronze-dim); }
+    .tier-header-title { font-size: 14px; font-weight: 500; }
+    .tier-count { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-left: auto; }
+    .tier-chevron { color: var(--muted); font-size: 12px; transition: transform .25s; }
+    .tier-chevron.open { transform: rotate(180deg); }
+
+    .source-list { display: flex; flex-direction: column; gap: 2px; }
+    .source-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      background: var(--surface);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      transition: border-color .2s, background .2s;
+      text-decoration: none;
+    }
+    .source-item:hover {
+      border-color: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.02);
+    }
+    .source-main { min-width: 0; }
+    .source-title {
+      font-size: 13px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 3px;
+      font-weight: 400;
+    }
+    .source-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .source-publisher {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      color: var(--accent);
+    }
+    .source-brand {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .source-cat {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 100px;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: .5px;
+    }
+    .cat-armi    { background: rgba(239,68,68,.1);   color: #ef4444; }
+    .cat-ambiente { background: rgba(34,197,94,.1);  color: #22c55e; }
+    .cat-diritti  { background: rgba(251,191,36,.1); color: #fbbf24; }
+    .cat-fisco    { background: rgba(99,202,183,.1); color: #63CAB7; }
+    .source-link {
+      font-size: 16px;
+      color: var(--muted);
+      flex-shrink: 0;
+      transition: color .2s;
+    }
+    .source-item:hover .source-link { color: var(--accent); }
+
+    /* collapsible */
+    .tier-body { overflow: hidden; transition: max-height .35s ease; }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .page-footer a {
+      font-size: 11px;
+      color: var(--muted);
+      text-decoration: none;
+      font-family: 'DM Mono', monospace;
+      transition: color .2s;
+    }
+    .page-footer a:hover { color: var(--accent); }
+
+    /* ── LOADING ── */
+    .loading {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+    .loading::after {
+      content: '';
+      animation: dots 1.2s infinite;
+    }
+    @keyframes dots {
+      0%,20% { content: '.'; }
+      40% { content: '..'; }
+      60%,100% { content: '...'; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── SEARCH ── */
+    .search-wrap {
+      max-width: 760px;
+      margin: 0 auto 32px;
+      padding: 0 24px;
+      opacity: 0;
+      animation: fadeUp .6s .65s forwards;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 16px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .search-input:focus { border-color: rgba(99,202,183,0.3); }
+    .search-input::placeholder { color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<a href="/" class="back">← EthicPrint</a>
+
+<div class="hero">
+  <div class="hero-eyebrow">Transparency Report</div>
+  <h1 class="hero-title">Sources &<br><span>Methodology</span></h1>
+  <p class="hero-desc">
+    Every score on EthicPrint is backed by verifiable sources.
+    Not all sources carry the same weight — an Amnesty International report
+    means more than a blog post. Here's exactly how we measure it.
+  </p>
+</div>
+
+<div class="trust-bar">
+  <span class="trust-pill">Open Source</span>
+  <span class="trust-pill">No editorial bias</span>
+  <span class="trust-pill">Human-reviewed</span>
+  <span class="trust-pill">Never auto-updated</span>
+</div>
+
+<div class="method">
+  <div class="section-label">How we weight sources</div>
+  <div class="tier-cards">
+    <div class="tier-card t1">
+      <div class="tier-num">T1</div>
+      <div class="tier-name">Primary Sources</div>
+      <div class="tier-desc">International NGOs, investigative media, and recognized research institutes with established editorial standards.</div>
+      <div class="tier-weight">
+        <div class="weight-dots">
+          <div class="weight-dot"></div>
+          <div class="weight-dot"></div>
+          <div class="weight-dot"></div>
+        </div>
+        weight ×3
+      </div>
+    </div>
+    <div class="tier-card t2">
+      <div class="tier-num">T2</div>
+      <div class="tier-name">Verified Sources</div>
+      <div class="tier-desc">National media outlets, official government data, institutional reports, and certified publications.</div>
+      <div class="tier-weight">
+        <div class="weight-dots">
+          <div class="weight-dot"></div>
+          <div class="weight-dot"></div>
+          <div class="weight-dot empty"></div>
+        </div>
+        weight ×2
+      </div>
+    </div>
+    <div class="tier-card t3">
+      <div class="tier-num">T3</div>
+      <div class="tier-name">Supporting Sources</div>
+      <div class="tier-desc">Blogs, secondary sources, and unverified publications. Valid as supporting evidence only.</div>
+      <div class="tier-weight">
+        <div class="weight-dots">
+          <div class="weight-dot active"></div>
+          <div class="weight-dot empty"></div>
+          <div class="weight-dot empty"></div>
+        </div>
+        weight ×1
+      </div>
+    </div>
+  </div>
+
+  <div class="conf-legend">
+    <div class="conf-legend-title">Confidence levels</div>
+    <div class="conf-rows">
+      <div class="conf-row">
+        <div class="conf-dot high"></div>
+        <div class="conf-label">High</div>
+        <div class="conf-desc">Weighted score ≥ 6 — e.g. two T1 sources, or one T1 + three T3</div>
+      </div>
+      <div class="conf-row">
+        <div class="conf-dot medium"></div>
+        <div class="conf-label">Medium</div>
+        <div class="conf-desc">Weighted score ≥ 3 — a single T1 source already reaches this level</div>
+      </div>
+      <div class="conf-row">
+        <div class="conf-dot low"></div>
+        <div class="conf-label">Low</div>
+        <div class="conf-desc">Weighted score ≥ 1 — limited evidence, treat with caution</div>
+      </div>
+      <div class="conf-row">
+        <div class="conf-dot none"></div>
+        <div class="conf-label">None</div>
+        <div class="conf-desc">No verified sources yet for this category</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="stats-bar" id="stats-bar">
+  <div class="stat"><div class="stat-val" id="s-total" style="color:var(--accent)">–</div><div class="stat-label">Total sources</div></div>
+  <div class="stat"><div class="stat-val" id="s-t1" style="color:var(--gold)">–</div><div class="stat-label">Tier 1</div></div>
+  <div class="stat"><div class="stat-val" id="s-t2" style="color:var(--silver)">–</div><div class="stat-label">Tier 2</div></div>
+  <div class="stat"><div class="stat-val" id="s-t3" style="color:var(--bronze)">–</div><div class="stat-label">Tier 3</div></div>
+</div>
+
+<div class="search-wrap">
+  <input class="search-input" type="text" id="search" placeholder="Filter by brand, publisher or category..." oninput="filterSources()" />
+</div>
+
+<div id="sources-container">
+  <div class="loading">Loading sources</div>
+</div>
+
+<footer class="page-footer">
+  <div>
+    <a href="/">← Back to EthicPrint</a>
+  </div>
+  <div style="display:flex;gap:20px">
+    <a href="https://github.com/Vigi1993/ethicprint" target="_blank">GitHub</a>
+    <a href="mailto:info@ethicprint.org">Suggest a source</a>
+  </div>
+</footer>
+
+<script>
+const API = "https://web-production-14708.up.railway.app";
+const CAT_ICONS = { armi: "⚔️", ambiente: "🌿", diritti: "🤝", fisco: "💰" };
+const CAT_LABELS = { armi: "Arms", ambiente: "Environment", diritti: "Human Rights", fisco: "Tax" };
+let allData = null;
+
+const TIER_CONFIG = {
+  1: { label: "TIER 1 · PRIMARY SOURCES", cls: "t1", bodyId: "body-t1" },
+  2: { label: "TIER 2 · VERIFIED SOURCES", cls: "t2", bodyId: "body-t2" },
+  3: { label: "TIER 3 · SUPPORTING SOURCES", cls: "t3", bodyId: "body-t3" },
+};
+
+function renderSource(s) {
+  const cat = s.category_key;
+  const brand = s.brands?.name || "";
+  const title = s.title || s.url;
+  return `<a class="source-item" href="${s.url}" target="_blank" rel="noopener"
+    data-search="${(brand + ' ' + (s.publisher||'') + ' ' + title + ' ' + cat).toLowerCase()}">
+    <div class="source-main">
+      <div class="source-title">${title}</div>
+      <div class="source-meta">
+        ${s.publisher ? `<span class="source-publisher">${s.publisher}</span>` : ""}
+        <span class="source-brand">${brand}</span>
+        <span class="source-cat cat-${cat}">${CAT_ICONS[cat] || ""} ${CAT_LABELS[cat] || cat}</span>
+      </div>
+    </div>
+    <span class="source-link">↗</span>
+  </a>`;
+}
+
+function renderTierSection(tier, sources, open = true) {
+  const cfg = TIER_CONFIG[tier];
+  const html = sources.map(renderSource).join("");
+  return `<div class="sources-section" id="section-t${tier}">
+    <div class="tier-header" onclick="toggleTier(${tier})">
+      <span class="tier-badge ${cfg.cls}">${cfg.label}</span>
+      <span class="tier-count" id="count-t${tier}">${sources.length} sources</span>
+      <span class="tier-chevron ${open ? 'open' : ''}" id="chevron-t${tier}">▼</span>
+    </div>
+    <div class="tier-body" id="${cfg.bodyId}" style="max-height:${open ? '99999px' : '0'}">
+      <div class="source-list" id="list-t${tier}">${html}</div>
+    </div>
+  </div>`;
+}
+
+function toggleTier(tier) {
+  const body = document.getElementById(TIER_CONFIG[tier].bodyId);
+  const chevron = document.getElementById(`chevron-t${tier}`);
+  const isOpen = chevron.classList.contains("open");
+  body.style.maxHeight = isOpen ? "0" : "99999px";
+  chevron.classList.toggle("open", !isOpen);
+}
+
+function filterSources() {
+  const q = document.getElementById("search").value.toLowerCase().trim();
+  let visible = { 1: 0, 2: 0, 3: 0 };
+  document.querySelectorAll(".source-item").forEach(el => {
+    const match = !q || el.dataset.search.includes(q);
+    el.style.display = match ? "" : "none";
+    if (match) {
+      const tier = el.closest("[id^='section-t']")?.id.replace("section-t","");
+      if (tier) visible[tier]++;
+    }
+  });
+  [1,2,3].forEach(t => {
+    const el = document.getElementById(`count-t${t}`);
+    if (el) el.textContent = `${visible[t]} sources`;
+    // Auto-open tier with results when searching
+    if (q && visible[t] > 0) {
+      const body = document.getElementById(TIER_CONFIG[t].bodyId);
+      const chevron = document.getElementById(`chevron-t${t}`);
+      if (body) body.style.maxHeight = "99999px";
+      if (chevron) chevron.classList.add("open");
+    }
+  });
+}
+
+async function load() {
+  try {
+    const res = await fetch(`${API}/sources/public`);
+    allData = await res.json();
+
+    document.getElementById("s-total").textContent = allData.total;
+    document.getElementById("s-t1").textContent = allData.tier1.length;
+    document.getElementById("s-t2").textContent = allData.tier2.length;
+    document.getElementById("s-t3").textContent = allData.tier3.length;
+
+    const container = document.getElementById("sources-container");
+    container.innerHTML =
+      renderTierSection(1, allData.tier1, true) +
+      renderTierSection(2, allData.tier2, true) +
+      renderTierSection(3, allData.tier3, false);
+  } catch(e) {
+    document.getElementById("sources-container").innerHTML =
+      `<div class="loading" style="color:#ef4444">Failed to load sources. Try refreshing.</div>`;
+  }
+}
+
+load();
+</script>
+</body>
+</html>
