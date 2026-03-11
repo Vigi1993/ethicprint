@@ -114,6 +114,30 @@
 </head>
 <body>
 
+<div id="gate" style="position:fixed;inset:0;background:#0a0a0f;display:flex;align-items:center;justify-content:center;z-index:9999">
+  <div style="background:#111118;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:40px;width:320px;text-align:center">
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:#63cab7;letter-spacing:3px;text-transform:uppercase;margin-bottom:24px">EthicPrint Admin</div>
+    <input id="pwd-input" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')checkPwd()"
+      style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px 16px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;box-sizing:border-box;margin-bottom:12px">
+    <button onclick="checkPwd()" style="width:100%;background:rgba(99,202,183,0.15);border:1px solid rgba(99,202,183,0.3);color:#63cab7;padding:12px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500">Enter</button>
+    <div id="pwd-error" style="color:#f87171;font-size:12px;margin-top:10px;display:none">Wrong password</div>
+  </div>
+</div>
+
+<script>
+function checkPwd() {
+  if (document.getElementById('pwd-input').value === 'Vigiethic93!') {
+    document.getElementById('gate').style.display = 'none';
+    loadAll();
+  } else {
+    document.getElementById('pwd-error').style.display = 'block';
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-input').focus();
+  }
+}
+document.addEventListener('DOMContentLoaded', () => document.getElementById('pwd-input').focus());
+</script>
+
 <header>
   <h1>EthicPrint Admin</h1>
   <div class="tabs">
@@ -390,7 +414,7 @@ function showToast(msg, error = false) {
   setTimeout(() => t.classList.add("hide"), 3000);
 }
 
-loadAll();
+// loadAll() called after password check
 </script>
 </body>
 </html>
