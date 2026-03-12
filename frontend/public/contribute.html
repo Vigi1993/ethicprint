@@ -9,8 +9,8 @@
   <style>
     :root {
       --bg: #08080f; --surface: #0f0f1a; --border: rgba(255,255,255,0.06);
-      --text: #e8e8f0; --muted: rgba(255,255,255,0.35); --accent: #63CAB7;
-      --accent-dim: rgba(99,202,183,0.1); --green: #4ade80; --red: #ef4444;
+      --text: #e8e8f0; --muted: rgba(255,255,255,0.35); --accent: #5ecf8a;
+      --accent-dim: rgba(94,207,138,0.1); --green: #4ade80; --red: #ef4444;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; }
@@ -20,7 +20,7 @@
     .back:hover { color: var(--accent); }
     .lang-toggle { display: flex; gap: 2px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
     .lang-btn { font-family: 'DM Mono', monospace; font-size: 11px; padding: 4px 10px; border-radius: 5px; border: none; background: transparent; color: var(--muted); cursor: pointer; transition: all .2s; letter-spacing: 1px; }
-    .lang-btn.active { background: rgba(99,202,183,0.15); color: var(--accent); }
+    .lang-btn.active { background: rgba(94,207,138,0.15); color: var(--accent); }
 
     .wrap { max-width: 620px; margin: 0 auto; padding: 80px 24px 80px; }
 
@@ -33,7 +33,7 @@
     /* TAB SWITCHER */
     .tabs { display: flex; gap: 6px; margin-bottom: 32px; }
     .tab { flex: 1; padding: 10px 8px; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; transition: all .2s; text-align: center; }
-    .tab.active { background: var(--accent-dim); border-color: rgba(99,202,183,0.25); color: var(--accent); }
+    .tab.active { background: var(--accent-dim); border-color: rgba(94,207,138,0.25); color: var(--accent); }
     .tab:hover:not(.active) { border-color: rgba(255,255,255,0.1); color: var(--text); }
 
     /* FORM */
@@ -48,7 +48,7 @@
       font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 300;
       outline: none; transition: border-color .2s; resize: none;
     }
-    .field input:focus, .field select:focus, .field textarea:focus { border-color: rgba(99,202,183,0.35); }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: rgba(94,207,138,0.35); }
     .field input::placeholder, .field textarea::placeholder { color: rgba(255,255,255,0.15); }
     .field select option { background: #0f0f1a; }
     .field .hint { font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 6px; line-height: 1.6; }
@@ -58,15 +58,15 @@
 
     .submit-btn {
       width: 100%; padding: 14px; border-radius: 12px;
-      background: var(--accent-dim); border: 1px solid rgba(99,202,183,0.3);
+      background: var(--accent-dim); border: 1px solid rgba(94,207,138,0.3);
       color: var(--accent); font-family: 'DM Sans', sans-serif; font-size: 13px;
       font-weight: 600; cursor: pointer; transition: all .2s; margin-top: 8px;
       letter-spacing: 0.5px;
     }
-    .submit-btn:hover { background: rgba(99,202,183,0.2); }
+    .submit-btn:hover { background: rgba(94,207,138,0.2); }
     .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    .note-box { background: var(--accent-dim); border: 1px solid rgba(99,202,183,0.12); border-radius: 12px; padding: 16px 20px; font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.8; margin-bottom: 28px; }
+    .note-box { background: var(--accent-dim); border: 1px solid rgba(94,207,138,0.12); border-radius: 12px; padding: 16px 20px; font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.8; margin-bottom: 28px; }
 
     .success-msg { display: none; background: rgba(74,222,128,0.07); border: 1px solid rgba(74,222,128,0.2); border-radius: 12px; padding: 20px 24px; text-align: center; }
     .success-msg.show { display: block; }
