@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, createContext, useContext } from "react";
+import logoSrc from "./assets/logo.png";
 
 const API = "https://web-production-14708.up.railway.app";
 
@@ -76,8 +77,8 @@ function getScore(brand) {
 
 function getColor(score, max = 100) {
   const pct = (score / max) * 100;
-  if (pct >= 90) return "#4ade80";
-  if (pct >= 75) return "#86efac";
+  if (pct >= 90) return "#6dbb7a";
+  if (pct >= 75) return "#a8c5a0";
   if (pct >= 55) return "#facc15";
   if (pct >= 35) return "#fb923c";
   return "#ef4444";
@@ -106,7 +107,7 @@ function getCatLabel(cat, lang) {
 function ScoreBar({ value, color, max = 25 }) {
   const pct = Math.min(100, Math.round((value / max) * 100));
   return (
-    <div style={{ background: "#1a1a2e", borderRadius: 99, height: 6, width: "100%", overflow: "hidden" }}>
+    <div style={{ background: "#0d1f16", borderRadius: 99, height: 6, width: "100%", overflow: "hidden" }}>
       <div style={{ width: `${pct}%`, height: "100%", background: color, borderRadius: 99, transition: "width 1s cubic-bezier(.4,0,.2,1)" }} />
     </div>
   );
@@ -117,9 +118,9 @@ function LangToggle({ lang, setLang }) {
     <div style={{ position: "fixed", top: 20, right: 20, zIndex: 200, display: "flex", gap: 4, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 99, padding: "4px" }}>
       {["en", "it"].map(l => (
         <button key={l} onClick={() => setLang(l)} style={{
-          background: lang === l ? "rgba(99,202,183,0.2)" : "transparent",
-          border: lang === l ? "1px solid rgba(99,202,183,0.4)" : "1px solid transparent",
-          color: lang === l ? "#63cab7" : "rgba(255,255,255,0.35)",
+          background: lang === l ? "rgba(122,171,138,0.2)" : "transparent",
+          border: lang === l ? "1px solid rgba(122,171,138,0.4)" : "1px solid transparent",
+          color: lang === l ? "#7aab8a" : "rgba(255,255,255,0.35)",
           padding: "4px 12px", borderRadius: 99, cursor: "pointer",
           fontSize: 12, fontWeight: 600, fontFamily: "'DM Sans', sans-serif",
           transition: "all 0.15s"
@@ -144,8 +145,8 @@ function RadarChart({ scores, lang }) {
     <svg width={size} height={size} style={{ overflow: "visible" }}>
       {[0.25, 0.5, 0.75, 1].map(s => <polygon key={s} points={polyStr(gridPoints(s))} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />)}
       {angles.map((a, i) => <line key={i} x1={cx} y1={cy} x2={cx + r * Math.cos(a)} y2={cy + r * Math.sin(a)} stroke="rgba(255,255,255,0.07)" strokeWidth="1" />)}
-      <polygon points={polyStr(points)} fill="rgba(99,202,183,0.18)" stroke="#63cab7" strokeWidth="1.5" />
-      {points.map((p, i) => <circle key={i} cx={p[0]} cy={p[1]} r={3} fill="#63cab7" />)}
+      <polygon points={polyStr(points)} fill="rgba(122,171,138,0.18)" stroke="#7aab8a" strokeWidth="1.5" />
+      {points.map((p, i) => <circle key={i} cx={p[0]} cy={p[1]} r={3} fill="#7aab8a" />)}
       {angles.map((a, i) => { const lx = cx + (r + 16) * Math.cos(a); const ly = cy + (r + 16) * Math.sin(a); return <text key={i} x={lx} y={ly + 4} textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="9" fontFamily="'DM Sans', sans-serif">{labels[i]}</text>; })}
     </svg>
   );
@@ -170,7 +171,7 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
 
   if (!fullBrand) return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} onClick={onClose}>
-      <div style={{ background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 48, display: "flex", alignItems: "center", justifyContent: "center" }} onClick={e => e.stopPropagation()}>
+      <div style={{ background: "#0f2018", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 48, display: "flex", alignItems: "center", justifyContent: "center" }} onClick={e => e.stopPropagation()}>
         <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, fontFamily: "'DM Sans', sans-serif", letterSpacing: 2 }}>{t.loading}</div>
       </div>
     </div>
@@ -180,7 +181,7 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} onClick={onClose}>
-      <div style={{ background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 32, maxWidth: 520, width: "100%", boxShadow: "0 40px 80px rgba(0,0,0,0.6)", maxHeight: "90vh", overflowY: "auto", position: "relative" }} onClick={e => e.stopPropagation()}>
+      <div style={{ background: "#0f2018", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 32, maxWidth: 520, width: "100%", boxShadow: "0 40px 80px rgba(0,0,0,0.6)", maxHeight: "90vh", overflowY: "auto", position: "relative" }} onClick={e => e.stopPropagation()}>
 
         {/* X chiudi in alto a destra */}
         <button onClick={onClose} style={{ position: "absolute", top: 16, right: 16, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.4)", width: 32, height: 32, borderRadius: 99, cursor: "pointer", fontSize: 18, lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}
@@ -274,9 +275,9 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                   <div style={{ display: "flex", flexDirection: "column", gap: 4, paddingLeft: 16 }}>
                     {catSources.map((src, i) => (
                       <a key={i} href={src.url} target="_blank" rel="noopener noreferrer"
-                        style={{ fontSize: 11, color: "rgba(99,202,183,0.6)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4, borderBottom: "1px solid rgba(99,202,183,0.15)", paddingBottom: 1, width: "fit-content", transition: "color 0.15s" }}
-                        onMouseOver={e => e.currentTarget.style.color = "#63cab7"}
-                        onMouseOut={e => e.currentTarget.style.color = "rgba(99,202,183,0.6)"}
+                        style={{ fontSize: 11, color: "rgba(122,171,138,0.6)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4, borderBottom: "1px solid rgba(122,171,138,0.15)", paddingBottom: 1, width: "fit-content", transition: "color 0.15s" }}
+                        onMouseOver={e => e.currentTarget.style.color = "#7aab8a"}
+                        onMouseOut={e => e.currentTarget.style.color = "rgba(122,171,138,0.6)"}
                       >
                         ↗ {src.title || src.publisher || "Source"}
                         {src.publisher && src.title && <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 10 }}>— {src.publisher}</span>}
@@ -289,13 +290,13 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
           })}
         </div>
 
-        <div style={{ marginTop: 20, background: b.alternatives && b.alternatives.length > 0 ? "rgba(99,202,183,0.06)" : "rgba(255,255,255,0.02)", border: "1px solid " + (b.alternatives && b.alternatives.length > 0 ? "rgba(99,202,183,0.15)" : "rgba(255,255,255,0.06)"), borderRadius: 12, padding: 16 }}>
-          <div style={{ fontSize: 11, color: "#63cab7", letterSpacing: 1, textTransform: "uppercase", marginBottom: 10 }}>{t.alternatives_label}</div>
+        <div style={{ marginTop: 20, background: b.alternatives && b.alternatives.length > 0 ? "rgba(122,171,138,0.06)" : "rgba(255,255,255,0.02)", border: "1px solid " + (b.alternatives && b.alternatives.length > 0 ? "rgba(122,171,138,0.15)" : "rgba(255,255,255,0.06)"), borderRadius: 12, padding: 16 }}>
+          <div style={{ fontSize: 11, color: "#7aab8a", letterSpacing: 1, textTransform: "uppercase", marginBottom: 10 }}>{t.alternatives_label}</div>
           {b.alternatives && b.alternatives.length > 0 ? (
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {b.alternatives.map(alt => (
-                <div key={alt.id} onClick={() => onSelectAlt(alt)} style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(99,202,183,0.15)", borderRadius: 10, padding: "10px 14px", cursor: "pointer", transition: "background 0.15s" }}
-                  onMouseOver={e => e.currentTarget.style.background = "rgba(99,202,183,0.1)"}
+                <div key={alt.id} onClick={() => onSelectAlt(alt)} style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(122,171,138,0.15)", borderRadius: 10, padding: "10px 14px", cursor: "pointer", transition: "background 0.15s" }}
+                  onMouseOver={e => e.currentTarget.style.background = "rgba(122,171,138,0.1)"}
                   onMouseOut={e => e.currentTarget.style.background = "rgba(255,255,255,0.04)"}
                 >
                   <div style={{ width: 28, height: 28, borderRadius: 7, background: getColor(alt.score) + "22", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, flexShrink: 0 }}>{alt.logo}</div>
@@ -378,7 +379,7 @@ function MyListPanel({ myBrands, onRemove, onClear, onSelect, lang }) {
                   <span style={{ fontSize: 11, background: "rgba(239,68,68,0.15)", color: "#f87171", padding: "2px 8px", borderRadius: 99 }}>{t.below_threshold}</span>
                 </div>
                 <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginBottom: 10 }}>{t.replace_with}</div>
-                <button onClick={() => onSelect(b)} style={{ background: "rgba(99,202,183,0.08)", border: "1px solid rgba(99,202,183,0.2)", borderRadius: 8, padding: "7px 14px", color: "#63cab7", cursor: "pointer", fontSize: 12, fontFamily: "'DM Sans', sans-serif" }}>
+                <button onClick={() => onSelect(b)} style={{ background: "rgba(122,171,138,0.08)", border: "1px solid rgba(122,171,138,0.2)", borderRadius: 8, padding: "7px 14px", color: "#7aab8a", cursor: "pointer", fontSize: 12, fontFamily: "'DM Sans', sans-serif" }}>
                   {lang === "it" ? "Vedi alternative →" : "See alternatives →"}
                 </button>
               </div>
@@ -406,7 +407,7 @@ function BrandRow({ brand, idx, myBrands, onAdd, onSelect, lang }) {
         {categories.map(cat => <div key={cat.key} title={getCatLabel(cat, lang)} style={{ width: 5, height: 5, borderRadius: 99, background: getColor(brand.scores[cat.key], 25) }} />)}
       </div>
       <div style={{ fontSize: 17, fontWeight: 700, color: getColor(score), width: 32, textAlign: "right", flexShrink: 0 }} onClick={() => onSelect(brand)}>{score}</div>
-      <button className="add-btn" onClick={() => onAdd(brand)} style={{ background: inList ? "rgba(99,202,183,0.1)" : "transparent", border: "1px solid rgba(255,255,255,0.08)", color: inList ? "#63cab7" : "rgba(255,255,255,0.3)", padding: "4px 10px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s", flexShrink: 0 }}>{inList ? "✓" : "+"}</button>
+      <button className="add-btn" onClick={() => onAdd(brand)} style={{ background: inList ? "rgba(122,171,138,0.1)" : "transparent", border: "1px solid rgba(255,255,255,0.08)", color: inList ? "#7aab8a" : "rgba(255,255,255,0.3)", padding: "4px 10px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s", flexShrink: 0 }}>{inList ? "✓" : "+"}</button>
     </div>
   );
 }
@@ -477,7 +478,7 @@ function SectorSection({ sector, sectorIcon, brands, myBrands, onAdd, onSelect, 
               </div>
             </div>
             <div style={{ fontSize: 22, fontWeight: 700, color: getColor(bestScore), flexShrink: 0 }} onClick={() => onSelect(best)}>{bestScore}</div>
-            <button className="add-btn" onClick={() => onAdd(best)} style={{ background: bestInList ? "rgba(99,202,183,0.1)" : "transparent", border: "1px solid rgba(255,255,255,0.08)", color: bestInList ? "#63cab7" : "rgba(255,255,255,0.3)", padding: "4px 10px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", flexShrink: 0 }}>{bestInList ? "✓" : "+"}</button>
+            <button className="add-btn" onClick={() => onAdd(best)} style={{ background: bestInList ? "rgba(122,171,138,0.1)" : "transparent", border: "1px solid rgba(255,255,255,0.08)", color: bestInList ? "#7aab8a" : "rgba(255,255,255,0.3)", padding: "4px 10px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", flexShrink: 0 }}>{bestInList ? "✓" : "+"}</button>
           </div>
 
           {/* Altri brand a scomparsa */}
@@ -528,7 +529,7 @@ export default function App() {
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap";
+    link.href = "https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap";
     document.head.appendChild(link);
   }, []);
 
@@ -553,7 +554,7 @@ export default function App() {
     .sort((a, b) => b.avgScore - a.avgScore);
 
   if (loading) return (
-    <div style={{ minHeight: "100vh", background: "#080814", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <div style={{ minHeight: "100vh", background: "#0a1a14", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div style={{ color: "rgba(255,255,255,0.3)", fontFamily: "'DM Sans', sans-serif", fontSize: 14, letterSpacing: 2 }}>{t.loading}</div>
     </div>
   );
@@ -561,23 +562,34 @@ export default function App() {
   return (
     <CategoriesContext.Provider value={categories}>
       <LangToggle lang={lang} setLang={setLang} />
-      <div style={{ minHeight: "100vh", background: "#080814", fontFamily: "'DM Sans', sans-serif", color: "#fff", backgroundImage: "radial-gradient(ellipse at 20% 20%, rgba(99,202,183,0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 80%, rgba(239,68,68,0.04) 0%, transparent 60%)" }}>
+      <div style={{ minHeight: "100vh", background: "#0a1a14", fontFamily: "'DM Sans', sans-serif", color: "#e8f0ec", backgroundImage: "radial-gradient(ellipse at 15% 10%, rgba(40,80,55,0.6) 0%, transparent 50%), radial-gradient(ellipse at 85% 90%, rgba(15,40,60,0.5) 0%, transparent 50%)" }}>
         <style>{`
           * { box-sizing: border-box; margin: 0; padding: 0; }
-          ::selection { background: rgba(99,202,183,0.3); }
+          ::selection { background: rgba(122,171,138,0.3); }
           input:focus { outline: none; }
           ::-webkit-scrollbar { width: 4px; }
           ::-webkit-scrollbar-track { background: transparent; }
           ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
           .brand-row:hover { background: rgba(255,255,255,0.05) !important; }
-          .add-btn:hover { background: rgba(99,202,183,0.2) !important; color: #63cab7 !important; }
+          .add-btn:hover { background: rgba(122,171,138,0.2) !important; color: #63cab7 !important; }
         `}</style>
 
         <div style={{ maxWidth: 720, margin: "0 auto", padding: "48px 20px 80px" }}>
 
           <div style={{ textAlign: "center", marginBottom: 52 }}>
-            <div style={{ fontSize: 11, letterSpacing: 4, color: "#63cab7", textTransform: "uppercase", marginBottom: 16 }}>{t.tagline}</div>
-            <h1 style={{ fontSize: "clamp(36px, 8vw, 64px)", fontFamily: "'Playfair Display', serif", fontWeight: 800, lineHeight: 1.05, marginBottom: 16, background: "linear-gradient(135deg, #fff 40%, rgba(255,255,255,0.4))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>EthicPrint</h1>
+            <div style={{ fontSize: 11, letterSpacing: 4, color: "#7aab8a", textTransform: "uppercase", marginBottom: 16 }}>{t.tagline}</div>
+            <div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}>
+              <img
+                src={logoSrc}
+                alt="EthicPrint"
+                style={{
+                  height: "clamp(48px, 10vw, 80px)",
+                  width: "auto",
+                  filter: "brightness(1.05) drop-shadow(0 0 18px rgba(122,171,138,0.25))",
+                  mixBlendMode: "normal",
+                }}
+              />
+            </div>
             <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 16, maxWidth: 440, margin: "0 auto", lineHeight: 1.6 }}>
               {t.subtitle}<br />
               <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 14 }}>
@@ -587,14 +599,14 @@ export default function App() {
           </div>
 
           <div style={{ position: "relative", marginBottom: 8 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, padding: "14px 18px", boxShadow: query ? "0 0 0 2px rgba(99,202,183,0.15)" : "none" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, padding: "14px 18px", boxShadow: query ? "0 0 0 2px rgba(122,171,138,0.15)" : "none" }}>
               <svg width="16" height="16" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
               <input ref={inputRef} value={query} onChange={e => setQuery(e.target.value)} placeholder={t.search_placeholder} style={{ flex: 1, background: "transparent", border: "none", color: "#fff", fontSize: 16, fontFamily: "'DM Sans', sans-serif" }} />
               {query && <button onClick={() => { setQuery(""); setResults([]); }} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.3)", cursor: "pointer", fontSize: 18 }}>×</button>}
             </div>
 
             {results.length > 0 && (
-              <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, right: 0, background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, overflow: "hidden", zIndex: 50, boxShadow: "0 20px 40px rgba(0,0,0,0.5)" }}>
+              <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, right: 0, background: "#0f2018", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, overflow: "hidden", zIndex: 50, boxShadow: "0 20px 40px rgba(0,0,0,0.5)" }}>
                 {results.map(brand => {
                   const score = getScore(brand); const inList = myBrands.find(b => b.name === brand.name);
                   return (
@@ -608,7 +620,7 @@ export default function App() {
                         <div style={{ fontSize: 18, fontWeight: 700, color: getColor(score) }}>{score}</div>
                         <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)" }}>/ 100</div>
                       </div>
-                      <button className="add-btn" onClick={() => addToList(brand)} style={{ background: inList ? "rgba(99,202,183,0.1)" : "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: inList ? "#63cab7" : "rgba(255,255,255,0.5)", padding: "6px 12px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s", whiteSpace: "nowrap" }}>{inList ? "✓" : "+ List"}</button>
+                      <button className="add-btn" onClick={() => addToList(brand)} style={{ background: inList ? "rgba(122,171,138,0.1)" : "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: inList ? "#7aab8a" : "rgba(255,255,255,0.5)", padding: "6px 12px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s", whiteSpace: "nowrap" }}>{inList ? "✓" : "+ List"}</button>
                     </div>
                   );
                 })}
@@ -617,10 +629,10 @@ export default function App() {
           </div>
 
           {showHint && (
-            <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(99,202,183,0.07)", border: "1px solid rgba(99,202,183,0.2)", borderRadius: 10, padding: "10px 14px", marginBottom: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(122,171,138,0.07)", border: "1px solid rgba(122,171,138,0.2)", borderRadius: 10, padding: "10px 14px", marginBottom: 8 }}>
               <span style={{ fontSize: 16 }}>👆</span>
               <span style={{ flex: 1, fontSize: 13, color: "rgba(255,255,255,0.6)", lineHeight: 1.4 }}>{t.hint}</span>
-              <button onClick={() => setShowHint(false)} style={{ background: "transparent", border: "1px solid rgba(99,202,183,0.3)", color: "#63cab7", padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap" }}>{t.hint_dismiss}</button>
+              <button onClick={() => setShowHint(false)} style={{ background: "transparent", border: "1px solid rgba(122,171,138,0.3)", color: "#7aab8a", padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap" }}>{t.hint_dismiss}</button>
             </div>
           )}
 
@@ -629,9 +641,9 @@ export default function App() {
           </div>
 
           <div style={{ marginBottom: 40, paddingLeft: 4 }}>
-            <a href="/sources.html" style={{ fontSize: 12, color: "rgba(99,202,183,0.6)", textDecoration: "none", transition: "color .2s" }}
-              onMouseEnter={e => e.currentTarget.style.color = "#63CAB7"}
-              onMouseLeave={e => e.currentTarget.style.color = "rgba(99,202,183,0.6)"}
+            <a href="/sources.html" style={{ fontSize: 12, color: "rgba(122,171,138,0.6)", textDecoration: "none", transition: "color .2s" }}
+              onMouseEnter={e => e.currentTarget.style.color = "#7aab8a"}
+              onMouseLeave={e => e.currentTarget.style.color = "rgba(122,171,138,0.6)"}
             >
               {lang === "en" ? "How do we score brands? →" : "Come calcoliamo i punteggi? →"}
             </a>
@@ -650,7 +662,7 @@ export default function App() {
             {/* Footer */}
             <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", lineHeight: 1.8 }}>
               {t.footer.split("\n").map((line, i) => <span key={i}>{line}{i === 0 && <br />}</span>)}<br />
-              <a href="/contribute.html" style={{ color: "rgba(99,202,183,0.5)", textDecoration: "none" }}>
+              <a href="/contribute.html" style={{ color: "rgba(122,171,138,0.5)", textDecoration: "none" }}>
                 {lang === "it" ? "➕ Contribuisci · Segnala un errore · Aggiungi un brand" : "➕ Contribute · Report an error · Add a brand"}
               </a>
             </div>
