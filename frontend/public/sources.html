@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sources &amp; Methodology — EthicPrint</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg: #08080f; --surface: #0f0f1a; --border: rgba(255,255,255,0.06);
@@ -36,9 +36,7 @@
 
     .section { margin-bottom: 56px; opacity: 0; animation: fadeUp .5s .2s forwards; }
     .section-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 20px; }
-    .section-intro { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.8; margin-bottom: 24px; }
 
-    /* TIER SOURCE CARDS */
     .tier-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     @media (max-width: 520px) { .tier-cards { grid-template-columns: 1fr; } }
     .tier-card { border-radius: 12px; padding: 18px 20px; border: 1px solid var(--border); position: relative; overflow: hidden; }
@@ -59,8 +57,6 @@
     .wd.off.s { background: transparent; border: 1px solid var(--silver); }
     .wd.off.b { background: transparent; border: 1px solid var(--bronze); }
 
-    /* COLLAPSIBLE BLOCKS */
-    .pub-section { margin-bottom: 56px; opacity: 0; animation: fadeUp .5s .3s forwards; }
     .tier-block { margin-bottom: 12px; }
     .tier-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; user-select: none; transition: border-color .2s; }
     .tier-header:hover { border-color: rgba(255,255,255,0.1); }
@@ -78,16 +74,13 @@
     .pub-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
     .pub-card { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 9px 12px; border-radius: 6px; text-decoration: none; transition: background .15s; }
     .pub-card:hover { background: rgba(255,255,255,0.03); }
-    .pub-name { font-size: 12px; font-weight: 400; color: var(--text); }
+    .pub-name { font-size: 12px; color: var(--text); }
     .pub-topic { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; }
     .pub-arrow { font-size: 12px; color: rgba(255,255,255,0.15); flex-shrink: 0; transition: color .2s; }
     .pub-card:hover .pub-arrow { color: var(--accent); }
     .tier3-note { padding: 16px; font-size: 12px; color: var(--muted); line-height: 1.7; }
-    .pub-loading { padding: 16px; font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 1px; }
 
-    /* SCORING CRITERIA */
     .scale-box { display: flex; flex-direction: column; gap: 7px; margin-bottom: 28px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; }
-    .scale-eyebrow { font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; font-family: 'DM Mono', monospace; }
     .scale-row { display: flex; align-items: center; gap: 12px; }
     .scale-dots { font-family: 'DM Mono', monospace; font-size: 12px; width: 64px; letter-spacing: 3px; }
     .scale-num { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.2); width: 16px; }
@@ -109,16 +102,7 @@
     .criterion-label { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.5; }
     .criterion-desc { font-size: 11px; color: rgba(255,255,255,0.25); line-height: 1.6; margin-top: 3px; }
 
-    /* FINAL SCORE SCALE */
-    .score-bands { display: flex; flex-direction: column; gap: 8px; }
-    .score-band { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 10px; border: 1px solid; }
-    .band-range { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; width: 60px; flex-shrink: 0; }
-    .band-label { font-size: 13px; font-weight: 500; flex: 1; }
-    .band-label-it { font-size: 11px; margin-top: 1px; opacity: 0.55; }
-    .band-bar { height: 3px; border-radius: 2px; flex-shrink: 0; width: 48px; }
-
-    /* NOTE */
-    .note-section { margin-bottom: 64px; opacity: 0; animation: fadeUp .5s .5s forwards; }
+    .note-section { margin-bottom: 64px; opacity: 0; animation: fadeUp .5s .4s forwards; }
     .note-box { background: var(--accent-dim); border: 1px solid rgba(99,202,183,0.15); border-radius: 12px; padding: 18px 22px; font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.8; }
     .note-box strong { color: var(--accent); font-weight: 500; }
     .note-box a { color: var(--accent); }
@@ -127,6 +111,7 @@
     .page-footer a { font-size: 11px; color: var(--muted); text-decoration: none; font-family: 'DM Mono', monospace; transition: color .2s; }
     .page-footer a:hover { color: var(--accent); }
 
+    .pub-loading { padding: 16px; font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
@@ -142,14 +127,13 @@
 
 <div class="wrap">
 
-  <!-- HERO -->
   <div class="hero">
-    <div class="hero-eyebrow" data-en="Transparency &middot; Methodology" data-it="Trasparenza &middot; Metodologia">Transparency &middot; Methodology</div>
-    <h1 class="hero-title" data-en="Sources &amp;<br><span>Methodology</span>" data-it="Fonti &amp;<br><span>Metodologia</span>">Sources &amp;<br><span>Methodology</span></h1>
+    <div class="hero-eyebrow" data-en="Transparency · Methodology" data-it="Trasparenza · Metodologia">Transparency · Methodology</div>
+    <h1 class="hero-title">Sources &amp;<br><span>Methodology</span></h1>
     <p class="hero-desc"
-      data-en="EthicPrint scores brands using verified, publicly available sources. Not all sources carry the same weight &mdash; here's exactly how we decide which publishers we trust and how much."
-      data-it="EthicPrint valuta i brand usando fonti verificate e pubblicamente disponibili. Non tutte le fonti hanno lo stesso peso &mdash; ecco come decidiamo di quali publisher fidarci e quanto.">
-      EthicPrint scores brands using verified, publicly available sources. Not all sources carry the same weight &mdash; here's exactly how we decide which publishers we trust and how much.
+      data-en="EthicPrint scores brands using verified, publicly available sources. Not all sources carry the same weight — here's exactly how we decide which publishers we trust and how much."
+      data-it="EthicPrint valuta i brand usando fonti verificate e pubblicamente disponibili. Non tutte le fonti hanno lo stesso peso — ecco come decidiamo di quali publisher fidarci e quanto.">
+      EthicPrint scores brands using verified, publicly available sources. Not all sources carry the same weight — here's exactly how we decide which publishers we trust and how much.
     </p>
   </div>
 
@@ -179,154 +163,125 @@
   </div>
 
   <!-- PUBLISHERS -->
-  <div class="pub-section">
+  <div class="section" style="animation-delay:.25s">
     <div class="section-label" data-en="Trusted publishers" data-it="Publisher di riferimento">Trusted publishers</div>
     <div class="tier-block">
       <div class="tier-header" id="hdr-t1" onclick="toggleTier('t1')">
         <span class="tier-badge t1">Tier 1</span>
-        <span class="tier-hcount" id="count-t1">loading&hellip;</span>
+        <span class="tier-hcount" id="count-t1">loading...</span>
         <span class="tier-chevron" id="chev-t1">&#9660;</span>
       </div>
       <div class="tier-body" id="body-t1" style="max-height:0">
-        <div class="pub-scroll" id="scroll-t1"><div class="pub-loading">Loading&hellip;</div></div>
+        <div class="pub-scroll" id="scroll-t1"><div class="pub-loading">Loading...</div></div>
       </div>
     </div>
     <div class="tier-block">
       <div class="tier-header" id="hdr-t2" onclick="toggleTier('t2')">
         <span class="tier-badge t2">Tier 2</span>
-        <span class="tier-hcount" id="count-t2">loading&hellip;</span>
+        <span class="tier-hcount" id="count-t2">loading...</span>
         <span class="tier-chevron" id="chev-t2">&#9660;</span>
       </div>
       <div class="tier-body" id="body-t2" style="max-height:0">
-        <div class="pub-scroll" id="scroll-t2"><div class="pub-loading">Loading&hellip;</div></div>
+        <div class="pub-scroll" id="scroll-t2"><div class="pub-loading">Loading...</div></div>
       </div>
     </div>
     <div class="tier-block">
       <div class="tier-header" id="hdr-t3" onclick="toggleTier('t3')">
         <span class="tier-badge t3">Tier 3</span>
-        <span class="tier-hcount" data-en="weight &times;1" data-it="peso &times;1">weight &times;1</span>
+        <span class="tier-hcount" data-en="weight x1" data-it="peso x1">weight x1</span>
         <span class="tier-chevron" id="chev-t3">&#9660;</span>
       </div>
       <div class="tier-body" id="body-t3" style="max-height:0">
         <div class="tier3-note"
-          data-en="Tier 3 includes blogs, specialist publications, and secondary sources. Used only as supporting evidence alongside higher-tier sources &mdash; never as the sole basis for a score. Evaluated case-by-case, no fixed whitelist."
-          data-it="Il Tier 3 include blog, pubblicazioni specialistiche e fonti secondarie. Usate solo come supporto alle fonti di tier superiore &mdash; mai come unica base per un punteggio. Valutate caso per caso, nessuna whitelist fissa.">
-          Tier 3 includes blogs, specialist publications, and secondary sources. Used only as supporting evidence alongside higher-tier sources &mdash; never as the sole basis for a score. Evaluated case-by-case, no fixed whitelist.
+          data-en="Tier 3 includes blogs, specialist publications, and secondary sources. Used only as supporting evidence alongside higher-tier sources — never as the sole basis for a score. Evaluated case-by-case, no fixed whitelist."
+          data-it="Il Tier 3 include blog, pubblicazioni specialistiche e fonti secondarie. Usate solo come supporto alle fonti di tier superiore — mai come unica base per un punteggio. Valutate caso per caso, nessuna whitelist fissa.">
+          Tier 3 includes blogs, specialist publications, and secondary sources. Used only as supporting evidence alongside higher-tier sources — never as the sole basis for a score. Evaluated case-by-case, no fixed whitelist.
         </div>
       </div>
     </div>
   </div>
 
-  <!-- HOW WE SCORE -->
+  <!-- SCORING FRAMEWORK -->
   <div class="section" style="animation-delay:.35s">
     <div class="section-label" data-en="How we score brands" data-it="Come valutiamo i brand">How we score brands</div>
-    <p class="section-intro"
-      data-en="Each brand is evaluated on 20 criteria across 4 equal categories (25 pts each). Every criterion is rated 1&ndash;5 based on evidence from verified sources. Score 3 means no evidence found &mdash; neutral, never penalized."
-      data-it="Ogni brand viene valutato su 20 criteri in 4 categorie di uguale peso (25 pt ciascuna). Ogni criterio riceve un punteggio da 1 a 5 in base alle evidenze da fonti verificate. Il punteggio 3 indica assenza di evidenze &mdash; neutro, non penalizzante.">
-      Each brand is evaluated on 20 criteria across 4 equal categories (25 pts each). Every criterion is rated 1&ndash;5 based on evidence from verified sources. Score 3 means no evidence found &mdash; neutral, never penalized.
+    <p style="font-size:13px;color:rgba(255,255,255,0.4);line-height:1.8;margin-bottom:24px"
+      data-en="Each brand is evaluated on 20 criteria across 4 categories. Each criterion receives an absolute score based on the tier of available sources. The total score ranges from -400 (worst) to +400 (best). A criterion only contributes if it meets the minimum source threshold."
+      data-it="Ogni brand viene valutato su 20 criteri in 4 categorie. Ogni criterio riceve un punteggio assoluto basato sul tier delle fonti disponibili. Il punteggio totale va da -400 (peggiore) a +400 (migliore). Un criterio contribuisce solo se raggiunge la soglia minima di fonti.">
+      Each brand is evaluated on 20 criteria across 4 categories. Each criterion receives an absolute score based on the tier of available sources. The total score ranges from -400 (worst) to +400 (best). A criterion only contributes if it meets the minimum source threshold.
     </p>
 
-    <!-- Evidence scale -->
+    <!-- SOURCE VALUES BY TIER -->
+    <div class="scale-box" style="margin-bottom:16px">
+      <div style="font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:12px" data-en="Source values by tier" data-it="Valori per tier di fonte">Source values by tier</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:4px">
+        <!-- T1 -->
+        <div style="background:rgba(240,192,96,0.06);border:1px solid rgba(240,192,96,0.15);border-radius:10px;padding:12px">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:#f0c060;margin-bottom:8px">Tier 1</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.5);line-height:2">
+            <span style="color:#4ade80">+20</span> Positive<br>
+            <span style="color:#86efac">+10</span> Prev. positive<br>
+            <span style="color:#fb923c">−10</span> Prev. negative<br>
+            <span style="color:#ef4444">−20</span> Negative
+          </div>
+        </div>
+        <!-- T2 -->
+        <div style="background:rgba(160,180,200,0.06);border:1px solid rgba(160,180,200,0.15);border-radius:10px;padding:12px">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:#a0b4c8;margin-bottom:8px">Tier 2</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.5);line-height:2">
+            <span style="color:#4ade80">+10</span> Positive<br>
+            <span style="color:#86efac">+5</span> Prev. positive<br>
+            <span style="color:#fb923c">−5</span> Prev. negative<br>
+            <span style="color:#ef4444">−10</span> Negative
+          </div>
+        </div>
+        <!-- T3 -->
+        <div style="background:rgba(192,128,96,0.06);border:1px solid rgba(192,128,96,0.15);border-radius:10px;padding:12px">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:#c08060;margin-bottom:8px">Tier 3</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.5);line-height:2">
+            <span style="color:#4ade80">+2</span> Positive<br>
+            <span style="color:#86efac">+1</span> Prev. positive<br>
+            <span style="color:#fb923c">−1</span> Prev. negative<br>
+            <span style="color:#ef4444">−2</span> Negative
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MINIMUM THRESHOLD -->
+    <div class="scale-box" style="margin-bottom:16px">
+      <div style="font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px" data-en="Minimum threshold per criterion" data-it="Soglia minima per criterio">Minimum threshold per criterion</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:2.2">
+        <span style="color:#f0c060;font-family:'DM Mono',monospace">T1</span>
+        &nbsp;<span data-en="At least 1 Tier 1 source → uses the average of all T1 sources" data-it="Almeno 1 fonte Tier 1 → usa la media delle fonti T1">At least 1 Tier 1 source → uses the average of all T1 sources</span><br>
+        <span style="color:#a0b4c8;font-family:'DM Mono',monospace">T2</span>
+        &nbsp;<span data-en="No T1, at least 2 Tier 2 sources → uses the average of T2 sources" data-it="Nessun T1, almeno 2 fonti Tier 2 → usa la media delle T2">No T1, at least 2 Tier 2 sources → uses the average of T2 sources</span><br>
+        <span style="color:#c08060;font-family:'DM Mono',monospace">T3</span>
+        &nbsp;<span data-en="No T1, 1 T2 + at least 3 T3 → average of T3, then averaged with T2" data-it="Nessun T1, 1 T2 + almeno 3 T3 → media T3 poi mediata con T2">No T1, 1 T2 + at least 3 T3 → average of T3, then averaged with T2</span>
+      </div>
+    </div>
+
+    <!-- SCORE BANDS -->
     <div class="scale-box">
-      <div class="scale-eyebrow" data-en="Evidence scale per criterion" data-it="Scala delle evidenze per criterio">Evidence scale per criterion</div>
-      <div class="scale-row">
-        <span class="scale-dots" style="color:#4ade80">&#9679;&#9679;&#9679;&#9679;&#9679;</span>
-        <span class="scale-num">5</span>
-        <span class="scale-label" style="color:#4ade80" data-en="Positive evidence" data-it="Evidenza positiva">Positive evidence</span>
-      </div>
-      <div class="scale-row">
-        <span class="scale-dots" style="color:#86efac">&#9679;&#9679;&#9679;&#9679;&#9675;</span>
-        <span class="scale-num">4</span>
-        <span class="scale-label" style="color:#86efac" data-en="Predominantly positive" data-it="Prevalentemente positiva">Predominantly positive</span>
-      </div>
-      <div class="scale-row">
-        <span class="scale-dots" style="color:rgba(255,255,255,0.2)">&#9679;&#9679;&#9679;&#9675;&#9675;</span>
-        <span class="scale-num">3</span>
-        <span class="scale-label" style="color:rgba(255,255,255,0.3)" data-en="No evidence available &mdash; neutral" data-it="Nessuna evidenza &mdash; neutro">No evidence available &mdash; neutral</span>
-      </div>
-      <div class="scale-row">
-        <span class="scale-dots" style="color:#fb923c">&#9679;&#9679;&#9675;&#9675;&#9675;</span>
-        <span class="scale-num">2</span>
-        <span class="scale-label" style="color:#fb923c" data-en="Predominantly negative" data-it="Prevalentemente negativa">Predominantly negative</span>
-      </div>
-      <div class="scale-row">
-        <span class="scale-dots" style="color:#ef4444">&#9679;&#9675;&#9675;&#9675;&#9675;</span>
-        <span class="scale-num">1</span>
-        <span class="scale-label" style="color:#ef4444" data-en="Negative evidence" data-it="Evidenza negativa accertata">Negative evidence</span>
-      </div>
+      <div style="font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px" data-en="Score bands (−400 / +400)" data-it="Fasce di punteggio (−400 / +400)">Score bands (−400 / +400)</div>
+      <div class="scale-row"><span style="color:#6dbb7a;font-family:'DM Mono',monospace;font-size:11px;width:100px">+200 → +400</span><span class="scale-label" style="color:#6dbb7a" data-en="Deeply Ethical" data-it="Profondamente Etico">Deeply Ethical</span></div>
+      <div class="scale-row"><span style="color:#a8c5a0;font-family:'DM Mono',monospace;font-size:11px;width:100px">+50 → +199</span><span class="scale-label" style="color:#a8c5a0" data-en="Fairly Ethical" data-it="Abbastanza Etico">Fairly Ethical</span></div>
+      <div class="scale-row"><span style="color:#facc15;font-family:'DM Mono',monospace;font-size:11px;width:100px">−49 → +49</span><span class="scale-label" style="color:#facc15" data-en="Partially Ethical" data-it="Parzialmente Etico">Partially Ethical</span></div>
+      <div class="scale-row"><span style="color:#fb923c;font-family:'DM Mono',monospace;font-size:11px;width:100px">−199 → −50</span><span class="scale-label" style="color:#fb923c" data-en="Scarcely Ethical" data-it="Scarsamente Etico">Scarcely Ethical</span></div>
+      <div class="scale-row"><span style="color:#ef4444;font-family:'DM Mono',monospace;font-size:11px;width:100px">−400 → −200</span><span class="scale-label" style="color:#ef4444" data-en="Ethically Compromised" data-it="Eticamente Inadeguato">Ethically Compromised</span></div>
     </div>
 
-    <!-- Criteria by category -->
     <div id="criteria-container">
-      <div class="pub-loading">Loading criteria&hellip;</div>
-    </div>
-  </div>
-
-  <!-- FINAL SCORE SCALE -->
-  <div class="section" style="animation-delay:.45s">
-    <div class="section-label" data-en="Final score &amp; rating bands" data-it="Punteggio finale &amp; fasce di valutazione">Final score &amp; rating bands</div>
-    <p class="section-intro"
-      data-en="The final score is the sum of the 4 category scores. It reflects only criteria for which evidence has been found and verified."
-      data-it="Il punteggio finale &egrave; la somma dei 4 punteggi di categoria. Riflette solo i criteri per cui sono state trovate e verificate evidenze.">
-      The final score is the sum of the 4 category scores. It reflects only criteria for which evidence has been found and verified.
-    </p>
-    <div class="score-bands">
-
-      <div class="score-band" style="background:rgba(74,222,128,0.07);border-color:rgba(74,222,128,0.2)">
-        <span class="band-range" style="color:#4ade80">90&ndash;100</span>
-        <div>
-          <div class="band-label" style="color:#4ade80" data-en="Deeply Ethical" data-it="Profondamente Etico">Deeply Ethical</div>
-          <div class="band-label-it" data-en="Consistent virtuous behavior across all dimensions, documented by multiple verified sources." data-it="Comportamento virtuoso e coerente su tutte le dimensioni, documentato da pi&ugrave; fonti verificate.">Consistent virtuous behavior across all dimensions, documented by multiple verified sources.</div>
-        </div>
-        <div class="band-bar" style="background:#4ade80"></div>
-      </div>
-
-      <div class="score-band" style="background:rgba(134,239,172,0.06);border-color:rgba(134,239,172,0.18)">
-        <span class="band-range" style="color:#86efac">75&ndash;89</span>
-        <div>
-          <div class="band-label" style="color:#86efac" data-en="Fairly Ethical" data-it="Abbastanza Etico">Fairly Ethical</div>
-          <div class="band-label-it" data-en="Strong ethical record with minor or isolated criticisms." data-it="Profilo etico solido con criticit&agrave; minori o isolate.">Strong ethical record with minor or isolated criticisms.</div>
-        </div>
-        <div class="band-bar" style="background:#86efac"></div>
-      </div>
-
-      <div class="score-band" style="background:rgba(250,204,21,0.06);border-color:rgba(250,204,21,0.18)">
-        <span class="band-range" style="color:#facc15">55&ndash;74</span>
-        <div>
-          <div class="band-label" style="color:#facc15" data-en="Partially Ethical" data-it="Parzialmente Etico">Partially Ethical</div>
-          <div class="band-label-it" data-en="Mixed evidence: positive practices coexist with documented problems." data-it="Evidenze miste: pratiche positive convivono con problemi documentati.">Mixed evidence: positive practices coexist with documented problems.</div>
-        </div>
-        <div class="band-bar" style="background:#facc15"></div>
-      </div>
-
-      <div class="score-band" style="background:rgba(251,146,60,0.06);border-color:rgba(251,146,60,0.18)">
-        <span class="band-range" style="color:#fb923c">35&ndash;54</span>
-        <div>
-          <div class="band-label" style="color:#fb923c" data-en="Scarcely Ethical" data-it="Scarsamente Etico">Scarcely Ethical</div>
-          <div class="band-label-it" data-en="Multiple documented issues across categories, limited evidence of improvement." data-it="Problematiche documentate in pi&ugrave; categorie, scarse evidenze di miglioramento.">Multiple documented issues across categories, limited evidence of improvement.</div>
-        </div>
-        <div class="band-bar" style="background:#fb923c"></div>
-      </div>
-
-      <div class="score-band" style="background:rgba(239,68,68,0.07);border-color:rgba(239,68,68,0.2)">
-        <span class="band-range" style="color:#ef4444">0&ndash;34</span>
-        <div>
-          <div class="band-label" style="color:#ef4444" data-en="Ethically Compromised" data-it="Eticamente Inadeguato">Ethically Compromised</div>
-          <div class="band-label-it" data-en="Serious, systematic violations documented across multiple dimensions." data-it="Violazioni gravi e sistematiche documentate su pi&ugrave; dimensioni.">Serious, systematic violations documented across multiple dimensions.</div>
-        </div>
-        <div class="band-bar" style="background:#ef4444"></div>
-      </div>
-
+      <div class="pub-loading">Loading criteria...</div>
     </div>
   </div>
 
   <!-- NOTE -->
   <div class="note-section">
     <div class="note-box">
-      <span data-en="&lt;strong&gt;Every score change requires human review.&lt;/strong&gt; New sources &mdash; whether found automatically or proposed by the community &mdash; are never applied directly. They go through a manual approval step before affecting any brand score. If you know a reliable source we're missing, &lt;a href='mailto:info@ethicprint.org'&gt;write to us&lt;/a&gt;."
-        data-it="&lt;strong&gt;Ogni modifica al punteggio richiede revisione umana.&lt;/strong&gt; Le nuove fonti &mdash; trovate automaticamente o proposte dalla community &mdash; non vengono mai applicate direttamente. Passano sempre per un&rsquo;approvazione manuale prima di influenzare qualsiasi punteggio. Se conosci una fonte affidabile che non abbiamo, &lt;a href='mailto:info@ethicprint.org'&gt;scrivici&lt;/a&gt;.">
-        <strong>Every score change requires human review.</strong> New sources &mdash; whether found automatically or proposed by the community &mdash; are never applied directly. They go through a manual approval step before affecting any brand score. If you know a reliable source we're missing, <a href="mailto:info@ethicprint.org">write to us</a>.
-      </span>
+      <strong data-en="Every score change requires human review." data-it="Ogni modifica al punteggio richiede revisione umana.">Every score change requires human review.</strong>
+      <span data-en=" New sources are never applied automatically — they go through a manual approval step before affecting any brand score. If you know a reliable source we're missing, " data-it=" Le nuove fonti non vengono mai applicate automaticamente — passano sempre per un'approvazione manuale. Se conosci una fonte affidabile che non abbiamo, "> New sources are never applied automatically — they go through a manual approval step before affecting any brand score. If you know a reliable source we're missing, </span>
+      <a href="mailto:info@ethicprint.org" data-en="write to us." data-it="scrivici.">write to us.</a>
     </div>
   </div>
 
@@ -345,15 +300,15 @@ const API = "https://web-production-14708.up.railway.app";
 let currentLang = localStorage.getItem('ep_lang') || 'en';
 
 const T = {
-  en: { count: (n, w) => `${n} publishers · weight ×${w}` },
-  it: { count: (n, w) => `${n} publisher · peso ×${w}` },
+  en: { count: function(n, w) { return n + ' publishers · weight x' + w; } },
+  it: { count: function(n, w) { return n + ' publisher · peso x' + w; } },
 };
 
 const CAT_META = {
-  armi:     { icon: '⚔️',  en: 'Conflicts & Arms',    it: 'Conflitti & Armi' },
-  diritti:  { icon: '🤝',  en: 'Human Rights',         it: 'Diritti Umani' },
-  ambiente: { icon: '🌿',  en: 'Environment & CO₂',    it: 'Ambiente & CO₂' },
-  fisco:    { icon: '💰',  en: 'Tax & Transparency',   it: 'Fisco & Trasparenza' },
+  armi:     { icon: '&#9876;&#65039;', en: 'Conflicts & Arms',   it: 'Conflitti & Armi' },
+  diritti:  { icon: '&#129309;',       en: 'Human Rights',       it: 'Diritti Umani' },
+  ambiente: { icon: '&#127807;',       en: 'Environment & CO2',  it: 'Ambiente & CO2' },
+  fisco:    { icon: '&#128176;',       en: 'Tax & Transparency', it: 'Fisco & Trasparenza' },
 };
 
 function setLang(lang) {
@@ -361,117 +316,107 @@ function setLang(lang) {
   localStorage.setItem('ep_lang', lang);
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
   document.getElementById('btn-it').classList.toggle('active', lang === 'it');
-  document.querySelectorAll('[data-en]').forEach(el => {
-    const val = el.getAttribute(`data-${lang}`);
+  document.querySelectorAll('[data-en]').forEach(function(el) {
+    var val = el.getAttribute('data-' + lang);
     if (val !== null) el.innerHTML = val;
   });
 }
 
 function toggleTier(id) {
-  const body = document.getElementById(`body-${id}`);
-  const chev = document.getElementById(`chev-${id}`);
-  const hdr  = document.getElementById(`hdr-${id}`);
-  const isOpen = chev.classList.contains('open');
+  var body = document.getElementById('body-' + id);
+  var chev = document.getElementById('chev-' + id);
+  var hdr  = document.getElementById('hdr-' + id);
+  var isOpen = chev.classList.contains('open');
   body.style.maxHeight = isOpen ? '0' : '99999px';
   chev.classList.toggle('open', !isOpen);
   hdr.classList.toggle('open', !isOpen);
 }
 
 function toggleCat(cat) {
-  const body = document.getElementById(`cat-body-${cat}`);
-  const chev = document.getElementById(`cat-chev-${cat}`);
-  const hdr  = document.getElementById(`cat-hdr-${cat}`);
+  var body = document.getElementById('cat-body-' + cat);
+  var chev = document.getElementById('cat-chev-' + cat);
+  var hdr  = document.getElementById('cat-hdr-' + cat);
   if (!body) return;
-  const isOpen = chev.classList.contains('open');
+  var isOpen = chev.classList.contains('open');
   body.style.maxHeight = isOpen ? '0' : '99999px';
   chev.classList.toggle('open', !isOpen);
   hdr.classList.toggle('open', !isOpen);
 }
 
 function renderPub(p) {
-  const href = p.url ? `href="${p.url}" target="_blank" rel="noopener"` : '';
-  return `<a class="pub-card" ${href}>
-    <div>
-      <div class="pub-name">${p.name}</div>
-      ${p.topic ? `<div class="pub-topic">${p.topic}</div>` : ''}
-    </div>
-    ${p.url ? '<span class="pub-arrow">↗</span>' : ''}
-  </a>`;
+  var href = p.url ? 'href="' + p.url + '" target="_blank" rel="noopener"' : '';
+  return '<a class="pub-card" ' + href + '>' +
+    '<div>' +
+      '<div class="pub-name">' + p.name + '</div>' +
+      (p.topic ? '<div class="pub-topic">' + p.topic + '</div>' : '') +
+    '</div>' +
+    (p.url ? '<span class="pub-arrow">&#8599;</span>' : '') +
+  '</a>';
 }
 
 function renderCriteria(data) {
-  const catOrder = ['armi', 'diritti', 'ambiente', 'fisco'];
-  const container = document.getElementById('criteria-container');
+  var catOrder = ['armi', 'diritti', 'ambiente', 'fisco'];
+  var container = document.getElementById('criteria-container');
   if (!container) return;
-
-  let html = '';
-  catOrder.forEach(cat => {
-    const criteria = data[cat] || [];
-    const meta = CAT_META[cat];
-    const titleEn = meta.en;
-    const titleIt = meta.it;
-    const displayTitle = currentLang === 'it' ? titleIt : titleEn;
-
-    html += `<div class="cat-block">
-      <div class="cat-header-row" id="cat-hdr-${cat}" onclick="toggleCat('${cat}')">
-        <span class="cat-icon">${meta.icon}</span>
-        <span class="cat-title" data-en="${titleEn}" data-it="${titleIt}">${displayTitle}</span>
-        <span class="cat-pts">25 pts</span>
-        <span class="cat-chev" id="cat-chev-${cat}">▼</span>
-      </div>
-      <div class="cat-body" id="cat-body-${cat}" style="max-height:0">`;
-
-    criteria.forEach((c, i) => {
-      const label = (currentLang === 'it' && c.label_it) ? c.label_it : c.label_en;
-      const desc  = (currentLang === 'it' && c.description_it) ? c.description_it : (c.description_en || '');
-      html += `<div class="criterion-row">
-        <span class="criterion-num">${i + 1}</span>
-        <div>
-          <div class="criterion-label"
-            data-en="${(c.label_en||'').replace(/"/g,'&quot;')}"
-            data-it="${(c.label_it||c.label_en||'').replace(/"/g,'&quot;')}">${label}</div>
-          ${desc ? `<div class="criterion-desc"
-            data-en="${(c.description_en||'').replace(/"/g,'&quot;')}"
-            data-it="${(c.description_it||'').replace(/"/g,'&quot;')}">${desc}</div>` : ''}
-        </div>
-      </div>`;
+  var html = '';
+  catOrder.forEach(function(cat) {
+    var criteria = data[cat] || [];
+    var meta = CAT_META[cat];
+    var titleEn = meta.en;
+    var titleIt = meta.it;
+    var displayTitle = currentLang === 'it' ? titleIt : titleEn;
+    html += '<div class="cat-block">' +
+      '<div class="cat-header-row" id="cat-hdr-' + cat + '" onclick="toggleCat(\'' + cat + '\')">' +
+        '<span class="cat-icon">' + meta.icon + '</span>' +
+        '<span class="cat-title" data-en="' + titleEn + '" data-it="' + titleIt + '">' + displayTitle + '</span>' +
+        '<span class="cat-pts">25 pts</span>' +
+        '<span class="cat-chev" id="cat-chev-' + cat + '">&#9660;</span>' +
+      '</div>' +
+      '<div class="cat-body" id="cat-body-' + cat + '" style="max-height:0">';
+    criteria.forEach(function(c, i) {
+      var label = (currentLang === 'it' && c.label_it) ? c.label_it : c.label_en;
+      var desc  = (currentLang === 'it' && c.description_it) ? c.description_it : (c.description_en || '');
+      html += '<div class="criterion-row">' +
+        '<span class="criterion-num">' + (i + 1) + '</span>' +
+        '<div>' +
+          '<div class="criterion-label" ' +
+            'data-en="' + (c.label_en || '').replace(/"/g, '&quot;') + '" ' +
+            'data-it="' + (c.label_it || c.label_en || '').replace(/"/g, '&quot;') + '">' +
+            label +
+          '</div>' +
+          (desc ? '<div class="criterion-desc" ' +
+            'data-en="' + (c.description_en || '').replace(/"/g, '&quot;') + '" ' +
+            'data-it="' + (c.description_it || '').replace(/"/g, '&quot;') + '">' +
+            desc + '</div>' : '') +
+        '</div>' +
+      '</div>';
     });
-
-    html += `</div></div>`;
+    html += '</div></div>';
   });
-
   container.innerHTML = html;
   toggleCat('armi');
 }
 
 async function load() {
   try {
-    const [pubRes, critRes] = await Promise.all([
-      fetch(`${API}/publishers`),
-      fetch(`${API}/scoring-criteria`),
-    ]);
-    const pubData = await pubRes.json();
-    const critData = await critRes.json();
+    var pubRes = await fetch(API + '/publishers');
+    var pubData = await pubRes.json();
+    var t = T[currentLang];
 
-    const t = T[currentLang];
-
-    // T1
-    document.getElementById('scroll-t1').innerHTML = pubData.tier1.length
-      ? pubData.tier1.map(renderPub).join('')
-      : '<div class="pub-loading">—</div>';
+    document.getElementById('scroll-t1').innerHTML = pubData.tier1.length ? pubData.tier1.map(renderPub).join('') : '<div class="pub-loading">-</div>';
     document.getElementById('count-t1').textContent = t.count(pubData.tier1.length, 3);
     document.getElementById('count-t1').setAttribute('data-en', T.en.count(pubData.tier1.length, 3));
     document.getElementById('count-t1').setAttribute('data-it', T.it.count(pubData.tier1.length, 3));
 
-    // T2
-    document.getElementById('scroll-t2').innerHTML = pubData.tier2.length
-      ? pubData.tier2.map(renderPub).join('')
-      : '<div class="pub-loading">—</div>';
+    document.getElementById('scroll-t2').innerHTML = pubData.tier2.length ? pubData.tier2.map(renderPub).join('') : '<div class="pub-loading">-</div>';
     document.getElementById('count-t2').textContent = t.count(pubData.tier2.length, 2);
     document.getElementById('count-t2').setAttribute('data-en', T.en.count(pubData.tier2.length, 2));
     document.getElementById('count-t2').setAttribute('data-it', T.it.count(pubData.tier2.length, 2));
 
     toggleTier('t1');
+
+    var critRes = await fetch(API + '/scoring-criteria');
+    var critData = await critRes.json();
     renderCriteria(critData);
 
   } catch(e) {
