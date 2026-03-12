@@ -171,7 +171,7 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
 
   if (!fullBrand) return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} onClick={onClose}>
-      <div style={{ background: "#0d1a16", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 48, display: "flex", alignItems: "center", justifyContent: "center" }} onClick={e => e.stopPropagation()}>
+      <div style={{ background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 48, display: "flex", alignItems: "center", justifyContent: "center" }} onClick={e => e.stopPropagation()}>
         <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, fontFamily: "'DM Sans', sans-serif", letterSpacing: 2 }}>{t.loading}</div>
       </div>
     </div>
@@ -181,7 +181,7 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} onClick={onClose}>
-      <div style={{ background: "#0d1a16", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 32, maxWidth: 520, width: "100%", boxShadow: "0 40px 80px rgba(0,0,0,0.6)", maxHeight: "90vh", overflowY: "auto", position: "relative" }} onClick={e => e.stopPropagation()}>
+      <div style={{ background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 32, maxWidth: 520, width: "100%", boxShadow: "0 40px 80px rgba(0,0,0,0.6)", maxHeight: "90vh", overflowY: "auto", position: "relative" }} onClick={e => e.stopPropagation()}>
 
         {/* X chiudi in alto a destra */}
         <button onClick={onClose} style={{ position: "absolute", top: 16, right: 16, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.4)", width: 32, height: 32, borderRadius: 99, cursor: "pointer", fontSize: 18, lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}
@@ -554,7 +554,7 @@ export default function App() {
     .sort((a, b) => b.avgScore - a.avgScore);
 
   if (loading) return (
-    <div style={{ minHeight: "100vh", background: "#080f0d", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <div style={{ minHeight: "100vh", background: "#08080f", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div style={{ color: "rgba(255,255,255,0.3)", fontFamily: "'DM Sans', sans-serif", fontSize: 14, letterSpacing: 2 }}>{t.loading}</div>
     </div>
   );
@@ -562,7 +562,7 @@ export default function App() {
   return (
     <CategoriesContext.Provider value={categories}>
       <LangToggle lang={lang} setLang={setLang} />
-      <div style={{ minHeight: "100vh", background: "#080f0d", fontFamily: "'DM Sans', sans-serif", color: "#f0f0f0", backgroundImage: "radial-gradient(ellipse at 15% 10%, rgba(20,60,35,0.45) 0%, transparent 50%), radial-gradient(ellipse at 85% 90%, rgba(10,30,45,0.4) 0%, transparent 50%)" }}>
+      <div style={{ minHeight: "100vh", background: "#08080f", fontFamily: "'DM Sans', sans-serif", color: "#f0f0f0", backgroundImage: "radial-gradient(ellipse at 15% 10%, rgba(30,30,60,0.5) 0%, transparent 50%), radial-gradient(ellipse at 85% 90%, rgba(60,20,60,0.3) 0%, transparent 50%)" }}>
         <style>{`
           * { box-sizing: border-box; margin: 0; padding: 0; }
           ::selection { background: rgba(94,207,138,0.3); }
@@ -606,7 +606,7 @@ export default function App() {
             </div>
 
             {results.length > 0 && (
-              <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, right: 0, background: "#0d1a16", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, overflow: "hidden", zIndex: 50, boxShadow: "0 20px 40px rgba(0,0,0,0.5)" }}>
+              <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, right: 0, background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, overflow: "hidden", zIndex: 50, boxShadow: "0 20px 40px rgba(0,0,0,0.5)" }}>
                 {results.map(brand => {
                   const score = getScore(brand); const inList = myBrands.find(b => b.name === brand.name);
                   return (
