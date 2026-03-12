@@ -67,6 +67,9 @@ const UI = {
 };
 
 function getScore(brand) {
+  // Usa total_score dall'API se disponibile (esclude categorie senza dati sufficienti)
+  if (brand.total_score !== undefined && brand.total_score !== null) return brand.total_score;
+  // Fallback: media semplice (per brand nella lista prima del fetch completo)
   const vals = Object.values(brand.scores);
   return Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
 }
@@ -153,6 +156,7 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
   const [fullBrand, setFullBrand] = useState(null);
   const t = UI[lang] || UI.en;
   const total = fullBrand ? getScore(fullBrand) : 0;
+  const b_scored = fullBrand?.categories_scored ?? 4;
   const verdict = getVerdict(total, lang);
   const color = getColor(total);
 
@@ -191,26 +195,54 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
             <div style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>{t.parent}: {b.parent}</div>
           </div>
           <div style={{ textAlign: "right" }}>
-            <div style={{ fontSize: 40, fontWeight: 800, color, fontFamily: "monospace", lineHeight: 1 }}>{total}</div>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>/100</div>
-            <div style={{ fontSize: 13, marginTop: 4 }}>{verdict.emoji} {verdict.label}</div>
-
+            {b.insufficient_data ? (
+              <div style={{ fontSize: 13, color: "#fb923c", fontWeight: 600, maxWidth: 140, lineHeight: 1.4 }}>
+                {lang === "it" ? "⚠️ Dati insufficienti" : "⚠️ Insufficient data"}
+              </div>
+            ) : (
+              <>
+                <div style={{ fontSize: 40, fontWeight: 800, color, fontFamily: "monospace", lineHeight: 1 }}>{total}</div>
+                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>
+                  {b.categories_scored < 4
+                    ? (lang === "it" ? `su ${b.categories_scored}/4 categorie` : `${b.categories_scored}/4 categories`)
+                    : "/100"}
+                </div>
+                <div style={{ fontSize: 13, marginTop: 4 }}>{verdict.emoji} {verdict.label}</div>
+              </>
+            )}
           </div>
         </div>
 
         <div style={{ marginBottom: 28 }}>
-          {categories.map(cat => (
-            <div key={cat.key} style={{ marginBottom: 12 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>{cat.icon} {getCatLabel(cat, lang)}</span>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 2 }}>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: getColor(b.scores[cat.key], 25) }}>{b.scores[cat.key]}</span>
-                  <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>/25</span>
+          {categories.map(cat => {
+            const status = b.confidence?.[cat.key]?.data_status || "none";
+            const score = b.scores[cat.key];
+            const isOk = status === "ok";
+            const isInsufficient = status === "insufficient";
+            const catColor = isOk ? getColor(score, 25) : "rgba(255,255,255,0.15)";
+            return (
+              <div key={cat.key} style={{ marginBottom: 12, opacity: isOk ? 1 : 0.5 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                  <span style={{ fontSize: 12, color: isOk ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)" }}>
+                    {cat.icon} {getCatLabel(cat, lang)}
+                  </span>
+                  {isOk ? (
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 2 }}>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: catColor }}>{score}</span>
+                      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>/25</span>
+                    </div>
+                  ) : (
+                    <span style={{ fontSize: 10, color: "#fb923c", fontFamily: "'DM Mono', monospace" }}>
+                      {isInsufficient
+                        ? (lang === "it" ? "1 fonte" : "1 source")
+                        : (lang === "it" ? "nessuna fonte" : "no sources")}
+                    </span>
+                  )}
                 </div>
+                <ScoreBar value={isOk ? score : 0} color={catColor} max={25} />
               </div>
-              <ScoreBar value={b.scores[cat.key]} color={getColor(b.scores[cat.key], 25)} max={25} />
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20 }}>
@@ -336,7 +368,7 @@ function MyListPanel({ myBrands, onRemove, onClear, onSelect, lang }) {
               <div key={b.name} style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.12)", borderRadius: 12, padding: "14px 16px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
                   <span style={{ fontSize: 13, fontWeight: 600, color: getColor(getScore(b)) }}>{b.name}</span>
-                  <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>score {getScore(b)}/100</span>
+                  <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>{b.insufficient_data ? "⚠️" : `score ${getScore(b)}/100`}</span>
                   <span style={{ fontSize: 11, background: "rgba(239,68,68,0.15)", color: "#f87171", padding: "2px 8px", borderRadius: 99 }}>{t.below_threshold}</span>
                 </div>
                 <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginBottom: 10 }}>{t.replace_with}</div>
