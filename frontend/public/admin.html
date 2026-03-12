@@ -146,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => document.getElementById('pwd
     <button class="tab" onclick="switchTab('rejected')">Rejected <span class="badge badge-count" id="badge-rejected">–</span></button>
     <div style="width:1px;height:20px;background:rgba(255,255,255,0.08);margin:0 4px"></div>
     <button class="tab" onclick="switchTab('scores')">Score Updates <span class="badge badge-pending" id="badge-scores">–</span></button>
+    <button class="tab" onclick="switchTab('costs')">💰 Costs</button>
   </div>
 </header>
 
@@ -422,7 +423,8 @@ async function reject(id) {
 function switchTab(tab) {
   currentTab = tab;
   currentCat = "all";
-  document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", ["pending","approved","rejected","scores"][i] === tab));
+  document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", ["pending","approved","rejected","scores","costs"][i] === tab));
+  if (tab === 'costs') { loadCosts(); return; }
   document.querySelectorAll(".filter-chip").forEach(c => c.classList.toggle("active", c.textContent.trim() === "All"));
   renderTab();
 }
@@ -441,6 +443,152 @@ function showToast(msg, error = false) {
   t.style.borderColor = error ? "rgba(248,113,113,0.3)" : "rgba(99,202,183,0.3)";
   t.classList.remove("hide");
   setTimeout(() => t.classList.add("hide"), 3000);
+}
+
+
+// ─── COSTS TAB ─────────────────────────────────────────────────────────────
+
+const ANTHROPIC_PRICES = {
+  "claude-haiku-4-5-20251001": { input: 0.80, output: 4.00 },   // per 1M tokens
+  "claude-sonnet-4-6":         { input: 3.00, output: 15.00 },
+};
+
+async function fetchAnthropicUsage() {
+  // Anthropic usage API — current month
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0];
+  const end   = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split("T")[0];
+  try {
+    const r = await fetch(`https://api.anthropic.com/v1/usage?start_date=${start}&end_date=${end}`, {
+      headers: { "x-api-key": "", "anthropic-version": "2023-06-01" }
+    });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch { return null; }
+}
+
+async function fetchBraveCount() {
+  // Brave: contatore interno dal nostro backend
+  try {
+    const r = await fetch(`${API}/costs/brave-count`);
+    if (!r.ok) return null;
+    return await r.json();
+  } catch { return null; }
+}
+
+function costBar(used, total, color = "#63CAB7") {
+  const pct = Math.min(100, Math.round((used / total) * 100));
+  const barColor = pct >= 90 ? "#ef4444" : pct >= 70 ? "#fb923c" : color;
+  return `
+    <div style="display:flex;align-items:center;gap:10px;margin-top:8px">
+      <div style="flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden">
+        <div style="width:${pct}%;height:100%;background:${barColor};border-radius:2px;transition:width .6s ease"></div>
+      </div>
+      <span style="font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.3);flex-shrink:0">${pct}%</span>
+    </div>`;
+}
+
+function costCard(icon, title, main, sub, bar = "", note = "") {
+  return `
+    <div style="background:#111118;border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:20px 24px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <span style="font-size:18px">${icon}</span>
+        <span style="font-size:12px;color:rgba(255,255,255,0.35);font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase">${title}</span>
+      </div>
+      <div style="font-size:28px;font-weight:700;font-family:'DM Mono',monospace;line-height:1;color:#e8e8f0">${main}</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:4px">${sub}</div>
+      ${bar}
+      ${note ? `<div style="font-size:11px;color:rgba(255,255,255,0.2);margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.05)">${note}</div>` : ""}
+    </div>`;
+}
+
+async function loadCosts() {
+  const el = document.getElementById("proposals-list");
+  if (!el) return;
+  el.innerHTML = `<div style="color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px;padding:40px 0;text-align:center">Loading cost data…</div>`;
+
+  const now = new Date();
+  const monthLabel = now.toLocaleString("en", { month: "long", year: "numeric" });
+
+  // ── Fetch all data in parallel ──
+  const [braveData] = await Promise.all([
+    fetchBraveCount(),
+  ]);
+
+  // ── Anthropic: note — the usage API requires passing your API key client-side
+  // which we don't do for security. Instead we show a note directing to the console.
+  const anthropicCard = costCard(
+    "🤖", "Anthropic",
+    "→ Console",
+    "Open Anthropic Console for token usage",
+    "",
+    `<a href="https://console.anthropic.com/settings/usage" target="_blank"
+       style="color:#63cab7;font-size:11px;text-decoration:none">
+       console.anthropic.com/settings/usage ↗
+     </a>`
+  );
+
+  // ── Brave Search ──
+  const braveMonthly = braveData?.month || 0;
+  const braveLimit   = 2000; // piano base Brave
+  const braveCard = costCard(
+    "🔍", "Brave Search",
+    `${braveMonthly.toLocaleString()}`,
+    `calls this month · limit ${braveLimit.toLocaleString()}`,
+    costBar(braveMonthly, braveLimit),
+    `Finder: ~${braveData?.finder || 0} · Checker: ~${braveData?.checker || 0}`
+  );
+
+  // ── Railway ──
+  const railwayCard = costCard(
+    "🚂", "Railway",
+    "→ Dashboard",
+    "3 services: API · Checker · Finder",
+    "",
+    `<a href="https://railway.app/dashboard" target="_blank"
+       style="color:#63cab7;font-size:11px;text-decoration:none">
+       railway.app/dashboard ↗
+     </a>`
+  );
+
+  // ── Supabase ──
+  const supabaseCard = costCard(
+    "🗄️", "Supabase",
+    "→ Dashboard",
+    "DB · Auth · Storage",
+    "",
+    `<a href="https://supabase.com/dashboard" target="_blank"
+       style="color:#63cab7;font-size:11px;text-decoration:none">
+       supabase.com/dashboard ↗
+     </a>`
+  );
+
+  // ── Resend ──
+  const resendCard = costCard(
+    "📧", "Resend",
+    "→ Dashboard",
+    "Email notifications",
+    "",
+    `<a href="https://resend.com/emails" target="_blank"
+       style="color:#63cab7;font-size:11px;text-decoration:none">
+       resend.com/emails ↗
+     </a>`
+  );
+
+  el.innerHTML = `
+    <div style="margin-bottom:24px">
+      <div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px">${monthLabel}</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
+        ${anthropicCard}
+        ${braveCard}
+        ${railwayCard}
+        ${supabaseCard}
+        ${resendCard}
+      </div>
+    </div>
+    <div style="background:rgba(99,202,183,0.05);border:1px solid rgba(99,202,183,0.12);border-radius:12px;padding:16px 20px;font-size:12px;color:rgba(255,255,255,0.3);line-height:1.7">
+      ℹ️ Brave Search è l'unico servizio tracciato internamente. Per gli altri apri i rispettivi dashboard — le API di usage richiederebbero chiavi client-side per motivi di sicurezza.
+    </div>`;
 }
 
 // loadAll() called after password check
