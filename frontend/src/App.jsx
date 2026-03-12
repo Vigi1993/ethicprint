@@ -67,35 +67,38 @@ const UI = {
   }
 };
 
+// ─── SCORING V2 (-400/+400) ──────────────────────────────────────────────────
+const SCORE_RANGE = 400;
+
 function getScore(brand) {
-  // Usa total_score dall'API se disponibile (esclude categorie senza dati sufficienti)
   if (brand.total_score !== undefined && brand.total_score !== null) return brand.total_score;
-  // Fallback: media semplice (per brand nella lista prima del fetch completo)
-  const vals = Object.values(brand.scores);
-  return Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
+  return null; // nessun dato
 }
 
-function getColor(score, max = 100) {
-  const pct = (score / max) * 100;
-  if (pct >= 90) return "#6dbb7a";
-  if (pct >= 75) return "#a8c5a0";
-  if (pct >= 55) return "#facc15";
-  if (pct >= 35) return "#fb923c";
-  return "#ef4444";
+function getColor(score) {
+  // Score da -400 a +400
+  if (score === null || score === undefined) return "rgba(255,255,255,0.2)";
+  if (score >= 200)  return "#6dbb7a";   // deeply ethical   — verde
+  if (score >= 50)   return "#a8c5a0";   // fairly ethical   — verde chiaro
+  if (score >= -49)  return "#facc15";   // partially        — giallo
+  if (score >= -199) return "#fb923c";   // scarcely         — arancione
+  return "#ef4444";                      // compromised      — rosso
 }
 
 function getVerdict(score, lang) {
+  if (score === null || score === undefined) return { label: "—", emoji: "❓" };
   const it = lang === "it";
-  if (score >= 90) return { label: it ? "Profondamente Etico"   : "Deeply Ethical",        emoji: "🟢" };
-  if (score >= 75) return { label: it ? "Abbastanza Etico"      : "Fairly Ethical",         emoji: "🟢" };
-  if (score >= 55) return { label: it ? "Parzialmente Etico"    : "Partially Ethical",      emoji: "🟡" };
-  if (score >= 35) return { label: it ? "Scarsamente Etico"     : "Scarcely Ethical",       emoji: "🟠" };
-  return           { label: it ? "Eticamente Inadeguato"        : "Ethically Compromised",  emoji: "🔴" };
+  if (score >= 200)  return { label: it ? "Profondamente Etico"  : "Deeply Ethical",       emoji: "🌿" };
+  if (score >= 50)   return { label: it ? "Abbastanza Etico"     : "Fairly Ethical",        emoji: "✅" };
+  if (score >= -49)  return { label: it ? "Parzialmente Etico"   : "Partially Ethical",     emoji: "⚖️" };
+  if (score >= -199) return { label: it ? "Scarsamente Etico"    : "Scarcely Ethical",      emoji: "⚠️" };
+  return               { label: it ? "Eticamente Inadeguato"     : "Ethically Compromised", emoji: "🚫" };
 }
 
 function getSectorAvgScore(brands) {
-  if (!brands.length) return 0;
-  return Math.round(brands.reduce((sum, b) => sum + getScore(b), 0) / brands.length);
+  const scored = brands.filter(b => getScore(b) !== null);
+  if (!scored.length) return null;
+  return Math.round(scored.reduce((sum, b) => sum + getScore(b), 0) / scored.length);
 }
 
 // Ritorna label categoria nella lingua corretta
@@ -104,11 +107,25 @@ function getCatLabel(cat, lang) {
   return cat.label;
 }
 
-function ScoreBar({ value, color, max = 25 }) {
-  const pct = Math.min(100, Math.round((value / max) * 100));
+function ScoreBar({ value, color, max = 20 }) {
+  // Barra centrata: zero al centro, positivi a destra, negativi a sinistra
+  const pct = Math.min(100, Math.abs(Math.round((value / max) * 50)));
+  const positive = value >= 0;
   return (
-    <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 99, height: 6, width: "100%", overflow: "hidden" }}>
-      <div style={{ width: `${pct}%`, height: "100%", background: color, borderRadius: 99, transition: "width 1s cubic-bezier(.4,0,.2,1)" }} />
+    <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 99, height: 6, width: "100%", overflow: "hidden", position: "relative" }}>
+      {/* Zero line */}
+      <div style={{ position: "absolute", left: "50%", top: 0, width: 1, height: "100%", background: "rgba(255,255,255,0.1)" }} />
+      {/* Bar */}
+      <div style={{
+        position: "absolute",
+        top: 0, height: "100%",
+        width: `${pct}%`,
+        background: color,
+        borderRadius: 99,
+        transition: "width 1s cubic-bezier(.4,0,.2,1)",
+        left: positive ? "50%" : undefined,
+        right: positive ? undefined : `${50}%`,
+      }} />
     </div>
   );
 }
@@ -156,7 +173,7 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
   const categories = useCategories();
   const [fullBrand, setFullBrand] = useState(null);
   const t = UI[lang] || UI.en;
-  const total = fullBrand ? getScore(fullBrand) : 0;
+  const total = fullBrand ? getScore(fullBrand) : null;
   const b_scored = fullBrand?.categories_scored ?? 4;
   const verdict = getVerdict(total, lang);
   const color = getColor(total);
@@ -204,9 +221,9 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
               <>
                 <div style={{ fontSize: 40, fontWeight: 800, color, fontFamily: "monospace", lineHeight: 1 }}>{total}</div>
                 <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>
-                  {b.categories_scored < 4
-                    ? (lang === "it" ? `su ${b.categories_scored}/4 categorie` : `${b.categories_scored}/4 categories`)
-                    : "/100"}
+                  {b.criteria_published > 0
+                    ? (lang === "it" ? `${b.criteria_published} criteri` : `${b.criteria_published} criteria`)
+                    : "/ ±400"}
                 </div>
                 <div style={{ fontSize: 13, marginTop: 4 }}>{verdict.emoji} {verdict.label}</div>
               </>
@@ -222,31 +239,34 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
 
         <div style={{ marginBottom: 28 }}>
           {categories.map(cat => {
-            const status = b.confidence?.[cat.key]?.data_status || "none";
-            const score = b.scores[cat.key];
-            const isOk = status === "ok";
-            const isInsufficient = status === "insufficient";
-            const catColor = isOk ? getColor(score, 25) : "rgba(255,255,255,0.15)";
+            const conf = b.confidence?.[cat.key] || {};
+            const criteria_met = conf.criteria_met;
+            const score = b.scores[cat.key];  // legacy fallback
+            const catColor = criteria_met ? getColor(score) : "rgba(255,255,255,0.15)";
+            const t1 = conf.tier1 ?? conf.t1 ?? 0;
+            const t2 = conf.tier2 ?? conf.t2 ?? 0;
+            const t3 = conf.tier3 ?? conf.t3 ?? 0;
+            const hasAnySources = (t1 + t2 + t3) > 0;
             return (
-              <div key={cat.key} style={{ marginBottom: 12, opacity: isOk ? 1 : 0.5 }}>
+              <div key={cat.key} style={{ marginBottom: 12, opacity: criteria_met ? 1 : 0.45 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                  <span style={{ fontSize: 12, color: isOk ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)" }}>
+                  <span style={{ fontSize: 12, color: criteria_met ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)" }}>
                     {cat.icon} {getCatLabel(cat, lang)}
                   </span>
-                  {isOk ? (
+                  {criteria_met ? (
                     <div style={{ display: "flex", alignItems: "baseline", gap: 2 }}>
                       <span style={{ fontSize: 13, fontWeight: 700, color: catColor }}>{score}</span>
-                      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>/25</span>
+                      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>/ ±20</span>
                     </div>
                   ) : (
                     <span style={{ fontSize: 10, color: "#fb923c", fontFamily: "'DM Mono', monospace" }}>
-                      {isInsufficient
-                        ? (lang === "it" ? "1 fonte" : "1 source")
+                      {hasAnySources
+                        ? (lang === "it" ? "fonti insufficienti" : "insufficient sources")
                         : (lang === "it" ? "nessuna fonte" : "no sources")}
                     </span>
                   )}
                 </div>
-                <ScoreBar value={isOk ? score : 0} color={catColor} max={25} />
+                <ScoreBar value={criteria_met ? (score || 0) : 0} color={catColor} max={20} />
               </div>
             );
           })}
@@ -338,7 +358,7 @@ function MyListPanel({ myBrands, onRemove, onClear, onSelect, lang }) {
         <div>
           <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", letterSpacing: 2, textTransform: "uppercase", marginBottom: 4 }}>{t.my_list_title}</div>
           <div style={{ fontSize: 20, fontWeight: 700, color: "#fff", fontFamily: "'Playfair Display', serif" }}>
-            {verdict.emoji} {t.aggregated_score}: <span style={{ color }}>{total}/100</span>
+            {verdict.emoji} {t.aggregated_score}: <span style={{ color }}>{total}</span>
           </div>
         </div>
         <button onClick={onClear} style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.3)", padding: "6px 12px", borderRadius: 8, cursor: "pointer", fontSize: 11 }}>{t.clear_list}</button>
@@ -348,7 +368,7 @@ function MyListPanel({ myBrands, onRemove, onClear, onSelect, lang }) {
         {categories.map(cat => (
           <div key={cat.key} style={{ flex: "1 1 120px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "10px 14px" }}>
             <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>{cat.icon} {getCatLabel(cat, lang)}</div>
-            <div style={{ fontSize: 22, fontWeight: 700, color: getColor(avgScores[cat.key], 25) }}>{avgScores[cat.key]}</div>
+            <div style={{ fontSize: 22, fontWeight: 700, color: getColor(avgScores[cat.key]) }}>{avgScores[cat.key] ?? "—"}</div>
           </div>
         ))}
       </div>
@@ -375,7 +395,7 @@ function MyListPanel({ myBrands, onRemove, onClear, onSelect, lang }) {
               <div key={b.name} style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.12)", borderRadius: 12, padding: "14px 16px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
                   <span style={{ fontSize: 13, fontWeight: 600, color: getColor(getScore(b)) }}>{b.name}</span>
-                  <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>{b.insufficient_data ? "⚠️" : `score ${getScore(b)}/100`}</span>
+                  <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>{b.insufficient_data ? "⚠️" : `score ${getScore(b) ?? "—"}`}</span>
                   <span style={{ fontSize: 11, background: "rgba(239,68,68,0.15)", color: "#f87171", padding: "2px 8px", borderRadius: 99 }}>{t.below_threshold}</span>
                 </div>
                 <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginBottom: 10 }}>{t.replace_with}</div>
@@ -617,8 +637,8 @@ export default function App() {
                         <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>{brand.sector}</div>
                       </div>
                       <div style={{ textAlign: "right", marginRight: 8 }} onClick={() => setSelected(brand)}>
-                        <div style={{ fontSize: 18, fontWeight: 700, color: getColor(score) }}>{score}</div>
-                        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)" }}>/ 100</div>
+                        <div style={{ fontSize: 18, fontWeight: 700, color: getColor(score) }}>{score ?? "—"}</div>
+                        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)" }}>/ ±400</div>
                       </div>
                       <button className="add-btn" onClick={() => addToList(brand)} style={{ background: inList ? "rgba(94,207,138,0.1)" : "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: inList ? "#5ecf8a" : "rgba(255,255,255,0.5)", padding: "6px 12px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s", whiteSpace: "nowrap" }}>{inList ? "✓" : "+ List"}</button>
                     </div>
