@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => document.getElementById('pwd
     <button class="tab" onclick="switchTab('approved')">Approved <span class="badge badge-count" id="badge-approved">–</span></button>
     <button class="tab" onclick="switchTab('rejected')">Rejected <span class="badge badge-count" id="badge-rejected">–</span></button>
     <div style="width:1px;height:20px;background:rgba(255,255,255,0.08);margin:0 4px"></div>
-    <button class="tab" onclick="switchTab('scores')">Score Updates <span class="badge badge-pending" id="badge-scores">–</span></button>
+    <button class="tab" onclick="switchTab('scores')">📊 Score V2 <span class="badge badge-pending" id="badge-scores">–</span></button>
     <button class="tab" onclick="switchTab('costs')">💰 Costs</button>
     <button class="tab" onclick="switchTab('contributions')">📬 Contributions <span class="badge badge-pending" id="badge-contributions">–</span></button>
     <button class="tab" onclick="switchTab('issues')">🔗 Issues <span class="badge badge-pending" id="badge-issues">–</span></button>
@@ -427,6 +427,7 @@ function switchTab(tab) {
   currentCat = "all";
   document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", ["pending","approved","rejected","scores","costs","contributions","issues"][i] === tab));
   if (tab === 'costs') { loadCosts(); return; }
+  if (tab === 'scores') { loadScoreV2(); return; }
   if (tab === 'contributions') { loadContributions(); return; }
   if (tab === 'issues') { loadIssues(); return; }
   document.querySelectorAll(".filter-chip").forEach(c => c.classList.toggle("active", c.textContent.trim() === "All"));
@@ -850,6 +851,317 @@ async function markResolved(sourceId, btn) {
     btn.disabled = false;
     btn.textContent = '✓ Mark resolved';
     showToast('Error', true);
+  }
+}
+
+
+// ─── SCORE V2 TAB ─────────────────────────────────────────────────────────────
+
+const TIER_VALUES = {
+  1: { positive: 20, prev_positive: 10, prev_negative: -10, negative: -20 },
+  2: { positive: 10, prev_positive:  5, prev_negative:  -5, negative: -10 },
+  3: { positive:  2, prev_positive:  1, prev_negative:  -1, negative:  -2 },
+};
+const JUDGMENT_LABELS = {
+  positive:      { en: "Positive evidence",      it: "Evidenza positiva",       color: "#4ade80" },
+  prev_positive: { en: "Predominantly positive", it: "Prevalentemente positiva",color: "#86efac" },
+  prev_negative: { en: "Predominantly negative", it: "Prevalentemente negativa",color: "#fb923c" },
+  negative:      { en: "Negative evidence",      it: "Evidenza negativa",        color: "#ef4444" },
+};
+const CAT_ICONS = { armi: "⚔️", ambiente: "🌿", diritti: "🤝", fisco: "💰" };
+const CAT_LABELS = { armi: "Conflicts & Arms", ambiente: "Environment & CO₂", diritti: "Human Rights", fisco: "Tax & Transparency" };
+
+let v2Brands = [];
+let v2Criteria = {};  // { armi: [...], ambiente: [...], diritti: [...], fisco: [...] }
+let v2Sources = [];   // sources for selected brand
+let selectedBrand = null;
+
+async function loadScoreV2() {
+  const el = document.getElementById("content");
+  el.innerHTML = renderScoreV2Shell();
+  try {
+    const [brandsRes, criteriaRes] = await Promise.all([
+      fetch(`${API}/brands?lang=en`).then(r => r.json()),
+      fetch(`${API}/scoring-criteria`).then(r => r.json()),
+    ]);
+    v2Brands = brandsRes;
+    // group criteria by category
+    v2Criteria = {};
+    for (const c of (criteriaRes.criteria || [])) {
+      const cat = c.category_key;
+      if (!v2Criteria[cat]) v2Criteria[cat] = [];
+      v2Criteria[cat].push(c);
+    }
+    populateBrandSelect();
+    document.getElementById("badge-scores").textContent = v2Brands.length;
+  } catch(e) {
+    el.innerHTML = `<div style="color:#f87171;padding:20px">Failed to load data: ${e}</div>`;
+  }
+}
+
+function renderScoreV2Shell() {
+  return `
+  <div style="display:grid;grid-template-columns:260px 1fr;gap:20px;align-items:start">
+
+    <!-- LEFT: brand selector + current scores -->
+    <div>
+      <div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:8px">Brand</div>
+      <select id="v2-brand-select" onchange="onBrandSelect(this.value)"
+        style="width:100%;background:#0f1a14;border:1px solid rgba(255,255,255,0.1);color:#f0f0f0;padding:10px 12px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;margin-bottom:16px;outline:none">
+        <option value="">— Select brand —</option>
+      </select>
+
+      <div id="v2-current-scores" style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:1px">
+        Select a brand to see current scores
+      </div>
+    </div>
+
+    <!-- RIGHT: scoring form -->
+    <div id="v2-form-area">
+      <div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:1px;padding:40px 0;text-align:center">
+        Select a brand to score
+      </div>
+    </div>
+
+  </div>`;
+}
+
+function populateBrandSelect() {
+  const sel = document.getElementById("v2-brand-select");
+  if (!sel) return;
+  const sorted = [...v2Brands].sort((a, b) => a.name.localeCompare(b.name));
+  sel.innerHTML = '<option value="">— Select brand —</option>' +
+    sorted.map(b => `<option value="${b.id}">${b.logo} ${b.name} · ${b.sector}</option>`).join('');
+}
+
+async function onBrandSelect(brandId) {
+  if (!brandId) return;
+  selectedBrand = v2Brands.find(b => b.id == brandId);
+  if (!selectedBrand) return;
+
+  // Load sources and current scores
+  const [sourcesRes, scoresRes] = await Promise.all([
+    fetch(`${API}/brands/${brandId}/sources`).then(r => r.json()),
+    fetch(`${API}/scoring/criterion-scores/${brandId}`).then(r => r.json()).catch(() => ({ criteria: [] })),
+  ]);
+  v2Sources = sourcesRes.sources || [];
+
+  renderCurrentScores(scoresRes);
+  renderScoringForm(brandId);
+}
+
+function renderCurrentScores(scoresRes) {
+  const el = document.getElementById("v2-current-scores");
+  if (!el) return;
+  const criteria = scoresRes.criteria || [];
+  const total = scoresRes.total_score_v2;
+  const published = scoresRes.criteria_published || 0;
+
+  if (!criteria.length) {
+    el.innerHTML = `<div style="color:rgba(255,255,255,0.2);font-size:11px">No scores yet</div>`;
+    return;
+  }
+
+  const color = total >= 200 ? "#6dbb7a" : total >= 50 ? "#a8c5a0" : total >= -49 ? "#facc15" : total >= -199 ? "#fb923c" : "#ef4444";
+  let html = `
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:14px;margin-bottom:12px;text-align:center">
+      <div style="font-size:28px;font-weight:700;color:${color};font-family:'DM Mono',monospace">${total ?? "—"}</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:2px">${published} criteria published</div>
+    </div>`;
+
+  for (const cat of ["armi","ambiente","diritti","fisco"]) {
+    const catCriteria = criteria.filter(c => c.criterion?.category_key === cat);
+    if (!catCriteria.length) continue;
+    html += `<div style="margin-bottom:10px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">${CAT_ICONS[cat]} ${CAT_LABELS[cat]}</div>`;
+    for (const c of catCriteria) {
+      const s = c.computed_score;
+      const met = c.criteria_met;
+      const col = s === null ? "rgba(255,255,255,0.15)" : s >= 0 ? "#5ecf8a" : "#ef4444";
+      html += `<div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04)">
+        <span style="color:rgba(255,255,255,0.4)">${c.criterion?.label_en || c.criterion_id}</span>
+        <span style="font-family:'DM Mono',monospace;color:${col}">${met ? (s > 0 ? '+' : '') + s : '—'}</span>
+      </div>`;
+    }
+    html += `</div>`;
+  }
+  el.innerHTML = html;
+}
+
+function renderScoringForm(brandId) {
+  const el = document.getElementById("v2-form-area");
+  if (!el) return;
+
+  let html = `<div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:16px">
+    Score a criterion — ${selectedBrand?.name}
+  </div>`;
+
+  // Category tabs
+  html += `<div style="display:flex;gap:6px;margin-bottom:20px" id="v2-cat-tabs">`;
+  for (const cat of ["armi","ambiente","diritti","fisco"]) {
+    html += `<button onclick="showCatCriteria('${cat}')"
+      id="v2-cat-${cat}"
+      style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:rgba(255,255,255,0.4);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;transition:all .15s">
+      ${CAT_ICONS[cat]} ${cat}
+    </button>`;
+  }
+  html += `</div>`;
+
+  html += `<div id="v2-criteria-list"></div>`;
+
+  el.innerHTML = html;
+  showCatCriteria("armi");
+}
+
+function showCatCriteria(cat) {
+  // Update tab styles
+  for (const c of ["armi","ambiente","diritti","fisco"]) {
+    const btn = document.getElementById(`v2-cat-${c}`);
+    if (!btn) continue;
+    btn.style.background = c === cat ? "rgba(94,207,138,0.1)" : "transparent";
+    btn.style.borderColor = c === cat ? "rgba(94,207,138,0.25)" : "rgba(255,255,255,0.08)";
+    btn.style.color = c === cat ? "#5ecf8a" : "rgba(255,255,255,0.4)";
+  }
+
+  const criteria = v2Criteria[cat] || [];
+  const el = document.getElementById("v2-criteria-list");
+  if (!el) return;
+
+  let html = "";
+  for (const crit of criteria) {
+    html += `
+    <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;margin-bottom:10px">
+      <div style="font-size:13px;font-weight:500;margin-bottom:4px">${crit.label_en}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:14px;font-family:'DM Mono',monospace;letter-spacing:0.5px">${crit.code}</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+        <div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Source</div>
+          <select id="source-${crit.id}"
+            style="width:100%;background:#0f1a14;border:1px solid rgba(255,255,255,0.1);color:#f0f0f0;padding:8px 10px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;outline:none">
+            <option value="">— No source —</option>
+            ${v2Sources.filter(s => !s.category_key || s.category_key === cat)
+              .map(s => `<option value="${s.id}">[T${s.tier||3}] ${s.publisher ? s.publisher+' — ' : ''}${(s.title||s.url||'').substring(0,50)}</option>`)
+              .join('')}
+          </select>
+        </div>
+        <div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Tier</div>
+          <select id="tier-${crit.id}" onchange="updateValuePreview(${crit.id})"
+            style="width:100%;background:#0f1a14;border:1px solid rgba(255,255,255,0.1);color:#f0f0f0;padding:8px 10px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;outline:none">
+            <option value="1">Tier 1 (±20/±10)</option>
+            <option value="2">Tier 2 (±10/±5)</option>
+            <option value="3">Tier 3 (±2/±1)</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Judgment</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px" id="judgment-${crit.id}">
+          ${['positive','prev_positive','prev_negative','negative'].map(j => `
+            <button onclick="selectJudgment(${crit.id}, '${j}', this)"
+              data-judgment="${j}"
+              style="padding:8px 4px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:transparent;
+                     color:${JUDGMENT_LABELS[j].color};cursor:pointer;font-size:10px;font-family:'DM Sans',sans-serif;
+                     transition:all .15s;line-height:1.3;text-align:center">
+              ${JUDGMENT_LABELS[j].en.replace(' ', '<br>')}
+            </button>`).join('')}
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+        <div id="preview-${crit.id}" style="font-family:'DM Mono',monospace;font-size:13px;color:rgba(255,255,255,0.3)">
+          Select tier + judgment
+        </div>
+        <button onclick="submitCriterionScore(${selectedBrand?.id}, ${crit.id}, this)"
+          id="submit-${crit.id}"
+          style="background:rgba(94,207,138,0.1);border:1px solid rgba(94,207,138,0.25);color:#5ecf8a;
+                 padding:8px 18px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;
+                 font-weight:600;transition:all .15s;white-space:nowrap">
+          Save score →
+        </button>
+      </div>
+    </div>`;
+  }
+
+  el.innerHTML = html || `<div style="color:rgba(255,255,255,0.2);font-size:12px;padding:20px 0">No criteria for this category</div>`;
+}
+
+function selectJudgment(critId, judgment, btn) {
+  // Deselect all in this group
+  document.querySelectorAll(`#judgment-${critId} button`).forEach(b => {
+    b.style.background = "transparent";
+    b.style.borderColor = "rgba(255,255,255,0.08)";
+    b.style.fontWeight = "400";
+  });
+  // Select this one
+  btn.style.background = `${JUDGMENT_LABELS[judgment].color}22`;
+  btn.style.borderColor = `${JUDGMENT_LABELS[judgment].color}55`;
+  btn.style.fontWeight = "600";
+  btn.dataset.selected = "true";
+  updateValuePreview(critId);
+}
+
+function updateValuePreview(critId) {
+  const tierEl = document.getElementById(`tier-${critId}`);
+  const judgmentEl = document.querySelector(`#judgment-${critId} button[data-selected="true"]`);
+  const previewEl = document.getElementById(`preview-${critId}`);
+  if (!tierEl || !judgmentEl || !previewEl) return;
+
+  const tier = parseInt(tierEl.value);
+  const judgment = judgmentEl.dataset.judgment;
+  const value = TIER_VALUES[tier][judgment];
+  const color = value > 0 ? "#5ecf8a" : value < 0 ? "#ef4444" : "rgba(255,255,255,0.3)";
+  previewEl.innerHTML = `Value: <span style="color:${color};font-size:16px;font-weight:700">${value > 0 ? '+' : ''}${value}</span>`;
+}
+
+async function submitCriterionScore(brandId, criterionId, btn) {
+  const tierEl = document.getElementById(`tier-${criterionId}`);
+  const judgmentEl = document.querySelector(`#judgment-${criterionId} button[data-selected="true"]`);
+  const sourceEl = document.getElementById(`source-${criterionId}`);
+
+  if (!judgmentEl) return showToast("Select a judgment first", true);
+
+  const tier = parseInt(tierEl.value);
+  const judgment = judgmentEl.dataset.judgment;
+  const sourceId = sourceEl?.value ? parseInt(sourceEl.value) : null;
+
+  btn.disabled = true;
+  btn.textContent = "Saving…";
+
+  try {
+    const res = await fetch(`${API}/scoring/criterion-score`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-admin-key": ADMIN_KEY },
+      body: JSON.stringify({
+        brand_id: brandId,
+        criterion_id: criterionId,
+        source_id: sourceId,
+        tier,
+        judgment,
+      })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    const valStr = (data.value > 0 ? "+" : "") + data.value;
+    showToast(`✓ Saved ${valStr} — Total: ${data.total_score_v2}`);
+    btn.textContent = "✓ Saved";
+    btn.style.color = "#4ade80";
+
+    // Reload scores panel
+    const scoresRes = await fetch(`${API}/scoring/criterion-scores/${brandId}`).then(r => r.json());
+    renderCurrentScores(scoresRes);
+
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = "Save score →";
+      btn.style.color = "#5ecf8a";
+    }, 2000);
+  } catch(e) {
+    showToast("Error: " + e.message, true);
+    btn.disabled = false;
+    btn.textContent = "Save score →";
   }
 }
 
