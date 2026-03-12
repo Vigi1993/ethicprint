@@ -148,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => document.getElementById('pwd
     <button class="tab" onclick="switchTab('scores')">Score Updates <span class="badge badge-pending" id="badge-scores">–</span></button>
     <button class="tab" onclick="switchTab('costs')">💰 Costs</button>
     <button class="tab" onclick="switchTab('contributions')">📬 Contributions <span class="badge badge-pending" id="badge-contributions">–</span></button>
+    <button class="tab" onclick="switchTab('issues')">🔗 Issues <span class="badge badge-pending" id="badge-issues">–</span></button>
   </div>
 </header>
 
@@ -424,9 +425,10 @@ async function reject(id) {
 function switchTab(tab) {
   currentTab = tab;
   currentCat = "all";
-  document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", ["pending","approved","rejected","scores","costs","contributions"][i] === tab));
+  document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", ["pending","approved","rejected","scores","costs","contributions","issues"][i] === tab));
   if (tab === 'costs') { loadCosts(); return; }
   if (tab === 'contributions') { loadContributions(); return; }
+  if (tab === 'issues') { loadIssues(); return; }
   document.querySelectorAll(".filter-chip").forEach(c => c.classList.toggle("active", c.textContent.trim() === "All"));
   renderTab();
 }
@@ -683,6 +685,170 @@ async function resolveContrib(type, id, status, btn) {
   } catch {
     btn.disabled = false;
     btn.textContent = status === 'resolved' || status === 'approved' ? '✓' : '✗';
+    showToast('Error', true);
+  }
+}
+
+
+// ─── ISSUES TAB (broken/missing sources) ─────────────────────────────────────
+
+async function loadIssues() {
+  const el = document.getElementById("content");
+  el.innerHTML = `<div style="color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px;padding:40px 0;text-align:center">Loading issues…</div>`;
+  try {
+    const res = await fetch(`${API}/sources/issues`, { headers: { "x-admin-key": ADMIN_KEY } });
+    const data = await res.json();
+    document.getElementById("badge-issues").textContent = data.count || "0";
+    renderIssues(data.issues || []);
+  } catch(e) {
+    el.innerHTML = `<div style="color:#f87171;padding:20px">Failed to load issues</div>`;
+  }
+}
+
+function renderIssues(issues) {
+  const el = document.getElementById("content");
+  if (issues.length === 0) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">✅</div>No broken or missing sources</div>`;
+    return;
+  }
+
+  const catIcons = { armi:"⚔️", ambiente:"🌿", diritti:"🤝", fisco:"💰" };
+  let html = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+    <div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:2px;text-transform:uppercase">${issues.length} source issues</div>
+    <button onclick="loadIssues()" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);padding:6px 14px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px">↻ Refresh</button>
+  </div>`;
+
+  issues.forEach(s => {
+    const typeLabel = s.broken ? '🔴 Broken link' : '🟡 Missing content';
+    const typeColor = s.broken ? 'rgba(239,68,68,0.12)' : 'rgba(250,204,21,0.1)';
+    const typeBorder = s.broken ? 'rgba(239,68,68,0.2)' : 'rgba(250,204,21,0.2)';
+    html += `
+    <div id="issue-${s.id}" style="background:${typeColor};border:1px solid ${typeBorder};border-radius:12px;padding:16px;margin-bottom:10px">
+      <div style="display:flex;align-items:flex-start;gap:14px">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-size:11px;color:rgba(255,255,255,0.3)">${typeLabel}</span>
+            <span class="cat-badge cat-${s.category_key}">${catIcons[s.category_key]||''} ${s.category_key}</span>
+          </div>
+          <div style="font-size:13px;font-weight:500;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.title || 'Untitled'}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:6px">${s.publisher || '—'} · Brand #${s.brand_id}</div>
+          <a href="${s.url}" target="_blank" style="font-size:11px;font-family:'DM Mono',monospace;color:rgba(99,202,183,0.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;max-width:380px">${s.url}</a>
+          <div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:4px">Last checked: ${s.last_checked ? new Date(s.last_checked).toLocaleDateString() : '—'}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+          <button class="btn" style="background:rgba(99,202,183,0.1);border-color:rgba(99,202,183,0.25);color:#63cab7;font-size:11px"
+            onclick="findReplacement(${s.id}, this)">🔍 Find replacement</button>
+          <button class="btn btn-reject" onclick="markResolved(${s.id}, this)" style="font-size:11px">✓ Mark resolved</button>
+        </div>
+      </div>
+      <div id="candidates-${s.id}" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06)"></div>
+    </div>`;
+  });
+
+  el.innerHTML = html;
+}
+
+async function findReplacement(sourceId, btn) {
+  btn.disabled = true;
+  const origText = btn.textContent;
+  btn.textContent = '⏳ Searching…';
+  const candidatesEl = document.getElementById(`candidates-${sourceId}`);
+  candidatesEl.style.display = 'block';
+  candidatesEl.innerHTML = `<div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:1px">Searching Brave + evaluating with Claude…</div>`;
+
+  try {
+    const res = await fetch(`${API}/sources/${sourceId}/find-replacement`, {
+      method: 'POST',
+      headers: { "x-admin-key": ADMIN_KEY }
+    });
+    const data = await res.json();
+    renderCandidates(sourceId, data);
+  } catch(e) {
+    candidatesEl.innerHTML = `<div style="color:#f87171;font-size:12px">Search failed. Try again.</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = origText;
+  }
+}
+
+function renderCandidates(sourceId, data) {
+  const el = document.getElementById(`candidates-${sourceId}`);
+  if (!data.candidates || data.candidates.length === 0) {
+    el.innerHTML = `<div style="font-size:12px;color:rgba(255,255,255,0.2)">No relevant candidates found for query: <em>${data.query}</em></div>`;
+    return;
+  }
+
+  const tierColors = { 1: '#f0c060', 2: '#a0b4c8', 3: '#c08060' };
+  let html = `<div style="font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:2px;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:10px">
+    ${data.candidates.length} candidate${data.candidates.length !== 1 ? 's' : ''} found
+  </div>`;
+
+  data.candidates.forEach((c, i) => {
+    const tierColor = tierColors[c.tier] || tierColors[3];
+    html += `
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start">
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span style="font-family:'DM Mono',monospace;font-size:10px;color:${tierColor};border:1px solid ${tierColor}44;border-radius:4px;padding:1px 6px">T${c.tier}</span>
+          <span style="font-size:12px;font-weight:500">${c.publisher || '—'}</span>
+        </div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:4px">${c.title || 'No title'}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:6px;line-height:1.5">${c.summary || ''}</div>
+        <a href="${c.url}" target="_blank" style="font-size:10px;font-family:'DM Mono',monospace;color:rgba(99,202,183,0.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;max-width:340px">${c.url}</a>
+      </div>
+      <button class="btn btn-approve" style="font-size:11px;flex-shrink:0"
+        onclick="proposeReplacement(${sourceId}, '${c.url.replace(/'/g,"\'")}', '${(c.title||'').replace(/'/g,"\'")}', '${(c.publisher||'').replace(/'/g,"\'")}', '${(c.summary||'').replace(/'/g,"\'")}', this)">
+        ✓ Propose
+      </button>
+    </div>`;
+  });
+
+  el.innerHTML = html;
+}
+
+async function proposeReplacement(sourceId, url, title, publisher, summary, btn) {
+  btn.disabled = true;
+  btn.textContent = '…';
+
+  // Get brand_id and category_key from the issue card
+  const issueCard = document.getElementById(`issue-${sourceId}`);
+  // We need brand_id — fetch from API
+  try {
+    const res = await fetch(`${API}/source-proposals`, {
+      method: 'POST' ,
+      headers: { "Content-Type": "application/json", "x-admin-key": ADMIN_KEY }
+    });
+    // Actually insert via the existing propose endpoint logic but we need brand_id
+    // Simpler: call a dedicated endpoint
+    const propRes = await fetch(`${API}/sources/${sourceId}/propose-replacement`, {
+      method: 'POST',
+      headers: { "Content-Type": "application/json", "x-admin-key": ADMIN_KEY },
+      body: JSON.stringify({ url, title, publisher, summary })
+    });
+    if (!propRes.ok) throw new Error();
+    btn.textContent = '✅ Proposed';
+    btn.style.color = '#4ade80';
+    showToast('✓ Replacement proposed — check Pending tab');
+  } catch {
+    btn.disabled = false;
+    btn.textContent = '✓ Propose';
+    showToast('Error proposing replacement', true);
+  }
+}
+
+async function markResolved(sourceId, btn) {
+  btn.disabled = true;
+  btn.textContent = '…';
+  try {
+    await fetch(`${API}/sources/${sourceId}/mark-resolved`, {
+      method: 'POST',
+      headers: { "x-admin-key": ADMIN_KEY }
+    });
+    document.getElementById(`issue-${sourceId}`).style.opacity = '0.3';
+    showToast('✓ Marked as resolved');
+  } catch {
+    btn.disabled = false;
+    btn.textContent = '✓ Mark resolved';
     showToast('Error', true);
   }
 }
