@@ -23,6 +23,7 @@
   body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
   ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
+  /* ── HEADER ── */
   header {
     position: sticky; top: 0; z-index: 100;
     background: rgba(10,10,15,0.95); backdrop-filter: blur(12px);
@@ -31,27 +32,37 @@
     display: flex; align-items: center; gap: 24px; height: 56px;
   }
   header h1 { font-size: 13px; font-family: 'DM Mono', monospace; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; }
-  .tabs { display: flex; gap: 4px; margin-left: auto; }
+  .tabs { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
   .tab { padding: 6px 14px; border-radius: 8px; border: 1px solid transparent; cursor: pointer; font-size: 12px; font-family: 'DM Sans', sans-serif; transition: all 0.15s; color: var(--muted); background: transparent; }
   .tab.active { background: rgba(99,202,183,0.1); border-color: rgba(99,202,183,0.25); color: var(--accent); }
   .tab:hover:not(.active) { background: rgba(255,255,255,0.04); color: var(--text); }
   .badge { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; border-radius: 99px; font-size: 10px; font-weight: 600; padding: 0 5px; margin-left: 6px; }
   .badge-pending { background: rgba(250,204,21,0.15); color: var(--yellow); }
-  .badge-count { background: rgba(255,255,255,0.08); color: var(--muted); }
+  .badge-count  { background: rgba(255,255,255,0.08); color: var(--muted); }
 
-  .main { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+  /* ── LAYOUT ── */
+  .main { max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
 
-  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px; }
+  /* ── STATS ── */
+  .stats { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; margin-bottom: 32px; }
   .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; }
-  .stat-val { font-size: 28px; font-weight: 600; font-family: 'DM Mono', monospace; line-height: 1; }
+  .stat-val   { font-size: 28px; font-weight: 600; font-family: 'DM Mono', monospace; line-height: 1; }
   .stat-label { font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
 
+  /* ── FILTER BAR ── */
+  .filter-bar { display: flex; gap: 8px; margin-bottom: 20px; align-items: center; }
+  .filter-bar span { font-size: 11px; color: var(--muted); margin-right: 4px; }
+  .filter-chip { padding: 4px 12px; border-radius: 99px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+  .filter-chip.active { background: rgba(99,202,183,0.1); border-color: rgba(99,202,183,0.25); color: var(--accent); }
+
+  /* ── BRAND GROUP ── */
   .brand-group { margin-bottom: 24px; }
   .brand-header { display: flex; align-items: center; gap: 10px; padding: 12px 0 8px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
-  .brand-logo { width: 28px; height: 28px; border-radius: 7px; background: rgba(99,202,183,0.1); border: 1px solid rgba(99,202,183,0.2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
-  .brand-name { font-size: 14px; font-weight: 600; }
+  .brand-logo  { width: 28px; height: 28px; border-radius: 7px; background: rgba(99,202,183,0.1); border: 1px solid rgba(99,202,183,0.2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+  .brand-name  { font-size: 14px; font-weight: 600; }
   .brand-count { font-size: 11px; color: var(--muted); }
 
+  /* ── PROPOSAL CARD ── */
   .proposal-card {
     background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
     padding: 16px; margin-bottom: 8px; display: flex; gap: 16px; align-items: flex-start;
@@ -59,61 +70,106 @@
   }
   .proposal-card:hover { border-color: rgba(255,255,255,0.1); }
   .proposal-card.approved { border-color: rgba(74,222,128,0.2); background: rgba(74,222,128,0.03); }
-  .proposal-card.rejected { border-color: rgba(248,113,113,0.15); background: rgba(248,113,113,0.02); opacity: 0.5; }
+  .proposal-card.rejected { border-color: rgba(248,113,113,0.15); background: rgba(248,113,113,0.02); opacity: 0.6; }
 
+  /* ── CATEGORY BADGES ── */
   .cat-badge { padding: 3px 9px; border-radius: 99px; font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; flex-shrink: 0; margin-top: 2px; }
-  .cat-armi { background: rgba(248,113,113,0.12); color: #f87171; }
-  .cat-ambiente { background: rgba(74,222,128,0.12); color: #4ade80; }
-  .cat-diritti { background: rgba(99,202,183,0.12); color: #63CAB7; }
-  .cat-fisco { background: rgba(250,204,21,0.12); color: #facc15; }
+  .cat-armi     { background: rgba(248,113,113,0.12); color: #f87171; }
+  .cat-ambiente { background: rgba(74,222,128,0.12);  color: #4ade80; }
+  .cat-diritti  { background: rgba(99,202,183,0.12);  color: #63CAB7; }
+  .cat-fisco    { background: rgba(250,204,21,0.12);  color: #facc15; }
 
-  .proposal-body { flex: 1; min-width: 0; }
-  .proposal-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .proposal-publisher { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+  /* ── PROPOSAL BODY ── */
+  .proposal-body    { flex: 1; min-width: 0; }
+  .proposal-title   { font-size: 13px; font-weight: 500; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .proposal-pub     { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
   .proposal-summary { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.5; margin-bottom: 8px; }
-  .proposal-url { font-size: 11px; font-family: 'DM Mono', monospace; color: rgba(99,202,183,0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+  .proposal-url     { font-size: 11px; font-family: 'DM Mono', monospace; color: rgba(99,202,183,0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
   .proposal-url:hover { color: var(--accent); }
-  .proposal-meta { font-size: 10px; color: var(--muted); margin-top: 4px; }
+  .proposal-meta    { font-size: 10px; color: var(--muted); margin-top: 4px; }
 
+  /* ── AI JUDGMENT BLOCK ── */
+  .ai-block { margin: 10px 0 4px; padding: 10px 14px; background: rgba(99,202,183,0.04); border: 1px solid rgba(99,202,183,0.15); border-radius: 8px; }
+  .ai-block-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+  .ai-label { font-size: 11px; color: #63CAB7; font-weight: 600; letter-spacing: .05em; }
+  .ai-tier-badge { font-size: 10px; padding: 2px 8px; border-radius: 99px; font-weight: 600; font-family: 'DM Mono', monospace; }
+  .tier-1 { background: rgba(240,192,96,0.15); color: #f0c060; }
+  .tier-2 { background: rgba(160,180,200,0.15); color: #a0b4c8; }
+  .tier-3 { background: rgba(192,128,96,0.15); color: #c08060; }
+
+  /* ── BUTTONS ── */
   .proposal-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
   .btn { padding: 7px 14px; border-radius: 8px; border: 1px solid; cursor: pointer; font-size: 12px; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: all 0.15s; white-space: nowrap; }
-  .btn-approve { background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.25); color: var(--green); }
+  .btn-approve  { background: rgba(74,222,128,0.1);   border-color: rgba(74,222,128,0.25);  color: var(--green); }
   .btn-approve:hover { background: rgba(74,222,128,0.2); }
-  .btn-reject { background: rgba(248,113,113,0.07); border-color: rgba(248,113,113,0.15); color: var(--red); }
-  .btn-reject:hover { background: rgba(248,113,113,0.15); }
-  .btn-open { background: transparent; border-color: var(--border); color: var(--muted); font-size: 11px; padding: 5px 10px; }
+  .btn-reject   { background: rgba(248,113,113,0.07); border-color: rgba(248,113,113,0.15); color: var(--red); }
+  .btn-reject:hover  { background: rgba(248,113,113,0.15); }
+  .btn-revert   { background: rgba(250,204,21,0.07);  border-color: rgba(250,204,21,0.2);   color: var(--yellow); font-size: 11px; }
+  .btn-revert:hover  { background: rgba(250,204,21,0.15); }
+  .btn-open     { background: transparent; border-color: var(--border); color: var(--muted); font-size: 11px; padding: 5px 10px; }
   .btn-open:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .status-chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 500; }
-  .status-approved { background: rgba(74,222,128,0.1); color: var(--green); }
+  .status-approved { background: rgba(74,222,128,0.1);  color: var(--green); }
   .status-rejected { background: rgba(248,113,113,0.1); color: var(--red); }
 
+  .job-badge { font-size: 9px; padding: 2px 7px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .job-new         { background: rgba(99,202,183,0.1);  color: var(--accent); }
+  .job-replacement { background: rgba(251,146,60,0.12); color: var(--orange); }
+
+  /* ── MISC ── */
   .empty { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 14px; }
   .empty-icon { font-size: 32px; margin-bottom: 12px; }
-
   .loading { text-align: center; padding: 80px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 2px; }
-
   .toast { position: fixed; bottom: 24px; right: 24px; background: #1a1a28; border: 1px solid var(--border); border-radius: 10px; padding: 12px 18px; font-size: 13px; z-index: 999; transition: opacity 0.3s; }
   .toast.hide { opacity: 0; pointer-events: none; }
 
-  .filter-bar { display: flex; gap: 8px; margin-bottom: 20px; align-items: center; }
-  .filter-bar span { font-size: 11px; color: var(--muted); margin-right: 4px; }
-  .filter-chip { padding: 4px 12px; border-radius: 99px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
-  .filter-chip.active { background: rgba(99,202,183,0.1); border-color: rgba(99,202,183,0.25); color: var(--accent); }
+  /* ── SCORE V2 ── */
+  .v2-grid { display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: start; }
 
-  .job-badge { font-size: 9px; padding: 2px 7px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .job-new { background: rgba(99,202,183,0.1); color: var(--accent); }
-  .score-arrow { font-size: 18px; font-weight: 700; font-family: 'DM Mono', monospace; }
-  .score-up { color: var(--green); }
-  .score-down { color: var(--red); }
-  .score-same { color: var(--muted); }
+  .v2-sidebar { position: sticky; top: 72px; }
+
+  .v2-score-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+  .v2-total { font-size: 36px; font-weight: 700; font-family: 'DM Mono', monospace; text-align: center; line-height: 1; }
+  .v2-total-label { font-size: 10px; color: var(--muted); text-align: center; margin-top: 4px; letter-spacing: 1px; text-transform: uppercase; }
+
+  .v2-cat-tabs { display: flex; gap: 4px; margin-bottom: 16px; }
+  .v2-cat-btn { flex: 1; padding: 7px 4px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: transparent; color: rgba(255,255,255,0.4); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 10px; transition: all .15s; text-align: center; }
+  .v2-cat-btn.active { background: rgba(99,202,183,0.1); border-color: rgba(99,202,183,0.25); color: var(--accent); }
+
+  .criterion-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 10px; }
+  .criterion-title { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+  .criterion-code  { font-size: 10px; color: rgba(255,255,255,0.3); font-family: 'DM Mono', monospace; letter-spacing: 0.5px; margin-bottom: 14px; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .form-label { font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  select.v2-select { width: 100%; background: #0f1a14; border: 1px solid rgba(255,255,255,0.1); color: #f0f0f0; padding: 8px 10px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 12px; outline: none; }
+
+  .judgment-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin-bottom: 12px; }
+  .judgment-btn { padding: 8px 4px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: transparent; cursor: pointer; font-size: 10px; font-family: 'DM Sans', sans-serif; transition: all .15s; line-height: 1.3; text-align: center; }
+
+  .save-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .value-preview { font-family: 'DM Mono', monospace; font-size: 13px; color: rgba(255,255,255,0.3); }
+
+  /* Fonte assegnata al criterio */
+  .assigned-source { display: flex; align-items: center; gap: 8px; background: rgba(74,222,128,0.05); border: 1px solid rgba(74,222,128,0.15); border-radius: 8px; padding: 8px 12px; margin-top: 8px; }
+  .assigned-source-info { flex: 1; min-width: 0; }
+  .assigned-source-title { font-size: 11px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .assigned-source-meta  { font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .btn-remove-source { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.2); color: var(--red); padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 10px; font-family: 'DM Sans', sans-serif; flex-shrink: 0; transition: all .15s; }
+  .btn-remove-source:hover { background: rgba(248,113,113,0.18); }
+
+  /* Sidebar criterion scores */
+  .sidebar-crit-row { display: flex; justify-content: space-between; font-size: 11px; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+
+  /* Score proposals (old tab) */
   .score-box { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 8px 14px; margin-bottom: 8px; }
-  .job-replacement { background: rgba(251,146,60,0.12); color: var(--orange); }
 </style>
 </head>
 <body>
 
+<!-- ── PASSWORD GATE ── -->
 <div id="gate" style="position:fixed;inset:0;background:#0a0a0f;display:flex;align-items:center;justify-content:center;z-index:9999">
   <div style="background:#111118;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:40px;width:320px;text-align:center">
     <div style="font-family:'DM Mono',monospace;font-size:11px;color:#63CAB7;letter-spacing:3px;text-transform:uppercase;margin-bottom:24px">EthicPrint Admin</div>
@@ -125,7 +181,7 @@
 </div>
 
 <script>
-const API = "https://web-production-14708.up.railway.app";
+const API       = "https://web-production-14708.up.railway.app";
 const ADMIN_KEY = "Vigiethic93!";
 
 function checkPwd() {
@@ -141,6 +197,7 @@ function checkPwd() {
 document.addEventListener('DOMContentLoaded', () => document.getElementById('pwd-input').focus());
 </script>
 
+<!-- ── HEADER ── -->
 <header>
   <h1>EthicPrint Admin</h1>
   <div class="tabs">
@@ -148,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => document.getElementById('pwd
     <button class="tab" onclick="switchTab('approved')">Approved <span class="badge badge-count" id="badge-approved">–</span></button>
     <button class="tab" onclick="switchTab('rejected')">Rejected <span class="badge badge-count" id="badge-rejected">–</span></button>
     <div style="width:1px;height:20px;background:rgba(255,255,255,0.08);margin:0 4px"></div>
-    <button class="tab" onclick="switchTab('scores')">📊 Score V2 <span class="badge badge-pending" id="badge-scores">–</span></button>
+    <button class="tab" onclick="switchTab('scorev2')">📊 Score V2</button>
     <button class="tab" onclick="switchTab('costs')">💰 Costs</button>
     <button class="tab" onclick="switchTab('contributions')">📬 Contributions <span class="badge badge-pending" id="badge-contributions">–</span></button>
     <button class="tab" onclick="switchTab('issues')">🔗 Issues <span class="badge badge-pending" id="badge-issues">–</span></button>
@@ -156,14 +213,16 @@ document.addEventListener('DOMContentLoaded', () => document.getElementById('pwd
 </header>
 
 <div class="main">
-  <div class="stats" id="stats" style="display:none;grid-template-columns:repeat(5,1fr)">
+  <!-- Stats -->
+  <div class="stats" id="stats" style="display:none">
     <div class="stat"><div class="stat-val" style="color:var(--yellow)" id="s-pending">–</div><div class="stat-label">Pending</div></div>
-    <div class="stat"><div class="stat-val" style="color:var(--green)" id="s-approved">–</div><div class="stat-label">Approved</div></div>
-    <div class="stat"><div class="stat-val" style="color:var(--red)" id="s-rejected">–</div><div class="stat-label">Rejected</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--green)"  id="s-approved">–</div><div class="stat-label">Approved</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--red)"    id="s-rejected">–</div><div class="stat-label">Rejected</div></div>
     <div class="stat"><div class="stat-val" style="color:var(--accent)" id="s-brands">–</div><div class="stat-label">Brands</div></div>
-    <div class="stat"><div class="stat-val" style="color:var(--orange)" id="s-scores">–</div><div class="stat-label">Score Updates</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--orange)" id="s-total">–</div><div class="stat-label">Total Sources</div></div>
   </div>
 
+  <!-- Filter bar (pending only) -->
   <div class="filter-bar" id="filter-bar" style="display:none">
     <span>Category:</span>
     <button class="filter-chip active" onclick="filterCat('all')">All</button>
@@ -173,448 +232,766 @@ document.addEventListener('DOMContentLoaded', () => document.getElementById('pwd
     <button class="filter-chip" onclick="filterCat('fisco')">💰 Tax</button>
   </div>
 
-  <div id="content"><div class="loading">Loading proposals...</div></div>
+  <div id="content"><div class="loading">Loading…</div></div>
 </div>
 
 <div class="toast hide" id="toast"></div>
 
 <script>
-let currentTab = "pending";
-let currentCat = "all";
-let allProposals = {};
+// ════════════════════════════════════════════════════════════════
+// GLOBALS
+// ════════════════════════════════════════════════════════════════
+let currentTab = 'pending';
+let currentCat = 'all';
+let allProposals = { pending: [], approved: [], rejected: [] };
 let counts = { pending: 0, approved: 0, rejected: 0 };
 
-const CAT_LABELS = { armi: "Conflicts & Arms", ambiente: "Environment & CO₂", diritti: "Human Rights", fisco: "Tax & Transparency" };
-const CAT_ICONS = { armi: "⚔️", ambiente: "🌿", diritti: "🤝", fisco: "💰" };
+const CAT_LABELS = { armi: 'Conflicts & Arms', ambiente: 'Environment & CO₂', diritti: 'Human Rights', fisco: 'Tax & Transparency' };
+const CAT_ICONS  = { armi: '⚔️', ambiente: '🌿', diritti: '🤝', fisco: '💰' };
+const TIER_COLORS = { 1: '#f0c060', 2: '#a0b4c8', 3: '#c08060' };
 
-const SCORE_LABELS = {
-  5: { label: "Positive evidence",        color: "#4ade80", dot: "●●●●●" },
-  4: { label: "Predominantly positive",   color: "#86efac", dot: "●●●●○" },
-  3: { label: "No evidence available",    color: "rgba(255,255,255,0.3)", dot: "●●●○○" },
-  2: { label: "Predominantly negative",   color: "#fb923c", dot: "●●○○○" },
-  1: { label: "Negative evidence",        color: "#ef4444", dot: "●○○○○" },
+const JUDGMENT_LABELS = {
+  positive:      { en: 'Positive evidence',      color: '#4ade80' },
+  prev_positive: { en: 'Predominantly positive', color: '#86efac' },
+  prev_negative: { en: 'Predominantly negative', color: '#fb923c' },
+  negative:      { en: 'Negative evidence',      color: '#ef4444' },
+};
+const TIER_VALUES = {
+  1: { positive: 20, prev_positive: 10, prev_negative: -10, negative: -20 },
+  2: { positive: 10, prev_positive:  5, prev_negative:  -5, negative: -10 },
+  3: { positive:  2, prev_positive:  1, prev_negative:  -1, negative:  -2 },
 };
 
-function renderScoreCard(p) {
-  const brand = p.brands?.name || `Brand ${p.brand_id}`;
-  const source = p.sources;
-  const catIcons = { armi: "⚔️", ambiente: "🌿", diritti: "🤝", fisco: "💰" };
-  const cur = SCORE_LABELS[p.current_score] || SCORE_LABELS[3];
-  const prop = SCORE_LABELS[p.proposed_score] || SCORE_LABELS[3];
-  const diff = p.proposed_score - p.current_score;
-  const arrow = diff > 0 ? "↑" : diff < 0 ? "↓" : "→";
-  const arrowColor = diff > 0 ? "#4ade80" : diff < 0 ? "#ef4444" : "rgba(255,255,255,0.3)";
+// Score V2 state
+let v2Brands   = [];
+let v2Criteria = {};   // { armi:[...], ambiente:[...], ... }
+let v2Sources  = [];   // flat array per brand selezionato
+let v2Scores   = {};   // { criterion_id: { computed_score, criteria_met, sources:[...] } }
+let v2BrandTotal = null;
+let v2CriteriaPub = 0;
+let selectedBrand = null;
+let activeCat = 'armi';
 
-  const criterionLabel = p.scoring_criteria?.label_en || p.criterion_id || "";
+// Esclusioni locali: Set di "sourceId_criterionId" esclusi (sincronizzato con DB)
+let localExclusions = new Set();
+// Assegnazioni locali: Map criterionId → sourceId (dopo save)
+let localAssignments = new Map();
 
-  const actions = p.status === "pending"
-    ? `<div class="proposal-actions">
-        <button class="btn btn-approve" onclick="approveScore(${p.id})">✓ Apply</button>
-        <button class="btn btn-reject" onclick="rejectScore(${p.id})">✗ Reject</button>
-       </div>`
-    : `<div class="proposal-actions">
-        <span class="status-chip ${p.status === "approved" ? "status-approved" : "status-rejected"}">${p.status === "approved" ? "✓ Applied" : "✗ Rejected"}</span>
-       </div>`;
 
-  return `<div class="proposal-card ${p.status}" id="score-card-${p.id}">
-    <span class="cat-badge cat-${p.category_key}">${catIcons[p.category_key] || "•"} ${CAT_LABELS[p.category_key] || p.category_key}</span>
-    <div class="proposal-body">
-      <div class="proposal-title">${brand}</div>
-      ${criterionLabel ? `<div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:8px;font-family:'DM Mono',monospace;letter-spacing:0.5px">› ${criterionLabel}</div>` : ""}
-      <div class="score-box" style="align-items:flex-start;flex-direction:column;gap:6px">
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="font-size:11px;color:var(--muted);width:52px">Before:</span>
-          <span style="font-family:'DM Mono',monospace;font-size:13px;color:${cur.color}">${cur.dot}</span>
-          <span style="font-size:12px;color:${cur.color}">${cur.label}</span>
-          <span style="font-size:11px;color:rgba(255,255,255,0.2)">(${p.current_score}/5)</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="font-size:11px;color:var(--muted);width:52px">After <span style="color:${arrowColor}">${arrow}</span>:</span>
-          <span style="font-family:'DM Mono',monospace;font-size:13px;color:${prop.color}">${prop.dot}</span>
-          <span style="font-size:12px;color:${prop.color};font-weight:500">${prop.label}</span>
-          <span style="font-size:11px;color:rgba(255,255,255,0.2)">(${p.proposed_score}/5)</span>
-        </div>
-      </div>
-      ${p.motivation ? `<div class="proposal-summary">${p.motivation}</div>` : ""}
-      ${source ? `<a class="proposal-url" href="${source.url}" target="_blank">↗ ${source.title || source.url}</a>` : ""}
-      <div class="proposal-meta">${new Date(p.created_at).toLocaleDateString("en-GB", {day:"numeric",month:"short",year:"numeric"})}</div>
-    </div>
-    ${actions}
-  </div>`;
-}
-
-async function approveScore(id) {
-  const card = document.getElementById(`score-card-${id}`);
-  card.querySelectorAll("button").forEach(b => b.disabled = true);
-  try {
-    await fetch(`${API}/score-proposals/${id}/approve`, { method: "POST" });
-    card.classList.add("approved");
-    card.querySelector(".proposal-actions").innerHTML = `<span class="status-chip status-approved">✓ Applied</span>`;
-    counts.scores = (counts.scores || 0) - 1;
-    document.getElementById("badge-scores").textContent = counts.scores;
-    document.getElementById("s-scores").textContent = counts.scores;
-    showToast("✓ Score updated in database");
-  } catch(e) { showToast("✗ Error — try again", true); card.querySelectorAll("button").forEach(b => b.disabled = false); }
-}
-
-async function rejectScore(id) {
-  const card = document.getElementById(`score-card-${id}`);
-  card.querySelectorAll("button").forEach(b => b.disabled = true);
-  try {
-    await fetch(`${API}/score-proposals/${id}/reject`, { method: "POST" });
-    card.classList.add("rejected");
-    card.querySelector(".proposal-actions").innerHTML = `<span class="status-chip status-rejected">✗ Rejected</span>`;
-    counts.scores = (counts.scores || 0) - 1;
-    document.getElementById("badge-scores").textContent = counts.scores;
-    document.getElementById("s-scores").textContent = counts.scores;
-    showToast("Score proposal rejected");
-  } catch(e) { showToast("✗ Error — try again", true); card.querySelectorAll("button").forEach(b => b.disabled = false); }
-}
-
-async function refreshScores() {
-  const res = await fetch(`${API}/score-proposals?status=pending`).then(r => r.json());
-  allProposals.scores = res.proposals;
-  counts.scores = res.count;
-  document.getElementById("badge-scores").textContent = counts.scores;
-  document.getElementById("s-scores").textContent = counts.scores;
-  renderTab();
-}
-
+// ════════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════════
 async function loadAll() {
-  const [p, a, r, s] = await Promise.all([
+  const [p, a, r] = await Promise.all([
     fetch(`${API}/source-proposals?status=pending`).then(r => r.json()),
     fetch(`${API}/source-proposals?status=approved`).then(r => r.json()),
     fetch(`${API}/source-proposals?status=rejected`).then(r => r.json()),
-    fetch(`${API}/score-proposals?status=pending`).then(r => r.json()),
   ]);
-  allProposals = { pending: p.proposals, approved: a.proposals, rejected: r.proposals, scores: s.proposals };
-  counts = { pending: p.count, approved: a.count, rejected: r.count, scores: s.count };
+  allProposals = { pending: p.proposals, approved: a.proposals, rejected: r.proposals };
+  counts = { pending: p.count, approved: a.count, rejected: r.count };
 
-  document.getElementById("badge-pending").textContent = counts.pending;
-  document.getElementById("badge-approved").textContent = counts.approved;
-  document.getElementById("badge-rejected").textContent = counts.rejected;
-  document.getElementById("badge-scores").textContent = counts.scores;
-  document.getElementById("s-scores").textContent = counts.scores;
-  document.getElementById("s-pending").textContent = counts.pending;
-  document.getElementById("s-approved").textContent = counts.approved;
-  document.getElementById("s-rejected").textContent = counts.rejected;
+  document.getElementById('badge-pending').textContent  = counts.pending;
+  document.getElementById('badge-approved').textContent = counts.approved;
+  document.getElementById('badge-rejected').textContent = counts.rejected;
+  document.getElementById('s-pending').textContent  = counts.pending;
+  document.getElementById('s-approved').textContent = counts.approved;
+  document.getElementById('s-rejected').textContent = counts.rejected;
 
   const brands = new Set(allProposals.pending.map(p => p.brand_id));
-  document.getElementById("s-brands").textContent = brands.size;
-  document.getElementById("stats").style.display = "grid";
-  document.getElementById("filter-bar").style.display = currentTab === "pending" ? "flex" : "none";
+  document.getElementById('s-brands').textContent = brands.size;
+  document.getElementById('s-total').textContent  = counts.pending + counts.approved + counts.rejected;
+  document.getElementById('stats').style.display  = 'grid';
 
   renderTab();
-}
-
-function groupByBrand(proposals) {
-  const groups = {};
-  proposals.forEach(p => {
-    const key = p.brand_id;
-    if (!groups[key]) groups[key] = { name: p.brands?.name || `Brand ${key}`, proposals: [] };
-    groups[key].proposals.push(p);
-  });
-  return groups;
-}
-
-function renderTab() {
-  if (currentTab === "scores") {
-    const proposals = allProposals.scores || [];
-    if (proposals.length === 0) {
-      document.getElementById("content").innerHTML = `<div class="empty"><div class="empty-icon">✅</div>No pending score updates<br><br><button onclick="refreshScores()" style="background:rgba(99,202,183,0.1);border:1px solid rgba(99,202,183,0.25);color:#63CAB7;padding:8px 18px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px">↻ Refresh</button></div>`;
-      return;
-    }
-    const groups = groupByBrand(proposals);
-    let html = `<div style="text-align:right;margin-bottom:12px"><button onclick="refreshScores()" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);padding:6px 14px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px">↻ Refresh</button></div>`;
-    Object.values(groups).forEach(group => {
-      html += `<div class="brand-group">
-        <div class="brand-header">
-          <div class="brand-logo">${group.name[0]}</div>
-          <div class="brand-name">${group.name}</div>
-          <div class="brand-count">${group.proposals.length} update${group.proposals.length !== 1 ? "s" : ""}</div>
-        </div>`;
-      group.proposals.forEach(p => { html += renderScoreCard(p); });
-      html += `</div>`;
-    });
-    document.getElementById("content").innerHTML = html;
-    return;
-  }
-
-  const proposals = allProposals[currentTab] || [];
-  const filtered = currentCat === "all" ? proposals : proposals.filter(p => p.category_key === currentCat);
-  document.getElementById("filter-bar").style.display = currentTab === "pending" ? "flex" : "none";
-
-  if (filtered.length === 0) {
-    document.getElementById("content").innerHTML = `<div class="empty"><div class="empty-icon">${currentTab === "pending" ? "✅" : "📭"}</div>No ${currentTab} proposals${currentCat !== "all" ? " in this category" : ""}</div>`;
-    return;
-  }
-
-  const groups = groupByBrand(filtered);
-  let html = "";
-  Object.values(groups).forEach(group => {
-    html += `<div class="brand-group">
-      <div class="brand-header">
-        <div class="brand-logo">${group.name[0]}</div>
-        <div class="brand-name">${group.name}</div>
-        <div class="brand-count">${group.proposals.length} proposal${group.proposals.length !== 1 ? "s" : ""}</div>
-      </div>`;
-    group.proposals.forEach(p => { html += renderCard(p); });
-    html += `</div>`;
-  });
-  document.getElementById("content").innerHTML = html;
-}
-
-function renderCard(p) {
-  const cat = p.category_key;
-  const isApproved = p.status === "approved";
-  const isRejected = p.status === "rejected";
-  const jobClass = p.job_type === "replacement" ? "job-replacement" : "job-new";
-  const jobLabel = p.job_type === "replacement" ? "replacement" : "new";
-
-  const JUDGMENT_COLORS = {
-    "Positive": "#4ade80",
-    "Predominantly positive": "#a8c5a0",
-    "Predominantly negative": "#fb923c",
-    "Negative": "#ef4444",
-  };
-  const JUDGMENT_ICONS = {
-    "Positive": "🟢",
-    "Predominantly positive": "🟡",
-    "Predominantly negative": "🟠",
-    "Negative": "🔴",
-  };
-  const JUDGMENT_OPTIONS = ["Positive", "Predominantly positive", "Predominantly negative", "Negative"];
-
-  const aiBlock = p.ai_judgment ? (() => {
-    const col = JUDGMENT_COLORS[p.ai_judgment] || "#888";
-    const icon = JUDGMENT_ICONS[p.ai_judgment] || "⚪";
-    const opts = JUDGMENT_OPTIONS.map(j =>
-      `<option value="${j}" ${j === p.ai_judgment ? "selected" : ""}>${JUDGMENT_ICONS[j]} ${j}</option>`
-    ).join("");
-    return `<div class="ai-judgment-block" id="aij-${p.id}" style="margin:10px 0 4px;padding:10px 14px;background:rgba(99,202,183,0.04);border:1px solid rgba(99,202,183,0.15);border-radius:8px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-        <span style="font-size:11px;color:#63CAB7;font-weight:600;letter-spacing:.05em">AI JUDGMENT</span>
-        <span style="font-size:11px;color:${col};font-weight:600">${icon} ${p.ai_judgment}</span>
-      </div>
-      ${p.ai_rationale ? `<div style="font-size:11px;color:rgba(255,255,255,0.45);line-height:1.6;margin-bottom:8px">${p.ai_rationale}</div>` : ""}
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <span style="font-size:11px;color:rgba(255,255,255,0.3)">Change:</span>
-        <select id="jsel-${p.id}" style="background:#0f0f1a;border:1px solid rgba(255,255,255,0.1);color:#e8e8f0;font-size:11px;border-radius:6px;padding:3px 8px">
-          ${opts}
-        </select>
-      </div>
-    </div>`;
-  })() : `<div style="margin:8px 0 4px;font-size:11px;color:rgba(255,255,255,0.25);font-style:italic">No AI judgment — assign manually in Score V2</div>`;
-
-  const actions = currentTab === "pending"
-    ? `<div class="proposal-actions">
-        <button class="btn btn-approve" onclick="approve(${p.id})">✓ Approve</button>
-        <button class="btn btn-reject" onclick="reject(${p.id})">✗ Reject</button>
-        <button class="btn btn-open" onclick="window.open('${p.url}','_blank')">↗ Open</button>
-       </div>`
-    : `<div class="proposal-actions">
-        <span class="status-chip ${isApproved ? "status-approved" : "status-rejected"}">${isApproved ? "✓ Approved" : "✗ Rejected"}</span>
-        <button class="btn btn-open" onclick="window.open('${p.url}','_blank')" style="margin-top:6px">↗ Open</button>
-       </div>`;
-
-  return `<div class="proposal-card ${p.status}" id="card-${p.id}">
-    <span class="cat-badge cat-${cat}">${CAT_ICONS[cat]} ${CAT_LABELS[cat]}</span>
-    <div class="proposal-body">
-      <div class="proposal-title">${p.title || p.url}</div>
-      <div class="proposal-publisher">${p.publisher || "—"} <span class="job-badge ${jobClass}">${jobLabel}</span></div>
-      ${p.summary ? `<div class="proposal-summary">${p.summary}</div>` : ""}
-      ${aiBlock}
-      <a class="proposal-url" href="${p.url}" target="_blank">${p.url}</a>
-      <div class="proposal-meta">${new Date(p.created_at).toLocaleDateString("en-GB", {day:"numeric",month:"short",year:"numeric"})}</div>
-    </div>
-    ${actions}
-  </div>`;
-}
-
-async function approve(id) {
-  const card = document.getElementById(`card-${id}`);
-  card.querySelectorAll("button").forEach(b => b.disabled = true);
-  const jsel = document.getElementById(`jsel-${id}`);
-  const confirmedJudgment = jsel ? jsel.value : null;
-  try {
-    const body = confirmedJudgment ? JSON.stringify({ confirmed_judgment: confirmedJudgment }) : null;
-    await fetch(`${API}/source-proposals/${id}/approve`, {
-      method: "POST",
-      headers: body ? { "Content-Type": "application/json" } : {},
-      body,
-    });
-    card.classList.add("approved");
-    card.querySelector(".proposal-actions").innerHTML = `<span class="status-chip status-approved">✓ Approved</span>`;
-    counts.pending--;
-    document.getElementById("badge-pending").textContent = counts.pending;
-    document.getElementById("s-pending").textContent = counts.pending;
-    showToast("✓ Source approved" + (confirmedJudgment ? ` — judgment: ${confirmedJudgment}` : ""));
-  } catch(e) { showToast("✗ Error — try again", true); card.querySelectorAll("button").forEach(b => b.disabled = false); }
-}
-
-async function reject(id) {
-  const card = document.getElementById(`card-${id}`);
-  card.querySelectorAll("button").forEach(b => b.disabled = true);
-  try {
-    await fetch(`${API}/source-proposals/${id}/reject`, { method: "POST" });
-    card.classList.add("rejected");
-    card.querySelector(".proposal-actions").innerHTML = `<span class="status-chip status-rejected">✗ Rejected</span>`;
-    counts.pending--;
-    document.getElementById("badge-pending").textContent = counts.pending;
-    document.getElementById("s-pending").textContent = counts.pending;
-    showToast("Proposal rejected");
-  } catch(e) { showToast("✗ Error — try again", true); card.querySelectorAll("button").forEach(b => b.disabled = false); }
 }
 
 function switchTab(tab) {
   currentTab = tab;
-  currentCat = "all";
-  document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", ["pending","approved","rejected","scores","costs","contributions","issues"][i] === tab));
-  if (tab === 'costs') { loadCosts(); return; }
-  if (tab === 'scores') { loadScoreV2(); return; }
-  if (tab === 'contributions') { loadContributions(); return; }
-  if (tab === 'issues') { loadIssues(); return; }
-  document.querySelectorAll(".filter-chip").forEach(c => c.classList.toggle("active", c.textContent.trim() === "All"));
+  currentCat = 'all';
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', ['pending','approved','rejected','scorev2','costs','contributions','issues'][i] === tab);
+  });
+  document.getElementById('filter-bar').style.display = tab === 'pending' ? 'flex' : 'none';
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('active', c.textContent.trim() === 'All'));
+
+  if (tab === 'scorev2')      { loadScoreV2();       return; }
+  if (tab === 'costs')        { loadCosts();          return; }
+  if (tab === 'contributions'){ loadContributions();  return; }
+  if (tab === 'issues')       { loadIssues();         return; }
   renderTab();
 }
 
 function filterCat(cat) {
   currentCat = cat;
-  document.querySelectorAll(".filter-chip").forEach(c => {
-    c.classList.toggle("active", c.textContent.toLowerCase().includes(cat) || (cat === "all" && c.textContent.trim() === "All"));
+  document.querySelectorAll('.filter-chip').forEach(c => {
+    c.classList.toggle('active',
+      c.textContent.toLowerCase().includes(cat) || (cat === 'all' && c.textContent.trim() === 'All'));
   });
   renderTab();
 }
 
 function showToast(msg, error = false) {
-  const t = document.getElementById("toast");
+  const t = document.getElementById('toast');
   t.textContent = msg;
-  t.style.borderColor = error ? "rgba(248,113,113,0.3)" : "rgba(99,202,183,0.3)";
-  t.classList.remove("hide");
-  setTimeout(() => t.classList.add("hide"), 3000);
+  t.style.borderColor = error ? 'rgba(248,113,113,0.3)' : 'rgba(99,202,183,0.3)';
+  t.classList.remove('hide');
+  setTimeout(() => t.classList.add('hide'), 3000);
+}
+
+function fmtDate(d) {
+  return new Date(d).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
 }
 
 
-// ─── COSTS TAB ─────────────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// PROPOSALS TAB (pending / approved / rejected)
+// ════════════════════════════════════════════════════════════════
+function renderTab() {
+  const proposals = allProposals[currentTab] || [];
+  const filtered  = currentCat === 'all' ? proposals : proposals.filter(p => p.category_key === currentCat);
 
-async function fetchBraveCount() {
+  if (filtered.length === 0) {
+    document.getElementById('content').innerHTML =
+      `<div class="empty"><div class="empty-icon">${currentTab === 'pending' ? '✅' : '📭'}</div>No ${currentTab} proposals${currentCat !== 'all' ? ' in this category' : ''}</div>`;
+    return;
+  }
+
+  const groups = {};
+  filtered.forEach(p => {
+    const k = p.brand_id;
+    if (!groups[k]) groups[k] = { name: p.brands?.name || `Brand ${k}`, proposals: [] };
+    groups[k].proposals.push(p);
+  });
+
+  let html = '';
+  Object.values(groups).forEach(g => {
+    html += `<div class="brand-group">
+      <div class="brand-header">
+        <div class="brand-logo">${g.name[0]}</div>
+        <div class="brand-name">${g.name}</div>
+        <div class="brand-count">${g.proposals.length} proposal${g.proposals.length !== 1 ? 's' : ''}</div>
+      </div>`;
+    g.proposals.forEach(p => { html += renderProposalCard(p); });
+    html += '</div>';
+  });
+  document.getElementById('content').innerHTML = html;
+}
+
+function renderProposalCard(p) {
+  const cat      = p.category_key;
+  const jobClass = p.job_type === 'replacement' ? 'job-replacement' : 'job-new';
+  const jobLabel = p.job_type === 'replacement' ? 'replacement' : 'new';
+
+  // AI block
+  let aiHtml = '';
+  if (p.ai_judgment) {
+    const judgmentColors = {
+      'Positive': '#4ade80', 'Predominantly positive': '#a8c5a0',
+      'Predominantly negative': '#fb923c', 'Negative': '#ef4444',
+    };
+    const judgmentIcons = {
+      'Positive': '🟢', 'Predominantly positive': '🟡',
+      'Predominantly negative': '🟠', 'Negative': '🔴',
+    };
+    const col  = judgmentColors[p.ai_judgment] || '#888';
+    const icon = judgmentIcons[p.ai_judgment]  || '⚪';
+
+    // Tier: usa ai_tier dal DB, oppure ricavalo da ai_value
+    let tier = p.ai_tier || 2;
+    if (!p.ai_tier && p.ai_value !== null && p.ai_value !== undefined) {
+      const av = Math.abs(p.ai_value);
+      tier = av >= 20 ? 1 : av >= 10 ? 2 : 3;
+    }
+    const tierLabel = `T${tier}`;
+    const tierClass = `tier-${tier}`;
+
+    aiHtml = `<div class="ai-block">
+      <div class="ai-block-header">
+        <span class="ai-label">AI JUDGMENT</span>
+        <span style="font-size:11px;color:${col};font-weight:600">${icon} ${p.ai_judgment}</span>
+        <span class="ai-tier-badge ${tierClass}">${tierLabel}</span>
+      </div>
+      ${p.ai_rationale ? `<div style="font-size:11px;color:rgba(255,255,255,0.45);line-height:1.6">${p.ai_rationale}</div>` : ''}
+    </div>`;
+  } else {
+    aiHtml = `<div style="margin:8px 0 4px;font-size:11px;color:rgba(255,255,255,0.25);font-style:italic">No AI judgment</div>`;
+  }
+
+  // Actions
+  let actions = '';
+  if (currentTab === 'pending') {
+    actions = `<div class="proposal-actions">
+      <button class="btn btn-approve" onclick="approveProposal(${p.id})">✓ Approve</button>
+      <button class="btn btn-reject"  onclick="rejectProposal(${p.id})">✗ Reject</button>
+      <button class="btn btn-open"    onclick="window.open('${p.url}','_blank')">↗ Open</button>
+    </div>`;
+  } else {
+    actions = `<div class="proposal-actions">
+      <span class="status-chip ${p.status === 'approved' ? 'status-approved' : 'status-rejected'}">
+        ${p.status === 'approved' ? '✓ Approved' : '✗ Rejected'}
+      </span>
+      <button class="btn btn-revert" onclick="revertProposal(${p.id}, this)" style="margin-top:6px">↩ Pending</button>
+      <button class="btn btn-open"   onclick="window.open('${p.url}','_blank')" style="margin-top:4px">↗ Open</button>
+    </div>`;
+  }
+
+  return `<div class="proposal-card ${p.status}" id="card-${p.id}">
+    <span class="cat-badge cat-${cat}">${CAT_ICONS[cat]} ${CAT_LABELS[cat]}</span>
+    <div class="proposal-body">
+      <div class="proposal-title">${p.title || p.url}</div>
+      <div class="proposal-pub">${p.publisher || '—'} <span class="job-badge ${jobClass}">${jobLabel}</span></div>
+      ${p.summary ? `<div class="proposal-summary">${p.summary}</div>` : ''}
+      ${aiHtml}
+      <a class="proposal-url" href="${p.url}" target="_blank">${p.url}</a>
+      <div class="proposal-meta">${fmtDate(p.created_at)}</div>
+    </div>
+    ${actions}
+  </div>`;
+}
+
+async function approveProposal(id) {
+  const card = document.getElementById(`card-${id}`);
+  card.querySelectorAll('button').forEach(b => b.disabled = true);
   try {
-    const r = await fetch(`${API}/costs/brave-count`);
-    if (!r.ok) return null;
-    return await r.json();
-  } catch { return null; }
+    await fetch(`${API}/source-proposals/${id}/approve`, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+    card.classList.add('approved');
+    card.querySelector('.proposal-actions').innerHTML = `<span class="status-chip status-approved">✓ Approved</span>`;
+    counts.pending--;
+    counts.approved++;
+    document.getElementById('badge-pending').textContent  = counts.pending;
+    document.getElementById('badge-approved').textContent = counts.approved;
+    document.getElementById('s-pending').textContent  = counts.pending;
+    document.getElementById('s-approved').textContent = counts.approved;
+    // Rimuovi dalla lista locale
+    allProposals.pending = allProposals.pending.filter(p => p.id !== id);
+    showToast('✓ Source approved');
+  } catch(e) {
+    showToast('✗ Error — try again', true);
+    card.querySelectorAll('button').forEach(b => b.disabled = false);
+  }
 }
 
-function costBar(used, total, color = "#63CAB7") {
+async function rejectProposal(id) {
+  const card = document.getElementById(`card-${id}`);
+  card.querySelectorAll('button').forEach(b => b.disabled = true);
+  try {
+    await fetch(`${API}/source-proposals/${id}/reject`, { method: 'POST' });
+    card.classList.add('rejected');
+    card.querySelector('.proposal-actions').innerHTML = `<span class="status-chip status-rejected">✗ Rejected</span>`;
+    counts.pending--;
+    counts.rejected++;
+    document.getElementById('badge-pending').textContent  = counts.pending;
+    document.getElementById('badge-rejected').textContent = counts.rejected;
+    document.getElementById('s-pending').textContent  = counts.pending;
+    document.getElementById('s-rejected').textContent = counts.rejected;
+    allProposals.pending = allProposals.pending.filter(p => p.id !== id);
+    showToast('Proposal rejected');
+  } catch(e) {
+    showToast('✗ Error — try again', true);
+    card.querySelectorAll('button').forEach(b => b.disabled = false);
+  }
+}
+
+async function revertProposal(id, btn) {
+  btn.disabled = true;
+  btn.textContent = '…';
+  try {
+    const res = await fetch(`${API}/source-proposals/${id}/revert`, { method: 'PATCH' });
+    if (!res.ok) throw new Error();
+    const card = document.getElementById(`card-${id}`);
+    card.style.opacity = '0.3';
+    card.style.pointerEvents = 'none';
+
+    // Aggiorna contatori
+    const wasApproved = currentTab === 'approved';
+    if (wasApproved) { counts.approved--; document.getElementById('badge-approved').textContent = counts.approved; document.getElementById('s-approved').textContent = counts.approved; }
+    else             { counts.rejected--; document.getElementById('badge-rejected').textContent = counts.rejected; document.getElementById('s-rejected').textContent = counts.rejected; }
+    counts.pending++;
+    document.getElementById('badge-pending').textContent = counts.pending;
+    document.getElementById('s-pending').textContent = counts.pending;
+
+    showToast('↩ Reverted to pending');
+    setTimeout(() => loadAll(), 800);
+  } catch(e) {
+    showToast('✗ Error', true);
+    btn.disabled = false;
+    btn.textContent = '↩ Pending';
+  }
+}
+
+
+// ════════════════════════════════════════════════════════════════
+// SCORE V2
+// ════════════════════════════════════════════════════════════════
+async function loadScoreV2() {
+  const el = document.getElementById('content');
+  el.innerHTML = `<div class="loading">Loading Score V2…</div>`;
+  try {
+    const [brandsRes, criteriaRes] = await Promise.all([
+      fetch(`${API}/brands?lang=en`).then(r => r.json()),
+      fetch(`${API}/scoring-criteria`).then(r => r.json()),
+    ]);
+    v2Brands = brandsRes;
+
+    // Parse criteria — il backend ora ritorna { criteria: [...], grouped: {...} }
+    v2Criteria = {};
+    if (criteriaRes.grouped) {
+      v2Criteria = criteriaRes.grouped;
+    } else {
+      // fallback
+      const list = criteriaRes.criteria || Object.values(criteriaRes).flat();
+      for (const c of list) {
+        const cat = c.category_key;
+        if (!v2Criteria[cat]) v2Criteria[cat] = [];
+        v2Criteria[cat].push(c);
+      }
+    }
+
+    renderScoreV2Shell();
+  } catch(e) {
+    el.innerHTML = `<div style="color:#f87171;padding:20px">Failed to load: ${e}</div>`;
+  }
+}
+
+function renderScoreV2Shell() {
+  const sorted = [...v2Brands].sort((a, b) => a.name.localeCompare(b.name));
+  const options = sorted.map(b => `<option value="${b.id}">${b.logo || ''} ${b.name} · ${b.sector || ''}</option>`).join('');
+
+  document.getElementById('content').innerHTML = `
+  <div class="v2-grid">
+    <!-- SIDEBAR -->
+    <div class="v2-sidebar">
+      <div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:8px">Brand</div>
+      <select id="v2-brand-sel" onchange="onBrandSelect(this.value)"
+        style="width:100%;background:#0f1a14;border:1px solid rgba(255,255,255,0.1);color:#f0f0f0;padding:10px 12px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;margin-bottom:16px;outline:none">
+        <option value="">— Select brand —</option>
+        ${options}
+      </select>
+      <div id="v2-score-sidebar">
+        <div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:1px">Select a brand to score</div>
+      </div>
+    </div>
+
+    <!-- MAIN AREA -->
+    <div id="v2-main">
+      <div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:1px;padding:40px 0;text-align:center">
+        Select a brand to start scoring
+      </div>
+    </div>
+  </div>`;
+}
+
+async function onBrandSelect(brandId) {
+  if (!brandId) return;
+  selectedBrand = v2Brands.find(b => b.id == brandId);
+  if (!selectedBrand) return;
+
+  localExclusions  = new Set();
+  localAssignments = new Map();
+  activeCat = 'armi';
+
+  document.getElementById('v2-main').innerHTML = `<div class="loading">Loading sources…</div>`;
+  document.getElementById('v2-score-sidebar').innerHTML = `<div style="font-size:11px;color:rgba(255,255,255,0.2)">Loading…</div>`;
+
+  const [sourcesRes, scoresRes] = await Promise.all([
+    fetch(`${API}/brands/${brandId}/sources`).then(r => r.json()),
+    fetch(`${API}/scoring/criterion-scores/${brandId}`).then(r => r.json()).catch(() => ({ criteria: [], total_score_v2: null, criteria_published: 0 })),
+  ]);
+
+  // Parse sources
+  if (Array.isArray(sourcesRes)) {
+    v2Sources = sourcesRes;
+  } else if (sourcesRes.sources) {
+    v2Sources = sourcesRes.sources;
+  } else {
+    v2Sources = Object.entries(sourcesRes).flatMap(([cat, items]) =>
+      Array.isArray(items) ? items.map(s => ({ ...s, category_key: s.category_key || cat })) : []
+    );
+  }
+
+  // Carica esclusioni esistenti dal DB nella mappa locale
+  v2Sources.forEach(s => {
+    (s.excluded_from_criteria || []).forEach(cid => {
+      localExclusions.add(`${s.id}_${cid}`);
+    });
+  });
+
+  // Parse scores
+  v2Scores = {};
+  v2BrandTotal  = scoresRes.total_score_v2;
+  v2CriteriaPub = scoresRes.criteria_published || 0;
+  (scoresRes.criteria || []).forEach(c => {
+    v2Scores[c.criterion_id] = c;
+    // Registra assegnazioni esistenti
+    if (c.sources && c.sources.length > 0 && c.sources[0].source_id) {
+      localAssignments.set(c.criterion_id, c.sources[0].source_id);
+    }
+  });
+
+  renderScoreSidebar();
+  renderV2Main();
+}
+
+function renderScoreSidebar() {
+  const color = v2BrandTotal === null ? 'rgba(255,255,255,0.3)'
+    : v2BrandTotal >= 200 ? '#6dbb7a'
+    : v2BrandTotal >= 50  ? '#a8c5a0'
+    : v2BrandTotal >= -49 ? '#facc15'
+    : v2BrandTotal >= -199? '#fb923c' : '#ef4444';
+
+  let html = `<div class="v2-score-panel">
+    <div class="v2-total" style="color:${color}">${v2BrandTotal ?? '—'}</div>
+    <div class="v2-total-label">${v2CriteriaPub} criteria published</div>
+  </div>`;
+
+  for (const cat of ['armi','ambiente','diritti','fisco']) {
+    const catCriteria = Object.entries(v2Scores)
+      .filter(([cid, c]) => c.criterion?.category_key === cat);
+    if (!catCriteria.length) continue;
+    html += `<div style="margin-bottom:10px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">${CAT_ICONS[cat]} ${CAT_LABELS[cat]}</div>`;
+    catCriteria.forEach(([cid, c]) => {
+      const s   = c.computed_score;
+      const met = c.criteria_met;
+      const col = s === null ? 'rgba(255,255,255,0.15)' : s >= 0 ? '#63CAB7' : '#ef4444';
+      html += `<div class="sidebar-crit-row">
+        <span style="color:rgba(255,255,255,0.4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px">${c.criterion?.label_en || cid}</span>
+        <span style="font-family:'DM Mono',monospace;color:${col};flex-shrink:0;margin-left:6px">${met ? (s > 0 ? '+' : '') + s : '—'}</span>
+      </div>`;
+    });
+    html += '</div>';
+  }
+  document.getElementById('v2-score-sidebar').innerHTML = html;
+}
+
+function renderV2Main() {
+  const el = document.getElementById('v2-main');
+
+  let html = `<div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:16px">
+    Score criteria — ${selectedBrand?.name}
+  </div>`;
+
+  // Category tabs
+  html += `<div class="v2-cat-tabs">`;
+  for (const cat of ['armi','ambiente','diritti','fisco']) {
+    html += `<button class="v2-cat-btn ${cat === activeCat ? 'active' : ''}" onclick="switchCat('${cat}')">${CAT_ICONS[cat]} ${cat}</button>`;
+  }
+  html += `</div><div id="v2-criteria-list"></div>`;
+
+  el.innerHTML = html;
+  renderCriteriaList();
+}
+
+function switchCat(cat) {
+  activeCat = cat;
+  document.querySelectorAll('.v2-cat-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.includes(cat));
+  });
+  renderCriteriaList();
+}
+
+function renderCriteriaList() {
+  const criteria = v2Criteria[activeCat] || [];
+  const el = document.getElementById('v2-criteria-list');
+  if (!el) return;
+
+  if (!criteria.length) {
+    el.innerHTML = `<div style="color:rgba(255,255,255,0.2);font-size:12px;padding:20px 0">No criteria for this category</div>`;
+    return;
+  }
+
+  // Fonti disponibili per questa categoria (non escluse dal criterio, non già assegnate altrove nella stessa cat)
+  const catSources = v2Sources.filter(s => !s.category_key || s.category_key === activeCat);
+
+  let html = '';
+  criteria.forEach(crit => {
+    const critId    = crit.id;
+    const existing  = v2Scores[critId];
+    const assignedSrcId = localAssignments.get(critId) || null;
+
+    // Fonti disponibili per questo criterio specifico
+    // Escludi: escluse da questo criterio, già assegnate ad altro criterio nella stessa cat
+    const assignedInCat = new Set(
+      criteria.filter(c => c.id !== critId && localAssignments.has(c.id)).map(c => localAssignments.get(c.id))
+    );
+    const availableSources = catSources.filter(s => {
+      if (localExclusions.has(`${s.id}_${critId}`)) return false;
+      if (assignedInCat.has(s.id)) return false;
+      return true;
+    });
+
+    html += `<div class="criterion-card" id="crit-card-${critId}">
+      <div class="criterion-title">${crit.label_en}</div>
+      <div class="criterion-code">${crit.code}</div>`;
+
+    // Se c'è una fonte assegnata e salvata mostra il recap
+    if (assignedSrcId && existing && existing.criteria_met) {
+      const src = v2Sources.find(s => s.id === assignedSrcId);
+      const scoreVal = existing.computed_score;
+      const scoreColor = scoreVal > 0 ? '#63CAB7' : scoreVal < 0 ? '#ef4444' : 'rgba(255,255,255,0.3)';
+      html += `<div class="assigned-source">
+        <div class="assigned-source-info">
+          <div class="assigned-source-title">${src ? (src.title || src.url) : `Source #${assignedSrcId}`}</div>
+          <div class="assigned-source-meta">
+            ${src ? `[T${src.tier||3}] ${src.publisher || '—'}` : ''}
+            · Score: <span style="color:${scoreColor};font-weight:600">${scoreVal > 0 ? '+' : ''}${scoreVal}</span>
+          </div>
+        </div>
+        <button class="btn-remove-source" onclick="removeAssignment(${selectedBrand.id}, ${critId}, ${assignedSrcId})">✕ Remove</button>
+      </div>`;
+    } else {
+      // Form di scoring
+      html += renderCriterionForm(critId, availableSources);
+    }
+
+    html += `</div>`;
+  });
+
+  el.innerHTML = html;
+}
+
+function renderCriterionForm(critId, availableSources) {
+  const sourceOptions = availableSources.map(s =>
+    `<option value="${s.id}">[T${s.tier||3}] ${s.publisher ? s.publisher+' — ' : ''}${(s.title || s.url || '').substring(0,45)}</option>`
+  ).join('');
+
+  const judgmentBtns = Object.entries(JUDGMENT_LABELS).map(([key, j]) =>
+    `<button class="judgment-btn" data-judgment="${key}" onclick="selectJudgment(${critId}, '${key}', this)"
+      style="color:${j.color}">${j.en.replace(' ','<br>')}</button>`
+  ).join('');
+
+  return `
+    <div class="form-row">
+      <div>
+        <div class="form-label">Source</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <select id="src-${critId}" class="v2-select" style="flex:1">
+            <option value="">— No source —</option>
+            ${sourceOptions}
+          </select>
+          <button onclick="excludeSource(${critId})"
+            title="Exclude selected source from this criterion"
+            style="background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);color:#f87171;padding:7px 10px;border-radius:8px;cursor:pointer;font-size:11px;white-space:nowrap;flex-shrink:0">
+            ✕ Exclude
+          </button>
+        </div>
+      </div>
+      <div>
+        <div class="form-label">Tier</div>
+        <select id="tier-${critId}" class="v2-select" onchange="updatePreview(${critId})">
+          <option value="1">Tier 1 (±20/±10)</option>
+          <option value="2" selected>Tier 2 (±10/±5)</option>
+          <option value="3">Tier 3 (±2/±1)</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <div class="form-label">Judgment</div>
+      <div class="judgment-grid" id="jgrid-${critId}">${judgmentBtns}</div>
+    </div>
+
+    <div class="save-row">
+      <div class="value-preview" id="prev-${critId}">Select tier + judgment</div>
+      <button id="save-${critId}"
+        onclick="saveScore(${selectedBrand?.id}, ${critId})"
+        style="background:rgba(99,202,183,0.1);border:1px solid rgba(99,202,183,0.25);color:#63CAB7;padding:8px 18px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;white-space:nowrap">
+        Save score →
+      </button>
+    </div>`;
+}
+
+function selectJudgment(critId, judgment, btn) {
+  document.querySelectorAll(`#jgrid-${critId} button`).forEach(b => {
+    b.style.background  = 'transparent';
+    b.style.borderColor = 'rgba(255,255,255,0.08)';
+    b.style.fontWeight  = '400';
+    delete b.dataset.selected;
+  });
+  const col = JUDGMENT_LABELS[judgment]?.color || '#fff';
+  btn.style.background  = `${col}22`;
+  btn.style.borderColor = `${col}55`;
+  btn.style.fontWeight  = '600';
+  btn.dataset.selected  = 'true';
+  updatePreview(critId);
+}
+
+function updatePreview(critId) {
+  const tierEl   = document.getElementById(`tier-${critId}`);
+  const jBtn     = document.querySelector(`#jgrid-${critId} button[data-selected="true"]`);
+  const prevEl   = document.getElementById(`prev-${critId}`);
+  if (!tierEl || !jBtn || !prevEl) return;
+  const tier     = parseInt(tierEl.value);
+  const judgment = jBtn.dataset.judgment;
+  const value    = TIER_VALUES[tier][judgment];
+  const color    = value > 0 ? '#63CAB7' : value < 0 ? '#ef4444' : 'rgba(255,255,255,0.3)';
+  prevEl.innerHTML = `Value: <span style="color:${color};font-size:16px;font-weight:700">${value > 0 ? '+' : ''}${value}</span>`;
+}
+
+async function excludeSource(critId) {
+  const srcEl = document.getElementById(`src-${critId}`);
+  if (!srcEl || !srcEl.value) { showToast('Select a source first', true); return; }
+  const sourceId = parseInt(srcEl.value);
+
+  try {
+    await fetch(`${API}/sources/${sourceId}/exclude-criterion`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY },
+      body: JSON.stringify({ brand_id: selectedBrand.id, criterion_id: critId }),
+    });
+    localExclusions.add(`${sourceId}_${critId}`);
+    showToast('Source excluded from this criterion');
+    renderCriteriaList();
+  } catch(e) {
+    showToast('Error excluding source', true);
+  }
+}
+
+async function saveScore(brandId, critId) {
+  const tierEl = document.getElementById(`tier-${critId}`);
+  const jBtn   = document.querySelector(`#jgrid-${critId} button[data-selected="true"]`);
+  const srcEl  = document.getElementById(`src-${critId}`);
+  const saveBtn= document.getElementById(`save-${critId}`);
+
+  if (!jBtn) { showToast('Select a judgment first', true); return; }
+
+  const tier     = parseInt(tierEl.value);
+  const judgment = jBtn.dataset.judgment;
+  const sourceId = srcEl?.value ? parseInt(srcEl.value) : null;
+
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Saving…';
+
+  try {
+    const res = await fetch(`${API}/scoring/criterion-score`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY },
+      body: JSON.stringify({ brand_id: brandId, criterion_id: critId, source_id: sourceId, tier, judgment }),
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+
+    // Aggiorna stato locale
+    v2BrandTotal  = data.total_score_v2;
+    v2CriteriaPub = data.criteria_published;
+    if (sourceId) localAssignments.set(critId, sourceId);
+
+    // Ricarica scores per aggiornare sidebar e card
+    const scoresRes = await fetch(`${API}/scoring/criterion-scores/${brandId}`).then(r => r.json());
+    v2Scores = {};
+    (scoresRes.criteria || []).forEach(c => { v2Scores[c.criterion_id] = c; });
+    v2BrandTotal  = scoresRes.total_score_v2;
+    v2CriteriaPub = scoresRes.criteria_published || 0;
+
+    renderScoreSidebar();
+    renderCriteriaList();
+    showToast(`✓ Saved ${data.value > 0 ? '+' : ''}${data.value} — Total: ${data.total_score_v2}`);
+  } catch(e) {
+    showToast('Error: ' + e.message, true);
+    saveBtn.disabled = false;
+    saveBtn.textContent = 'Save score →';
+  }
+}
+
+async function removeAssignment(brandId, critId, sourceId) {
+  if (!confirm('Remove this source score?')) return;
+  try {
+    const res = await fetch(`${API}/scoring/criterion-score/${brandId}/${critId}/${sourceId}`, {
+      method: 'DELETE',
+      headers: { 'x-admin-key': ADMIN_KEY },
+    });
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+
+    localAssignments.delete(critId);
+    v2BrandTotal  = data.total_score_v2;
+    v2CriteriaPub = data.criteria_published;
+
+    const scoresRes = await fetch(`${API}/scoring/criterion-scores/${brandId}`).then(r => r.json());
+    v2Scores = {};
+    (scoresRes.criteria || []).forEach(c => { v2Scores[c.criterion_id] = c; });
+    v2BrandTotal  = scoresRes.total_score_v2;
+    v2CriteriaPub = scoresRes.criteria_published || 0;
+
+    renderScoreSidebar();
+    renderCriteriaList();
+    showToast('✓ Score removed');
+  } catch(e) {
+    showToast('Error removing score', true);
+  }
+}
+
+
+// ════════════════════════════════════════════════════════════════
+// COSTS TAB
+// ════════════════════════════════════════════════════════════════
+function costCard(icon, title, main, sub, bar = '', note = '') {
+  return `<div style="background:#111118;border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:20px 24px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <span style="font-size:18px">${icon}</span>
+      <span style="font-size:12px;color:rgba(255,255,255,0.35);font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase">${title}</span>
+    </div>
+    <div style="font-size:28px;font-weight:700;font-family:'DM Mono',monospace;line-height:1;color:#e8e8f0">${main}</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:4px">${sub}</div>
+    ${bar}
+    ${note ? `<div style="font-size:11px;color:rgba(255,255,255,0.2);margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.05)">${note}</div>` : ''}
+  </div>`;
+}
+
+function costBar(used, total) {
   const pct = Math.min(100, Math.round((used / total) * 100));
-  const barColor = pct >= 90 ? "#ef4444" : pct >= 70 ? "#fb923c" : color;
-  return `
-    <div style="display:flex;align-items:center;gap:10px;margin-top:8px">
-      <div style="flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden">
-        <div style="width:${pct}%;height:100%;background:${barColor};border-radius:2px;transition:width .6s ease"></div>
-      </div>
-      <span style="font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.3);flex-shrink:0">${pct}%</span>
-    </div>`;
-}
-
-function costCard(icon, title, main, sub, bar = "", note = "") {
-  return `
-    <div style="background:#111118;border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:20px 24px">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-        <span style="font-size:18px">${icon}</span>
-        <span style="font-size:12px;color:rgba(255,255,255,0.35);font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase">${title}</span>
-      </div>
-      <div style="font-size:28px;font-weight:700;font-family:'DM Mono',monospace;line-height:1;color:#e8e8f0">${main}</div>
-      <div style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:4px">${sub}</div>
-      ${bar}
-      ${note ? `<div style="font-size:11px;color:rgba(255,255,255,0.2);margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.05)">${note}</div>` : ""}
-    </div>`;
+  const col = pct >= 90 ? '#ef4444' : pct >= 70 ? '#fb923c' : '#63CAB7';
+  return `<div style="display:flex;align-items:center;gap:10px;margin-top:8px">
+    <div style="flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden">
+      <div style="width:${pct}%;height:100%;background:${col};border-radius:2px"></div>
+    </div>
+    <span style="font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.3)">${pct}%</span>
+  </div>`;
 }
 
 async function loadCosts() {
-  const el = document.getElementById("content");
-  if (!el) return;
-  el.innerHTML = `<div style="color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px;padding:40px 0;text-align:center">Loading cost data…</div>`;
-
+  const el = document.getElementById('content');
+  el.innerHTML = `<div class="loading">Loading cost data…</div>`;
   const now = new Date();
-  const monthLabel = now.toLocaleString("en", { month: "long", year: "numeric" });
+  const monthLabel = now.toLocaleString('en', { month: 'long', year: 'numeric' });
+  let braveData = null;
+  try { braveData = await fetch(`${API}/costs/brave-count`).then(r => r.json()); } catch {}
 
-  const [braveData] = await Promise.all([fetchBraveCount()]);
-
-  const anthropicCard = costCard(
-    "🤖", "Anthropic",
-    "→ Console",
-    "Open Anthropic Console for token usage",
-    "",
-    `<a href="https://console.anthropic.com/settings/usage" target="_blank" style="color:#63CAB7;font-size:11px;text-decoration:none">console.anthropic.com/settings/usage ↗</a>`
-  );
-
-  const braveMonthly = braveData?.month_total || 0;
-  const braveLimit = 2000;
-  const braveCard = costCard(
-    "🔍", "Brave Search",
-    `${braveMonthly.toLocaleString()}`,
-    `calls this month · limit ${braveLimit.toLocaleString()}`,
-    costBar(braveMonthly, braveLimit),
-    `Finder: ~${braveData?.finder || 0} · Checker: ~${braveData?.checker || 0}`
-  );
-
-  const railwayCard = costCard(
-    "🚂", "Railway",
-    "→ Dashboard",
-    "3 services: API · Checker · Finder",
-    "",
-    `<a href="https://railway.app/dashboard" target="_blank" style="color:#63CAB7;font-size:11px;text-decoration:none">railway.app/dashboard ↗</a>`
-  );
-
-  const supabaseCard = costCard(
-    "🗄️", "Supabase",
-    "→ Dashboard",
-    "DB · Auth · Storage",
-    "",
-    `<a href="https://supabase.com/dashboard" target="_blank" style="color:#63CAB7;font-size:11px;text-decoration:none">supabase.com/dashboard ↗</a>`
-  );
-
-  const resendCard = costCard(
-    "📧", "Resend",
-    "→ Dashboard",
-    "Email notifications",
-    "",
-    `<a href="https://resend.com/emails" target="_blank" style="color:#63CAB7;font-size:11px;text-decoration:none">resend.com/emails ↗</a>`
-  );
-
+  const braveTotal = braveData?.month_total || 0;
   el.innerHTML = `
-    <div style="margin-bottom:24px">
-      <div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px">${monthLabel}</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
-        ${anthropicCard}${braveCard}${railwayCard}${supabaseCard}${resendCard}
-      </div>
-    </div>
-    <div style="background:rgba(99,202,183,0.05);border:1px solid rgba(99,202,183,0.12);border-radius:12px;padding:16px 20px;font-size:12px;color:rgba(255,255,255,0.3);line-height:1.7">
-      ℹ️ Brave Search è l'unico servizio tracciato internamente. Per gli altri apri i rispettivi dashboard.
-    </div>`;
+  <div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px">${monthLabel}</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:20px">
+    ${costCard('🤖','Anthropic','→ Console','Token usage',``,`<a href="https://console.anthropic.com/settings/usage" target="_blank" style="color:#63CAB7;font-size:11px;text-decoration:none">console.anthropic.com ↗</a>`)}
+    ${costCard('🔍','Brave Search',braveTotal.toLocaleString(),`calls this month · limit 2,000`,costBar(braveTotal,2000),`Finder: ${braveData?.finder||0} · Checker: ${braveData?.checker||0}`)}
+    ${costCard('🚂','Railway','→ Dashboard','3 services: API · Checker · Finder','',`<a href="https://railway.app/dashboard" target="_blank" style="color:#63CAB7;font-size:11px;text-decoration:none">railway.app ↗</a>`)}
+    ${costCard('🗄️','Supabase','→ Dashboard','DB · Auth · Storage','',`<a href="https://supabase.com/dashboard" target="_blank" style="color:#63CAB7;font-size:11px;text-decoration:none">supabase.com ↗</a>`)}
+    ${costCard('📧','Resend','→ Dashboard','Email notifications','',`<a href="https://resend.com/emails" target="_blank" style="color:#63CAB7;font-size:11px;text-decoration:none">resend.com ↗</a>`)}
+  </div>
+  <div style="background:rgba(99,202,183,0.05);border:1px solid rgba(99,202,183,0.12);border-radius:12px;padding:16px 20px;font-size:12px;color:rgba(255,255,255,0.3);line-height:1.7">
+    ℹ️ Brave Search è l'unico servizio tracciato internamente. Per gli altri apri i rispettivi dashboard.
+  </div>`;
 }
 
 
-// ─── CONTRIBUTIONS TAB ──────────────────────────────────────────────────────
-
+// ════════════════════════════════════════════════════════════════
+// CONTRIBUTIONS TAB
+// ════════════════════════════════════════════════════════════════
 async function loadContributions() {
-  const el = document.getElementById("content");
-  el.innerHTML = `<div style="color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px;padding:40px 0;text-align:center">Loading contributions…</div>`;
+  const el = document.getElementById('content');
+  el.innerHTML = `<div class="loading">Loading contributions…</div>`;
   try {
-    const res = await fetch(`${API}/contribute/pending`, { headers: { "x-admin-key": ADMIN_KEY } });
+    const res  = await fetch(`${API}/contribute/pending`, { headers: { 'x-admin-key': ADMIN_KEY } });
     const data = await res.json();
-    document.getElementById("badge-contributions").textContent = (data.counts.brand_proposals + data.counts.error_reports) || "0";
+    document.getElementById('badge-contributions').textContent =
+      (data.counts.brand_proposals + data.counts.error_reports) || '0';
     renderContributions(data);
   } catch(e) {
-    el.innerHTML = `<div style="color:#f87171;padding:20px">Failed to load contributions</div>`;
+    document.getElementById('content').innerHTML = `<div style="color:#f87171;padding:20px">Failed to load</div>`;
   }
 }
 
 function renderContributions(data) {
-  const el = document.getElementById("content");
   const { brand_proposals, error_reports } = data;
-
   let html = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
     <div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:2px;text-transform:uppercase">
       ${brand_proposals.length} brand proposals · ${error_reports.length} error reports
@@ -622,59 +999,56 @@ function renderContributions(data) {
     <button onclick="loadContributions()" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);padding:6px 14px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px">↻ Refresh</button>
   </div>`;
 
-  if (brand_proposals.length === 0 && error_reports.length === 0) {
+  if (!brand_proposals.length && !error_reports.length) {
     html += `<div class="empty"><div class="empty-icon">📬</div>No pending contributions</div>`;
-    el.innerHTML = html;
+    document.getElementById('content').innerHTML = html;
     return;
   }
 
-  if (brand_proposals.length > 0) {
+  if (brand_proposals.length) {
     html += `<div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:12px">➕ Brand Proposals</div>`;
     brand_proposals.forEach(p => {
       html += `<div class="proposal-card" style="margin-bottom:8px">
         <div class="proposal-body">
           <div class="proposal-title">${p.name}</div>
-          <div class="proposal-publisher">${p.sector_key || '—'} ${p.website ? `· <a href="${p.website}" target="_blank" style="color:#63CAB7">${p.website}</a>` : ''}</div>
-          ${p.reason ? `<div class="proposal-summary">${p.reason}</div>` : ''}
-          <div class="proposal-meta">${p.submitter || 'Anonymous'} · ${new Date(p.created_at).toLocaleDateString()}</div>
+          <div class="proposal-pub">${p.sector_key||'—'} ${p.website?`· <a href="${p.website}" target="_blank" style="color:#63CAB7">${p.website}</a>`:''}</div>
+          ${p.reason?`<div class="proposal-summary">${p.reason}</div>`:''}
+          <div class="proposal-meta">${p.submitter||'Anonymous'} · ${new Date(p.created_at).toLocaleDateString()}</div>
         </div>
         <div class="proposal-actions">
-          <button class="btn btn-approve" onclick="resolveContrib('brand-proposal', ${p.id}, 'approved', this)">✓ Approve</button>
-          <button class="btn btn-reject" onclick="resolveContrib('brand-proposal', ${p.id}, 'rejected', this)">✗ Reject</button>
+          <button class="btn btn-approve" onclick="resolveContrib('brand-proposal',${p.id},'approved',this)">✓ Approve</button>
+          <button class="btn btn-reject"  onclick="resolveContrib('brand-proposal',${p.id},'rejected',this)">✗ Reject</button>
         </div>
       </div>`;
     });
   }
 
-  if (error_reports.length > 0) {
+  if (error_reports.length) {
     html += `<div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:12px;margin-top:24px">⚠️ Error Reports</div>`;
     error_reports.forEach(r => {
       const brandName = r.brands?.name || `Brand #${r.brand_id}`;
       html += `<div class="proposal-card" style="margin-bottom:8px">
         <div class="proposal-body">
-          <div class="proposal-title">${brandName} ${r.category_key ? `· <span class="cat-badge cat-${r.category_key}">${r.category_key}</span>` : ''}</div>
+          <div class="proposal-title">${brandName} ${r.category_key?`· <span class="cat-badge cat-${r.category_key}">${r.category_key}</span>`:''}</div>
           <div class="proposal-summary" style="margin-top:6px">${r.description}</div>
-          ${r.source_url ? `<a href="${r.source_url}" target="_blank" class="proposal-url">${r.source_url}</a>` : ''}
-          <div class="proposal-meta">${r.submitter || 'Anonymous'} · ${new Date(r.created_at).toLocaleDateString()}</div>
+          ${r.source_url?`<a href="${r.source_url}" target="_blank" class="proposal-url">${r.source_url}</a>`:''}
+          <div class="proposal-meta">${r.submitter||'Anonymous'} · ${new Date(r.created_at).toLocaleDateString()}</div>
         </div>
         <div class="proposal-actions">
-          <button class="btn btn-approve" onclick="resolveContrib('error-report', ${r.id}, 'resolved', this)">✓ Resolved</button>
-          <button class="btn btn-reject" onclick="resolveContrib('error-report', ${r.id}, 'rejected', this)">✗ Ignore</button>
+          <button class="btn btn-approve" onclick="resolveContrib('error-report',${r.id},'resolved',this)">✓ Resolved</button>
+          <button class="btn btn-reject"  onclick="resolveContrib('error-report',${r.id},'rejected',this)">✗ Ignore</button>
         </div>
       </div>`;
     });
   }
-
-  el.innerHTML = html;
+  document.getElementById('content').innerHTML = html;
 }
 
 async function resolveContrib(type, id, status, btn) {
-  btn.disabled = true;
-  btn.textContent = '…';
+  btn.disabled = true; btn.textContent = '…';
   try {
     const res = await fetch(`${API}/contribute/${type}/${id}/resolve?status=${status}`, {
-      method: 'POST',
-      headers: { "x-admin-key": ADMIN_KEY }
+      method: 'POST', headers: { 'x-admin-key': ADMIN_KEY }
     });
     if (!res.ok) throw new Error();
     btn.closest('.proposal-card').style.opacity = '0.3';
@@ -688,15 +1062,16 @@ async function resolveContrib(type, id, status, btn) {
 }
 
 
-// ─── ISSUES TAB ─────────────────────────────────────────────────────────────
-
+// ════════════════════════════════════════════════════════════════
+// ISSUES TAB
+// ════════════════════════════════════════════════════════════════
 async function loadIssues() {
-  const el = document.getElementById("content");
-  el.innerHTML = `<div style="color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px;padding:40px 0;text-align:center">Loading issues…</div>`;
+  const el = document.getElementById('content');
+  el.innerHTML = `<div class="loading">Loading issues…</div>`;
   try {
-    const res = await fetch(`${API}/sources/issues`, { headers: { "x-admin-key": ADMIN_KEY } });
+    const res  = await fetch(`${API}/sources/issues`, { headers: { 'x-admin-key': ADMIN_KEY } });
     const data = await res.json();
-    document.getElementById("badge-issues").textContent = data.count || "0";
+    document.getElementById('badge-issues').textContent = data.count || '0';
     renderIssues(data.issues || []);
   } catch(e) {
     el.innerHTML = `<div style="color:#f87171;padding:20px">Failed to load issues</div>`;
@@ -704,32 +1079,30 @@ async function loadIssues() {
 }
 
 function renderIssues(issues) {
-  const el = document.getElementById("content");
-  if (issues.length === 0) {
+  const el = document.getElementById('content');
+  if (!issues.length) {
     el.innerHTML = `<div class="empty"><div class="empty-icon">✅</div>No broken or missing sources</div>`;
     return;
   }
-
-  const catIcons = { armi:"⚔️", ambiente:"🌿", diritti:"🤝", fisco:"💰" };
   let html = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
     <div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:2px;text-transform:uppercase">${issues.length} source issues</div>
     <button onclick="loadIssues()" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);padding:6px 14px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px">↻ Refresh</button>
   </div>`;
 
   issues.forEach(s => {
-    const typeLabel = s.broken ? '🔴 Broken link' : '🟡 Missing content';
-    const typeColor = s.broken ? 'rgba(239,68,68,0.12)' : 'rgba(250,204,21,0.1)';
-    const typeBorder = s.broken ? 'rgba(239,68,68,0.2)' : 'rgba(250,204,21,0.2)';
-    html += `
-    <div id="issue-${s.id}" style="background:${typeColor};border:1px solid ${typeBorder};border-radius:12px;padding:16px;margin-bottom:10px">
+    const broken     = s.broken;
+    const typeLabel  = broken ? '🔴 Broken link' : '🟡 Missing content';
+    const bgColor    = broken ? 'rgba(239,68,68,0.12)' : 'rgba(250,204,21,0.1)';
+    const borderCol  = broken ? 'rgba(239,68,68,0.2)'  : 'rgba(250,204,21,0.2)';
+    html += `<div id="issue-${s.id}" style="background:${bgColor};border:1px solid ${borderCol};border-radius:12px;padding:16px;margin-bottom:10px">
       <div style="display:flex;align-items:flex-start;gap:14px">
         <div style="flex:1;min-width:0">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
             <span style="font-size:11px;color:rgba(255,255,255,0.3)">${typeLabel}</span>
-            <span class="cat-badge cat-${s.category_key}">${catIcons[s.category_key]||''} ${s.category_key}</span>
+            ${s.category_key?`<span class="cat-badge cat-${s.category_key}">${CAT_ICONS[s.category_key]||''} ${s.category_key}</span>`:''}
           </div>
-          <div style="font-size:13px;font-weight:500;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.title || 'Untitled'}</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:6px">${s.publisher || '—'} · Brand #${s.brand_id}</div>
+          <div style="font-size:13px;font-weight:500;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.title||'Untitled'}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:6px">${s.publisher||'—'} · Brand #${s.brand_id}</div>
           <a href="${s.url}" target="_blank" style="font-size:11px;font-family:'DM Mono',monospace;color:rgba(99,202,183,0.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;max-width:380px">${s.url}</a>
           <div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:4px">Last checked: ${s.last_checked ? new Date(s.last_checked).toLocaleDateString() : '—'}</div>
         </div>
@@ -742,426 +1115,84 @@ function renderIssues(issues) {
       <div id="candidates-${s.id}" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06)"></div>
     </div>`;
   });
-
   el.innerHTML = html;
 }
 
 async function findReplacement(sourceId, btn) {
   btn.disabled = true;
-  const origText = btn.textContent;
+  const orig = btn.textContent;
   btn.textContent = '⏳ Searching…';
-  const candidatesEl = document.getElementById(`candidates-${sourceId}`);
-  candidatesEl.style.display = 'block';
-  candidatesEl.innerHTML = `<div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:1px">Searching Brave + evaluating with Claude…</div>`;
-
+  const candEl = document.getElementById(`candidates-${sourceId}`);
+  candEl.style.display = 'block';
+  candEl.innerHTML = `<div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace">Searching Brave + evaluating with Claude…</div>`;
   try {
-    const res = await fetch(`${API}/sources/${sourceId}/find-replacement`, {
-      method: 'POST',
-      headers: { "x-admin-key": ADMIN_KEY }
-    });
+    const res  = await fetch(`${API}/sources/${sourceId}/find-replacement`, { method: 'POST', headers: { 'x-admin-key': ADMIN_KEY } });
     const data = await res.json();
     renderCandidates(sourceId, data);
   } catch(e) {
-    candidatesEl.innerHTML = `<div style="color:#f87171;font-size:12px">Search failed. Try again.</div>`;
+    candEl.innerHTML = `<div style="color:#f87171;font-size:12px">Search failed.</div>`;
   } finally {
-    btn.disabled = false;
-    btn.textContent = origText;
+    btn.disabled = false; btn.textContent = orig;
   }
 }
 
 function renderCandidates(sourceId, data) {
   const el = document.getElementById(`candidates-${sourceId}`);
-  if (!data.candidates || data.candidates.length === 0) {
-    el.innerHTML = `<div style="font-size:12px;color:rgba(255,255,255,0.2)">No relevant candidates found for query: <em>${data.query}</em></div>`;
+  if (!data.candidates?.length) {
+    el.innerHTML = `<div style="font-size:12px;color:rgba(255,255,255,0.2)">No candidates found for: <em>${data.query}</em></div>`;
     return;
   }
-
-  const tierColors = { 1: '#f0c060', 2: '#a0b4c8', 3: '#c08060' };
-  let html = `<div style="font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:2px;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:10px">
-    ${data.candidates.length} candidate${data.candidates.length !== 1 ? 's' : ''} found
-  </div>`;
-
-  data.candidates.forEach((c, i) => {
-    const tierColor = tierColors[c.tier] || tierColors[3];
-    html += `
-    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start">
+  let html = `<div style="font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:2px;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:10px">${data.candidates.length} candidates found</div>`;
+  data.candidates.forEach(c => {
+    const tc = TIER_COLORS[c.tier] || TIER_COLORS[3];
+    html += `<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start">
       <div style="flex:1;min-width:0">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-          <span style="font-family:'DM Mono',monospace;font-size:10px;color:${tierColor};border:1px solid ${tierColor}44;border-radius:4px;padding:1px 6px">T${c.tier}</span>
-          <span style="font-size:12px;font-weight:500">${c.publisher || '—'}</span>
+          <span style="font-family:'DM Mono',monospace;font-size:10px;color:${tc};border:1px solid ${tc}44;border-radius:4px;padding:1px 6px">T${c.tier}</span>
+          <span style="font-size:12px;font-weight:500">${c.publisher||'—'}</span>
         </div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:4px">${c.title || 'No title'}</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:6px;line-height:1.5">${c.summary || ''}</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:4px">${c.title||'No title'}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:6px;line-height:1.5">${c.summary||''}</div>
         <a href="${c.url}" target="_blank" style="font-size:10px;font-family:'DM Mono',monospace;color:rgba(99,202,183,0.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;max-width:340px">${c.url}</a>
       </div>
       <button class="btn btn-approve" style="font-size:11px;flex-shrink:0"
-        onclick="proposeReplacement(${sourceId}, '${c.url.replace(/'/g,"\'")}', '${(c.title||'').replace(/'/g,"\'")}', '${(c.publisher||'').replace(/'/g,"\'")}', '${(c.summary||'').replace(/'/g,"\'")}', this)">
+        onclick="proposeReplacement(${sourceId},'${c.url.replace(/'/g,"\\'")}','${(c.title||'').replace(/'/g,"\\'")}','${(c.publisher||'').replace(/'/g,"\\'")}','${(c.summary||'').replace(/'/g,"\\'")}',this)">
         ✓ Propose
       </button>
     </div>`;
   });
-
   el.innerHTML = html;
 }
 
 async function proposeReplacement(sourceId, url, title, publisher, summary, btn) {
-  btn.disabled = true;
-  btn.textContent = '…';
+  btn.disabled = true; btn.textContent = '…';
   try {
-    const propRes = await fetch(`${API}/sources/${sourceId}/propose-replacement`, {
+    const res = await fetch(`${API}/sources/${sourceId}/propose-replacement`, {
       method: 'POST',
-      headers: { "Content-Type": "application/json", "x-admin-key": ADMIN_KEY },
-      body: JSON.stringify({ url, title, publisher, summary })
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY },
+      body: JSON.stringify({ url, title, publisher, summary }),
     });
-    if (!propRes.ok) throw new Error();
+    if (!res.ok) throw new Error();
     btn.textContent = '✅ Proposed';
     btn.style.color = '#4ade80';
     showToast('✓ Replacement proposed — check Pending tab');
   } catch {
-    btn.disabled = false;
-    btn.textContent = '✓ Propose';
+    btn.disabled = false; btn.textContent = '✓ Propose';
     showToast('Error proposing replacement', true);
   }
 }
 
 async function markResolved(sourceId, btn) {
-  btn.disabled = true;
-  btn.textContent = '…';
+  btn.disabled = true; btn.textContent = '…';
   try {
-    await fetch(`${API}/sources/${sourceId}/mark-resolved`, {
-      method: 'POST',
-      headers: { "x-admin-key": ADMIN_KEY }
-    });
+    await fetch(`${API}/sources/${sourceId}/mark-resolved`, { method: 'POST', headers: { 'x-admin-key': ADMIN_KEY } });
     document.getElementById(`issue-${sourceId}`).style.opacity = '0.3';
     showToast('✓ Marked as resolved');
   } catch {
-    btn.disabled = false;
-    btn.textContent = '✓ Mark resolved';
+    btn.disabled = false; btn.textContent = '✓ Mark resolved';
     showToast('Error', true);
   }
 }
-
-
-// ─── SCORE V2 TAB ────────────────────────────────────────────────────────────
-
-const TIER_VALUES = {
-  1: {"positive": 20, "prev_positive": 10, "prev_negative": -10, "negative": -20},
-  2: {"positive": 10, "prev_positive":  5, "prev_negative":  -5, "negative": -10},
-  3: {"positive":  2, "prev_positive":  1, "prev_negative":  -1, "negative":  -2},
-};
-const JUDGMENT_LABELS = {
-  positive:      { en: "Positive evidence",      it: "Evidenza positiva",        color: "#4ade80" },
-  prev_positive: { en: "Predominantly positive", it: "Prevalentemente positiva", color: "#86efac" },
-  prev_negative: { en: "Predominantly negative", it: "Prevalentemente negativa", color: "#fb923c" },
-  negative:      { en: "Negative evidence",      it: "Evidenza negativa",         color: "#ef4444" },
-};
-
-let v2Brands = [];
-let v2Criteria = {};
-let v2Sources = [];   // ← flat array, già fixato
-let selectedBrand = null;
-
-async function loadScoreV2() {
-  const el = document.getElementById("content");
-  el.innerHTML = renderScoreV2Shell();
-  try {
-    const [brandsRes, criteriaRes] = await Promise.all([
-      fetch(`${API}/brands?lang=en`).then(r => r.json()),
-      fetch(`${API}/scoring-criteria`).then(r => r.json()),
-    ]);
-    v2Brands = brandsRes;
-    v2Criteria = {};
-    for (const c of (criteriaRes.criteria || [])) {
-      const cat = c.category_key;
-      if (!v2Criteria[cat]) v2Criteria[cat] = [];
-      v2Criteria[cat].push(c);
-    }
-
-    // ── FIX: scoring-criteria ritorna un oggetto {armi:[...], ...}
-    // non ha .criteria — gestiamo entrambi i formati
-    if (!criteriaRes.criteria) {
-      for (const [cat, items] of Object.entries(criteriaRes)) {
-        if (Array.isArray(items)) v2Criteria[cat] = items;
-      }
-    }
-
-    populateBrandSelect();
-    document.getElementById("badge-scores").textContent = v2Brands.length;
-  } catch(e) {
-    el.innerHTML = `<div style="color:#f87171;padding:20px">Failed to load data: ${e}</div>`;
-  }
-}
-
-function renderScoreV2Shell() {
-  return `
-  <div style="display:grid;grid-template-columns:260px 1fr;gap:20px;align-items:start">
-    <div>
-      <div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:8px">Brand</div>
-      <select id="v2-brand-select" onchange="onBrandSelect(this.value)"
-        style="width:100%;background:#0f1a14;border:1px solid rgba(255,255,255,0.1);color:#f0f0f0;padding:10px 12px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;margin-bottom:16px;outline:none">
-        <option value="">— Select brand —</option>
-      </select>
-      <div id="v2-current-scores" style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:1px">
-        Select a brand to see current scores
-      </div>
-    </div>
-    <div id="v2-form-area">
-      <div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:1px;padding:40px 0;text-align:center">
-        Select a brand to score
-      </div>
-    </div>
-  </div>`;
-}
-
-function populateBrandSelect() {
-  const sel = document.getElementById("v2-brand-select");
-  if (!sel) return;
-  const sorted = [...v2Brands].sort((a, b) => a.name.localeCompare(b.name));
-  sel.innerHTML = '<option value="">— Select brand —</option>' +
-    sorted.map(b => `<option value="${b.id}">${b.logo} ${b.name} · ${b.sector}</option>`).join('');
-}
-
-async function onBrandSelect(brandId) {
-  if (!brandId) return;
-  selectedBrand = v2Brands.find(b => b.id == brandId);
-  if (!selectedBrand) return;
-
-  const [sourcesRes, scoresRes] = await Promise.all([
-    fetch(`${API}/brands/${brandId}/sources`).then(r => r.json()),
-    fetch(`${API}/scoring/criterion-scores/${brandId}`).then(r => r.json()).catch(() => ({ criteria: [] })),
-  ]);
-
-  // ── FIX PRINCIPALE ──────────────────────────────────────────────────────
-  // Il backend ritorna { armi: [...], ambiente: [...], diritti: [...], fisco: [...] }
-  // Il frontend si aspettava sourcesRes.sources che era sempre undefined.
-  // Ora appiattisce l'oggetto in un array flat con category_key e tier inclusi.
-  if (Array.isArray(sourcesRes)) {
-    // Formato alternativo: già un array
-    v2Sources = sourcesRes;
-  } else if (sourcesRes.sources && Array.isArray(sourcesRes.sources)) {
-    // Formato futuro (se backend aggiornato)
-    v2Sources = sourcesRes.sources;
-  } else {
-    // Formato attuale: { armi: [...], ambiente: [...], ... }
-    v2Sources = Object.entries(sourcesRes).flatMap(([cat, items]) =>
-      Array.isArray(items)
-        ? items.map(s => ({ ...s, category_key: s.category_key || cat }))
-        : []
-    );
-  }
-  // ────────────────────────────────────────────────────────────────────────
-
-  renderCurrentScores(scoresRes);
-  renderScoringForm(brandId);
-}
-
-function renderCurrentScores(scoresRes) {
-  const el = document.getElementById("v2-current-scores");
-  if (!el) return;
-  const criteria = scoresRes.criteria || [];
-  const total = scoresRes.total_score_v2;
-  const published = scoresRes.criteria_published || 0;
-
-  if (!criteria.length) {
-    el.innerHTML = `<div style="color:rgba(255,255,255,0.2);font-size:11px">No scores yet</div>`;
-    return;
-  }
-
-  const color = total >= 200 ? "#6dbb7a" : total >= 50 ? "#a8c5a0" : total >= -49 ? "#facc15" : total >= -199 ? "#fb923c" : "#ef4444";
-  let html = `
-    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:14px;margin-bottom:12px;text-align:center">
-      <div style="font-size:28px;font-weight:700;color:${color};font-family:'DM Mono',monospace">${total ?? "—"}</div>
-      <div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:2px">${published} criteria published</div>
-    </div>`;
-
-  for (const cat of ["armi","ambiente","diritti","fisco"]) {
-    const catCriteria = criteria.filter(c => c.criterion?.category_key === cat);
-    if (!catCriteria.length) continue;
-    html += `<div style="margin-bottom:10px">
-      <div style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">${CAT_ICONS[cat]} ${CAT_LABELS[cat]}</div>`;
-    for (const c of catCriteria) {
-      const s = c.computed_score;
-      const met = c.criteria_met;
-      const col = s === null ? "rgba(255,255,255,0.15)" : s >= 0 ? "#63CAB7" : "#ef4444";
-      html += `<div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04)">
-        <span style="color:rgba(255,255,255,0.4)">${c.criterion?.label_en || c.criterion_id}</span>
-        <span style="font-family:'DM Mono',monospace;color:${col}">${met ? (s > 0 ? '+' : '') + s : '—'}</span>
-      </div>`;
-    }
-    html += `</div>`;
-  }
-  el.innerHTML = html;
-}
-
-function renderScoringForm(brandId) {
-  const el = document.getElementById("v2-form-area");
-  if (!el) return;
-
-  let html = `<div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:16px">
-    Score a criterion — ${selectedBrand?.name}
-  </div>`;
-
-  html += `<div style="display:flex;gap:6px;margin-bottom:20px" id="v2-cat-tabs">`;
-  for (const cat of ["armi","ambiente","diritti","fisco"]) {
-    html += `<button onclick="showCatCriteria('${cat}')"
-      id="v2-cat-${cat}"
-      style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:rgba(255,255,255,0.4);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;transition:all .15s">
-      ${CAT_ICONS[cat]} ${cat}
-    </button>`;
-  }
-  html += `</div>`;
-  html += `<div id="v2-criteria-list"></div>`;
-
-  el.innerHTML = html;
-  showCatCriteria("armi");
-}
-
-function showCatCriteria(cat) {
-  for (const c of ["armi","ambiente","diritti","fisco"]) {
-    const btn = document.getElementById(`v2-cat-${c}`);
-    if (!btn) continue;
-    btn.style.background = c === cat ? "rgba(99,202,183,0.1)" : "transparent";
-    btn.style.borderColor = c === cat ? "rgba(99,202,183,0.25)" : "rgba(255,255,255,0.08)";
-    btn.style.color = c === cat ? "#63CAB7" : "rgba(255,255,255,0.4)";
-  }
-
-  const criteria = v2Criteria[cat] || [];
-  const el = document.getElementById("v2-criteria-list");
-  if (!el) return;
-
-  // ── FIX: filtra per categoria, includendo fonti senza category_key
-  const catSources = v2Sources.filter(s => !s.category_key || s.category_key === cat);
-
-  let html = "";
-  for (const crit of criteria) {
-    html += `
-    <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;margin-bottom:10px">
-      <div style="font-size:13px;font-weight:500;margin-bottom:4px">${crit.label_en}</div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:14px;font-family:'DM Mono',monospace;letter-spacing:0.5px">${crit.code}</div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
-        <div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Source</div>
-          <select id="source-${crit.id}"
-            style="width:100%;background:#0f1a14;border:1px solid rgba(255,255,255,0.1);color:#f0f0f0;padding:8px 10px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;outline:none">
-            <option value="">— No source —</option>
-            ${catSources.map(s =>
-              `<option value="${s.id}">[T${s.tier || 3}] ${s.publisher ? s.publisher + ' — ' : ''}${(s.title || s.url || '').substring(0, 50)}</option>`
-            ).join('')}
-          </select>
-        </div>
-        <div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Tier</div>
-          <select id="tier-${crit.id}" onchange="updateValuePreview(${crit.id})"
-            style="width:100%;background:#0f1a14;border:1px solid rgba(255,255,255,0.1);color:#f0f0f0;padding:8px 10px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;outline:none">
-            <option value="1">Tier 1 (±20/±10)</option>
-            <option value="2">Tier 2 (±10/±5)</option>
-            <option value="3">Tier 3 (±2/±1)</option>
-          </select>
-        </div>
-      </div>
-
-      <div style="margin-bottom:12px">
-        <div style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Judgment</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px" id="judgment-${crit.id}">
-          ${['positive','prev_positive','prev_negative','negative'].map(j => `
-            <button onclick="selectJudgment(${crit.id}, '${j}', this)"
-              data-judgment="${j}"
-              style="padding:8px 4px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:transparent;
-                     color:${JUDGMENT_LABELS[j].color};cursor:pointer;font-size:10px;font-family:'DM Sans',sans-serif;
-                     transition:all .15s;line-height:1.3;text-align:center">
-              ${JUDGMENT_LABELS[j].en.replace(' ', '<br>')}
-            </button>`).join('')}
-        </div>
-      </div>
-
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-        <div id="preview-${crit.id}" style="font-family:'DM Mono',monospace;font-size:13px;color:rgba(255,255,255,0.3)">
-          Select tier + judgment
-        </div>
-        <button onclick="submitCriterionScore(${selectedBrand?.id}, ${crit.id}, this)"
-          id="submit-${crit.id}"
-          style="background:rgba(99,202,183,0.1);border:1px solid rgba(99,202,183,0.25);color:#63CAB7;
-                 padding:8px 18px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;
-                 font-weight:600;transition:all .15s;white-space:nowrap">
-          Save score →
-        </button>
-      </div>
-    </div>`;
-  }
-
-  el.innerHTML = html || `<div style="color:rgba(255,255,255,0.2);font-size:12px;padding:20px 0">No criteria for this category</div>`;
-}
-
-function selectJudgment(critId, judgment, btn) {
-  document.querySelectorAll(`#judgment-${critId} button`).forEach(b => {
-    b.style.background = "transparent";
-    b.style.borderColor = "rgba(255,255,255,0.08)";
-    b.style.fontWeight = "400";
-  });
-  btn.style.background = `${JUDGMENT_LABELS[judgment].color}22`;
-  btn.style.borderColor = `${JUDGMENT_LABELS[judgment].color}55`;
-  btn.style.fontWeight = "600";
-  btn.dataset.selected = "true";
-  updateValuePreview(critId);
-}
-
-function updateValuePreview(critId) {
-  const tierEl = document.getElementById(`tier-${critId}`);
-  const judgmentEl = document.querySelector(`#judgment-${critId} button[data-selected="true"]`);
-  const previewEl = document.getElementById(`preview-${critId}`);
-  if (!tierEl || !judgmentEl || !previewEl) return;
-
-  const tier = parseInt(tierEl.value);
-  const judgment = judgmentEl.dataset.judgment;
-  const value = TIER_VALUES[tier][judgment];
-  const color = value > 0 ? "#63CAB7" : value < 0 ? "#ef4444" : "rgba(255,255,255,0.3)";
-  previewEl.innerHTML = `Value: <span style="color:${color};font-size:16px;font-weight:700">${value > 0 ? '+' : ''}${value}</span>`;
-}
-
-async function submitCriterionScore(brandId, criterionId, btn) {
-  const tierEl = document.getElementById(`tier-${criterionId}`);
-  const judgmentEl = document.querySelector(`#judgment-${criterionId} button[data-selected="true"]`);
-  const sourceEl = document.getElementById(`source-${criterionId}`);
-
-  if (!judgmentEl) return showToast("Select a judgment first", true);
-
-  const tier = parseInt(tierEl.value);
-  const judgment = judgmentEl.dataset.judgment;
-  const sourceId = sourceEl?.value ? parseInt(sourceEl.value) : null;
-
-  btn.disabled = true;
-  btn.textContent = "Saving…";
-
-  try {
-    const res = await fetch(`${API}/scoring/criterion-score`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-admin-key": ADMIN_KEY },
-      body: JSON.stringify({ brand_id: brandId, criterion_id: criterionId, source_id: sourceId, tier, judgment })
-    });
-    if (!res.ok) throw new Error(await res.text());
-    const data = await res.json();
-    const valStr = (data.value > 0 ? "+" : "") + data.value;
-    showToast(`✓ Saved ${valStr} — Total: ${data.total_score_v2}`);
-    btn.textContent = "✓ Saved";
-    btn.style.color = "#4ade80";
-
-    const scoresRes = await fetch(`${API}/scoring/criterion-scores/${brandId}`).then(r => r.json());
-    renderCurrentScores(scoresRes);
-
-    setTimeout(() => {
-      btn.disabled = false;
-      btn.textContent = "Save score →";
-      btn.style.color = "#63CAB7";
-    }, 2000);
-  } catch(e) {
-    showToast("Error: " + e.message, true);
-    btn.disabled = false;
-    btn.textContent = "Save score →";
-  }
-}
-
-// loadAll() called after password check
 </script>
 </body>
 </html>
