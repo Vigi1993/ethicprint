@@ -48,14 +48,6 @@
     .tier-card.t1 .tier-num { color: var(--gold); } .tier-card.t2 .tier-num { color: var(--silver); } .tier-card.t3 .tier-num { color: var(--bronze); }
     .tier-name { font-size: 11px; font-weight: 500; margin-bottom: 6px; }
     .tier-desc { font-size: 11px; color: var(--muted); line-height: 1.6; }
-    .tier-weight { margin-top: 10px; font-family: 'DM Mono', monospace; font-size: 10px; display: flex; align-items: center; gap: 6px; }
-    .tier-card.t1 .tier-weight { color: var(--gold); } .tier-card.t2 .tier-weight { color: var(--silver); } .tier-card.t3 .tier-weight { color: var(--bronze); }
-    .weight-dots { display: flex; gap: 3px; }
-    .wd { width: 6px; height: 6px; border-radius: 50%; }
-    .wd.on.g { background: var(--gold); } .wd.on.s { background: var(--silver); } .wd.on.b { background: var(--bronze); }
-    .wd.off.g { background: transparent; border: 1px solid var(--gold); }
-    .wd.off.s { background: transparent; border: 1px solid var(--silver); }
-    .wd.off.b { background: transparent; border: 1px solid var(--bronze); }
 
     .tier-block { margin-bottom: 12px; }
     .tier-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; user-select: none; transition: border-color .2s; }
@@ -82,17 +74,15 @@
 
     .scale-box { display: flex; flex-direction: column; gap: 7px; margin-bottom: 28px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; }
     .scale-row { display: flex; align-items: center; gap: 12px; }
-    .scale-dots { font-family: 'DM Mono', monospace; font-size: 12px; width: 64px; letter-spacing: 3px; }
-    .scale-num { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.2); width: 16px; }
-    .scale-label { font-size: 12px; }
 
     .cat-block { margin-bottom: 12px; }
     .cat-header-row { display: flex; align-items: center; gap: 10px; padding: 13px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; user-select: none; transition: border-color .2s; }
     .cat-header-row:hover { border-color: rgba(255,255,255,0.1); }
     .cat-header-row.open { border-radius: 10px 10px 0 0; border-bottom-color: transparent; }
-    .cat-icon { font-size: 15px; }
+    .cat-icon { font-size: 15px; flex-shrink: 0; }
     .cat-title { font-size: 13px; font-weight: 500; flex: 1; }
-    .cat-chev { color: var(--muted); font-size: 11px; transition: transform .25s; }
+    .cat-count { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+    .cat-chev { color: var(--muted); font-size: 11px; transition: transform .25s; flex-shrink: 0; }
     .cat-chev.open { transform: rotate(180deg); }
     .cat-body { overflow: hidden; transition: max-height .35s ease; background: var(--surface); border: 1px solid var(--border); border-top: none; border-radius: 0 0 10px 10px; }
     .criterion-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); }
@@ -206,12 +196,9 @@
       Each brand is evaluated on 20 criteria across 4 categories. Each criterion receives an absolute score based on the tier of available sources. The total score ranges from -400 (worst) to +400 (best). A criterion only contributes if it meets the minimum source threshold.
     </p>
 
-    <!-- SOURCE VALUES BY TIER -->
     <div class="scale-box" style="margin-bottom:16px">
       <div style="font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:12px" data-en="Source values by tier" data-it="Valori per tier di fonte">Source values by tier</div>
-
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:4px">
-        <!-- T1 -->
         <div style="background:rgba(240,192,96,0.06);border:1px solid rgba(240,192,96,0.15);border-radius:10px;padding:12px">
           <div style="font-family:'DM Mono',monospace;font-size:11px;color:#f0c060;margin-bottom:8px">Tier 1</div>
           <div style="font-size:11px;color:rgba(255,255,255,0.5);line-height:2">
@@ -221,7 +208,6 @@
             <span style="color:#ef4444">−20</span> Negative
           </div>
         </div>
-        <!-- T2 -->
         <div style="background:rgba(160,180,200,0.06);border:1px solid rgba(160,180,200,0.15);border-radius:10px;padding:12px">
           <div style="font-family:'DM Mono',monospace;font-size:11px;color:#a0b4c8;margin-bottom:8px">Tier 2</div>
           <div style="font-size:11px;color:rgba(255,255,255,0.5);line-height:2">
@@ -231,7 +217,6 @@
             <span style="color:#ef4444">−10</span> Negative
           </div>
         </div>
-        <!-- T3 -->
         <div style="background:rgba(192,128,96,0.06);border:1px solid rgba(192,128,96,0.15);border-radius:10px;padding:12px">
           <div style="font-family:'DM Mono',monospace;font-size:11px;color:#c08060;margin-bottom:8px">Tier 3</div>
           <div style="font-size:11px;color:rgba(255,255,255,0.5);line-height:2">
@@ -244,7 +229,6 @@
       </div>
     </div>
 
-    <!-- MINIMUM THRESHOLD -->
     <div class="scale-box" style="margin-bottom:16px">
       <div style="font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px" data-en="Minimum threshold per criterion" data-it="Soglia minima per criterio">Minimum threshold per criterion</div>
       <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:2.2">
@@ -257,14 +241,13 @@
       </div>
     </div>
 
-    <!-- SCORE BANDS -->
     <div class="scale-box">
       <div style="font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px" data-en="Score bands (−400 / +400)" data-it="Fasce di punteggio (−400 / +400)">Score bands (−400 / +400)</div>
-      <div class="scale-row"><span style="color:#6dbb7a;font-family:'DM Mono',monospace;font-size:11px;width:100px">+200 → +400</span><span class="scale-label" style="color:#6dbb7a" data-en="Deeply Ethical" data-it="Profondamente Etico">Deeply Ethical</span></div>
-      <div class="scale-row"><span style="color:#a8c5a0;font-family:'DM Mono',monospace;font-size:11px;width:100px">+50 → +199</span><span class="scale-label" style="color:#a8c5a0" data-en="Fairly Ethical" data-it="Abbastanza Etico">Fairly Ethical</span></div>
-      <div class="scale-row"><span style="color:#facc15;font-family:'DM Mono',monospace;font-size:11px;width:100px">−49 → +49</span><span class="scale-label" style="color:#facc15" data-en="Partially Ethical" data-it="Parzialmente Etico">Partially Ethical</span></div>
-      <div class="scale-row"><span style="color:#fb923c;font-family:'DM Mono',monospace;font-size:11px;width:100px">−199 → −50</span><span class="scale-label" style="color:#fb923c" data-en="Scarcely Ethical" data-it="Scarsamente Etico">Scarcely Ethical</span></div>
-      <div class="scale-row"><span style="color:#ef4444;font-family:'DM Mono',monospace;font-size:11px;width:100px">−400 → −200</span><span class="scale-label" style="color:#ef4444" data-en="Ethically Compromised" data-it="Eticamente Inadeguato">Ethically Compromised</span></div>
+      <div class="scale-row"><span style="color:#6dbb7a;font-family:'DM Mono',monospace;font-size:11px;width:100px">+200 → +400</span><span style="color:#6dbb7a" data-en="Deeply Ethical" data-it="Profondamente Etico">Deeply Ethical</span></div>
+      <div class="scale-row"><span style="color:#a8c5a0;font-family:'DM Mono',monospace;font-size:11px;width:100px">+50 → +199</span><span style="color:#a8c5a0" data-en="Fairly Ethical" data-it="Abbastanza Etico">Fairly Ethical</span></div>
+      <div class="scale-row"><span style="color:#facc15;font-family:'DM Mono',monospace;font-size:11px;width:100px">−49 → +49</span><span style="color:#facc15" data-en="Partially Ethical" data-it="Parzialmente Etico">Partially Ethical</span></div>
+      <div class="scale-row"><span style="color:#fb923c;font-family:'DM Mono',monospace;font-size:11px;width:100px">−199 → −50</span><span style="color:#fb923c" data-en="Scarcely Ethical" data-it="Scarsamente Etico">Scarcely Ethical</span></div>
+      <div class="scale-row"><span style="color:#ef4444;font-family:'DM Mono',monospace;font-size:11px;width:100px">−400 → −200</span><span style="color:#ef4444" data-en="Ethically Compromised" data-it="Eticamente Inadeguato">Ethically Compromised</span></div>
     </div>
 
     <div id="criteria-container">
@@ -276,7 +259,7 @@
   <div class="note-section">
     <div class="note-box">
       <strong data-en="Every score change requires human review." data-it="Ogni modifica al punteggio richiede revisione umana.">Every score change requires human review.</strong>
-      <span data-en="AI automatically finds sources and proposes an ethical judgment for each one. A human editor then reviews every proposal before it affects any brand score — approving, rejecting, or correcting the AI suggestion. If you know a reliable source we're missing, " data-it="IA trova automaticamente le fonti e propone una valutazione etica per ognuna. Un editor umano rivede ogni proposta prima che influenzi il punteggio di un brand — approvando, rifiutando o correggendo il suggerimento dell'IA. Se conosci una fonte affidabile che non abbiamo, "> Our AI automatically finds sources and proposes an ethical judgment for each one. A human editor then reviews every proposal before it affects any brand score — approving, rejecting, or correcting the AI suggestion. If you know a reliable source we're missing, </span>
+      <span data-en=" AI automatically finds sources and proposes an ethical judgment for each one. A human editor then reviews every proposal before it affects any brand score — approving, rejecting, or correcting the AI suggestion. If you know a reliable source we're missing, " data-it=" IA trova automaticamente le fonti e propone una valutazione etica per ognuna. Un editor umano rivede ogni proposta prima che influenzi il punteggio di un brand — approvando, rifiutando o correggendo il suggerimento dell'IA. Se conosci una fonte affidabile che non abbiamo, "> AI automatically finds sources and proposes an ethical judgment for each one. A human editor then reviews every proposal before it affects any brand score — approving, rejecting, or correcting the AI suggestion. If you know a reliable source we're missing, </span>
       <a href="mailto:info@ethicprint.org" data-en="write to us." data-it="scrivici.">write to us.</a>
     </div>
   </div>
@@ -350,22 +333,21 @@ function renderPub(p) {
   '</a>';
 }
 
-function renderCriteria(data) {
+function renderCriteria(grouped) {
   var catOrder = ['armi', 'diritti', 'ambiente', 'fisco'];
   var container = document.getElementById('criteria-container');
   if (!container) return;
   var html = '';
   catOrder.forEach(function(cat) {
-    var criteria = data[cat] || [];
+    var criteria = grouped[cat] || [];
+    if (!criteria.length) return;
     var meta = CAT_META[cat];
-    var titleEn = meta.en;
-    var titleIt = meta.it;
-    var displayTitle = currentLang === 'it' ? titleIt : titleEn;
+    var displayTitle = currentLang === 'it' ? meta.it : meta.en;
     html += '<div class="cat-block">' +
       '<div class="cat-header-row" id="cat-hdr-' + cat + '" onclick="toggleCat(\'' + cat + '\')">' +
         '<span class="cat-icon">' + meta.icon + '</span>' +
-        '<span class="cat-title" data-en="' + titleEn + '" data-it="' + titleIt + '">' + displayTitle + '</span>' +
-        '' +
+        '<span class="cat-title" data-en="' + meta.en + '" data-it="' + meta.it + '">' + displayTitle + '</span>' +
+        '<span class="cat-count">' + criteria.length + '</span>' +
         '<span class="cat-chev" id="cat-chev-' + cat + '">&#9660;</span>' +
       '</div>' +
       '<div class="cat-body" id="cat-body-' + cat + '" style="max-height:0">';
@@ -390,6 +372,7 @@ function renderCriteria(data) {
     html += '</div></div>';
   });
   container.innerHTML = html;
+  // Apri la prima categoria di default
   toggleCat('armi');
 }
 
@@ -413,10 +396,13 @@ async function load() {
 
     var critRes = await fetch(API + '/scoring-criteria');
     var critData = await critRes.json();
-    renderCriteria(critData);
+    // Il backend ritorna { criteria: [...], grouped: {...} } — usiamo grouped
+    renderCriteria(critData.grouped || critData);
 
   } catch(e) {
     console.error('Failed to load data', e);
+    document.getElementById('criteria-container').innerHTML =
+      '<div class="pub-loading">Failed to load criteria.</div>';
   }
 }
 
