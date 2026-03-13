@@ -128,7 +128,7 @@
 
   <div class="hero">
     <div class="hero-eyebrow" data-en="Transparency · Methodology" data-it="Trasparenza · Metodologia">Transparency · Methodology</div>
-    <h1 class="hero-title">Sources &amp;<br><span>Methodology</span></h1>
+    <h1 class="hero-title" data-en="Sources &amp;<br><span>Methodology</span>" data-it="Fonti &amp;<br><span>Metodologia</span>">Sources &amp;<br><span>Methodology</span></h1>
     <p class="hero-desc"
       data-en="EthicPrint scores brands using verified, publicly available sources. Not all sources carry the same weight — here's exactly how we decide which publishers we trust and how much."
       data-it="EthicPrint valuta i brand usando fonti verificate e pubblicamente disponibili. Non tutte le fonti hanno lo stesso peso — ecco come decidiamo di quali publisher fidarci e quanto.">
@@ -144,19 +144,16 @@
         <div class="tier-num">T1</div>
         <div class="tier-name" data-en="Primary sources" data-it="Fonti primarie">Primary sources</div>
         <div class="tier-desc" data-en="International NGOs, investigative media, and recognized research institutes." data-it="ONG internazionali, media investigativi e istituti di ricerca riconosciuti.">International NGOs, investigative media, and recognized research institutes.</div>
-        <div class="tier-weight"><div class="weight-dots"><div class="wd on g"></div><div class="wd on g"></div><div class="wd on g"></div></div>weight &times;3</div>
       </div>
       <div class="tier-card t2">
         <div class="tier-num">T2</div>
         <div class="tier-name" data-en="Verified sources" data-it="Fonti verificate">Verified sources</div>
         <div class="tier-desc" data-en="National media, official government data, institutional and certified reports." data-it="Media nazionali, dati governativi ufficiali, report istituzionali e certificazioni.">National media, official government data, institutional and certified reports.</div>
-        <div class="tier-weight"><div class="weight-dots"><div class="wd on s"></div><div class="wd on s"></div><div class="wd off s"></div></div>weight &times;2</div>
       </div>
       <div class="tier-card t3">
         <div class="tier-num">T3</div>
         <div class="tier-name" data-en="Supporting sources" data-it="Fonti di supporto">Supporting sources</div>
         <div class="tier-desc" data-en="Blogs and secondary publications. Valid only as supporting evidence." data-it="Blog e pubblicazioni secondarie. Valide solo come evidenza di supporto.">Blogs and secondary publications. Valid only as supporting evidence.</div>
-        <div class="tier-weight"><div class="weight-dots"><div class="wd on b"></div><div class="wd off b"></div><div class="wd off b"></div></div>weight &times;1</div>
       </div>
     </div>
   </div>
@@ -187,7 +184,7 @@
     <div class="tier-block">
       <div class="tier-header" id="hdr-t3" onclick="toggleTier('t3')">
         <span class="tier-badge t3">Tier 3</span>
-        <span class="tier-hcount" data-en="weight x1" data-it="peso x1">weight x1</span>
+        <span class="tier-hcount" id="count-t3">—</span>
         <span class="tier-chevron" id="chev-t3">&#9660;</span>
       </div>
       <div class="tier-body" id="body-t3" style="max-height:0">
@@ -279,7 +276,7 @@
   <div class="note-section">
     <div class="note-box">
       <strong data-en="Every score change requires human review." data-it="Ogni modifica al punteggio richiede revisione umana.">Every score change requires human review.</strong>
-      <span data-en=" New sources are never applied automatically — they go through a manual approval step before affecting any brand score. If you know a reliable source we're missing, " data-it=" Le nuove fonti non vengono mai applicate automaticamente — passano sempre per un'approvazione manuale. Se conosci una fonte affidabile che non abbiamo, "> New sources are never applied automatically — they go through a manual approval step before affecting any brand score. If you know a reliable source we're missing, </span>
+      <span data-en="AI automatically finds sources and proposes an ethical judgment for each one. A human editor then reviews every proposal before it affects any brand score — approving, rejecting, or correcting the AI suggestion. If you know a reliable source we're missing, " data-it="IA trova automaticamente le fonti e propone una valutazione etica per ognuna. Un editor umano rivede ogni proposta prima che influenzi il punteggio di un brand — approvando, rifiutando o correggendo il suggerimento dell'IA. Se conosci una fonte affidabile che non abbiamo, "> Our AI automatically finds sources and proposes an ethical judgment for each one. A human editor then reviews every proposal before it affects any brand score — approving, rejecting, or correcting the AI suggestion. If you know a reliable source we're missing, </span>
       <a href="mailto:info@ethicprint.org" data-en="write to us." data-it="scrivici.">write to us.</a>
     </div>
   </div>
@@ -299,8 +296,8 @@ const API = "https://web-production-14708.up.railway.app";
 let currentLang = localStorage.getItem('ep_lang') || 'en';
 
 const T = {
-  en: { count: function(n, w) { return n + ' publishers · weight x' + w; } },
-  it: { count: function(n, w) { return n + ' publisher · peso x' + w; } },
+  en: { count: function(n) { return n + ' publishers'; } },
+  it: { count: function(n) { return n + ' publisher'; } },
 };
 
 const CAT_META = {
@@ -403,14 +400,14 @@ async function load() {
     var t = T[currentLang];
 
     document.getElementById('scroll-t1').innerHTML = pubData.tier1.length ? pubData.tier1.map(renderPub).join('') : '<div class="pub-loading">-</div>';
-    document.getElementById('count-t1').textContent = t.count(pubData.tier1.length, 3);
-    document.getElementById('count-t1').setAttribute('data-en', T.en.count(pubData.tier1.length, 3));
-    document.getElementById('count-t1').setAttribute('data-it', T.it.count(pubData.tier1.length, 3));
+    document.getElementById('count-t1').textContent = t.count(pubData.tier1.length);
+    document.getElementById('count-t1').setAttribute('data-en', T.en.count(pubData.tier1.length));
+    document.getElementById('count-t1').setAttribute('data-it', T.it.count(pubData.tier1.length));
 
     document.getElementById('scroll-t2').innerHTML = pubData.tier2.length ? pubData.tier2.map(renderPub).join('') : '<div class="pub-loading">-</div>';
-    document.getElementById('count-t2').textContent = t.count(pubData.tier2.length, 2);
-    document.getElementById('count-t2').setAttribute('data-en', T.en.count(pubData.tier2.length, 2));
-    document.getElementById('count-t2').setAttribute('data-it', T.it.count(pubData.tier2.length, 2));
+    document.getElementById('count-t2').textContent = t.count(pubData.tier2.length);
+    document.getElementById('count-t2').setAttribute('data-en', T.en.count(pubData.tier2.length));
+    document.getElementById('count-t2').setAttribute('data-it', T.it.count(pubData.tier2.length));
 
     toggleTier('t1');
 
