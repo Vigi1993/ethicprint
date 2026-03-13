@@ -372,6 +372,42 @@ function renderCard(p) {
   const jobClass = p.job_type === "replacement" ? "job-replacement" : "job-new";
   const jobLabel = p.job_type === "replacement" ? "replacement" : "new";
 
+  // AI judgment block
+  const JUDGMENT_COLORS = {
+    "Positive": "#4ade80",
+    "Predominantly positive": "#a8c5a0",
+    "Predominantly negative": "#fb923c",
+    "Negative": "#ef4444",
+  };
+  const JUDGMENT_ICONS = {
+    "Positive": "🟢",
+    "Predominantly positive": "🟡",
+    "Predominantly negative": "🟠",
+    "Negative": "🔴",
+  };
+  const JUDGMENT_OPTIONS = ["Positive", "Predominantly positive", "Predominantly negative", "Negative"];
+
+  const aiBlock = p.ai_judgment ? (() => {
+    const col = JUDGMENT_COLORS[p.ai_judgment] || "#888";
+    const icon = JUDGMENT_ICONS[p.ai_judgment] || "⚪";
+    const opts = JUDGMENT_OPTIONS.map(j =>
+      `<option value="${j}" ${j === p.ai_judgment ? "selected" : ""}>${JUDGMENT_ICONS[j]} ${j}</option>`
+    ).join("");
+    return `<div class="ai-judgment-block" id="aij-${p.id}" style="margin:10px 0 4px;padding:10px 14px;background:rgba(99,202,183,0.04);border:1px solid rgba(99,202,183,0.15);border-radius:8px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:11px;color:#63CAB7;font-weight:600;letter-spacing:.05em">AI JUDGMENT</span>
+        <span style="font-size:11px;color:${col};font-weight:600">${icon} ${p.ai_judgment}</span>
+      </div>
+      ${p.ai_rationale ? `<div style="font-size:11px;color:rgba(255,255,255,0.45);line-height:1.6;margin-bottom:8px">${p.ai_rationale}</div>` : ""}
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span style="font-size:11px;color:rgba(255,255,255,0.3)">Change:</span>
+        <select id="jsel-${p.id}" style="background:#0f0f1a;border:1px solid rgba(255,255,255,0.1);color:#e8e8f0;font-size:11px;border-radius:6px;padding:3px 8px">
+          ${opts}
+        </select>
+      </div>
+    </div>`;
+  })() : `<div style="margin:8px 0 4px;font-size:11px;color:rgba(255,255,255,0.25);font-style:italic">No AI judgment — assign manually in Score V2</div>`;
+
   const actions = currentTab === "pending"
     ? `<div class="proposal-actions">
         <button class="btn btn-approve" onclick="approve(${p.id})">✓ Approve</button>
@@ -389,6 +425,7 @@ function renderCard(p) {
       <div class="proposal-title">${p.title || p.url}</div>
       <div class="proposal-publisher">${p.publisher || "—"} <span class="job-badge ${jobClass}">${jobLabel}</span></div>
       ${p.summary ? `<div class="proposal-summary">${p.summary}</div>` : ""}
+      ${aiBlock}
       <a class="proposal-url" href="${p.url}" target="_blank">${p.url}</a>
       <div class="proposal-meta">${new Date(p.created_at).toLocaleDateString("en-GB", {day:"numeric",month:"short",year:"numeric"})}</div>
     </div>
@@ -399,14 +436,22 @@ function renderCard(p) {
 async function approve(id) {
   const card = document.getElementById(`card-${id}`);
   card.querySelectorAll("button").forEach(b => b.disabled = true);
+  // Legge il giudizio confermato (eventualmente modificato dall'utente)
+  const jsel = document.getElementById(`jsel-${id}`);
+  const confirmedJudgment = jsel ? jsel.value : null;
   try {
-    await fetch(`${API}/source-proposals/${id}/approve`, { method: "POST" });
+    const body = confirmedJudgment ? JSON.stringify({ confirmed_judgment: confirmedJudgment }) : null;
+    await fetch(`${API}/source-proposals/${id}/approve`, {
+      method: "POST",
+      headers: body ? { "Content-Type": "application/json" } : {},
+      body,
+    });
     card.classList.add("approved");
     card.querySelector(".proposal-actions").innerHTML = `<span class="status-chip status-approved">✓ Approved</span>`;
     counts.pending--;
     document.getElementById("badge-pending").textContent = counts.pending;
     document.getElementById("s-pending").textContent = counts.pending;
-    showToast("✓ Source approved and added to database");
+    showToast("✓ Source approved" + (confirmedJudgment ? ` — judgment: ${confirmedJudgment}` : ""));
   } catch(e) { showToast("✗ Error — try again", true); card.querySelectorAll("button").forEach(b => b.disabled = false); }
 }
 
