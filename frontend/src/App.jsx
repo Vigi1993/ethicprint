@@ -7,7 +7,7 @@ import { CategoriesContext, useCategories } from "./context/categoriesContext";
 import { useInitialData } from "./hooks/useInitialData";
 import { useSourcesCount } from "./hooks/useSourcesCount";
 import { useBrandSearch } from "./hooks/useBrandSearch";
-import { getSectorAvgScore } from "./utils/brandHelpers";
+import { getSectorAvgScore, getCatLabel } from "./utils/brandHelpers";
 
 const THRESHOLD = 50;
 
@@ -69,41 +69,6 @@ const UI = {
     score_verdicts: ["Fortemente sconsigliato", "Problematico", "Migliorabile", "Abbastanza etico"],
   },
 };
-
-function getScore(brand) {
-  if (brand?.total_score !== undefined && brand?.total_score !== null) return brand.total_score;
-  return null;
-}
-
-function getColor(score) {
-  if (score === null || score === undefined) return "rgba(255,255,255,0.2)";
-  if (score >= 200) return "#6dbb7a";
-  if (score >= 50) return "#a8c5a0";
-  if (score >= -49) return "#facc15";
-  if (score >= -199) return "#fb923c";
-  return "#ef4444";
-}
-
-function getVerdict(score, lang) {
-  if (score === null || score === undefined) return { label: "—", emoji: "❓" };
-  const it = lang === "it";
-  if (score >= 200) return { label: it ? "Profondamente Etico" : "Deeply Ethical", emoji: "🌿" };
-  if (score >= 50) return { label: it ? "Abbastanza Etico" : "Fairly Ethical", emoji: "✅" };
-  if (score >= -49) return { label: it ? "Parzialmente Etico" : "Partially Ethical", emoji: "⚖️" };
-  if (score >= -199) return { label: it ? "Scarsamente Etico" : "Scarcely Ethical", emoji: "⚠️" };
-  return { label: it ? "Eticamente Inadeguato" : "Ethically Compromised", emoji: "🚫" };
-}
-
-function getSectorAvgScore(brands) {
-  const scored = brands.filter((b) => getScore(b) !== null);
-  if (!scored.length) return null;
-  return Math.round(scored.reduce((sum, b) => sum + getScore(b), 0) / scored.length);
-}
-
-function getCatLabel(cat, lang) {
-  if (lang === "en" && cat.label_en) return cat.label_en;
-  return cat.label;
-}
 
 function ScoreBar({ value, color, max = 20 }) {
   const pct = Math.min(100, Math.abs(Math.round((value / max) * 50)));
@@ -568,10 +533,6 @@ const addToList = (brand) => {
               lang={lang}
               ui={UI}
               threshold={THRESHOLD}
-              getScore={getScore}
-              getColor={getColor}
-              getVerdict={getVerdict}
-              getCatLabel={getCatLabel}
           />
 
           <div style={{ marginTop: 52 }}>
@@ -598,10 +559,6 @@ const addToList = (brand) => {
               onSelect={setSelected}
               lang={lang}
               defaultOpen={true}
-              getScore={getScore}
-              getColor={getColor}
-              getCatLabel={getCatLabel}
-              getSectorAvgScore={getSectorAvgScore}
             />
           ))}
           </div>
