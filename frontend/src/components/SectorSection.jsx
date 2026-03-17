@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useCategories } from "../context/categoriesContext";
 import RestBrands from "./RestBrands";
+import {
+  getScore,
+  getColor,
+  getCatLabel,
+  getSectorAvgScore,
+} from "../utils/brandHelpers";
 
 export default function SectorSection({
   sector,
@@ -11,10 +17,6 @@ export default function SectorSection({
   onSelect,
   lang,
   defaultOpen,
-  getScore,
-  getColor,
-  getCatLabel,
-  getSectorAvgScore,
 }) {
   const categories = useCategories();
   const [expanded, setExpanded] = useState(defaultOpen);
