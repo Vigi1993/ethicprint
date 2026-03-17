@@ -12,6 +12,7 @@ function normalizeCategory(category) {
     label_en: category.label_en ?? "",
     description: category.description ?? "",
     description_en: category.description_en ?? "",
+    icon: category.icon ?? "•",
   };
 }
 
