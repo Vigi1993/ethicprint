@@ -1190,28 +1190,10 @@ export default function App() {
   const [selected, setSelected] = useState(null);
   const [myBrands, setMyBrands] = useState([]);
   const [showHint, setShowHint] = useState(true);
-  const [sourcesCount, setSourcesCount] = useState(0);
+  const sourcesCount = useSourcesCount();
   const inputRef = useRef(null);
 
   const t = UI[lang] || UI.en;
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function loadSourcesCount() {
-      const count = await getPublicSourcesCount();
-
-      if (isMounted) {
-        setSourcesCount(count);
-      }
-    }
-
-    loadSourcesCount();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   useEffect(() => {
     const link = document.createElement("link");
