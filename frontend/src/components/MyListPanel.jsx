@@ -1,4 +1,10 @@
 import { useCategories } from "../context/categoriesContext";
+import {
+  getScore,
+  getColor,
+  getVerdict,
+  getCatLabel,
+} from "../utils/brandHelpers";
 
 export default function MyListPanel({
   myBrands,
@@ -8,11 +14,7 @@ export default function MyListPanel({
   lang,
   ui,
   threshold,
-  getScore,
-  getColor,
-  getVerdict,
-  getCatLabel,
-}) {
+}) { {
   const categories = useCategories();
   const t = ui[lang] || ui.en;
 
