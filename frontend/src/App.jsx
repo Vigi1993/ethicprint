@@ -8,67 +8,9 @@ import { useInitialData } from "./hooks/useInitialData";
 import { useSourcesCount } from "./hooks/useSourcesCount";
 import { useBrandSearch } from "./hooks/useBrandSearch";
 import { getSectorAvgScore, getCatLabel } from "./utils/brandHelpers";
+import { UI } from "./constants/uiText";
 
 const THRESHOLD = 50;
-
-const UI = {
-  en: {
-    tagline: "Open Source · Community Driven",
-    subtitle: "Discover the ethical impact of the brands you use every day.",
-    search_placeholder: "Search brand, platform, service...",
-    db_info: (n, s, src) => `${n} brands · ${s} sectors · ${src || "–"} sources · open source`,
-    my_list_title: "Your ethical footprint",
-    aggregated_score: "Aggregated score",
-    clear_list: "Clear list",
-    alternatives_title: "⚠️ Recommended alternatives",
-    below_threshold: "below threshold",
-    replace_with: "Consider replacing it with:",
-    ranking_title: "Ranking by sector",
-    notes_title: "Notes & Sources",
-    alternatives_label: "✦ More ethical alternatives",
-    parent: "Parent company",
-    footer: "EthicPrint is an open source, non-profit project.",
-    footer_cta: "Contribute on GitHub · Report an error · Add a brand",
-    sources_banner_title: "How do we score brands?",
-    sources_banner_desc:
-      "Every score is backed by verified sources, weighted by publisher authority. Amnesty International counts more than a blog. Everything is public.",
-    sources_banner_cta: "View all sources & methodology →",
-    loading: "Loading...",
-    hint: "Add the brands you use with + to discover your personal ethical footprint.",
-    hint_dismiss: "Got it",
-    show_less: "Less",
-    show_more: (n) => `+${n} more`,
-    score_verdicts: ["Strongly discouraged", "Problematic", "Improvable", "Fairly ethical"],
-  },
-  it: {
-    tagline: "Open Source · Community Driven",
-    subtitle: "Scopri l'impatto etico dei brand che usi ogni giorno.",
-    search_placeholder: "Cerca brand, piattaforma, fornitore...",
-    db_info: (n, s, src) => `${n} brand · ${s} settori · ${src || "–"} fonti · open source`,
-    my_list_title: "La tua impronta etica",
-    aggregated_score: "Score aggregato",
-    clear_list: "Svuota lista",
-    alternatives_title: "⚠️ Alternative consigliate",
-    below_threshold: "sotto soglia",
-    replace_with: "Considera di sostituirlo con:",
-    ranking_title: "Classifica per settore",
-    notes_title: "Note & Fonti",
-    alternatives_label: "✦ Alternative più etiche",
-    parent: "Casa madre",
-    footer: "EthicPrint è un progetto open source e no-profit.",
-    footer_cta: "Contribuisci su GitHub · Segnala un errore · Aggiungi un brand",
-    sources_banner_title: "Come calcoliamo i punteggi?",
-    sources_banner_desc:
-      "Ogni punteggio è supportato da fonti verificate, pesate per autorevolezza. Amnesty International vale più di un blog. Tutto è pubblico.",
-    sources_banner_cta: "Vedi tutte le fonti e la metodologia →",
-    loading: "Caricamento...",
-    hint: "Aggiungi i brand che usi con + per scoprire la tua impronta etica personale.",
-    hint_dismiss: "Capito",
-    show_less: "Meno",
-    show_more: (n) => `+${n} altri`,
-    score_verdicts: ["Fortemente sconsigliato", "Problematico", "Migliorabile", "Abbastanza etico"],
-  },
-};
 
 function ScoreBar({ value, color, max = 20 }) {
   const pct = Math.min(100, Math.abs(Math.round((value / max) * 50)));
