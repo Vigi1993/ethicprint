@@ -84,3 +84,15 @@ export function getDisplayScoreColor(score) {
   if (score >= 20) return "#fb923c";
   return "#ef4444";
 }
+
+export function getSectorAvgDisplayScore(brands) {
+  const scored = brands.filter(
+    (b) => typeof b.public_score === "number" && !b.insufficient_data
+  );
+
+  if (!scored.length) return null;
+
+  return Math.round(
+    scored.reduce((sum, b) => sum + b.public_score, 0) / scored.length
+  );
+}
