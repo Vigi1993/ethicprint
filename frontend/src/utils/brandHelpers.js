@@ -103,15 +103,3 @@ export function rawCategoryScoreToPublic(score) {
   const clamped = Math.max(-20, Math.min(20, score));
   return Math.round(((clamped + 20) / 40) * 100);
 }
-
-export function getSectorAvgDisplayScore(brands) {
-  const scored = brands.filter(
-    (b) => typeof b.public_score === "number" && !b.insufficient_data
-  );
-
-  if (!scored.length) return null;
-
-  return Math.round(
-    scored.reduce((sum, b) => sum + b.public_score, 0) / scored.length
-  );
-}
