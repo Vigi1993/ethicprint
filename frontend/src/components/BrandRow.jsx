@@ -1,4 +1,5 @@
 import { useCategories } from "../context/categoriesContext";
+import { getScore, getColor, getCatLabel } from "../utils/brandHelpers";
 
 export default function BrandRow({
   brand,
@@ -7,9 +8,6 @@ export default function BrandRow({
   onAdd,
   onSelect,
   lang,
-  getScore,
-  getColor,
-  getCatLabel,
 }) {
   const categories = useCategories();
   const score = getScore(brand);
