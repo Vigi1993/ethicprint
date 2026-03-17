@@ -3,7 +3,7 @@ import logoSrc from "./assets/logo.png";
 import BrandCard from "./components/BrandCard";
 import MyListPanel from "./components/MyListPanel";
 import SectorSection from "./components/SectorSection";
-import { CategoriesContext, useCategories } from "./context/categoriesContext";
+import { CategoriesContext} from "./context/categoriesContext";
 import { useInitialData } from "./hooks/useInitialData";
 import { useSourcesCount } from "./hooks/useSourcesCount";
 import { useBrandSearch } from "./hooks/useBrandSearch";
@@ -11,48 +11,6 @@ import { getSectorAvgScore, getCatLabel } from "./utils/brandHelpers";
 import { UI } from "./constants/uiText";
 
 const THRESHOLD = 50;
-
-function ScoreBar({ value, color, max = 20 }) {
-  const pct = Math.min(100, Math.abs(Math.round((value / max) * 50)));
-  const positive = value >= 0;
-
-  return (
-    <div
-      style={{
-        background: "rgba(255,255,255,0.06)",
-        borderRadius: 99,
-        height: 6,
-        width: "100%",
-        overflow: "hidden",
-        position: "relative",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          left: "50%",
-          top: 0,
-          width: 1,
-          height: "100%",
-          background: "rgba(255,255,255,0.1)",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          height: "100%",
-          width: `${pct}%`,
-          background: color,
-          borderRadius: 99,
-          transition: "width 1s cubic-bezier(.4,0,.2,1)",
-          left: positive ? "50%" : undefined,
-          right: positive ? undefined : "50%",
-        }}
-      />
-    </div>
-  );
-}
 
 function LangToggle({ lang, setLang }) {
   return (
@@ -93,22 +51,6 @@ function LangToggle({ lang, setLang }) {
     </div>
   );
 }
-
-function RadarChart({ scores, lang }) {
-  const categories = useCategories();
-  const size = 140;
-  const cx = size / 2;
-  const cy = size / 2;
-  const r = 52;
-
-  const keys = categories.map((c) => c.key);
-  const labels = categories.map((c) => getCatLabel(c, lang).split(" ")[0]);
-  const angles = keys.map((_, i) => (i * 2 * Math.PI) / keys.length - Math.PI / 2);
-
-  const points = keys.map((k, i) => {
-    const val = (scores?.[k] || 0) / 100;
-    return [cx + r * val * Math.cos(angles[i]), cy + r * val * Math.sin(angles[i])];
-  });
 
   const gridPoints = (scale) =>
     keys.map((_, i) => [cx + r * scale * Math.cos(angles[i]), cy + r * scale * Math.sin(angles[i])]);
