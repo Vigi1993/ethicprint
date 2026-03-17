@@ -8,12 +8,36 @@ function normalizeAlternative(alt) {
     id: alt.id ?? null,
     name: alt.name ?? "",
     sector: alt.sector ?? "",
-    score: typeof alt.score === "number"
-      ? alt.score
-      : typeof alt.total_score === "number"
+    sector_icon: alt.sector_icon ?? "",
+    parent: alt.parent ?? alt.parent_company ?? "",
+    total_score:
+      typeof alt.total_score === "number"
         ? alt.total_score
-        : null,
+        : typeof alt.score === "number"
+          ? alt.score
+          : null,
+    score:
+      typeof alt.score === "number"
+        ? alt.score
+        : typeof alt.total_score === "number"
+          ? alt.total_score
+          : null,
     logo: alt.logo ?? alt.sector_icon ?? "🏢",
+    scores:
+      alt.scores && typeof alt.scores === "object" ? alt.scores : {},
+    notes:
+      alt.notes && typeof alt.notes === "object" ? alt.notes : {},
+    sources:
+      alt.sources && typeof alt.sources === "object" ? alt.sources : {},
+    confidence:
+      alt.confidence && typeof alt.confidence === "object" ? alt.confidence : {},
+    alternatives: Array.isArray(alt.alternatives)
+      ? alt.alternatives.map(normalizeAlternative).filter(Boolean)
+      : [],
+    impact_summary: alt.impact_summary ?? "",
+    insufficient_data: Boolean(alt.insufficient_data),
+    criteria_published:
+      typeof alt.criteria_published === "number" ? alt.criteria_published : 0,
   };
 }
 
