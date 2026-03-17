@@ -28,7 +28,8 @@ const UI = {
     footer: "EthicPrint is an open source, non-profit project.",
     footer_cta: "Contribute on GitHub · Report an error · Add a brand",
     sources_banner_title: "How do we score brands?",
-    sources_banner_desc: "Every score is backed by verified sources, weighted by publisher authority. Amnesty International counts more than a blog. Everything is public.",
+    sources_banner_desc:
+      "Every score is backed by verified sources, weighted by publisher authority. Amnesty International counts more than a blog. Everything is public.",
     sources_banner_cta: "View all sources & methodology →",
     loading: "Loading...",
     hint: "Add the brands you use with + to discover your personal ethical footprint.",
@@ -55,7 +56,8 @@ const UI = {
     footer: "EthicPrint è un progetto open source e no-profit.",
     footer_cta: "Contribuisci su GitHub · Segnala un errore · Aggiungi un brand",
     sources_banner_title: "Come calcoliamo i punteggi?",
-    sources_banner_desc: "Ogni punteggio è supportato da fonti verificate, pesate per autorevolezza. Amnesty International vale più di un blog. Tutto è pubblico.",
+    sources_banner_desc:
+      "Ogni punteggio è supportato da fonti verificate, pesate per autorevolezza. Amnesty International vale più di un blog. Tutto è pubblico.",
     sources_banner_cta: "Vedi tutte le fonti e la metodologia →",
     loading: "Caricamento...",
     hint: "Aggiungi i brand che usi con + per scoprire la tua impronta etica personale.",
@@ -63,21 +65,19 @@ const UI = {
     show_less: "Meno",
     show_more: (n) => `+${n} altri`,
     score_verdicts: ["Fortemente sconsigliato", "Problematico", "Migliorabile", "Abbastanza etico"],
-  }
+  },
 };
 
-const SCORE_RANGE = 400;
-
 function getScore(brand) {
-  if (brand.total_score !== undefined && brand.total_score !== null) return brand.total_score;
+  if (brand?.total_score !== undefined && brand?.total_score !== null) return brand.total_score;
   return null;
 }
 
 function getColor(score) {
   if (score === null || score === undefined) return "rgba(255,255,255,0.2)";
-  if (score >= 200)  return "#6dbb7a";
-  if (score >= 50)   return "#a8c5a0";
-  if (score >= -49)  return "#facc15";
+  if (score >= 200) return "#6dbb7a";
+  if (score >= 50) return "#a8c5a0";
+  if (score >= -49) return "#facc15";
   if (score >= -199) return "#fb923c";
   return "#ef4444";
 }
@@ -85,15 +85,15 @@ function getColor(score) {
 function getVerdict(score, lang) {
   if (score === null || score === undefined) return { label: "—", emoji: "❓" };
   const it = lang === "it";
-  if (score >= 200)  return { label: it ? "Profondamente Etico"  : "Deeply Ethical",       emoji: "🌿" };
-  if (score >= 50)   return { label: it ? "Abbastanza Etico"     : "Fairly Ethical",        emoji: "✅" };
-  if (score >= -49)  return { label: it ? "Parzialmente Etico"   : "Partially Ethical",     emoji: "⚖️" };
-  if (score >= -199) return { label: it ? "Scarsamente Etico"    : "Scarcely Ethical",      emoji: "⚠️" };
-  return               { label: it ? "Eticamente Inadeguato"     : "Ethically Compromised", emoji: "🚫" };
+  if (score >= 200) return { label: it ? "Profondamente Etico" : "Deeply Ethical", emoji: "🌿" };
+  if (score >= 50) return { label: it ? "Abbastanza Etico" : "Fairly Ethical", emoji: "✅" };
+  if (score >= -49) return { label: it ? "Parzialmente Etico" : "Partially Ethical", emoji: "⚖️" };
+  if (score >= -199) return { label: it ? "Scarsamente Etico" : "Scarcely Ethical", emoji: "⚠️" };
+  return { label: it ? "Eticamente Inadeguato" : "Ethically Compromised", emoji: "🚫" };
 }
 
 function getSectorAvgScore(brands) {
-  const scored = brands.filter(b => getScore(b) !== null);
+  const scored = brands.filter((b) => getScore(b) !== null);
   if (!scored.length) return null;
   return Math.round(scored.reduce((sum, b) => sum + getScore(b), 0) / scored.length);
 }
@@ -106,32 +106,78 @@ function getCatLabel(cat, lang) {
 function ScoreBar({ value, color, max = 20 }) {
   const pct = Math.min(100, Math.abs(Math.round((value / max) * 50)));
   const positive = value >= 0;
+
   return (
-    <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 99, height: 6, width: "100%", overflow: "hidden", position: "relative" }}>
-      <div style={{ position: "absolute", left: "50%", top: 0, width: 1, height: "100%", background: "rgba(255,255,255,0.1)" }} />
-      <div style={{
-        position: "absolute", top: 0, height: "100%",
-        width: `${pct}%`, background: color, borderRadius: 99,
-        transition: "width 1s cubic-bezier(.4,0,.2,1)",
-        left: positive ? "50%" : undefined,
-        right: positive ? undefined : `${50}%`,
-      }} />
+    <div
+      style={{
+        background: "rgba(255,255,255,0.06)",
+        borderRadius: 99,
+        height: 6,
+        width: "100%",
+        overflow: "hidden",
+        position: "relative",
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: 0,
+          width: 1,
+          height: "100%",
+          background: "rgba(255,255,255,0.1)",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          height: "100%",
+          width: `${pct}%`,
+          background: color,
+          borderRadius: 99,
+          transition: "width 1s cubic-bezier(.4,0,.2,1)",
+          left: positive ? "50%" : undefined,
+          right: positive ? undefined : "50%",
+        }}
+      />
     </div>
   );
 }
 
 function LangToggle({ lang, setLang }) {
   return (
-    <div style={{ position: "fixed", top: 20, right: 20, zIndex: 200, display: "flex", gap: 4, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 99, padding: "4px" }}>
-      {["en", "it"].map(l => (
-        <button key={l} onClick={() => setLang(l)} style={{
-          background: lang === l ? "rgba(99,202,183,0.2)" : "transparent",
-          border: lang === l ? "1px solid rgba(99,202,183,0.4)" : "1px solid transparent",
-          color: lang === l ? "#63CAB7" : "rgba(255,255,255,0.35)",
-          padding: "4px 12px", borderRadius: 99, cursor: "pointer",
-          fontSize: 12, fontWeight: 600, fontFamily: "'DM Sans', sans-serif",
-          transition: "all 0.15s"
-        }}>
+    <div
+      style={{
+        position: "fixed",
+        top: 20,
+        right: 20,
+        zIndex: 200,
+        display: "flex",
+        gap: 4,
+        background: "rgba(255,255,255,0.06)",
+        border: "1px solid rgba(255,255,255,0.12)",
+        borderRadius: 99,
+        padding: "4px",
+      }}
+    >
+      {["en", "it"].map((l) => (
+        <button
+          key={l}
+          onClick={() => setLang(l)}
+          style={{
+            background: lang === l ? "rgba(99,202,183,0.2)" : "transparent",
+            border: lang === l ? "1px solid rgba(99,202,183,0.4)" : "1px solid transparent",
+            color: lang === l ? "#63CAB7" : "rgba(255,255,255,0.35)",
+            padding: "4px 12px",
+            borderRadius: 99,
+            cursor: "pointer",
+            fontSize: 12,
+            fontWeight: 600,
+            fontFamily: "'DM Sans', sans-serif",
+            transition: "all 0.15s",
+          }}
+        >
           {l.toUpperCase()}
         </button>
       ))}
@@ -141,94 +187,242 @@ function LangToggle({ lang, setLang }) {
 
 function RadarChart({ scores, lang }) {
   const categories = useCategories();
-  const size = 140; const cx = size / 2, cy = size / 2, r = 52;
-  const keys = categories.map(c => c.key);
-  const labels = categories.map(c => getCatLabel(c, lang).split(" ")[0]);
+  const size = 140;
+  const cx = size / 2;
+  const cy = size / 2;
+  const r = 52;
+
+  const keys = categories.map((c) => c.key);
+  const labels = categories.map((c) => getCatLabel(c, lang).split(" ")[0]);
   const angles = keys.map((_, i) => (i * 2 * Math.PI) / keys.length - Math.PI / 2);
-  const points = keys.map((k, i) => { const val = (scores[k] || 0) / 100; return [cx + r * val * Math.cos(angles[i]), cy + r * val * Math.sin(angles[i])]; });
-  const gridPoints = (scale) => keys.map((_, i) => [cx + r * scale * Math.cos(angles[i]), cy + r * scale * Math.sin(angles[i])]);
-  const polyStr = (pts) => pts.map(p => p.join(",")).join(" ");
+
+  const points = keys.map((k, i) => {
+    const val = (scores?.[k] || 0) / 100;
+    return [cx + r * val * Math.cos(angles[i]), cy + r * val * Math.sin(angles[i])];
+  });
+
+  const gridPoints = (scale) =>
+    keys.map((_, i) => [cx + r * scale * Math.cos(angles[i]), cy + r * scale * Math.sin(angles[i])]);
+
+  const polyStr = (pts) => pts.map((p) => p.join(",")).join(" ");
+
   return (
     <svg width={size} height={size} style={{ overflow: "visible" }}>
-      {[0.25, 0.5, 0.75, 1].map(s => <polygon key={s} points={polyStr(gridPoints(s))} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />)}
-      {angles.map((a, i) => <line key={i} x1={cx} y1={cy} x2={cx + r * Math.cos(a)} y2={cy + r * Math.sin(a)} stroke="rgba(255,255,255,0.07)" strokeWidth="1" />)}
+      {[0.25, 0.5, 0.75, 1].map((s) => (
+        <polygon
+          key={s}
+          points={polyStr(gridPoints(s))}
+          fill="none"
+          stroke="rgba(255,255,255,0.06)"
+          strokeWidth="1"
+        />
+      ))}
+      {angles.map((a, i) => (
+        <line
+          key={i}
+          x1={cx}
+          y1={cy}
+          x2={cx + r * Math.cos(a)}
+          y2={cy + r * Math.sin(a)}
+          stroke="rgba(255,255,255,0.07)"
+          strokeWidth="1"
+        />
+      ))}
       <polygon points={polyStr(points)} fill="rgba(99,202,183,0.18)" stroke="#63CAB7" strokeWidth="1.5" />
-      {points.map((p, i) => <circle key={i} cx={p[0]} cy={p[1]} r={3} fill="#63CAB7" />)}
-      {angles.map((a, i) => { const lx = cx + (r + 16) * Math.cos(a); const ly = cy + (r + 16) * Math.sin(a); return <text key={i} x={lx} y={ly + 4} textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="9" fontFamily="'DM Sans', sans-serif">{labels[i]}</text>; })}
+      {points.map((p, i) => (
+        <circle key={i} cx={p[0]} cy={p[1]} r={3} fill="#63CAB7" />
+      ))}
+      {angles.map((a, i) => {
+        const lx = cx + (r + 16) * Math.cos(a);
+        const ly = cy + (r + 16) * Math.sin(a);
+        return (
+          <text
+            key={i}
+            x={lx}
+            y={ly + 4}
+            textAnchor="middle"
+            fill="rgba(255,255,255,0.45)"
+            fontSize="9"
+            fontFamily="'DM Sans', sans-serif"
+          >
+            {labels[i]}
+          </text>
+        );
+      })}
     </svg>
   );
 }
 
 function BrandCard({ brand, onClose, lang, onSelectAlt }) {
   const categories = useCategories();
-  const [fullBrand, setFullBrand] = useState(null);
+  const [fullBrand, setFullBrand] = useState(brand || null);
   const t = UI[lang] || UI.en;
+
   const total = fullBrand ? getScore(fullBrand) : null;
   const verdict = getVerdict(total, lang);
   const color = getColor(total);
-  const [fullBrand, setFullBrand] = useState(brand || null);
 
-useEffect(() => {
-  let isMounted = true;
+  useEffect(() => {
+    let isMounted = true;
 
-  async function loadBrandDetail() {
-    useEffect(() => {
-  let isMounted = true;
+    async function loadBrandDetail() {
+      const data = await getBrandDetail(brand.id, lang);
 
-  async function loadBrandDetail() {
-    const data = await getBrandDetail(brand.id, lang);
+      if (!isMounted) return;
 
-    if (!isMounted) return;
+      setFullBrand(data || brand);
+    }
 
-    setFullBrand(data || brand);
-  }
+    loadBrandDetail();
 
-  loadBrandDetail();
+    return () => {
+      isMounted = false;
+    };
+  }, [brand.id, lang, brand]);
 
-  return () => {
-    isMounted = false;
-  };
-}, [brand.id, lang, brand]);
-
-    const data = await getBrandDetail(brand.id, lang);
-
-    if (!isMounted) return;
-
-    setFullBrand(data || brand);
-  }
-
-  loadBrandDetail();
-
-  return () => {
-    isMounted = false;
-  };
-}, [brand.id, lang, brand]);
-
-  if (!fullBrand) return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} onClick={onClose}>
-      <div style={{ background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 48, display: "flex", alignItems: "center", justifyContent: "center" }} onClick={e => e.stopPropagation()}>
-        <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, fontFamily: "'DM Sans', sans-serif", letterSpacing: 2 }}>{t.loading}</div>
+  if (!fullBrand) {
+    return (
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(0,0,0,0.75)",
+          backdropFilter: "blur(6px)",
+          zIndex: 100,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 20,
+        }}
+        onClick={onClose}
+      >
+        <div
+          style={{
+            background: "#0f0f1a",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: 20,
+            padding: 48,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div
+            style={{
+              color: "rgba(255,255,255,0.3)",
+              fontSize: 13,
+              fontFamily: "'DM Sans', sans-serif",
+              letterSpacing: 2,
+            }}
+          >
+            {t.loading}
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 
   const b = fullBrand;
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} onClick={onClose}>
-      <div style={{ background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 32, maxWidth: 520, width: "100%", boxShadow: "0 40px 80px rgba(0,0,0,0.6)", maxHeight: "90vh", overflowY: "auto", position: "relative" }} onClick={e => e.stopPropagation()}>
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0,0,0,0.75)",
+        backdropFilter: "blur(6px)",
+        zIndex: 100,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 20,
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          background: "#0f0f1a",
+          border: "1px solid rgba(255,255,255,0.08)",
+          borderRadius: 20,
+          padding: 32,
+          maxWidth: 520,
+          width: "100%",
+          boxShadow: "0 40px 80px rgba(0,0,0,0.6)",
+          maxHeight: "90vh",
+          overflowY: "auto",
+          position: "relative",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          style={{
+            position: "absolute",
+            top: 16,
+            right: 16,
+            background: "rgba(255,255,255,0.06)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            color: "rgba(255,255,255,0.4)",
+            width: 32,
+            height: 32,
+            borderRadius: 99,
+            cursor: "pointer",
+            fontSize: 18,
+            lineHeight: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "all 0.15s",
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.background = "rgba(255,255,255,0.12)";
+            e.currentTarget.style.color = "#fff";
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.background = "rgba(255,255,255,0.06)";
+            e.currentTarget.style.color = "rgba(255,255,255,0.4)";
+          }}
+        >
+          ×
+        </button>
 
-        <button onClick={onClose} style={{ position: "absolute", top: 16, right: 16, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.4)", width: 32, height: 32, borderRadius: 99, cursor: "pointer", fontSize: 18, lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}
-          onMouseOver={e => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; e.currentTarget.style.color = "#fff"; }}
-          onMouseOut={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "rgba(255,255,255,0.4)"; }}
-        >×</button>
-
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, paddingRight: 40 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            marginBottom: 24,
+            paddingRight: 40,
+          }}
+        >
           <div>
-            <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 12, marginBottom: 4, letterSpacing: 2, textTransform: "uppercase" }}>{b.sector}</div>
-            <div style={{ fontSize: 26, fontWeight: 700, color: "#fff", fontFamily: "'Playfair Display', serif" }}>{b.name}</div>
-            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>{t.parent}: {b.parent}</div>
+            <div
+              style={{
+                color: "rgba(255,255,255,0.4)",
+                fontSize: 12,
+                marginBottom: 4,
+                letterSpacing: 2,
+                textTransform: "uppercase",
+              }}
+            >
+              {b.sector}
+            </div>
+            <div
+              style={{
+                fontSize: 26,
+                fontWeight: 700,
+                color: "#fff",
+                fontFamily: "'Playfair Display', serif",
+              }}
+            >
+              {b.name}
+            </div>
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>
+              {t.parent}: {b.parent}
+            </div>
           </div>
+
           <div style={{ textAlign: "right" }}>
             {b.insufficient_data ? (
               <div style={{ fontSize: 13, color: "#fb923c", fontWeight: 600, maxWidth: 140, lineHeight: 1.4 }}>
@@ -236,40 +430,60 @@ useEffect(() => {
               </div>
             ) : (
               <>
-                <div style={{ fontSize: 40, fontWeight: 800, color, fontFamily: "monospace", lineHeight: 1 }}>{total}</div>
+                <div style={{ fontSize: 40, fontWeight: 800, color, fontFamily: "monospace", lineHeight: 1 }}>
+                  {total}
+                </div>
                 <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>
                   {b.criteria_published > 0
-                    ? (lang === "it" ? `${b.criteria_published} criteri` : `${b.criteria_published} criteria`)
+                    ? lang === "it"
+                      ? `${b.criteria_published} criteri`
+                      : `${b.criteria_published} criteria`
                     : "/ ±400"}
                 </div>
-                <div style={{ fontSize: 13, marginTop: 4 }}>{verdict.emoji} {verdict.label}</div>
+                <div style={{ fontSize: 13, marginTop: 4 }}>
+                  {verdict.emoji} {verdict.label}
+                </div>
               </>
             )}
           </div>
         </div>
 
         {b.impact_summary && (
-          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "12px 16px", marginBottom: 20, fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.7, fontStyle: "italic" }}>
+          <div
+            style={{
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(255,255,255,0.06)",
+              borderRadius: 10,
+              padding: "12px 16px",
+              marginBottom: 20,
+              fontSize: 13,
+              color: "rgba(255,255,255,0.5)",
+              lineHeight: 1.7,
+              fontStyle: "italic",
+            }}
+          >
             {b.impact_summary}
           </div>
         )}
 
         <div style={{ marginBottom: 28 }}>
-          {categories.map(cat => {
+          {categories.map((cat) => {
             const conf = b.confidence?.[cat.key] || {};
             const criteria_met = conf.criteria_met;
-            const score = b.scores[cat.key];
+            const score = b.scores?.[cat.key];
             const catColor = criteria_met ? getColor(score) : "rgba(255,255,255,0.15)";
             const t1 = conf.tier1 ?? conf.t1 ?? 0;
             const t2 = conf.tier2 ?? conf.t2 ?? 0;
             const t3 = conf.tier3 ?? conf.t3 ?? 0;
-            const hasAnySources = (t1 + t2 + t3) > 0;
+            const hasAnySources = t1 + t2 + t3 > 0;
+
             return (
               <div key={cat.key} style={{ marginBottom: 12, opacity: criteria_met ? 1 : 0.45 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
                   <span style={{ fontSize: 12, color: criteria_met ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)" }}>
                     {cat.icon} {getCatLabel(cat, lang)}
                   </span>
+
                   {criteria_met ? (
                     <div style={{ display: "flex", alignItems: "baseline", gap: 2 }}>
                       <span style={{ fontSize: 13, fontWeight: 700, color: catColor }}>{score}</span>
@@ -278,59 +492,125 @@ useEffect(() => {
                   ) : (
                     <span style={{ fontSize: 10, color: "#fb923c", fontFamily: "'DM Mono', monospace" }}>
                       {hasAnySources
-                        ? (lang === "it" ? "fonti insufficienti" : "insufficient sources")
-                        : (lang === "it" ? "nessuna fonte" : "no sources")}
+                        ? lang === "it"
+                          ? "fonti insufficienti"
+                          : "insufficient sources"
+                        : lang === "it"
+                          ? "nessuna fonte"
+                          : "no sources"}
                     </span>
                   )}
                 </div>
-                <ScoreBar value={criteria_met ? (score || 0) : 0} color={catColor} max={20} />
+
+                <ScoreBar value={criteria_met ? score || 0 : 0} color={catColor} max={20} />
               </div>
             );
           })}
         </div>
 
-        {/* ── NOTES & SOURCES ── */}
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20 }}>
-          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 14, letterSpacing: 1, textTransform: "uppercase" }}>{t.notes_title}</div>
-          {categories.map(cat => {
+          <div
+            style={{
+              fontSize: 11,
+              color: "rgba(255,255,255,0.3)",
+              marginBottom: 14,
+              letterSpacing: 1,
+              textTransform: "uppercase",
+            }}
+          >
+            {t.notes_title}
+          </div>
+
+          {categories.map((cat) => {
             const catSources = b.sources?.[cat.key] || [];
             const hasNote = b.notes?.[cat.key];
             const conf = b.confidence?.[cat.key];
+
             if (!hasNote && !catSources.length && !conf) return null;
+
             return (
-              <div key={cat.key} style={{ marginBottom: 18, paddingBottom: 14, borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-                {/* Categoria label */}
+              <div
+                key={cat.key}
+                style={{
+                  marginBottom: 18,
+                  paddingBottom: 14,
+                  borderBottom: "1px solid rgba(255,255,255,0.04)",
+                }}
+              >
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
                   <span style={{ fontSize: 13 }}>{cat.icon}</span>
-                  <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 1 }}>
+                  <span
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 600,
+                      color: "rgba(255,255,255,0.5)",
+                      textTransform: "uppercase",
+                      letterSpacing: 1,
+                    }}
+                  >
                     {getCatLabel(cat, lang)}
                   </span>
                 </div>
-                {/* Note testuali */}
+
                 {hasNote && (
                   <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", lineHeight: 1.6, marginBottom: 8 }}>
-                    {b.notes[cat.key]}
+                    {b.notes?.[cat.key]}
                   </div>
                 )}
-                {/* Contatore fonti */}
+
                 {conf && (
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 5, marginBottom: catSources.length ? 8 : 0 }}>
+                  <div
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 5,
+                      marginBottom: catSources.length ? 8 : 0,
+                    }}
+                  >
                     <span style={{ fontSize: 11, color: "rgba(255,255,255,0.25)" }}>
-                      ◆ {conf.count} {lang === "it" ? (conf.count === 1 ? "fonte verificata" : "fonti verificate") : (conf.count === 1 ? "verified source" : "verified sources")}
+                      ◆ {conf.count}{" "}
+                      {lang === "it"
+                        ? conf.count === 1
+                          ? "fonte verificata"
+                          : "fonti verificate"
+                        : conf.count === 1
+                          ? "verified source"
+                          : "verified sources"}
                     </span>
                   </div>
                 )}
-                {/* Link fonti */}
+
                 {catSources.length > 0 && (
                   <div style={{ display: "flex", flexDirection: "column", gap: 4, paddingLeft: 16 }}>
                     {catSources.map((src, i) => (
-                      <a key={i} href={src.url} target="_blank" rel="noopener noreferrer"
-                        style={{ fontSize: 11, color: "rgba(99,202,183,0.6)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4, borderBottom: "1px solid rgba(99,202,183,0.15)", paddingBottom: 1, width: "fit-content", transition: "color 0.15s" }}
-                        onMouseOver={e => e.currentTarget.style.color = "#63CAB7"}
-                        onMouseOut={e => e.currentTarget.style.color = "rgba(99,202,183,0.6)"}
+                      <a
+                        key={i}
+                        href={src.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          fontSize: 11,
+                          color: "rgba(99,202,183,0.6)",
+                          textDecoration: "none",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 4,
+                          borderBottom: "1px solid rgba(99,202,183,0.15)",
+                          paddingBottom: 1,
+                          width: "fit-content",
+                          transition: "color 0.15s",
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.color = "#63CAB7";
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.color = "rgba(99,202,183,0.6)";
+                        }}
                       >
                         ↗ {src.title || src.publisher || "Source"}
-                        {src.publisher && src.title && <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 10 }}>— {src.publisher}</span>}
+                        {src.publisher && src.title && (
+                          <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 10 }}>— {src.publisher}</span>
+                        )}
                       </a>
                     ))}
                   </div>
@@ -340,16 +620,63 @@ useEffect(() => {
           })}
         </div>
 
-        <div style={{ marginTop: 20, background: b.alternatives && b.alternatives.length > 0 ? "rgba(99,202,183,0.06)" : "rgba(255,255,255,0.02)", border: "1px solid " + (b.alternatives && b.alternatives.length > 0 ? "rgba(99,202,183,0.15)" : "rgba(255,255,255,0.06)"), borderRadius: 12, padding: 16 }}>
-          <div style={{ fontSize: 11, color: "#63CAB7", letterSpacing: 1, textTransform: "uppercase", marginBottom: 10 }}>{t.alternatives_label}</div>
+        <div
+          style={{
+            marginTop: 20,
+            background:
+              b.alternatives && b.alternatives.length > 0 ? "rgba(99,202,183,0.06)" : "rgba(255,255,255,0.02)",
+            border:
+              "1px solid " +
+              (b.alternatives && b.alternatives.length > 0
+                ? "rgba(99,202,183,0.15)"
+                : "rgba(255,255,255,0.06)"),
+            borderRadius: 12,
+            padding: 16,
+          }}
+        >
+          <div style={{ fontSize: 11, color: "#63CAB7", letterSpacing: 1, textTransform: "uppercase", marginBottom: 10 }}>
+            {t.alternatives_label}
+          </div>
+
           {b.alternatives && b.alternatives.length > 0 ? (
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {b.alternatives.map(alt => (
-                <div key={alt.id} onClick={() => onSelectAlt(alt)} style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(99,202,183,0.15)", borderRadius: 10, padding: "10px 14px", cursor: "pointer", transition: "background 0.15s" }}
-                  onMouseOver={e => e.currentTarget.style.background = "rgba(99,202,183,0.1)"}
-                  onMouseOut={e => e.currentTarget.style.background = "rgba(255,255,255,0.04)"}
+              {b.alternatives.map((alt) => (
+                <div
+                  key={alt.id}
+                  onClick={() => onSelectAlt(alt)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(99,202,183,0.15)",
+                    borderRadius: 10,
+                    padding: "10px 14px",
+                    cursor: "pointer",
+                    transition: "background 0.15s",
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.background = "rgba(99,202,183,0.1)";
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+                  }}
                 >
-                  <div style={{ width: 28, height: 28, borderRadius: 7, background: getColor(alt.score) + "22", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, flexShrink: 0 }}>{alt.logo}</div>
+                  <div
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: 7,
+                      background: getColor(alt.score) + "22",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 13,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {alt.logo}
+                  </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{alt.name}</div>
                     <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>{alt.sector}</div>
@@ -361,7 +688,9 @@ useEffect(() => {
             </div>
           ) : (
             <div style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", fontStyle: "italic" }}>
-              {lang === "it" ? "🏆 Questo brand è tra i più virtuosi nel suo settore." : "🏆 This brand is among the most ethical in its sector."}
+              {lang === "it"
+                ? "🏆 Questo brand è tra i più virtuosi nel suo settore."
+                : "🏆 This brand is among the most ethical in its sector."}
             </div>
           )}
         </div>
@@ -373,61 +702,194 @@ useEffect(() => {
 function MyListPanel({ myBrands, onRemove, onClear, onSelect, lang }) {
   const categories = useCategories();
   const t = UI[lang] || UI.en;
+
   if (myBrands.length === 0) return null;
+
   const avgScores = {};
-  categories.forEach(c => avgScores[c.key] = 0);
-  myBrands.forEach(b => { categories.forEach(c => avgScores[c.key] += b.scores[c.key] || 0); });
-  categories.forEach(c => avgScores[c.key] = Math.round(avgScores[c.key] / myBrands.length));
-  const total = Math.round(Object.values(avgScores).reduce((a, b) => a + b, 0) / categories.length);
-  const verdict = getVerdict(total, lang); const color = getColor(total);
- const problematic = myBrands.filter(
-  (b) => (getScore(b) ?? 9999) < THRESHOLD && b.alternatives && b.alternatives.length > 0
-);
+  categories.forEach((c) => {
+    avgScores[c.key] = 0;
+  });
+
+  myBrands.forEach((b) => {
+    categories.forEach((c) => {
+      avgScores[c.key] += b.scores?.[c.key] || 0;
+    });
+  });
+
+  categories.forEach((c) => {
+    avgScores[c.key] = Math.round(avgScores[c.key] / myBrands.length);
+  });
+
+  const total = categories.length
+    ? Math.round(Object.values(avgScores).reduce((a, b) => a + b, 0) / categories.length)
+    : 0;
+
+  const verdict = getVerdict(total, lang);
+  const color = getColor(total);
+
+  const problematic = myBrands.filter(
+    (b) => (getScore(b) ?? 9999) < THRESHOLD && b.alternatives && b.alternatives.length > 0
+  );
+
   return (
-    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: 24, marginTop: 32 }}>
+    <div
+      style={{
+        background: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(255,255,255,0.07)",
+        borderRadius: 16,
+        padding: 24,
+        marginTop: 32,
+      }}
+    >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
         <div>
-          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", letterSpacing: 2, textTransform: "uppercase", marginBottom: 4 }}>{t.my_list_title}</div>
+          <div
+            style={{
+              fontSize: 11,
+              color: "rgba(255,255,255,0.3)",
+              letterSpacing: 2,
+              textTransform: "uppercase",
+              marginBottom: 4,
+            }}
+          >
+            {t.my_list_title}
+          </div>
           <div style={{ fontSize: 20, fontWeight: 700, color: "#fff", fontFamily: "'Playfair Display', serif" }}>
             {verdict.emoji} {t.aggregated_score}: <span style={{ color }}>{total}</span>
           </div>
         </div>
-        <button onClick={onClear} style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.3)", padding: "6px 12px", borderRadius: 8, cursor: "pointer", fontSize: 11 }}>{t.clear_list}</button>
+
+        <button
+          onClick={onClear}
+          style={{
+            background: "transparent",
+            border: "1px solid rgba(255,255,255,0.1)",
+            color: "rgba(255,255,255,0.3)",
+            padding: "6px 12px",
+            borderRadius: 8,
+            cursor: "pointer",
+            fontSize: 11,
+          }}
+        >
+          {t.clear_list}
+        </button>
       </div>
+
       <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
-        {categories.map(cat => (
-          <div key={cat.key} style={{ flex: "1 1 120px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "10px 14px" }}>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>{cat.icon} {getCatLabel(cat, lang)}</div>
-            <div style={{ fontSize: 22, fontWeight: 700, color: getColor(avgScores[cat.key]) }}>{avgScores[cat.key] ?? "—"}</div>
+        {categories.map((cat) => (
+          <div
+            key={cat.key}
+            style={{
+              flex: "1 1 120px",
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(255,255,255,0.06)",
+              borderRadius: 10,
+              padding: "10px 14px",
+            }}
+          >
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>
+              {cat.icon} {getCatLabel(cat, lang)}
+            </div>
+            <div style={{ fontSize: 22, fontWeight: 700, color: getColor(avgScores[cat.key]) }}>
+              {avgScores[cat.key] ?? "—"}
+            </div>
           </div>
         ))}
       </div>
+
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: problematic.length > 0 ? 24 : 0 }}>
-        {myBrands.map(b => {
+        {myBrands.map((b) => {
           const s = getScore(b);
           return (
-            <div key={b.name} style={{ display: "flex", alignItems: "center", gap: 8, background: s < THRESHOLD ? "rgba(239,68,68,0.08)" : "rgba(255,255,255,0.04)", border: `1px solid ${s < THRESHOLD ? "rgba(239,68,68,0.2)" : "rgba(255,255,255,0.07)"}`, borderRadius: 99, padding: "6px 12px 6px 8px", cursor: "pointer" }} onClick={() => onSelect(b)}>
+            <div
+              key={b.name}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                background: s < THRESHOLD ? "rgba(239,68,68,0.08)" : "rgba(255,255,255,0.04)",
+                border: `1px solid ${s < THRESHOLD ? "rgba(239,68,68,0.2)" : "rgba(255,255,255,0.07)"}`,
+                borderRadius: 99,
+                padding: "6px 12px 6px 8px",
+                cursor: "pointer",
+              }}
+              onClick={() => onSelect(b)}
+            >
               <span style={{ fontSize: 12, fontWeight: 600, color: getColor(s) }}>{s}</span>
               <span style={{ fontSize: 12, color: "rgba(255,255,255,0.7)" }}>{b.name}</span>
               {s < THRESHOLD && <span style={{ fontSize: 10 }}>⚠️</span>}
-              <button onClick={(e) => { e.stopPropagation(); onRemove(b.name); }} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.2)", cursor: "pointer", fontSize: 14, lineHeight: 1, padding: 0 }}>×</button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRemove(b.name);
+                }}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "rgba(255,255,255,0.2)",
+                  cursor: "pointer",
+                  fontSize: 14,
+                  lineHeight: 1,
+                  padding: 0,
+                }}
+              >
+                ×
+              </button>
             </div>
           );
         })}
       </div>
+
       {problematic.length > 0 && (
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20 }}>
-          <div style={{ fontSize: 11, color: "#f87171", letterSpacing: 2, textTransform: "uppercase", marginBottom: 16 }}>{t.alternatives_title}</div>
+          <div style={{ fontSize: 11, color: "#f87171", letterSpacing: 2, textTransform: "uppercase", marginBottom: 16 }}>
+            {t.alternatives_title}
+          </div>
+
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {problematic.map(b => (
-              <div key={b.name} style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.12)", borderRadius: 12, padding: "14px 16px" }}>
+            {problematic.map((b) => (
+              <div
+                key={b.name}
+                style={{
+                  background: "rgba(239,68,68,0.05)",
+                  border: "1px solid rgba(239,68,68,0.12)",
+                  borderRadius: 12,
+                  padding: "14px 16px",
+                }}
+              >
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
                   <span style={{ fontSize: 13, fontWeight: 600, color: getColor(getScore(b)) }}>{b.name}</span>
-                  <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>{b.insufficient_data ? "⚠️" : `score ${getScore(b) ?? "—"}`}</span>
-                  <span style={{ fontSize: 11, background: "rgba(239,68,68,0.15)", color: "#f87171", padding: "2px 8px", borderRadius: 99 }}>{t.below_threshold}</span>
+                  <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
+                    {b.insufficient_data ? "⚠️" : `score ${getScore(b) ?? "—"}`}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: 11,
+                      background: "rgba(239,68,68,0.15)",
+                      color: "#f87171",
+                      padding: "2px 8px",
+                      borderRadius: 99,
+                    }}
+                  >
+                    {t.below_threshold}
+                  </span>
                 </div>
+
                 <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginBottom: 10 }}>{t.replace_with}</div>
-                <button onClick={() => onSelect(b)} style={{ background: "rgba(99,202,183,0.08)", border: "1px solid rgba(99,202,183,0.2)", borderRadius: 8, padding: "7px 14px", color: "#63CAB7", cursor: "pointer", fontSize: 12, fontFamily: "'DM Sans', sans-serif" }}>
+
+                <button
+                  onClick={() => onSelect(b)}
+                  style={{
+                    background: "rgba(99,202,183,0.08)",
+                    border: "1px solid rgba(99,202,183,0.2)",
+                    borderRadius: 8,
+                    padding: "7px 14px",
+                    color: "#63CAB7",
+                    cursor: "pointer",
+                    fontSize: 12,
+                    fontFamily: "'DM Sans', sans-serif",
+                  }}
+                >
                   {lang === "it" ? "Vedi alternative →" : "See alternatives →"}
                 </button>
               </div>
@@ -442,35 +904,130 @@ function MyListPanel({ myBrands, onRemove, onClear, onSelect, lang }) {
 function BrandRow({ brand, idx, myBrands, onAdd, onSelect, lang }) {
   const categories = useCategories();
   const score = getScore(brand);
-  const inList = myBrands.find(b => b.name === brand.name);
+  const inList = myBrands.find((b) => b.name === brand.name);
+
   return (
-    <div className="brand-row" style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", borderRadius: 11, cursor: "pointer", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)", transition: "background 0.15s" }}>
-      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.18)", width: 16, textAlign: "right", flexShrink: 0 }}>{idx + 1}</div>
-      <div style={{ width: 30, height: 30, borderRadius: 8, flexShrink: 0, background: `${getColor(score)}18`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: getColor(score) }}>{brand.logo}</div>
+    <div
+      className="brand-row"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        padding: "10px 14px",
+        borderRadius: 11,
+        cursor: "pointer",
+        background: "rgba(255,255,255,0.02)",
+        border: "1px solid rgba(255,255,255,0.04)",
+        transition: "background 0.15s",
+      }}
+    >
+      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.18)", width: 16, textAlign: "right", flexShrink: 0 }}>
+        {idx + 1}
+      </div>
+
+      <div
+        style={{
+          width: 30,
+          height: 30,
+          borderRadius: 8,
+          flexShrink: 0,
+          background: `${getColor(score)}18`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 11,
+          fontWeight: 700,
+          color: getColor(score),
+        }}
+      >
+        {brand.logo}
+      </div>
+
       <div style={{ flex: 1, minWidth: 0 }} onClick={() => onSelect(brand)}>
-        <div style={{ fontSize: 13, fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{brand.name}</div>
+        <div style={{ fontSize: 13, fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+          {brand.name}
+        </div>
         <div style={{ fontSize: 10, color: "rgba(255,255,255,0.22)" }}>{brand.parent}</div>
       </div>
+
       <div style={{ display: "flex", gap: 5, alignItems: "center", flexShrink: 0 }}>
-        {categories.map(cat => <div key={cat.key} title={getCatLabel(cat, lang)} style={{ width: 5, height: 5, borderRadius: 99, background: getColor(brand.scores[cat.key], 25) }} />)}
+        {categories.map((cat) => (
+          <div
+            key={cat.key}
+            title={getCatLabel(cat, lang)}
+            style={{
+              width: 5,
+              height: 5,
+              borderRadius: 99,
+              background: getColor(brand.scores?.[cat.key]),
+            }}
+          />
+        ))}
       </div>
-      <div style={{ fontSize: 17, fontWeight: 700, color: getColor(score), width: 32, textAlign: "right", flexShrink: 0 }} onClick={() => onSelect(brand)}>{score}</div>
-      <button className="add-btn" onClick={() => onAdd(brand)} style={{ background: inList ? "rgba(99,202,183,0.1)" : "transparent", border: "1px solid rgba(255,255,255,0.08)", color: inList ? "#63CAB7" : "rgba(255,255,255,0.3)", padding: "4px 10px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s", flexShrink: 0 }}>{inList ? "✓" : "+"}</button>
+
+      <div
+        style={{ fontSize: 17, fontWeight: 700, color: getColor(score), width: 32, textAlign: "right", flexShrink: 0 }}
+        onClick={() => onSelect(brand)}
+      >
+        {score}
+      </div>
+
+      <button
+        className="add-btn"
+        onClick={() => onAdd(brand)}
+        style={{
+          background: inList ? "rgba(99,202,183,0.1)" : "transparent",
+          border: "1px solid rgba(255,255,255,0.08)",
+          color: inList ? "#63CAB7" : "rgba(255,255,255,0.3)",
+          padding: "4px 10px",
+          borderRadius: 8,
+          cursor: "pointer",
+          fontSize: 11,
+          fontFamily: "'DM Sans', sans-serif",
+          transition: "all 0.15s",
+          flexShrink: 0,
+        }}
+      >
+        {inList ? "✓" : "+"}
+      </button>
     </div>
   );
 }
 
 function RestBrands({ rest, myBrands, onAdd, onSelect, lang }) {
   const [open, setOpen] = useState(false);
+
   return (
     <div style={{ marginTop: 4 }}>
-      <button onClick={() => setOpen(!open)} style={{ background: "transparent", border: "none", color: "rgba(255,255,255,0.25)", cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", padding: "4px 6px", width: "100%", textAlign: "left" }}>
-        {open ? "↑ " + (lang === "it" ? "Nascondi" : "Hide") : "↓ " + (lang === "it" ? `Vedi altri ${rest.length}` : `See ${rest.length} more`)}
+      <button
+        onClick={() => setOpen(!open)}
+        style={{
+          background: "transparent",
+          border: "none",
+          color: "rgba(255,255,255,0.25)",
+          cursor: "pointer",
+          fontSize: 11,
+          fontFamily: "'DM Sans', sans-serif",
+          padding: "4px 6px",
+          width: "100%",
+          textAlign: "left",
+        }}
+      >
+        {open ? `↑ ${lang === "it" ? "Nascondi" : "Hide"}` : `↓ ${lang === "it" ? `Vedi altri ${rest.length}` : `See ${rest.length} more`}`}
       </button>
+
       {open && (
         <div style={{ display: "flex", flexDirection: "column", gap: 4, marginTop: 2 }}>
           {rest.map((brand, idx) => (
-            <BrandRow key={brand.name} brand={brand} idx={idx + 1} myBrands={myBrands} onAdd={onAdd} onSelect={onSelect} lang={lang} />
+            <BrandRow
+              key={brand.name}
+              brand={brand}
+              idx={idx + 1}
+              myBrands={myBrands}
+              onAdd={onAdd}
+              onSelect={onSelect}
+              lang={lang}
+            />
           ))}
         </div>
       )}
@@ -480,61 +1037,144 @@ function RestBrands({ rest, myBrands, onAdd, onSelect, lang }) {
 
 function SectorSection({ sector, sectorIcon, brands, myBrands, onAdd, onSelect, lang, defaultOpen }) {
   const categories = useCategories();
-  const t = UI[lang] || UI.en;
   const [expanded, setExpanded] = useState(defaultOpen);
-  const sorted = [...brands].sort(
-  (a, b) => (getScore(b) ?? -9999) - (getScore(a) ?? -9999)
-);
+
+  const sorted = [...brands].sort((a, b) => (getScore(b) ?? -9999) - (getScore(a) ?? -9999));
   const avgScore = getSectorAvgScore(brands);
   const best = sorted[0];
   const rest = sorted.slice(1);
   const avgColor = getColor(avgScore);
   const bestScore = best ? getScore(best) : 0;
-  const bestInList = best && myBrands.find(b => b.name === best.name);
+  const bestInList = best && myBrands.find((b) => b.name === best.name);
 
   return (
-    <div style={{ marginBottom: 8, border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, overflow: "hidden", background: "rgba(255,255,255,0.01)" }}>
-
-      {/* Header settore — cliccabile per expand/collapse */}
+    <div
+      style={{
+        marginBottom: 8,
+        border: "1px solid rgba(255,255,255,0.05)",
+        borderRadius: 14,
+        overflow: "hidden",
+        background: "rgba(255,255,255,0.01)",
+      }}
+    >
       <div
-        onClick={() => setExpanded(e => !e)}
-        style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 18px", cursor: "pointer", userSelect: "none" }}
+        onClick={() => setExpanded((e) => !e)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 14,
+          padding: "14px 18px",
+          cursor: "pointer",
+          userSelect: "none",
+        }}
       >
         <span style={{ fontSize: 18, flexShrink: 0 }}>{sectorIcon}</span>
+
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{sector}</div>
           <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>
             {brands.length} {lang === "it" ? "brand" : "brands"}
           </div>
         </div>
+
         <div style={{ textAlign: "right", flexShrink: 0, marginRight: 8 }}>
           <div style={{ fontSize: 18, fontWeight: 700, color: avgColor }}>{avgScore}</div>
           <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)" }}>{lang === "it" ? "media" : "avg"}</div>
         </div>
-        {/* Chevron */}
-        <div style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, transition: "transform 0.25s", transform: expanded ? "rotate(180deg)" : "rotate(0deg)", flexShrink: 0 }}>▼</div>
+
+        <div
+          style={{
+            color: "rgba(255,255,255,0.25)",
+            fontSize: 11,
+            transition: "transform 0.25s",
+            transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+            flexShrink: 0,
+          }}
+        >
+          ▼
+        </div>
       </div>
 
-      {/* Best brand + rest — visibili solo se expanded */}
       {expanded && best && (
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.04)", margin: "0 12px", padding: "12px 6px 8px" }}>
-          <div className="brand-row" style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 11, background: `${getColor(bestScore)}08`, border: `1px solid ${getColor(bestScore)}22`, cursor: "pointer" }}>
-            <div style={{ width: 34, height: 34, borderRadius: 9, background: `${getColor(bestScore)}20`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: getColor(bestScore), flexShrink: 0 }}>{best.logo}</div>
+          <div
+            className="brand-row"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              padding: "12px 14px",
+              borderRadius: 11,
+              background: `${getColor(bestScore)}08`,
+              border: `1px solid ${getColor(bestScore)}22`,
+              cursor: "pointer",
+            }}
+          >
+            <div
+              style={{
+                width: 34,
+                height: 34,
+                borderRadius: 9,
+                background: `${getColor(bestScore)}20`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 13,
+                fontWeight: 700,
+                color: getColor(bestScore),
+                flexShrink: 0,
+              }}
+            >
+              {best.logo}
+            </div>
+
             <div style={{ flex: 1, minWidth: 0 }} onClick={() => onSelect(best)}>
               <div style={{ fontSize: 14, fontWeight: 600 }}>{best.name}</div>
               <div style={{ display: "flex", gap: 6, marginTop: 4, alignItems: "center" }}>
-                {categories.map(cat => (
+                {categories.map((cat) => (
                   <div key={cat.key} style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                    <div style={{ width: 6, height: 6, borderRadius: 99, background: getColor(best.scores[cat.key], 25) }} />
-                    <span style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>{getCatLabel(cat, lang).split(" ")[0]}</span>
+                    <div
+                      style={{
+                        width: 6,
+                        height: 6,
+                        borderRadius: 99,
+                        background: getColor(best.scores?.[cat.key]),
+                      }}
+                    />
+                    <span style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>
+                      {getCatLabel(cat, lang).split(" ")[0]}
+                    </span>
                   </div>
                 ))}
               </div>
             </div>
-            <div style={{ fontSize: 22, fontWeight: 700, color: getColor(bestScore), flexShrink: 0 }} onClick={() => onSelect(best)}>{bestScore}</div>
-            <button className="add-btn" onClick={() => onAdd(best)} style={{ background: bestInList ? "rgba(99,202,183,0.1)" : "transparent", border: "1px solid rgba(255,255,255,0.08)", color: bestInList ? "#63CAB7" : "rgba(255,255,255,0.3)", padding: "4px 10px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", flexShrink: 0 }}>{bestInList ? "✓" : "+"}</button>
+
+            <div style={{ fontSize: 22, fontWeight: 700, color: getColor(bestScore), flexShrink: 0 }} onClick={() => onSelect(best)}>
+              {bestScore}
+            </div>
+
+            <button
+              className="add-btn"
+              onClick={() => onAdd(best)}
+              style={{
+                background: bestInList ? "rgba(99,202,183,0.1)" : "transparent",
+                border: "1px solid rgba(255,255,255,0.08)",
+                color: bestInList ? "#63CAB7" : "rgba(255,255,255,0.3)",
+                padding: "4px 10px",
+                borderRadius: 8,
+                cursor: "pointer",
+                fontSize: 11,
+                fontFamily: "'DM Sans', sans-serif",
+                flexShrink: 0,
+              }}
+            >
+              {bestInList ? "✓" : "+"}
+            </button>
           </div>
-          {rest.length > 0 && <RestBrands rest={rest} myBrands={myBrands} onAdd={onAdd} onSelect={onSelect} lang={lang} />}
+
+          {rest.length > 0 && (
+            <RestBrands rest={rest} myBrands={myBrands} onAdd={onAdd} onSelect={onSelect} lang={lang} />
+          )}
         </div>
       )}
 
@@ -555,110 +1195,133 @@ export default function App() {
   const [showHint, setShowHint] = useState(true);
   const [sourcesCount, setSourcesCount] = useState(0);
   const inputRef = useRef(null);
+
   const t = UI[lang] || UI.en;
 
-useEffect(() => {
-  let isMounted = true;
+  useEffect(() => {
+    let isMounted = true;
 
-  async function loadInitialData() {
-    setLoading(true);
+    async function loadInitialData() {
+      setLoading(true);
 
-    try {
-      const [brandsData, categoriesData] = await Promise.all([
-        getBrands(lang),
-        getCategories(),
-      ]);
+      try {
+        const [brandsData, categoriesData] = await Promise.all([getBrands(lang), getCategories()]);
 
-      if (!isMounted) return;
+        if (!isMounted) return;
 
-      setDb(brandsData);
-      setCategories(categoriesData);
-    } catch (err) {
-      console.error("Error loading data:", err);
+        setDb(brandsData);
+        setCategories(categoriesData);
+      } catch (err) {
+        console.error("Error loading data:", err);
 
-      if (!isMounted) return;
+        if (!isMounted) return;
 
-      setDb([]);
-      setCategories([]);
-    } finally {
-      if (isMounted) {
-        setLoading(false);
+        setDb([]);
+        setCategories([]);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     }
-  }
 
-  loadInitialData();
+    loadInitialData();
 
-  return () => {
-    isMounted = false;
-  };
-}, [lang]);
+    return () => {
+      isMounted = false;
+    };
+  }, [lang]);
 
-useEffect(() => {
-  let isMounted = true;
+  useEffect(() => {
+    let isMounted = true;
 
-  async function loadSourcesCount() {
-    const count = await getPublicSourcesCount();
+    async function loadSourcesCount() {
+      const count = await getPublicSourcesCount();
 
-    if (isMounted) {
-      setSourcesCount(count);
+      if (isMounted) {
+        setSourcesCount(count);
+      }
     }
-  }
 
-  loadSourcesCount();
+    loadSourcesCount();
 
-  return () => {
-    isMounted = false;
-  };
-}, []);
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap";
+    link.href =
+      "https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap";
     document.head.appendChild(link);
   }, []);
 
-useEffect(() => {
-  if (query.length < 2) {
-    setResults([]);
-    return;
-  }
+  useEffect(() => {
+    if (query.length < 2) {
+      setResults([]);
+      return;
+    }
 
-  const q = query.toLowerCase();
+    const q = query.toLowerCase();
 
-  setResults(
-    db.filter((b) => {
-      const name = (b.name || "").toLowerCase();
-      const sector = (b.sector || "").toLowerCase();
-      return name.includes(q) || sector.includes(q);
-    })
-  );
-}, [query, db]);
+    setResults(
+      db.filter((b) => {
+        const name = (b.name || "").toLowerCase();
+        const sector = (b.sector || "").toLowerCase();
+        return name.includes(q) || sector.includes(q);
+      })
+    );
+  }, [query, db]);
 
   const addToList = (brand) => {
-    if (!myBrands.find(b => b.name === brand.name)) setMyBrands(prev => [...prev, brand]);
-    setQuery(""); setResults([]);
+    if (!myBrands.find((b) => b.name === brand.name)) {
+      setMyBrands((prev) => [...prev, brand]);
+    }
+    setQuery("");
+    setResults([]);
   };
 
-  const sectors = [...new Set(db.map(b => b.sector))].sort();
+  const sectors = [...new Set(db.map((b) => b.sector))].sort();
+
   const brandsBySector = sectors
-    .map(sector => {
-      const brands = db.filter(b => b.sector === sector);
+    .map((sector) => {
+      const brands = db.filter((b) => b.sector === sector);
       const sectorIcon = brands[0]?.sector_icon || "🏢";
       return { sector, sectorIcon, brands, avgScore: getSectorAvgScore(brands) };
     })
     .sort((a, b) => (b.avgScore ?? -9999) - (a.avgScore ?? -9999));
 
-  if (loading) return (
-    <div style={{ minHeight: "100vh", background: "#08080f", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ color: "rgba(255,255,255,0.3)", fontFamily: "'DM Sans', sans-serif", fontSize: 14, letterSpacing: 2 }}>{t.loading}</div>
-    </div>
-  );
+  if (loading) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#08080f",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            color: "rgba(255,255,255,0.3)",
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 14,
+            letterSpacing: 2,
+          }}
+        >
+          {t.loading}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <CategoriesContext.Provider value={categories}>
       <LangToggle lang={lang} setLang={setLang} />
+
       <div style={{ minHeight: "100vh", background: "#08080f", fontFamily: "'DM Sans', sans-serif", color: "#e8e8f0" }}>
         <style>{`
           * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -672,43 +1335,172 @@ useEffect(() => {
         `}</style>
 
         <div style={{ maxWidth: 720, margin: "0 auto", padding: "48px 20px 80px" }}>
-
           <div style={{ textAlign: "center", marginBottom: 52 }}>
-            <div style={{ fontSize: 11, letterSpacing: 4, color: "rgba(99,202,183,0.7)", textTransform: "uppercase", marginBottom: 16 }}>{t.tagline}</div>
-            <div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}>
-              <img src={logoSrc} alt="EthicPrint" style={{ height: "clamp(48px, 10vw, 80px)", width: "auto", filter: "brightness(1.05) drop-shadow(0 0 18px rgba(99,202,183,0.25))", mixBlendMode: "normal" }} />
+            <div
+              style={{
+                fontSize: 11,
+                letterSpacing: 4,
+                color: "rgba(99,202,183,0.7)",
+                textTransform: "uppercase",
+                marginBottom: 16,
+              }}
+            >
+              {t.tagline}
             </div>
+
+            <div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}>
+              <img
+                src={logoSrc}
+                alt="EthicPrint"
+                style={{
+                  height: "clamp(48px, 10vw, 80px)",
+                  width: "auto",
+                  filter: "brightness(1.05) drop-shadow(0 0 18px rgba(99,202,183,0.25))",
+                  mixBlendMode: "normal",
+                }}
+              />
+            </div>
+
             <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 16, maxWidth: 440, margin: "0 auto", lineHeight: 1.6 }}>
-              {t.subtitle}<br />
+              {t.subtitle}
+              <br />
               <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 14 }}>
-                {categories.map(c => getCatLabel(c, lang).split(" ")[0]).join(" · ")}
+                {categories.map((c) => getCatLabel(c, lang).split(" ")[0]).join(" · ")}
               </span>
             </p>
           </div>
 
           <div style={{ position: "relative", marginBottom: 8 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, padding: "14px 18px", boxShadow: query ? "0 0 0 2px rgba(99,202,183,0.15)" : "none" }}>
-              <svg width="16" height="16" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-              <input ref={inputRef} value={query} onChange={e => setQuery(e.target.value)} placeholder={t.search_placeholder} style={{ flex: 1, background: "transparent", border: "none", color: "#fff", fontSize: 16, fontFamily: "'DM Sans', sans-serif" }} />
-              {query && <button onClick={() => { setQuery(""); setResults([]); }} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.3)", cursor: "pointer", fontSize: 18 }}>×</button>}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                borderRadius: 14,
+                padding: "14px 18px",
+                boxShadow: query ? "0 0 0 2px rgba(99,202,183,0.15)" : "none",
+              }}
+            >
+              <svg width="16" height="16" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+
+              <input
+                ref={inputRef}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t.search_placeholder}
+                style={{
+                  flex: 1,
+                  background: "transparent",
+                  border: "none",
+                  color: "#fff",
+                  fontSize: 16,
+                  fontFamily: "'DM Sans', sans-serif",
+                }}
+              />
+
+              {query && (
+                <button
+                  onClick={() => {
+                    setQuery("");
+                    setResults([]);
+                  }}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "rgba(255,255,255,0.3)",
+                    cursor: "pointer",
+                    fontSize: 18,
+                  }}
+                >
+                  ×
+                </button>
+              )}
             </div>
 
             {results.length > 0 && (
-              <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, right: 0, background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, overflow: "hidden", zIndex: 50, boxShadow: "0 20px 40px rgba(0,0,0,0.5)" }}>
-                {results.map(brand => {
-                  const score = getScore(brand); const inList = myBrands.find(b => b.name === brand.name);
+              <div
+                style={{
+                  position: "absolute",
+                  top: "calc(100% + 8px)",
+                  left: 0,
+                  right: 0,
+                  background: "#0f0f1a",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  borderRadius: 14,
+                  overflow: "hidden",
+                  zIndex: 50,
+                  boxShadow: "0 20px 40px rgba(0,0,0,0.5)",
+                }}
+              >
+                {results.map((brand) => {
+                  const score = getScore(brand);
+                  const inList = myBrands.find((b) => b.name === brand.name);
+
                   return (
-                    <div key={brand.name} className="brand-row" style={{ display: "flex", alignItems: "center", gap: 14, padding: "12px 16px", cursor: "pointer", borderBottom: "1px solid rgba(255,255,255,0.04)", transition: "background 0.15s" }}>
-                      <div style={{ width: 36, height: 36, borderRadius: 10, background: `${getColor(score)}22`, border: `1px solid ${getColor(score)}44`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 700, color: getColor(score) }}>{brand.logo}</div>
+                    <div
+                      key={brand.name}
+                      className="brand-row"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 14,
+                        padding: "12px 16px",
+                        cursor: "pointer",
+                        borderBottom: "1px solid rgba(255,255,255,0.04)",
+                        transition: "background 0.15s",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: 36,
+                          height: 36,
+                          borderRadius: 10,
+                          background: `${getColor(score)}22`,
+                          border: `1px solid ${getColor(score)}44`,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 14,
+                          fontWeight: 700,
+                          color: getColor(score),
+                        }}
+                      >
+                        {brand.logo}
+                      </div>
+
                       <div style={{ flex: 1 }} onClick={() => setSelected(brand)}>
                         <div style={{ fontSize: 14, fontWeight: 600 }}>{brand.name}</div>
                         <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>{brand.sector}</div>
                       </div>
+
                       <div style={{ textAlign: "right", marginRight: 8 }} onClick={() => setSelected(brand)}>
                         <div style={{ fontSize: 18, fontWeight: 700, color: getColor(score) }}>{score ?? "—"}</div>
                         <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)" }}>/ ±400</div>
                       </div>
-                      <button className="add-btn" onClick={() => addToList(brand)} style={{ background: inList ? "rgba(99,202,183,0.1)" : "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: inList ? "#63CAB7" : "rgba(255,255,255,0.5)", padding: "6px 12px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s", whiteSpace: "nowrap" }}>{inList ? "✓" : "+ List"}</button>
+
+                      <button
+                        className="add-btn"
+                        onClick={() => addToList(brand)}
+                        style={{
+                          background: inList ? "rgba(99,202,183,0.1)" : "rgba(255,255,255,0.06)",
+                          border: "1px solid rgba(255,255,255,0.1)",
+                          color: inList ? "#63CAB7" : "rgba(255,255,255,0.5)",
+                          padding: "6px 12px",
+                          borderRadius: 8,
+                          cursor: "pointer",
+                          fontSize: 11,
+                          fontFamily: "'DM Sans', sans-serif",
+                          transition: "all 0.15s",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {inList ? "✓" : "+ List"}
+                      </button>
                     </div>
                   );
                 })}
@@ -717,10 +1509,36 @@ useEffect(() => {
           </div>
 
           {showHint && (
-            <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(99,202,183,0.07)", border: "1px solid rgba(99,202,183,0.2)", borderRadius: 10, padding: "10px 14px", marginBottom: 8 }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                background: "rgba(99,202,183,0.07)",
+                border: "1px solid rgba(99,202,183,0.2)",
+                borderRadius: 10,
+                padding: "10px 14px",
+                marginBottom: 8,
+              }}
+            >
               <span style={{ fontSize: 16 }}>👆</span>
               <span style={{ flex: 1, fontSize: 13, color: "rgba(255,255,255,0.6)", lineHeight: 1.4 }}>{t.hint}</span>
-              <button onClick={() => setShowHint(false)} style={{ background: "transparent", border: "1px solid rgba(99,202,183,0.3)", color: "#63CAB7", padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap" }}>{t.hint_dismiss}</button>
+              <button
+                onClick={() => setShowHint(false)}
+                style={{
+                  background: "transparent",
+                  border: "1px solid rgba(99,202,183,0.3)",
+                  color: "#63CAB7",
+                  padding: "4px 10px",
+                  borderRadius: 6,
+                  cursor: "pointer",
+                  fontSize: 11,
+                  fontFamily: "'DM Sans', sans-serif",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {t.hint_dismiss}
+              </button>
             </div>
           )}
 
@@ -729,26 +1547,65 @@ useEffect(() => {
           </div>
 
           <div style={{ marginBottom: 40, paddingLeft: 4 }}>
-            <a href="/sources.html" style={{ fontSize: 12, color: "rgba(99,202,183,0.6)", textDecoration: "none", transition: "color .2s" }}
-              onMouseEnter={e => e.currentTarget.style.color = "#63CAB7"}
-              onMouseLeave={e => e.currentTarget.style.color = "rgba(99,202,183,0.6)"}
+            <a
+              href="/sources.html"
+              style={{ fontSize: 12, color: "rgba(99,202,183,0.6)", textDecoration: "none", transition: "color .2s" }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "#63CAB7";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "rgba(99,202,183,0.6)";
+              }}
             >
               {lang === "en" ? "How do we score brands? →" : "Come calcoliamo i punteggi? →"}
             </a>
           </div>
 
-          <MyListPanel myBrands={myBrands} onRemove={(name) => setMyBrands(prev => prev.filter(b => b.name !== name))} onClear={() => setMyBrands([])} onSelect={setSelected} lang={lang} />
+          <MyListPanel
+            myBrands={myBrands}
+            onRemove={(name) => setMyBrands((prev) => prev.filter((b) => b.name !== name))}
+            onClear={() => setMyBrands([])}
+            onSelect={setSelected}
+            lang={lang}
+          />
 
           <div style={{ marginTop: 52 }}>
-            <div style={{ fontSize: 11, letterSpacing: 2, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 32 }}>{t.ranking_title}</div>
+            <div
+              style={{
+                fontSize: 11,
+                letterSpacing: 2,
+                color: "rgba(255,255,255,0.3)",
+                textTransform: "uppercase",
+                marginBottom: 32,
+              }}
+            >
+              {t.ranking_title}
+            </div>
+
             {brandsBySector.map(({ sector, sectorIcon, brands }) => (
-              <SectorSection key={sector} sector={sector} sectorIcon={sectorIcon} brands={brands} myBrands={myBrands} onAdd={addToList} onSelect={setSelected} lang={lang} defaultOpen={true} />
+              <SectorSection
+                key={sector}
+                sector={sector}
+                sectorIcon={sectorIcon}
+                brands={brands}
+                myBrands={myBrands}
+                onAdd={addToList}
+                onSelect={setSelected}
+                lang={lang}
+                defaultOpen={true}
+              />
             ))}
           </div>
 
           <div style={{ marginTop: 64, textAlign: "center", borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: 32 }}>
             <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", lineHeight: 1.8 }}>
-              {t.footer.split("\n").map((line, i) => <span key={i}>{line}{i === 0 && <br />}</span>)}<br />
+              {t.footer.split("\n").map((line, i) => (
+                <span key={i}>
+                  {line}
+                  {i === 0 && <br />}
+                </span>
+              ))}
+              <br />
               <a href="/contribute.html" style={{ color: "rgba(99,202,183,0.5)", textDecoration: "none" }}>
                 {lang === "it" ? "➕ Contribuisci · Segnala un errore · Aggiungi un brand" : "➕ Contribute · Report an error · Add a brand"}
               </a>
@@ -756,7 +1613,14 @@ useEffect(() => {
           </div>
         </div>
 
-        {selected && <BrandCard brand={selected} onClose={() => setSelected(null)} lang={lang} onSelectAlt={(alt) => setSelected(alt)} />}
+        {selected && (
+          <BrandCard
+            brand={selected}
+            onClose={() => setSelected(null)}
+            lang={lang}
+            onSelectAlt={(alt) => setSelected(alt)}
+          />
+        )}
       </div>
     </CategoriesContext.Provider>
   );
