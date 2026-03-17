@@ -166,12 +166,29 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
   const total = fullBrand ? getScore(fullBrand) : null;
   const verdict = getVerdict(total, lang);
   const color = getColor(total);
+  const [fullBrand, setFullBrand] = useState(brand || null);
 
 useEffect(() => {
   let isMounted = true;
 
   async function loadBrandDetail() {
-    setFullBrand(null);
+    useEffect(() => {
+  let isMounted = true;
+
+  async function loadBrandDetail() {
+    const data = await getBrandDetail(brand.id, lang);
+
+    if (!isMounted) return;
+
+    setFullBrand(data || brand);
+  }
+
+  loadBrandDetail();
+
+  return () => {
+    isMounted = false;
+  };
+}, [brand.id, lang, brand]);
 
     const data = await getBrandDetail(brand.id, lang);
 
@@ -363,8 +380,9 @@ function MyListPanel({ myBrands, onRemove, onClear, onSelect, lang }) {
   categories.forEach(c => avgScores[c.key] = Math.round(avgScores[c.key] / myBrands.length));
   const total = Math.round(Object.values(avgScores).reduce((a, b) => a + b, 0) / categories.length);
   const verdict = getVerdict(total, lang); const color = getColor(total);
-  const problematic = myBrands.filter(b => getScore(b) < THRESHOLD && b.alternatives && b.alternatives.length > 0);
-
+ const problematic = myBrands.filter(
+  (b) => (getScore(b) ?? 9999) < THRESHOLD && b.alternatives && b.alternatives.length > 0
+);
   return (
     <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: 24, marginTop: 32 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
@@ -464,7 +482,9 @@ function SectorSection({ sector, sectorIcon, brands, myBrands, onAdd, onSelect, 
   const categories = useCategories();
   const t = UI[lang] || UI.en;
   const [expanded, setExpanded] = useState(defaultOpen);
-  const sorted = [...brands].sort((a, b) => getScore(b) - getScore(a));
+  const sorted = [...brands].sort(
+  (a, b) => (getScore(b) ?? -9999) - (getScore(a) ?? -9999)
+);
   const avgScore = getSectorAvgScore(brands);
   const best = sorted[0];
   const rest = sorted.slice(1);
@@ -628,7 +648,7 @@ useEffect(() => {
       const sectorIcon = brands[0]?.sector_icon || "🏢";
       return { sector, sectorIcon, brands, avgScore: getSectorAvgScore(brands) };
     })
-    .sort((a, b) => b.avgScore - a.avgScore);
+    .sort((a, b) => (b.avgScore ?? -9999) - (a.avgScore ?? -9999));
 
   if (loading) return (
     <div style={{ minHeight: "100vh", background: "#08080f", display: "flex", alignItems: "center", justifyContent: "center" }}>
