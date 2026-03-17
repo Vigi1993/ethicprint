@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, createContext, useContext } from "react";
 import logoSrc from "./assets/logo.png";
-import { getBrands, getBrandDetail } from "./api/brands";
-import { getCategories } from "./api/categories";
+import { useInitialData } from "./hooks/useInitialData";
 import { getPublicSourcesCount } from "./api/sources";
 
 const CategoriesContext = createContext([]);
@@ -1184,53 +1183,17 @@ function SectorSection({ sector, sectorIcon, brands, myBrands, onAdd, onSelect, 
 }
 
 export default function App() {
-  const [db, setDb] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [lang, setLang] = useState("en");
+  const { db, categories, loading } = useInitialData(lang);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [selected, setSelected] = useState(null);
   const [myBrands, setMyBrands] = useState([]);
-  const [lang, setLang] = useState("en");
   const [showHint, setShowHint] = useState(true);
   const [sourcesCount, setSourcesCount] = useState(0);
   const inputRef = useRef(null);
 
   const t = UI[lang] || UI.en;
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function loadInitialData() {
-      setLoading(true);
-
-      try {
-        const [brandsData, categoriesData] = await Promise.all([getBrands(lang), getCategories()]);
-
-        if (!isMounted) return;
-
-        setDb(brandsData);
-        setCategories(categoriesData);
-      } catch (err) {
-        console.error("Error loading data:", err);
-
-        if (!isMounted) return;
-
-        setDb([]);
-        setCategories([]);
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    }
-
-    loadInitialData();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [lang]);
 
   useEffect(() => {
     let isMounted = true;
