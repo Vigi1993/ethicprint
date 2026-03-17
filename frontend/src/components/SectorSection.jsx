@@ -209,9 +209,6 @@ export default function SectorSection({
               onAdd={onAdd}
               onSelect={onSelect}
               lang={lang}
-              getScore={getScore}
-              getColor={getColor}
-              getCatLabel={getCatLabel}
             />
           )}
         </div>
