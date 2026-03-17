@@ -340,37 +340,61 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
           {categories.map((cat) => {
             const conf = b.confidence?.[cat.key] || {};
             const criteria_met = conf.criteria_met;
-           const rawScore = b.scores?.[cat.key];
+        
+            const rawScore = b.scores?.[cat.key];
             const publicCategoryScore = criteria_met
               ? rawCategoryScoreToPublic(rawScore)
               : null;
-            
+        
             const catColor = criteria_met
               ? getDisplayScoreColor(publicCategoryScore)
               : "rgba(255,255,255,0.15)";
+        
             const t1 = conf.tier1 ?? conf.t1 ?? 0;
             const t2 = conf.tier2 ?? conf.t2 ?? 0;
             const t3 = conf.tier3 ?? conf.t3 ?? 0;
             const hasAnySources = t1 + t2 + t3 > 0;
-
+        
             return (
-              <div key={cat.key} style={{ marginBottom: 12, opacity: criteria_met ? 1 : 0.45 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+              <div
+                key={cat.key}
+                style={{ marginBottom: 12, opacity: criteria_met ? 1 : 0.45 }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginBottom: 4,
+                  }}
+                >
                   <span
                     style={{
                       fontSize: 12,
-                      color: criteria_met ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)",
+                      color: criteria_met
+                        ? "rgba(255,255,255,0.6)"
+                        : "rgba(255,255,255,0.3)",
                     }}
                   >
                     {cat.icon} {getCatLabel(cat, lang)}
                   </span>
-
+        
                   {criteria_met ? (
                     <div style={{ display: "flex", alignItems: "baseline", gap: 2 }}>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: catColor }}>
-                        {publicCategoryScore}
+                      <span
+                        style={{
+                          fontSize: 13,
+                          fontWeight: 700,
+                          color: catColor,
+                        }}
+                      >
+                        {publicCategoryScore ?? "—"}
                       </span>
-                      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>
+                      <span
+                        style={{
+                          fontSize: 10,
+                          color: "rgba(255,255,255,0.2)",
+                        }}
+                      >
                         / 100
                       </span>
                     </div>
@@ -392,9 +416,9 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                     </span>
                   )}
                 </div>
-
+        
                 <ScoreBar
-                  value={criteria_met ? (publicCategoryScore ?? 0) - 50 : 0}
+                  value={criteria_met ? (publicCategoryScore ?? 50) - 50 : 0}
                   color={catColor}
                   max={50}
                 />
