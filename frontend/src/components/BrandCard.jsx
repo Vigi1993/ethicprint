@@ -6,6 +6,9 @@ import {
   getColor,
   getVerdict,
   getCatLabel,
+  getDisplayScore,
+  getDisplayLabel,
+  getDisplayScoreColor,
 } from "../utils/brandHelpers";
 
 function ScoreBar({ value, color, max = 20 }) {
@@ -71,8 +74,9 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
   const t = UI[lang] || UI.en;
 
   const total = fullBrand ? getScore(fullBrand) : null;
-  const verdict = getVerdict(total, lang);
-  const color = getColor(total);
+  const displayScore = fullBrand ? getDisplayScore(fullBrand) : null;
+  const displayLabel = fullBrand ? getDisplayLabel(fullBrand, lang) : "";
+  const color = getDisplayScoreColor(displayScore);
 
   useEffect(() => {
     let isMounted = true;
@@ -242,22 +246,37 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
               </div>
             ) : (
               <>
-                <div style={{ fontSize: 40, fontWeight: 800, color, fontFamily: "monospace", lineHeight: 1 }}>
-                  {total}
+                <div
+                  style={{
+                    fontSize: 40,
+                    fontWeight: 800,
+                    color,
+                    fontFamily: "monospace",
+                    lineHeight: 1,
+                  }}
+                >
+                  {displayScore}
                 </div>
+            
                 <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>
-                  {b.criteria_published > 0
-                    ? lang === "it"
-                      ? `${b.criteria_published} criteri`
-                      : `${b.criteria_published} criteria`
-                    : "/ ±400"}
+                  / 100
                 </div>
+            
                 <div style={{ fontSize: 13, marginTop: 4 }}>
-                  {verdict.emoji} {verdict.label}
+                  {displayLabel}
+                </div>
+            
+                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)", marginTop: 6 }}>
+                  {lang === "it"
+                    ? `${b.criteria_published} criteri pubblicati`
+                    : `${b.criteria_published} published criteria`}
+                </div>
+            
+                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.18)", marginTop: 2 }}>
+                  raw {total ?? "—"}
                 </div>
               </>
             )}
-          </div>
         </div>
 
         {b.impact_summary && (
