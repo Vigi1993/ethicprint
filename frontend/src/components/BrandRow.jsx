@@ -1,5 +1,11 @@
 import { useCategories } from "../context/categoriesContext";
-import { getScore, getColor, getCatLabel } from "../utils/brandHelpers";
+import {
+  getScore,
+  getColor,
+  getCatLabel,
+  getDisplayScore,
+  getDisplayScoreColor,
+} from "../utils/brandHelpers";
 
 export default function BrandRow({
   brand,
@@ -10,7 +16,8 @@ export default function BrandRow({
   lang,
 }) {
   const categories = useCategories();
-  const score = getScore(brand);
+  const score = getDisplayScore(brand);
+  const rawScore = getScore(brand);
   const inList = myBrands.find((b) => b.name === brand.name);
 
   return (
