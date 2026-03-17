@@ -2,12 +2,10 @@ import { useState } from "react";
 import { useCategories } from "../context/categoriesContext";
 import RestBrands from "./RestBrands";
 import {
-  getScore,
-  getColor,
-  getCatLabel,
-  getSectorAvgScore,
   getDisplayScore,
   getDisplayScoreColor,
+  getSectorAvgDisplayScore,
+  getCatLabel,
 } from "../utils/brandHelpers";
 
 export default function SectorSection({
@@ -26,11 +24,11 @@ export default function SectorSection({
   const sorted = [...brands].sort(
     (a, b) => (getScore(b) ?? -9999) - (getScore(a) ?? -9999)
   );
-  const avgScore = getSectorAvgScore(brands);
+  const avgScore = getSectorAvgDisplayScore(brands);
+  const avgColor = getDisplayScoreColor(avgScore);
+  const bestScore = best ? getDisplayScore(best) : null;
   const best = sorted[0];
   const rest = sorted.slice(1);
-  const avgColor = getColor(avgScore);
-  const bestScore = best ? getDisplayScore(best) : null;
   const bestInList = best && myBrands.find((b) => b.name === best.name);
 
   return (
@@ -79,10 +77,10 @@ export default function SectorSection({
           }}
         >
           <div style={{ fontSize: 18, fontWeight: 700, color: avgColor }}>
-            {avgScore}
+            {avgScore ?? "—"}
           </div>
           <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)" }}>
-            {lang === "it" ? "media" : "avg"}
+            / 100
           </div>
         </div>
 
