@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, createContext, useContext } from "react";
 import logoSrc from "./assets/logo.png";
+import { getBrandDetail } from "./api/brands";
 import { useInitialData } from "./hooks/useInitialData";
-import { getPublicSourcesCount } from "./api/sources";
+import { useSourcesCount } from "./hooks/useSourcesCount";
 
 const CategoriesContext = createContext([]);
 const useCategories = () => useContext(CategoriesContext);
