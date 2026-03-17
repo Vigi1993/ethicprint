@@ -8,6 +8,7 @@ import {
   getDisplayScore,
   getDisplayLabel,
   getDisplayScoreColor,
+  rawCategoryScoreToPublic,
 } from "../utils/brandHelpers";
 
 function ScoreBar({ value, color, max = 20 }) {
@@ -339,8 +340,14 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
           {categories.map((cat) => {
             const conf = b.confidence?.[cat.key] || {};
             const criteria_met = conf.criteria_met;
-            const score = b.scores?.[cat.key];
-            const catColor = criteria_met ? getColor(score) : "rgba(255,255,255,0.15)";
+           const rawScore = b.scores?.[cat.key];
+            const publicCategoryScore = criteria_met
+              ? rawCategoryScoreToPublic(rawScore)
+              : null;
+            
+            const catColor = criteria_met
+              ? getDisplayScoreColor(publicCategoryScore)
+              : "rgba(255,255,255,0.15)";
             const t1 = conf.tier1 ?? conf.t1 ?? 0;
             const t2 = conf.tier2 ?? conf.t2 ?? 0;
             const t3 = conf.tier3 ?? conf.t3 ?? 0;
@@ -361,10 +368,10 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                   {criteria_met ? (
                     <div style={{ display: "flex", alignItems: "baseline", gap: 2 }}>
                       <span style={{ fontSize: 13, fontWeight: 700, color: catColor }}>
-                        {score}
+                        {publicCategoryScore}
                       </span>
                       <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>
-                        / ±20
+                        / 100
                       </span>
                     </div>
                   ) : (
@@ -386,7 +393,11 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                   )}
                 </div>
 
-                <ScoreBar value={criteria_met ? score || 0 : 0} color={catColor} max={20} />
+                <ScoreBar
+                  value={criteria_met ? (publicCategoryScore ?? 0) - 50 : 0}
+                  color={catColor}
+                  max={50}
+                />
               </div>
             );
           })}
