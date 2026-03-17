@@ -12,6 +12,8 @@ import {
   getColor,
   getSectorAvgScore,
   getCatLabel,
+  getDisplayScore,
+  getDisplayScoreColor,
 } from "./utils/brandHelpers";
 import { UI } from "./constants/uiText";
 
@@ -270,7 +272,8 @@ export default function App() {
                 }}
               >
                 {results.map((brand) => {
-                  const score = getScore(brand);
+                  const score = getDisplayScore(brand);
+                  const rawScore = getScore(brand);
                   const inList = myBrands.find((b) => b.name === brand.name);
 
                   return (
@@ -292,54 +295,24 @@ export default function App() {
                           width: 36,
                           height: 36,
                           borderRadius: 10,
-                          background: `${getColor(score)}22`,
-                          border: `1px solid ${getColor(score)}44`,
+                          background: `${getDisplayScoreColor(score)}22`,
+                          border: `1px solid ${getDisplayScoreColor(score)}44`,
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
                           fontSize: 14,
                           fontWeight: 700,
-                          color: getColor(score),
+                          color: getDisplayScoreColor(score),
                         }}
                       >
                         {brand.logo}
                       </div>
 
-                      <div style={{ flex: 1 }} onClick={() => setSelected(brand)}>
-                        <div style={{ fontSize: 14, fontWeight: 600 }}>
-                          {brand.name}
-                        </div>
-                        <div
-                          style={{
-                            fontSize: 11,
-                            color: "rgba(255,255,255,0.35)",
-                          }}
-                        >
-                          {brand.sector}
-                        </div>
-                      </div>
-
-                      <div
-                        style={{ textAlign: "right", marginRight: 8 }}
-                        onClick={() => setSelected(brand)}
-                      >
-                        <div
-                          style={{
-                            fontSize: 18,
-                            fontWeight: 700,
-                            color: getColor(score),
-                          }}
-                        >
+                      <div style={{ textAlign: "right", marginRight: 8 }} onClick={() => setSelected(brand)}>
+                        <div style={{ fontSize: 18, fontWeight: 700, color: getDisplayScoreColor(score) }}>
                           {score ?? "—"}
                         </div>
-                        <div
-                          style={{
-                            fontSize: 10,
-                            color: "rgba(255,255,255,0.3)",
-                          }}
-                        >
-                          / ±400
-                        </div>
+                        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)" }}>/ 100</div>
                       </div>
 
                       <button
