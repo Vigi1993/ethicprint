@@ -201,6 +201,13 @@ export default function App() {
                 myBrands={myBrands}
                 db={db}
                 onAdd={addToList}
+                onReplace={(oldBrand, newBrand) => {
+                  setMyBrands((prev) => {
+                    const withoutOld = prev.filter((b) => b.name !== oldBrand.name);
+                    const alreadyPresent = withoutOld.some((b) => b.name === newBrand.name);
+                    return alreadyPresent ? withoutOld : [...withoutOld, newBrand];
+                  });
+                }}
                 onRemove={(name) =>
                   setMyBrands((prev) => prev.filter((b) => b.name !== name))
                 }
