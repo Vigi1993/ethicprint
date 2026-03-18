@@ -564,6 +564,7 @@ export default function MyListPanel({
         </div>
 
         {isEmpty ? (
+          <>
           <div
             style={{
               padding: "8px 0 2px",
@@ -591,7 +592,7 @@ export default function MyListPanel({
                 ? "Puoi cliccare su un brand per vedere fonti, note e dettagli del punteggio."
                 : "Click any brand to see sources, notes, and scoring details."}
             </div>
-          </div>
+          </>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
             <div>
