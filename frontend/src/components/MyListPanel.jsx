@@ -251,6 +251,72 @@ function findAlternativeInDb(brand, db) {
   return db.find((item) => normalize(item.name) === alternativeName) || null;
 }
 
+function getCategoryPublicScoreMap(brand, categories) {
+  const map = {};
+
+  categories.forEach((cat) => {
+    const raw = brand?.scores?.[cat.key];
+    map[cat.key] =
+      typeof raw === "number" ? rawCategoryScoreToPublic(raw) : null;
+  });
+
+  return map;
+}
+
+function getAlternativeAdvantages(currentBrand, alternativeBrand, categories, lang) {
+  if (!currentBrand || !alternativeBrand) return [];
+
+  const currentScores = getCategoryPublicScoreMap(currentBrand, categories);
+  const alternativeScores = getCategoryPublicScoreMap(alternativeBrand, categories);
+
+  const improvements = categories
+    .map((cat) => {
+      const current = currentScores[cat.key];
+      const alternative = alternativeScores[cat.key];
+
+      if (typeof current !== "number" || typeof alternative !== "number") {
+        return null;
+      }
+
+      return {
+        key: cat.key,
+        label: getCatLabel(cat, lang),
+        delta: alternative - current,
+      };
+    })
+    .filter(Boolean)
+    .filter((item) => item.delta >= 8)
+    .sort((a, b) => b.delta - a.delta)
+    .slice(0, 2);
+
+  return improvements;
+}
+
+function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories, lang) {
+  const improvements = getAlternativeAdvantages(
+    currentBrand,
+    alternativeBrand,
+    categories,
+    lang
+  );
+
+  if (!improvements.length) {
+    return lang === "it"
+      ? "Alternativa con segnali etici più solidi."
+      : "Alternative with stronger ethical signals.";
+  }
+
+  if (improvements.length === 1) {
+    return lang === "it"
+      ? `Più forte su ${improvements[0].label.toLowerCase()}.`
+      : `Stronger on ${improvements[0].label.toLowerCase()}.`;
+  }
+
+  return lang === "it"
+    ? `Più forte su ${improvements[0].label.toLowerCase()} e ${improvements[1].label.toLowerCase()}.`
+    : `Stronger on ${improvements[0].label.toLowerCase()} and ${improvements[1].label.toLowerCase()}.`;
+}
+
   export default function MyListPanel({
     myBrands,
     db,
@@ -655,6 +721,9 @@ function findAlternativeInDb(brand, db) {
                     const alternativeName = getAlternativeName(topAlternative);
                     const alternativeDelta = getAlternativeDelta(b);
                     const replaceBrand = findAlternativeInDb(b, db);
+                    const alternativeAdvantageCopy = replaceBrand
+                      ? getAlternativeAdvantageCopy(b, replaceBrand, categories, lang)
+                      : null;
                   
                     return (
                       <div
@@ -776,36 +845,52 @@ function findAlternativeInDb(brand, db) {
                                     flexWrap: "wrap",
                                   }}
                                 >
-                                  <div
-                                    style={{
-                                      color: "#63CAB7",
-                                      fontSize: 12,
-                                      fontWeight: 600,
-                                      fontFamily: "'DM Sans', sans-serif",
-                                    }}
-                                  >
-                                    {lang === "it"
-                                      ? `Meglio passare a ${alternativeName}`
-                                      : `Better switch to ${alternativeName}`}
-                                  </div>
-                            
-                                  {alternativeDelta !== null && (
+                                  <div>
                                     <div
                                       style={{
-                                        fontSize: 11,
-                                        color: "rgba(99,202,183,0.9)",
-                                        border: "1px solid rgba(99,202,183,0.2)",
-                                        background: "rgba(99,202,183,0.08)",
-                                        padding: "4px 8px",
-                                        borderRadius: 999,
+                                        color: "#63CAB7",
+                                        fontSize: 12,
+                                        fontWeight: 600,
                                         fontFamily: "'DM Sans', sans-serif",
+                                        marginBottom: alternativeAdvantageCopy ? 2 : 0,
                                       }}
                                     >
                                       {lang === "it"
-                                        ? `+${alternativeDelta} punti`
-                                        : `+${alternativeDelta} points`}
+                                        ? `Meglio passare a ${alternativeName}`
+                                        : `Better switch to ${alternativeName}`}
                                     </div>
-                                  )}
+                                  
+                                    {alternativeAdvantageCopy && (
+                                      <div
+                                        style={{
+                                          color: "rgba(255,255,255,0.52)",
+                                          fontSize: 11,
+                                          fontFamily: "'DM Sans', sans-serif",
+                                          lineHeight: 1.4,
+                                        }}
+                                      >
+                                        {alternativeAdvantageCopy}
+                                      </div>
+                                    )}
+                                  </div>
+                            
+                                    {alternativeDelta !== null && (
+                                      <div
+                                        style={{
+                                          fontSize: 11,
+                                          color: "rgba(255,255,255,0.5)",
+                                          border: "1px solid rgba(255,255,255,0.08)",
+                                          background: "rgba(255,255,255,0.03)",
+                                          padding: "4px 8px",
+                                          borderRadius: 999,
+                                          fontFamily: "'DM Sans', sans-serif",
+                                        }}
+                                      >
+                                        {lang === "it"
+                                          ? `${alternativeDelta} punti meglio`
+                                          : `${alternativeDelta} points better`}
+                                      </div>
+                                    )}
                             
                                   {replaceBrand ? (
                                     <button
