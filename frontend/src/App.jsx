@@ -104,6 +104,31 @@ export default function App() {
   }
 }, [myBrands]);
 
+  useEffect(() => {
+  if (!Array.isArray(db) || db.length === 0) return;
+
+  setMyBrands((prev) => {
+    if (!Array.isArray(prev) || prev.length === 0) return prev;
+
+    let changed = false;
+
+    const next = prev.map((savedBrand) => {
+      const freshBrand = db.find(
+        (brand) =>
+          String(brand.name || "").toLowerCase() ===
+          String(savedBrand.name || "").toLowerCase()
+      );
+
+      if (!freshBrand) return savedBrand;
+
+      if (freshBrand !== savedBrand) changed = true;
+      return freshBrand;
+    });
+
+    return changed ? next : prev;
+  });
+}, [db]);
+
   const addToList = (brand) => {
     if (!myBrands.find((b) => b.name === brand.name)) {
       setMyBrands((prev) => [...prev, brand]);
