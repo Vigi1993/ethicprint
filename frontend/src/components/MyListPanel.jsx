@@ -242,17 +242,27 @@ function getAlternativeDelta(brand) {
   return delta > 0 ? delta : null;
 }
 
-export default function MyListPanel({
-  myBrands,
-  db,
-  onAdd,
-  onRemove,
-  onClear,
-  onSelect,
-  lang,
-  ui,
-  threshold,
-}) {
+function findAlternativeInDb(brand, db) {
+  const topAlternative = getTopAlternative(brand);
+  const alternativeName = normalize(getAlternativeName(topAlternative));
+
+  if (!alternativeName || !Array.isArray(db)) return null;
+
+  return db.find((item) => normalize(item.name) === alternativeName) || null;
+}
+
+  export default function MyListPanel({
+    myBrands,
+    db,
+    onAdd,
+    onReplace,
+    onRemove,
+    onClear,
+    onSelect,
+    lang,
+    ui,
+    threshold,
+  }) {
   const categories = useCategories();
   const t = ui[lang] || ui.en;
 
@@ -644,6 +654,7 @@ export default function MyListPanel({
                     const topAlternative = getTopAlternative(b);
                     const alternativeName = getAlternativeName(topAlternative);
                     const alternativeDelta = getAlternativeDelta(b);
+                    const replaceBrand = findAlternativeInDb(b, db);
                   
                     return (
                       <div
@@ -739,8 +750,8 @@ export default function MyListPanel({
                               </span>
                               {impactCopy}
                             </div>
-                  
-                            {alternativeName && (
+                
+                           {alternativeName && (
                               <div>
                                 <div
                                   style={{
@@ -795,6 +806,31 @@ export default function MyListPanel({
                                         : `+${alternativeDelta} points`}
                                     </div>
                                   )}
+                            
+                                  {replaceBrand ? (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        onReplace(b, replaceBrand);
+                                      }}
+                                      style={{
+                                        background: "#63CAB7",
+                                        border: "1px solid rgba(99,202,183,0.35)",
+                                        borderRadius: 8,
+                                        padding: "6px 10px",
+                                        color: "#08110f",
+                                        cursor: "pointer",
+                                        fontSize: 11,
+                                        fontWeight: 700,
+                                        fontFamily: "'DM Sans', sans-serif",
+                                        whiteSpace: "nowrap",
+                                      }}
+                                    >
+                                      {lang === "it"
+                                        ? `Sostituisci con ${replaceBrand.name}`
+                                        : `Replace with ${replaceBrand.name}`}
+                                    </button>
+                                  ) : null}
                             
                                   <button
                                     onClick={(e) => {
