@@ -1331,7 +1331,18 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
             </button>
           )}
         </div>
-
+          <div
+            style={{
+              color: "rgba(255,255,255,0.42)",
+              fontSize: 12,
+              marginBottom: 8,
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          >
+            {lang === "it"
+              ? "Per iniziare, prova da qui:"
+              : "A good place to start:"}
+          </div>
         <div
           style={{
             display: "flex",
