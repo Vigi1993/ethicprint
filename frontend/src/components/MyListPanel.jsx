@@ -576,9 +576,21 @@ export default function MyListPanel({
             {lang === "it"
               ? "Aggiungi i brand che usi più spesso. Ti mostreremo il loro giudizio e, se serve, alternative migliori."
               : "Add the brands you use most. We’ll show their ethical standing and, when needed, better alternatives."}
-            {lang === "it"
-              ? "Puoi cliccare su un brand per vedere fonti, note e dettagli del punteggio."
-              : "Click any brand to see sources, notes, and scoring details."}
+            </div>
+            
+            <div
+              style={{
+                padding: "2px 0 4px",
+                color: "rgba(255,255,255,0.42)",
+                fontSize: 12,
+                lineHeight: 1.5,
+                fontFamily: "'DM Sans', sans-serif",
+              }}
+            >
+              {lang === "it"
+                ? "Puoi cliccare su un brand per vedere fonti, note e dettagli del punteggio."
+                : "Click any brand to see sources, notes, and scoring details."}
+            </div>
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
