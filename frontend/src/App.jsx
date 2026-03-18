@@ -437,20 +437,20 @@ export default function App() {
             </p>
           </div>
 
-              <YourEthicalFootprint
-                myBrands={myBrands}
-                allBrands={brands}
-                onRemove={(id) =>
-                  setMyBrands((prev) => prev.filter((b) => b.id !== id))
-                }
-                onReplace={(oldId, newBrand) => {
-                  setMyBrands((prev) => {
-                    const withoutOld = prev.filter((b) => b.id !== oldId);
-                    const alreadyPresent = withoutOld.some((b) => b.name === newBrand.name);
-                    return alreadyPresent ? withoutOld : [...withoutOld, newBrand];
-                  });
-                }}
-              />
+                <YourEthicalFootprint
+                  myBrands={myBrands}
+                  allBrands={db}
+                  onRemove={(id) =>
+                    setMyBrands((prev) => prev.filter((b) => b.id !== id))
+                  }
+                  onReplace={(oldId, newBrand) => {
+                    setMyBrands((prev) => {
+                      const withoutOld = prev.filter((b) => b.id !== oldId);
+                      const alreadyPresent = withoutOld.some((b) => b.name === newBrand.name);
+                      return alreadyPresent ? withoutOld : [...withoutOld, newBrand];
+                    });
+                  }}
+                />
               
               <div style={{ marginTop: 28, marginBottom: 10 }}>
                 <div
