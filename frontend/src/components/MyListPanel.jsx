@@ -839,18 +839,18 @@ export default function MyListPanel({
             </div>
 
             <div>
-              <div
-                style={{
-                  fontSize: 12,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                  color: "rgba(255,255,255,0.45)",
-                  marginBottom: 8,
-                  fontFamily: "'DM Mono', monospace",
-                }}
-              >
-                {lang === "it" ? "In buona posizione" : "In good standing"}
-              </div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.08em",
+                    color: "rgba(255,255,255,0.36)",
+                    marginBottom: 8,
+                    fontFamily: "'DM Mono', monospace",
+                  }}
+                >
+                  {lang === "it" ? "Brand solidi" : "Stronger brands"}
+                </div>
 
               {positive.length === 0 ? (
                 <div
@@ -866,105 +866,112 @@ export default function MyListPanel({
                 </div>
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {positive.map((b) => {
-                    const displayScore = getDisplayScore(b);
 
-                    return (
-                      <div
-                        key={b.name}
-                        onClick={() => onSelect(b)}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          gap: 12,
-                          padding: "12px",
-                          borderRadius: 12,
-                          background: "rgba(255,255,255,0.03)",
-                          border: "1px solid rgba(255,255,255,0.06)",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 12,
-                            minWidth: 0,
-                            flex: 1,
-                          }}
-                        >
-                          <div style={{ fontSize: 16, minWidth: 18 }}>✓</div>
-
-                          <div style={{ minWidth: 0, flex: 1 }}>
-                            <div
-                              style={{
-                                color: "#fff",
-                                fontSize: 14,
-                                fontWeight: 600,
-                                fontFamily: "'DM Sans', sans-serif",
-                                marginBottom: 2,
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              {b.name}
-                            </div>
-
-                            <div
-                              style={{
-                                color: "rgba(255,255,255,0.6)",
-                                fontSize: 12,
-                                fontFamily: "'DM Sans', sans-serif",
-                              }}
-                            >
-                              {getDisplayLabel(b, lang)}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 10,
-                            flexShrink: 0,
-                          }}
-                        >
+                    {positive.map((b) => {
+                        const displayScore = getDisplayScore(b);
+                      
+                        return (
                           <div
+                            key={b.name}
+                            onClick={() => onSelect(b)}
                             style={{
-                              fontSize: 13,
-                              fontWeight: 700,
-                              color: getDisplayScoreColor(displayScore),
-                              fontFamily: "'DM Sans', sans-serif",
-                            }}
-                          >
-                            {displayScore ?? "—"}
-                          </div>
-
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onRemove(b.name);
-                            }}
-                            style={{
-                              background: "none",
-                              border: "none",
-                              color: "rgba(255,255,255,0.25)",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              gap: 12,
+                              padding: "10px 12px",
+                              borderRadius: 10,
+                              background: "rgba(255,255,255,0.025)",
+                              border: "1px solid rgba(255,255,255,0.05)",
                               cursor: "pointer",
-                              fontSize: 15,
-                              lineHeight: 1,
-                              padding: 0,
                             }}
-                            aria-label={`Remove ${b.name}`}
                           >
-                            ×
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 10,
+                                minWidth: 0,
+                                flex: 1,
+                              }}
+                            >
+                              <div
+                                style={{
+                                  fontSize: 13,
+                                  color: "rgba(99,202,183,0.9)",
+                                  minWidth: 14,
+                                }}
+                              >
+                                ✓
+                              </div>
+                      
+                              <div
+                                style={{
+                                  color: "#fff",
+                                  fontSize: 13,
+                                  fontWeight: 600,
+                                  fontFamily: "'DM Sans', sans-serif",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                {b.name}
+                              </div>
+                            </div>
+                      
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 8,
+                                flexShrink: 0,
+                              }}
+                            >
+                              <div
+                                style={{
+                                  fontSize: 12,
+                                  color: "rgba(255,255,255,0.55)",
+                                  fontFamily: "'DM Sans', sans-serif",
+                                }}
+                              >
+                                {getDisplayLabel(b, lang)}
+                              </div>
+                      
+                              <div
+                                style={{
+                                  fontSize: 12,
+                                  fontWeight: 700,
+                                  color: getDisplayScoreColor(displayScore),
+                                  fontFamily: "'DM Sans', sans-serif",
+                                }}
+                              >
+                                {displayScore ?? "—"}
+                              </div>
+                      
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onRemove(b.name);
+                                }}
+                                style={{
+                                  background: "none",
+                                  border: "none",
+                                  color: "rgba(255,255,255,0.22)",
+                                  cursor: "pointer",
+                                  fontSize: 14,
+                                  lineHeight: 1,
+                                  padding: 0,
+                                }}
+                                aria-label={`Remove ${b.name}`}
+                              >
+                                ×
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                  
                 </div>
               )}
             </div>
