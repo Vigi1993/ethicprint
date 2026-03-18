@@ -718,35 +718,6 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
                     ? "Dopo averli aggiunti, puoi cliccare su ogni brand per vedere fonti, note e dettagli del punteggio."
                     : "Once added, you can click any brand to see sources, notes, and scoring details."}
                 </div>
-            
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: 8,
-                    paddingBottom: 4,
-                  }}
-                >
-                  {(lang === "it"
-                    ? ["Moda", "GDO", "Energia", "Tech", "Social"]
-                    : ["Fashion", "Grocery", "Energy", "Tech", "Social"]
-                  ).map((item) => (
-                    <div
-                      key={item}
-                      style={{
-                        padding: "6px 10px",
-                        borderRadius: 999,
-                        background: "rgba(255,255,255,0.03)",
-                        border: "1px solid rgba(255,255,255,0.06)",
-                        color: "rgba(255,255,255,0.55)",
-                        fontSize: 12,
-                        fontFamily: "'DM Sans', sans-serif",
-                      }}
-                    >
-                      {item}
-                    </div>
-                  ))}
-                </div>
               </>
             ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
