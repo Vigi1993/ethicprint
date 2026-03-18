@@ -260,21 +260,32 @@ export default function MyListPanel({
   const [activeHintKey, setActiveHintKey] = useState(null);
 
   const hints = CATEGORY_HINTS[lang] || CATEGORY_HINTS.en;
-
+  
   const avgScores = {};
+  const avgScoreCounts = {};
+  
   categories.forEach((c) => {
     avgScores[c.key] = 0;
+    avgScoreCounts[c.key] = 0;
   });
-
+  
   if (myBrands.length > 0) {
     myBrands.forEach((b) => {
       categories.forEach((c) => {
-        avgScores[c.key] += b.scores?.[c.key] || 0;
+        const rawValue = b.scores?.[c.key];
+  
+        if (typeof rawValue === "number") {
+          avgScores[c.key] += rawValue;
+          avgScoreCounts[c.key] += 1;
+        }
       });
     });
-
+  
     categories.forEach((c) => {
-      avgScores[c.key] = Math.round(avgScores[c.key] / myBrands.length);
+      avgScores[c.key] =
+        avgScoreCounts[c.key] > 0
+          ? Math.round(avgScores[c.key] / avgScoreCounts[c.key])
+          : null;
     });
   }
 
@@ -460,9 +471,10 @@ export default function MyListPanel({
             }}
           >
             {categories.map((cat) => {
-              const publicCatScore = isEmpty
-                ? null
-                : rawCategoryScoreToPublic(avgScores[cat.key]);
+          const publicCatScore =
+            isEmpty || typeof avgScores[cat.key] !== "number"
+              ? null
+              : rawCategoryScoreToPublic(avgScores[cat.key]);
       
               return (
                 <div
