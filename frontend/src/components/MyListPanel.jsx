@@ -1068,21 +1068,34 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
                         const displayScore = getDisplayScore(b);
                       
                         return (
+
                           <div
-                            key={b.name}
-                            onClick={() => onSelect(b)}
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              gap: 12,
-                              padding: "10px 12px",
-                              borderRadius: 10,
-                              background: "rgba(255,255,255,0.025)",
-                              border: "1px solid rgba(255,255,255,0.05)",
-                              cursor: "pointer",
-                            }}
-                          >
+                              key={b.name}
+                              onClick={() => onSelect(b)}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                gap: 12,
+                                padding: "10px 12px",
+                                borderRadius: 10,
+                                background: "rgba(255,255,255,0.025)",
+                                border: "1px solid rgba(255,255,255,0.05)",
+                                cursor: "pointer",
+                                transition: "transform 0.15s ease, border-color 0.15s ease, background 0.15s ease",
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+                                e.currentTarget.style.borderColor = "rgba(99,202,183,0.16)";
+                                e.currentTarget.style.transform = "translateY(-1px)";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.background = "rgba(255,255,255,0.025)";
+                                e.currentTarget.style.borderColor = "rgba(255,255,255,0.05)";
+                                e.currentTarget.style.transform = "translateY(0)";
+                              }}
+                            >
+
                             <div
                               style={{
                                 display: "flex",
@@ -1116,7 +1129,7 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
                                 {b.name}
                               </div>
                             </div>
-                      
+                            
                             <div
                               style={{
                                 display: "flex",
@@ -1125,6 +1138,17 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
                                 flexShrink: 0,
                               }}
                             >
+                              <div
+                                style={{
+                                  fontSize: 13,
+                                  color: "rgba(255,255,255,0.3)",
+                                  fontFamily: "'DM Sans', sans-serif",
+                                  lineHeight: 1,
+                                }}
+                              >
+                                →
+                              </div>
+
                               <div
                                 style={{
                                   fontSize: 12,
