@@ -157,50 +157,6 @@ function getImpactCopy(brand, categories, lang) {
   return copy[lang]?.[key] || copy[lang]?.default || copy.en.default;
 }
 
-function getSwitchBenefitCopy(brand, categories, lang) {
-  if (brand?.insufficient_data) {
-    return lang === "it"
-      ? "Scegliere un’alternativa con più evidenza pubblica ti aiuta a fare una scelta più consapevole."
-      : "Choosing an alternative with more public evidence helps you make a more informed choice.";
-  }
-
-  const worst = getWorstCategory(brand, categories);
-  const key = worst?.cat?.key;
-
-  const copy = {
-    it: {
-      environment:
-        "Cambiare può ridurre il supporto a modelli più impattanti su ambiente e risorse.",
-      labor:
-        "Cambiare può spostare il tuo supporto verso filiere e condizioni più affidabili.",
-      conflicts:
-        "Cambiare può ridurre l’esposizione a brand con segnali più controversi.",
-      transparency:
-        "Cambiare può favorire brand più chiari su pratiche, filiera e governance.",
-      animals:
-        "Cambiare può favorire scelte più attente a materiali e benessere animale.",
-      default:
-        "Cambiare può spostare il tuo impatto verso opzioni eticamente più solide.",
-    },
-    en: {
-      environment:
-        "Switching can reduce support for models with heavier impact on environment and resources.",
-      labor:
-        "Switching can move your support toward more reliable supply chains and conditions.",
-      conflicts:
-        "Switching can reduce exposure to brands with more controversial signals.",
-      transparency:
-        "Switching can favor brands that are clearer about practices, supply chain, and governance.",
-      animals:
-        "Switching can favor choices that are more careful about materials and animal welfare.",
-      default:
-        "Switching can move your impact toward more ethically solid options.",
-    },
-  };
-
-  return copy[lang]?.[key] || copy[lang]?.default || copy.en.default;
-}
-
 function getAlternativeName(alternative) {
   if (!alternative) return null;
   if (typeof alternative === "string") return alternative;
@@ -669,8 +625,8 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
                 }}
               >
                 {lang === "it"
-                  ? "Clicca un brand per vedere fonti, note e dettagli"
-                  : "Click a brand to see sources, notes, and details"}
+                ? "Clicca un brand per aprire dettagli, fonti e note"
+                : "Click a brand to open details, sources, and notes"}
               </div>
             )}
           </div>
@@ -754,7 +710,6 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
                     const issueLabel = getIssueLabel(b, categories, lang);
                     const issueExplanation = getIssueExplanation(b, categories, lang);
                     const impactCopy = getImpactCopy(b, categories, lang);
-                    const switchBenefitCopy = getSwitchBenefitCopy(b, categories, lang);
                     const topAlternative = getTopAlternative(b);
                     const alternativeName = getAlternativeName(topAlternative);
                     const alternativeDelta = getAlternativeDelta(b);
@@ -844,153 +799,142 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
                           >
                             {issueLabel}
                           </div>
-                  
+                                              
                             <div
                               style={{
-                                color: "rgba(255,255,255,0.62)",
+                                color: "rgba(255,255,255,0.58)",
                                 fontSize: 12,
                                 lineHeight: 1.5,
                                 fontFamily: "'DM Sans', sans-serif",
-                                marginBottom: 8,
+                                marginBottom: 6,
                               }}
                             >
                               {issueExplanation}
                             </div>
-                            
+                                                        
                             <div
                               style={{
-                                color: "rgba(255,255,255,0.78)",
+                                color: "rgba(255,255,255,0.8)",
                                 fontSize: 12,
                                 lineHeight: 1.5,
                                 fontFamily: "'DM Sans', sans-serif",
-                                marginBottom: 8,
+                                marginBottom: alternativeName ? 10 : 0,
                               }}
                             >
-                              <span style={{ color: "rgba(255,255,255,0.45)" }}>
+                              <span style={{ color: "rgba(255,255,255,0.42)" }}>
                                 {lang === "it" ? "Il tuo impatto: " : "Your impact: "}
                               </span>
                               {impactCopy}
                             </div>
-                
-                           {alternativeName && (
-                              <div>
+                                          
+                          {alternativeName && (
+                            <div>
+                              <div
+                                style={{
+                                  marginBottom: 8,
+                                }}
+                              >
                                 <div
                                   style={{
-                                    color: "rgba(255,255,255,0.78)",
+                                    color: "#63CAB7",
                                     fontSize: 12,
-                                    lineHeight: 1.5,
+                                    fontWeight: 600,
                                     fontFamily: "'DM Sans', sans-serif",
-                                    marginBottom: 8,
+                                    marginBottom: alternativeAdvantageCopy ? 2 : 0,
                                   }}
                                 >
-                                  <span style={{ color: "rgba(255,255,255,0.45)" }}>
-                                    {lang === "it" ? "Perché cambiare aiuta: " : "Why switching helps: "}
-                                  </span>
-                                  {switchBenefitCopy}
+                                  {lang === "it"
+                                    ? `Alternativa migliore: ${alternativeName}`
+                                    : `Better alternative: ${alternativeName}`}
                                 </div>
-                            
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 8,
-                                    flexWrap: "wrap",
-                                  }}
-                                >
-                                  <div>
-                                    <div
-                                      style={{
-                                        color: "#63CAB7",
-                                        fontSize: 12,
-                                        fontWeight: 600,
-                                        fontFamily: "'DM Sans', sans-serif",
-                                        marginBottom: alternativeAdvantageCopy ? 2 : 0,
-                                      }}
-                                    >
-                                      {lang === "it"
-                                        ? `Meglio passare a ${alternativeName}`
-                                        : `Better switch to ${alternativeName}`}
-                                    </div>
-                                  
-                                    {alternativeAdvantageCopy && (
-                                      <div
-                                        style={{
-                                          color: "rgba(255,255,255,0.52)",
-                                          fontSize: 11,
-                                          fontFamily: "'DM Sans', sans-serif",
-                                          lineHeight: 1.4,
-                                        }}
-                                      >
-                                        {alternativeAdvantageCopy}
-                                      </div>
-                                    )}
+                          
+                                {alternativeAdvantageCopy && (
+                                  <div
+                                    style={{
+                                      color: "rgba(255,255,255,0.52)",
+                                      fontSize: 11,
+                                      fontFamily: "'DM Sans', sans-serif",
+                                      lineHeight: 1.4,
+                                    }}
+                                  >
+                                    {alternativeAdvantageCopy}
                                   </div>
-                            
-                                    {alternativeDelta !== null && (
-                                      <div
-                                        style={{
-                                          fontSize: 11,
-                                          color: "rgba(255,255,255,0.5)",
-                                          border: "1px solid rgba(255,255,255,0.08)",
-                                          background: "rgba(255,255,255,0.03)",
-                                          padding: "4px 8px",
-                                          borderRadius: 999,
-                                          fontFamily: "'DM Sans', sans-serif",
-                                        }}
-                                      >
-                                        {lang === "it"
-                                          ? `${alternativeDelta} punti meglio`
-                                          : `${alternativeDelta} points better`}
-                                      </div>
-                                    )}
-                            
-                                  {replaceBrand ? (
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        onReplace(b, replaceBrand);
-                                      }}
-                                      style={{
-                                        background: "#63CAB7",
-                                        border: "1px solid rgba(99,202,183,0.35)",
-                                        borderRadius: 8,
-                                        padding: "6px 10px",
-                                        color: "#08110f",
-                                        cursor: "pointer",
-                                        fontSize: 11,
-                                        fontWeight: 700,
-                                        fontFamily: "'DM Sans', sans-serif",
-                                        whiteSpace: "nowrap",
-                                      }}
-                                    >
-                                      {lang === "it"
-                                        ? `Sostituisci con ${replaceBrand.name}`
-                                        : `Replace with ${replaceBrand.name}`}
-                                    </button>
-                                  ) : null}
-                            
+                                )}
+                              </div>
+                          
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 8,
+                                  flexWrap: "wrap",
+                                }}
+                              >
+                                {alternativeDelta !== null && (
+                                  <div
+                                    style={{
+                                      fontSize: 11,
+                                      color: "rgba(255,255,255,0.5)",
+                                      border: "1px solid rgba(255,255,255,0.08)",
+                                      background: "rgba(255,255,255,0.03)",
+                                      padding: "4px 8px",
+                                      borderRadius: 999,
+                                      fontFamily: "'DM Sans', sans-serif",
+                                    }}
+                                  >
+                                    {lang === "it"
+                                      ? `${alternativeDelta} punti meglio`
+                                      : `${alternativeDelta} points better`}
+                                  </div>
+                                )}
+                          
+                                {replaceBrand ? (
                                   <button
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      onSelect(b);
+                                      onReplace(b, replaceBrand);
                                     }}
                                     style={{
-                                      background: "rgba(99,202,183,0.08)",
-                                      border: "1px solid rgba(99,202,183,0.2)",
+                                      background: "#63CAB7",
+                                      border: "1px solid rgba(99,202,183,0.35)",
                                       borderRadius: 8,
                                       padding: "6px 10px",
-                                      color: "#63CAB7",
+                                      color: "#08110f",
                                       cursor: "pointer",
                                       fontSize: 11,
+                                      fontWeight: 700,
                                       fontFamily: "'DM Sans', sans-serif",
                                       whiteSpace: "nowrap",
                                     }}
                                   >
-                                    {lang === "it" ? "Vedi dettaglio →" : "See details →"}
+                                    {lang === "it"
+                                      ? `Sostituisci con ${replaceBrand.name}`
+                                      : `Replace with ${replaceBrand.name}`}
                                   </button>
-                                </div>
+                                ) : null}
+                          
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onSelect(b);
+                                  }}
+                                  style={{
+                                    background: "rgba(255,255,255,0.04)",
+                                    border: "1px solid rgba(255,255,255,0.08)",
+                                    borderRadius: 8,
+                                    padding: "6px 10px",
+                                    color: "rgba(255,255,255,0.72)",
+                                    cursor: "pointer",
+                                    fontSize: 11,
+                                    fontFamily: "'DM Sans', sans-serif",
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {lang === "it" ? "Apri dettagli →" : "Open details →"}
+                                </button>
                               </div>
-                            )}
+                            </div>
+                          )}
                         </div>
 
                           <div
