@@ -674,37 +674,81 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
               </div>
             )}
           </div>
-        {isEmpty ? (
-          <>
-          <div
-            style={{
-              padding: "8px 0 2px",
-              color: "rgba(255,255,255,0.58)",
-              fontSize: 14,
-              lineHeight: 1.6,
-              fontFamily: "'DM Sans', sans-serif",
-            }}
-          >
-            {lang === "it"
-              ? "Aggiungi i brand che usi più spesso. Ti mostreremo il loro giudizio e, se serve, alternative migliori."
-              : "Add the brands you use most. We’ll show their ethical standing and, when needed, better alternatives."}
-            </div>
+            {isEmpty ? (
+              <>
+                <div
+                  style={{
+                    padding: "8px 0 4px",
+                    color: "#fff",
+                    fontSize: 15,
+                    lineHeight: 1.5,
+                    fontWeight: 600,
+                    fontFamily: "'DM Sans', sans-serif",
+                  }}
+                >
+                  {lang === "it"
+                    ? "Inizia dai brand che usi davvero ogni settimana."
+                    : "Start with the brands you actually use every week."}
+                </div>
             
-            <div
-              style={{
-                padding: "2px 0 4px",
-                color: "rgba(255,255,255,0.42)",
-                fontSize: 12,
-                lineHeight: 1.5,
-                fontFamily: "'DM Sans', sans-serif",
-              }}
-            >
-              {lang === "it"
-                ? "Puoi cliccare su un brand per vedere fonti, note e dettagli del punteggio."
-                : "Click any brand to see sources, notes, and scoring details."}
-            </div>
-          </>
-        ) : (
+                <div
+                  style={{
+                    padding: "0 0 4px",
+                    color: "rgba(255,255,255,0.62)",
+                    fontSize: 14,
+                    lineHeight: 1.6,
+                    fontFamily: "'DM Sans', sans-serif",
+                  }}
+                >
+                  {lang === "it"
+                    ? "Ti mostreremo il loro giudizio etico, cosa non va quando emergono criticità, e alternative migliori quando servono."
+                    : "We’ll show their ethical standing, what’s problematic when issues emerge, and better alternatives when needed."}
+                </div>
+            
+                <div
+                  style={{
+                    padding: "2px 0 10px",
+                    color: "rgba(255,255,255,0.42)",
+                    fontSize: 12,
+                    lineHeight: 1.5,
+                    fontFamily: "'DM Sans', sans-serif",
+                  }}
+                >
+                  {lang === "it"
+                    ? "Dopo averli aggiunti, puoi cliccare su ogni brand per vedere fonti, note e dettagli del punteggio."
+                    : "Once added, you can click any brand to see sources, notes, and scoring details."}
+                </div>
+            
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 8,
+                    paddingBottom: 4,
+                  }}
+                >
+                  {(lang === "it"
+                    ? ["Moda", "GDO", "Energia", "Tech", "Social"]
+                    : ["Fashion", "Grocery", "Energy", "Tech", "Social"]
+                  ).map((item) => (
+                    <div
+                      key={item}
+                      style={{
+                        padding: "6px 10px",
+                        borderRadius: 999,
+                        background: "rgba(255,255,255,0.03)",
+                        border: "1px solid rgba(255,255,255,0.06)",
+                        color: "rgba(255,255,255,0.55)",
+                        fontSize: 12,
+                        fontFamily: "'DM Sans', sans-serif",
+                      }}
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
             <div>
               <div
