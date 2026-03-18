@@ -165,11 +165,11 @@ export default function MyListPanel({
           justifyContent: "space-between",
           alignItems: "flex-start",
           gap: 14,
-          marginBottom: 18,
+          marginBottom: 20,
           flexWrap: "wrap",
         }}
       >
-        <div>
+        <div style={{ flex: 1, minWidth: 280 }}>
           <div
             style={{
               fontSize: 13,
@@ -182,14 +182,14 @@ export default function MyListPanel({
           >
             {t.my_list_title}
           </div>
-
+      
           <div
             style={{
               color: "#fff",
               fontSize: 18,
               fontWeight: 600,
               fontFamily: "'DM Sans', sans-serif",
-              marginBottom: 6,
+              marginBottom: 10,
             }}
           >
             {isEmpty
@@ -200,13 +200,14 @@ export default function MyListPanel({
               ? `Monitori ${myBrands.length} brand · ${problematic.length} richiedono attenzione`
               : `You track ${myBrands.length} brands · ${problematic.length} need attention`}
           </div>
-
+      
           <div
             style={{
               display: "flex",
               alignItems: "center",
               gap: 10,
               flexWrap: "wrap",
+              marginBottom: 10,
             }}
           >
             <div
@@ -229,7 +230,7 @@ export default function MyListPanel({
                 / 100
               </span>
             </div>
-
+      
             <div
               style={{
                 fontSize: 12,
@@ -250,8 +251,87 @@ export default function MyListPanel({
               )}
             </div>
           </div>
+      
+          <div
+            style={{
+              display: "flex",
+              gap: 8,
+              flexWrap: "wrap",
+              marginBottom: 10,
+            }}
+          >
+            {categories.map((cat) => {
+              const publicCatScore = isEmpty
+                ? null
+                : rawCategoryScoreToPublic(avgScores[cat.key]);
+      
+              return (
+                <div
+                  key={cat.key}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "6px 8px",
+                    borderRadius: 999,
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    fontFamily: "'DM Sans', sans-serif",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: 12,
+                      color: "rgba(255,255,255,0.6)",
+                    }}
+                  >
+                    {cat.icon}
+                  </span>
+      
+                  <span
+                    style={{
+                      fontSize: 12,
+                      color: "rgba(255,255,255,0.6)",
+                    }}
+                  >
+                    {getCatLabel(cat, lang)}
+                  </span>
+      
+                  <span
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color: getDisplayScoreColor(publicCatScore),
+                    }}
+                  >
+                    {publicCatScore ?? "—"}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+      
+          <a
+            href="/sources.html"
+            style={{
+              fontSize: 12,
+              color: "rgba(99,202,183,0.72)",
+              textDecoration: "none",
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "#63CAB7";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "rgba(99,202,183,0.72)";
+            }}
+          >
+            {lang === "it"
+              ? "Come funzionano i punteggi? →"
+              : "How do scores work? →"}
+          </a>
         </div>
-
+      
         {!isEmpty && (
           <button
             onClick={onClear}
@@ -817,69 +897,6 @@ export default function MyListPanel({
             )}
           </div>
         )}
-      </div>
-
-      <div>
-        <div
-          style={{
-            fontSize: 12,
-            textTransform: "uppercase",
-            letterSpacing: "0.08em",
-            color: "rgba(255,255,255,0.45)",
-            marginBottom: 10,
-            fontFamily: "'DM Mono', monospace",
-          }}
-        >
-          {lang === "it" ? "Profilo categorie" : "Category profile"}
-        </div>
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(135px, 1fr))",
-            gap: 10,
-          }}
-        >
-          {categories.map((cat) => {
-            const publicCatScore = isEmpty
-              ? null
-              : rawCategoryScoreToPublic(avgScores[cat.key]);
-
-            return (
-              <div
-                key={cat.key}
-                style={{
-                  background: "rgba(255,255,255,0.025)",
-                  border: "1px solid rgba(255,255,255,0.06)",
-                  borderRadius: 10,
-                  padding: "10px 12px",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 12,
-                    color: "rgba(255,255,255,0.55)",
-                    marginBottom: 6,
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}
-                >
-                  {cat.icon} {getCatLabel(cat, lang)}
-                </div>
-
-                <div
-                  style={{
-                    fontSize: 16,
-                    color: getDisplayScoreColor(publicCatScore),
-                    fontWeight: 600,
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}
-                >
-                  {publicCatScore ?? "—"}
-                </div>
-              </div>
-            );
-          })}
-        </div>
       </div>
     </div>
   );
