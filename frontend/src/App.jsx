@@ -187,7 +187,7 @@ function YourEthicalFootprint({ myBrands, onRemove, onReplace, onClear }) {
                 <div className="flex gap-6 mt-5 text-sm">
                   {b.alternative && (
                     <button
-                      <button className="underline underline-offset-2 font-medium">
+                      className="underline underline-offset-2 font-medium">
                       onClick={() => onReplace(b.id, b.alternative)}
                     >
                       Replace with {b.alternative.name}
