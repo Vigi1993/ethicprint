@@ -331,16 +331,18 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
           displayScores.length
       )
     : null;
-
-  const problematic = myBrands.filter((b) => {
-    const score = getDisplayScore(b);
-    return b.insufficient_data || (score !== null && score < threshold);
-  });
-
-  const positive = myBrands.filter((b) => {
-    const score = getDisplayScore(b);
-    return !b.insufficient_data && score !== null && score >= threshold;
-  });
+    
+    const problematic = myBrands.filter((b) => {
+      const score = getDisplayScore(b);
+      return !b.insufficient_data && score !== null && score < threshold;
+    });
+    
+    const insufficient = myBrands.filter((b) => b.insufficient_data);
+    
+    const positive = myBrands.filter((b) => {
+      const score = getDisplayScore(b);
+      return !b.insufficient_data && score !== null && score >= threshold;
+    });
 
   const isEmpty = myBrands.length === 0;
   const trackedNames = useMemo(
