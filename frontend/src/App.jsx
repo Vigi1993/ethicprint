@@ -20,260 +20,6 @@ import { UI } from "./constants/uiText";
 const THRESHOLD = 50;
 const MY_BRANDS_STORAGE_KEY = "ethicprint_my_brands_v1";
 
-// 🔧 Adapter: trasforma dati backend → UI
-const adaptBrandsForUI = (brands) => {
-  return brands.map((b) => {
-    const score = b.total_score ?? null
-
-    let group = "unknown"
-    if (b.insufficient_data) group = "unknown"
-    else if (score !== null && score < 50) group = "problem"
-    else if (score !== null && score >= 50) group = "strong"
-
-    return {
-      id: b.id,
-      name: b.name,
-      score,
-      group,
-      issue: b.impact_summary || "No clear issue available",
-      impact: b.impact_summary || "Your usage contributes to this impact",
-      alternative: b.alternatives?.[0] || null,
-    }
-  })
-}
-
-function YourEthicalFootprint({ myBrands, onRemove, onReplace, onClear }) {
-  const adapted = adaptBrandsForUI(myBrands)
-
-  const problems = adapted.filter(b => b.group === "problem")
-  const unknown = adapted.filter(b => b.group === "unknown")
-  const strong = adapted.filter(b => b.group === "strong")
-
-  const validScores = adapted
-    .filter(b => b.score !== null && b.group !== "unknown")
-    .map(b => b.score)
-
-  const avg =
-    validScores.length > 0
-      ? Math.round(validScores.reduce((a, b) => a + b, 0) / validScores.length)
-      : null
-
-  return (
-    <div className="max-w-3xl mx-auto px-6 py-10">
-
-      {/* HERO */}
-    <section className="mb-20">
-  <h1 className="text-5xl font-semibold tracking-tight mb-8">
-    Your Ethical Footprint
-  </h1>
-
-  <div className="flex items-baseline gap-6">
-    <span className="text-8xl font-bold leading-none text-white">
-      {avg ?? "--"}
-    </span>
-
-    {avg !== null && (
-      <span className="text-lg text-white/50">
-        {avg < 50 ? "Needs attention" : "Decent"}
-      </span>
-    )}
-  </div>
-
-  <p className="mt-6 text-white/70 max-w-sm text-base leading-relaxed">
-    {myBrands.length === 0
-      ? "Start with the brands you actually use."
-      : problems.length > 0
-      ? `${problems.length} brands are driving most of your impact.`
-      : "No major issues detected."}
-  </p>
-</section>
-
-      <input
-  value={query}
-  onChange={(e) => setQuery(e.target.value)}
-  placeholder="Search a brand..."
-  className="w-full bg-transparent border-b border-white/20 py-4 text-lg text-white outline-none focus:border-white"
-/>
-      
-            <section className="mb-16">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">
-            Your brands
-          </h2>
-      
-          {myBrands.length > 0 && (
-            <button
-              className="text-sm text-neutral-500 underline underline-offset-2"
-              onClick={() => onClear?.()}
-            >
-              Clear all
-            </button>
-          )}
-        </div>
-      
-        {myBrands.length === 0 ? (
-          <div className="border-t border-neutral-300 pt-6">
-            <p className="text-sm text-neutral-700 max-w-md">
-              Add the brands you actually use to see where your impact gets worse and where you can switch to better options.
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {myBrands.map((brand) => {
-              const score = brand.total_score ?? "—"
-      
-              return (
-                <div
-                  key={brand.id ?? brand.name}
-                  className="border-t border-neutral-300 pt-4 flex items-center justify-between gap-4"
-                >
-                  <div>
-                    <div className="font-medium">{brand.name}</div>
-                    <div className="text-sm text-neutral-500">
-                      {score === "—" ? "No score available" : `${score} / 100`}
-                    </div>
-                  </div>
-      
-                  <button
-                    className="text-sm text-neutral-500 underline underline-offset-2"
-                    onClick={() => onRemove(brand.name)}
-                  >
-                    Remove
-                  </button>
-                </div>
-              )
-            })}
-          </div>
-        )}
-      </section>
-
-      {/* PROBLEMS */}
-      {problems.length > 0 && (
-        <section className="mb-20">
-          <h2 className="text-xl font-semibold mb-8">
-            Brands hurting your impact
-          </h2>
-
-          <div className="space-y-12">
-            {problems.map((b) => (
-              <div key={b.id} className="border-t border-neutral-300 pt-8">
-
-                <div className="flex justify-between">
-                  <h3 className="text-lg font-semibold">{b.name}</h3>
-                  <span className="text-xs text-neutral-400">{b.score}</span>
-                </div>
-
-                <p className="mt-2 text-sm font-medium text-red-700">
-                  Main issue
-                </p>
-
-                <p className="text-sm text-neutral-700 mt-1 max-w-md">
-                  {b.issue}
-                </p>
-
-                <div className="mt-4">
-                  <p className="text-xs uppercase tracking-wide text-neutral-500 mb-1">
-                    Your impact
-                  </p>
-                  <p className="text-sm text-neutral-900 max-w-md font-medium">
-                    {b.impact}
-                  </p>
-                </div>
-
-                {b.alternative && (
-                  <div className="mt-4">
-                    <p className="text-xs uppercase tracking-wide text-neutral-500 mb-1">
-                      Better option
-                    </p>
-                    <p className="text-sm">
-                      <span className="font-medium">
-                        {b.alternative.name}
-                      </span>
-                    </p>
-                  </div>
-                )}
-
-                <div className="flex gap-6 mt-5 text-sm">
-                  {b.alternative && (
-                    <button
-                      className="underline underline-offset-2 font-medium">
-                      onClick={() => onReplace(b.id, b.alternative)}
-                    >
-                      Replace with {b.alternative.name}
-                    </button>
-                  )}
-
-                  <button
-                    className="text-neutral-500 underline"
-                    onClick={() => onRemove(b.id)}
-                  >
-                    Remove
-                  </button>
-                </div>
-
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* UNKNOWN */}
-      {unknown.length > 0 && (
-        <section className="mb-16">
-          <h2 className="text-xl font-semibold mb-6">
-            Not enough public evidence
-          </h2>
-
-          <div className="space-y-6">
-            {unknown.map((b) => (
-              <div key={b.id} className="border-t border-neutral-200 pt-4">
-
-                <h3 className="font-medium">{b.name}</h3>
-
-                <p className="text-sm text-neutral-600 mt-1 max-w-md">
-                  We don’t have enough public evidence to assess this brand reliably.
-                </p>
-
-                <button
-                  className="text-sm text-neutral-500 underline mt-2"
-                  onClick={() => onRemove(b.id)}
-                >
-                  Remove
-                </button>
-
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* STRONG */}
-      {strong.length > 0 && (
-        <section className="mb-10">
-          <h2 className="text-xl font-semibold mb-6">
-            Stronger choices
-          </h2>
-
-          <div className="space-y-2">
-            {strong.map((b) => (
-              <div key={b.id} className="flex justify-between text-sm">
-
-                <span className="font-medium">{b.name}</span>
-
-                <span className="text-neutral-500">
-                  {b.score}
-                </span>
-
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-    </div>
-  )
-}
-
 function LangToggle({ lang, setLang }) {
   return (
     <div
@@ -498,20 +244,26 @@ export default function App() {
             </p>
           </div>
 
-                  <YourEthicalFootprint
-                    myBrands={myBrands}
-                    onRemove={(id) =>
-                      setMyBrands((prev) => prev.filter((b) => b.name !== name))
-                    }
-                    onReplace={(oldId, newBrand) => {
-                      setMyBrands((prev) => {
-                        const withoutOld = prev.filter((b) => b.id !== oldId)
-                        const alreadyPresent = withoutOld.some((b) => b.name === newBrand.name)
-                        return alreadyPresent ? withoutOld : [...withoutOld, newBrand]
-                      })
-                    }}
-                    onClear={() => setMyBrands([])}
-                  />
+              <MyListPanel
+                myBrands={myBrands}
+                db={db}
+                onAdd={addToList}
+                onReplace={(oldBrand, newBrand) => {
+                  setMyBrands((prev) => {
+                    const withoutOld = prev.filter((b) => b.name !== oldBrand.name);
+                    const alreadyPresent = withoutOld.some((b) => b.name === newBrand.name);
+                    return alreadyPresent ? withoutOld : [...withoutOld, newBrand];
+                  });
+                }}
+                onRemove={(name) =>
+                  setMyBrands((prev) => prev.filter((b) => b.name !== name))
+                }
+                onClear={() => setMyBrands([])}
+                onSelect={setSelected}
+                lang={lang}
+                ui={UI}
+                threshold={THRESHOLD}
+              />
               
               <div style={{ marginTop: 28, marginBottom: 10 }}>
                 <div
