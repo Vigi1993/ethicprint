@@ -18,6 +18,7 @@ import {
 import { UI } from "./constants/uiText";
 
 const THRESHOLD = 50;
+const MY_BRANDS_STORAGE_KEY = "ethicprint_my_brands_v1";
 
 function LangToggle({ lang, setLang }) {
   return (
@@ -68,7 +69,17 @@ export default function App() {
   const [query, setQuery] = useState("");
   const results = useBrandSearch(query, db);
   const [selected, setSelected] = useState(null);
-  const [myBrands, setMyBrands] = useState([]);
+   const [myBrands, setMyBrands] = useState(() => {
+    try {
+      const raw = localStorage.getItem(MY_BRANDS_STORAGE_KEY);
+      if (!raw) return [];
+  
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  });
   const sourcesCount = useSourcesCount();
   const inputRef = useRef(null);
 
@@ -81,6 +92,17 @@ export default function App() {
       "https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap";
     document.head.appendChild(link);
   }, []);
+
+  useEffect(() => {
+  try {
+    localStorage.setItem(
+      MY_BRANDS_STORAGE_KEY,
+      JSON.stringify(myBrands)
+    );
+  } catch {
+    // ignore storage errors
+  }
+}, [myBrands]);
 
   const addToList = (brand) => {
     if (!myBrands.find((b) => b.name === brand.name)) {
