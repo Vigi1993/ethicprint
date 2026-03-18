@@ -638,19 +638,42 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
         )}
       </div>
 
-      <div style={{ marginBottom: 20 }}>
-        <div
-          style={{
-            color: "#fff",
-            fontSize: 14,
-            fontWeight: 600,
-            marginBottom: 10,
-            fontFamily: "'DM Sans', sans-serif",
-          }}
-        >
-          {lang === "it" ? "I tuoi brand" : "Your brands"}
-        </div>
-
+              <div style={{ marginBottom: 20 }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 12,
+              marginBottom: 10,
+              flexWrap: "wrap",
+            }}
+          >
+            <div
+              style={{
+                color: "#fff",
+                fontSize: 14,
+                fontWeight: 600,
+                fontFamily: "'DM Sans', sans-serif",
+              }}
+            >
+              {lang === "it" ? "I tuoi brand" : "Your brands"}
+            </div>
+        
+            {!isEmpty && (
+              <div
+                style={{
+                  color: "rgba(255,255,255,0.42)",
+                  fontSize: 12,
+                  fontFamily: "'DM Sans', sans-serif",
+                }}
+              >
+                {lang === "it"
+                  ? "Clicca un brand per vedere fonti, note e dettagli"
+                  : "Click a brand to see sources, notes, and details"}
+              </div>
+            )}
+          </div>
         {isEmpty ? (
           <>
           <div
