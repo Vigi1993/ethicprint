@@ -1250,17 +1250,31 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
           paddingTop: 2,
         }}
       >
-        <div
-          style={{
-            color: "#fff",
-            fontSize: 14,
-            fontWeight: 600,
-            marginBottom: 10,
-            fontFamily: "'DM Sans', sans-serif",
-          }}
-        >
-          {lang === "it" ? "Aggiungi brand che usi" : "Add brands you use"}
-        </div>
+          <div
+            style={{
+              color: "#fff",
+              fontSize: 14,
+              fontWeight: 600,
+              marginBottom: 6,
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          >
+            {lang === "it" ? "Aggiungi brand che usi" : "Add brands you use"}
+          </div>
+          
+          <div
+            style={{
+              color: "rgba(255,255,255,0.5)",
+              fontSize: 12,
+              lineHeight: 1.5,
+              marginBottom: 10,
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          >
+            {lang === "it"
+              ? "Inizia da 3–5 brand che usi davvero: ti daranno una footprint più utile."
+              : "Start with 3–5 brands you actually use for a more useful footprint."}
+          </div>
 
         <div
           style={{
