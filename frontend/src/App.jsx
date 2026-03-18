@@ -397,28 +397,6 @@ export default function App() {
           >
             {t.db_info(db.length, sectors.length, sourcesCount)}
           </div>
-
-          <div style={{ marginBottom: 40, paddingLeft: 4 }}>
-            <a
-              href="/sources.html"
-              style={{
-                fontSize: 12,
-                color: "rgba(99,202,183,0.6)",
-                textDecoration: "none",
-                transition: "color .2s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#63CAB7";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = "rgba(99,202,183,0.6)";
-              }}
-            >
-              {lang === "en"
-                ? "How do we score brands? →"
-                : "Come calcoliamo i punteggi? →"}
-            </a>
-          </div>
         </div>
 
           <div style={{ marginTop: 52 }}>
