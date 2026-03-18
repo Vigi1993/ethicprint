@@ -21,8 +21,6 @@ export const UI = {
       "Every score is backed by verified sources, weighted by publisher authority. Amnesty International counts more than a blog. Everything is public.",
     sources_banner_cta: "View all sources & methodology →",
     loading: "Loading...",
-    hint: "Add the brands you use with + to discover your personal ethical footprint.",
-    hint_dismiss: "Got it",
     show_less: "Less",
     show_more: (n) => `+${n} more`,
     score_verdicts: ["Strongly discouraged", "Problematic", "Improvable", "Fairly ethical"],
