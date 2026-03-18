@@ -376,9 +376,11 @@ export default function App() {
                 : "Come calcoliamo i punteggi? →"}
             </a>
           </div>
-
+          
           <MyListPanel
             myBrands={myBrands}
+            db={db}
+            onAdd={addToList}
             onRemove={(name) =>
               setMyBrands((prev) => prev.filter((b) => b.name !== name))
             }
