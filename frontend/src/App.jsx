@@ -42,7 +42,7 @@ const adaptBrandsForUI = (brands) => {
   })
 }
 
-function YourEthicalFootprint({ myBrands, allBrands, onRemove, onReplace }) {
+function YourEthicalFootprint({ myBrands, onRemove, onReplace, onClear }) {
   const adapted = adaptBrandsForUI(myBrands)
 
   const problems = adapted.filter(b => b.group === "problem")
@@ -63,12 +63,12 @@ function YourEthicalFootprint({ myBrands, allBrands, onRemove, onReplace }) {
 
       {/* HERO */}
       <section className="mb-14">
-        <h1 className="text-3xl font-semibold tracking-tight mb-6">
+        <h1 className="text-4xl font-semibold tracking-tight mb-6">
           Your Ethical Footprint
         </h1>
 
         <div className="flex items-end gap-4">
-          <span className="text-6xl font-bold">
+          <span className="text-7xl font-bold leading-none">
             {avg ?? "--"}
           </span>
 
@@ -79,11 +79,63 @@ function YourEthicalFootprint({ myBrands, allBrands, onRemove, onReplace }) {
           )}
         </div>
 
-        <p className="mt-4 text-neutral-700 max-w-md">
+        <p className="mt-4 text-neutral-800 max-w-md">
           {problems.length > 0
             ? `${problems.length} brands are driving most of your impact`
             : "Your current selection shows no major issues"}
         </p>
+      </section>
+      
+            <section className="mb-16">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">
+            Your brands
+          </h2>
+      
+          {myBrands.length > 0 && (
+            <button
+              className="text-sm text-neutral-500 underline underline-offset-2"
+              onClick={() => onClear?.()}
+            >
+              Clear all
+            </button>
+          )}
+        </div>
+      
+        {myBrands.length === 0 ? (
+          <div className="border-t border-neutral-300 pt-6">
+            <p className="text-sm text-neutral-700 max-w-md">
+              Add the brands you actually use to see where your impact gets worse and where you can switch to better options.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {myBrands.map((brand) => {
+              const score = brand.total_score ?? "—"
+      
+              return (
+                <div
+                  key={brand.id ?? brand.name}
+                  className="border-t border-neutral-300 pt-4 flex items-center justify-between gap-4"
+                >
+                  <div>
+                    <div className="font-medium">{brand.name}</div>
+                    <div className="text-sm text-neutral-500">
+                      {score === "—" ? "No score available" : `${score} / 100`}
+                    </div>
+                  </div>
+      
+                  <button
+                    className="text-sm text-neutral-500 underline underline-offset-2"
+                    onClick={() => onRemove(brand.name)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+        )}
       </section>
 
       {/* PROBLEMS */}
@@ -95,14 +147,14 @@ function YourEthicalFootprint({ myBrands, allBrands, onRemove, onReplace }) {
 
           <div className="space-y-12">
             {problems.map((b) => (
-              <div key={b.id} className="border-t border-neutral-200 pt-6">
+              <div key={b.id} className="border-t border-neutral-300 pt-8">
 
                 <div className="flex justify-between">
                   <h3 className="text-lg font-semibold">{b.name}</h3>
-                  <span className="text-sm text-neutral-500">{b.score}</span>
+                  <span className="text-xs text-neutral-400">{b.score}</span>
                 </div>
 
-                <p className="mt-2 text-sm font-medium text-red-600">
+                <p className="mt-2 text-sm font-medium text-red-700">
                   Main issue
                 </p>
 
@@ -114,7 +166,7 @@ function YourEthicalFootprint({ myBrands, allBrands, onRemove, onReplace }) {
                   <p className="text-xs uppercase tracking-wide text-neutral-500 mb-1">
                     Your impact
                   </p>
-                  <p className="text-sm text-neutral-800 max-w-md">
+                  <p className="text-sm text-neutral-900 max-w-md font-medium">
                     {b.impact}
                   </p>
                 </div>
@@ -135,7 +187,7 @@ function YourEthicalFootprint({ myBrands, allBrands, onRemove, onReplace }) {
                 <div className="flex gap-6 mt-5 text-sm">
                   {b.alternative && (
                     <button
-                      className="underline"
+                      <button className="underline underline-offset-2 font-medium">
                       onClick={() => onReplace(b.id, b.alternative)}
                     >
                       Replace with {b.alternative.name}
@@ -437,20 +489,20 @@ export default function App() {
             </p>
           </div>
 
-                <YourEthicalFootprint
-                  myBrands={myBrands}
-                  allBrands={db}
-                  onRemove={(id) =>
-                    setMyBrands((prev) => prev.filter((b) => b.id !== id))
-                  }
-                  onReplace={(oldId, newBrand) => {
-                    setMyBrands((prev) => {
-                      const withoutOld = prev.filter((b) => b.id !== oldId);
-                      const alreadyPresent = withoutOld.some((b) => b.name === newBrand.name);
-                      return alreadyPresent ? withoutOld : [...withoutOld, newBrand];
-                    });
-                  }}
-                />
+                  <YourEthicalFootprint
+                    myBrands={myBrands}
+                    onRemove={(id) =>
+                      setMyBrands((prev) => prev.filter((b) => b.name !== name))
+                    }
+                    onReplace={(oldId, newBrand) => {
+                      setMyBrands((prev) => {
+                        const withoutOld = prev.filter((b) => b.id !== oldId)
+                        const alreadyPresent = withoutOld.some((b) => b.name === newBrand.name)
+                        return alreadyPresent ? withoutOld : [...withoutOld, newBrand]
+                      })
+                    }}
+                    onClear={() => setMyBrands([])}
+                  />
               
               <div style={{ marginTop: 28, marginBottom: 10 }}>
                 <div
