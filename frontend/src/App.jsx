@@ -62,29 +62,31 @@ function YourEthicalFootprint({ myBrands, onRemove, onReplace, onClear }) {
     <div className="max-w-3xl mx-auto px-6 py-10">
 
       {/* HERO */}
-      <section className="mb-14">
-        <h1 className="text-4xl font-semibold tracking-tight mb-6">
-          Your Ethical Footprint
-        </h1>
+    <section className="mb-20">
+  <h1 className="text-5xl font-semibold tracking-tight mb-8">
+    Your Ethical Footprint
+  </h1>
 
-        <div className="flex items-end gap-4">
-          <span className="text-7xl font-bold leading-none">
-            {avg ?? "--"}
-          </span>
+  <div className="flex items-baseline gap-6">
+    <span className="text-8xl font-bold leading-none text-white">
+      {avg ?? "--"}
+    </span>
 
-          {avg !== null && (
-            <span className="text-lg text-neutral-600">
-              {avg < 50 ? "Needs attention" : "Decent"}
-            </span>
-          )}
-        </div>
+    {avg !== null && (
+      <span className="text-lg text-white/50">
+        {avg < 50 ? "Needs attention" : "Decent"}
+      </span>
+    )}
+  </div>
 
-        <p className="mt-4 text-neutral-800 max-w-md">
-          {problems.length > 0
-            ? `${problems.length} brands are driving most of your impact`
-            : "Your current selection shows no major issues"}
-        </p>
-      </section>
+  <p className="mt-6 text-white/70 max-w-sm text-base leading-relaxed">
+    {myBrands.length === 0
+      ? "Start with the brands you actually use."
+      : problems.length > 0
+      ? `${problems.length} brands are driving most of your impact.`
+      : "No major issues detected."}
+  </p>
+</section>
       
             <section className="mb-16">
         <div className="flex items-center justify-between mb-4">
