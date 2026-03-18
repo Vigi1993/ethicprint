@@ -20,6 +20,199 @@ import { UI } from "./constants/uiText";
 const THRESHOLD = 50;
 const MY_BRANDS_STORAGE_KEY = "ethicprint_my_brands_v1";
 
+// 🔧 Adapter: trasforma dati backend → UI
+const adaptBrandsForUI = (brands) => {
+  return brands.map((b) => {
+    const score = b.total_score ?? null
+
+    let group = "unknown"
+    if (b.insufficient_data) group = "unknown"
+    else if (score !== null && score < 50) group = "problem"
+    else if (score !== null && score >= 50) group = "strong"
+
+    return {
+      id: b.id,
+      name: b.name,
+      score,
+      group,
+      issue: b.impact_summary || "No clear issue available",
+      impact: b.impact_summary || "Your usage contributes to this impact",
+      alternative: b.alternatives?.[0] || null,
+    }
+  })
+}
+
+function YourEthicalFootprint({ myBrands, allBrands, onRemove, onReplace }) {
+  const adapted = adaptBrandsForUI(myBrands)
+
+  const problems = adapted.filter(b => b.group === "problem")
+  const unknown = adapted.filter(b => b.group === "unknown")
+  const strong = adapted.filter(b => b.group === "strong")
+
+  const validScores = adapted
+    .filter(b => b.score !== null && b.group !== "unknown")
+    .map(b => b.score)
+
+  const avg =
+    validScores.length > 0
+      ? Math.round(validScores.reduce((a, b) => a + b, 0) / validScores.length)
+      : null
+
+  return (
+    <div className="max-w-3xl mx-auto px-6 py-10">
+
+      {/* HERO */}
+      <section className="mb-14">
+        <h1 className="text-3xl font-semibold tracking-tight mb-6">
+          Your Ethical Footprint
+        </h1>
+
+        <div className="flex items-end gap-4">
+          <span className="text-6xl font-bold">
+            {avg ?? "--"}
+          </span>
+
+          {avg !== null && (
+            <span className="text-lg text-neutral-600">
+              {avg < 50 ? "Needs attention" : "Decent"}
+            </span>
+          )}
+        </div>
+
+        <p className="mt-4 text-neutral-700 max-w-md">
+          {problems.length > 0
+            ? `${problems.length} brands are driving most of your impact`
+            : "Your current selection shows no major issues"}
+        </p>
+      </section>
+
+      {/* PROBLEMS */}
+      {problems.length > 0 && (
+        <section className="mb-20">
+          <h2 className="text-xl font-semibold mb-8">
+            Brands hurting your impact
+          </h2>
+
+          <div className="space-y-12">
+            {problems.map((b) => (
+              <div key={b.id} className="border-t border-neutral-200 pt-6">
+
+                <div className="flex justify-between">
+                  <h3 className="text-lg font-semibold">{b.name}</h3>
+                  <span className="text-sm text-neutral-500">{b.score}</span>
+                </div>
+
+                <p className="mt-2 text-sm font-medium text-red-600">
+                  Main issue
+                </p>
+
+                <p className="text-sm text-neutral-700 mt-1 max-w-md">
+                  {b.issue}
+                </p>
+
+                <div className="mt-4">
+                  <p className="text-xs uppercase tracking-wide text-neutral-500 mb-1">
+                    Your impact
+                  </p>
+                  <p className="text-sm text-neutral-800 max-w-md">
+                    {b.impact}
+                  </p>
+                </div>
+
+                {b.alternative && (
+                  <div className="mt-4">
+                    <p className="text-xs uppercase tracking-wide text-neutral-500 mb-1">
+                      Better option
+                    </p>
+                    <p className="text-sm">
+                      <span className="font-medium">
+                        {b.alternative.name}
+                      </span>
+                    </p>
+                  </div>
+                )}
+
+                <div className="flex gap-6 mt-5 text-sm">
+                  {b.alternative && (
+                    <button
+                      className="underline"
+                      onClick={() => onReplace(b.id, b.alternative)}
+                    >
+                      Replace with {b.alternative.name}
+                    </button>
+                  )}
+
+                  <button
+                    className="text-neutral-500 underline"
+                    onClick={() => onRemove(b.id)}
+                  >
+                    Remove
+                  </button>
+                </div>
+
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* UNKNOWN */}
+      {unknown.length > 0 && (
+        <section className="mb-16">
+          <h2 className="text-xl font-semibold mb-6">
+            Not enough public evidence
+          </h2>
+
+          <div className="space-y-6">
+            {unknown.map((b) => (
+              <div key={b.id} className="border-t border-neutral-200 pt-4">
+
+                <h3 className="font-medium">{b.name}</h3>
+
+                <p className="text-sm text-neutral-600 mt-1 max-w-md">
+                  We don’t have enough public evidence to assess this brand reliably.
+                </p>
+
+                <button
+                  className="text-sm text-neutral-500 underline mt-2"
+                  onClick={() => onRemove(b.id)}
+                >
+                  Remove
+                </button>
+
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* STRONG */}
+      {strong.length > 0 && (
+        <section className="mb-10">
+          <h2 className="text-xl font-semibold mb-6">
+            Stronger choices
+          </h2>
+
+          <div className="space-y-2">
+            {strong.map((b) => (
+              <div key={b.id} className="flex justify-between text-sm">
+
+                <span className="font-medium">{b.name}</span>
+
+                <span className="text-neutral-500">
+                  {b.score}
+                </span>
+
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+    </div>
+  )
+}
+
 function LangToggle({ lang, setLang }) {
   return (
     <div
@@ -244,25 +437,19 @@ export default function App() {
             </p>
           </div>
 
-              <MyListPanel
+              <YourEthicalFootprint
                 myBrands={myBrands}
-                db={db}
-                onAdd={addToList}
-                onReplace={(oldBrand, newBrand) => {
+                allBrands={brands}
+                onRemove={(id) =>
+                  setMyBrands((prev) => prev.filter((b) => b.id !== id))
+                }
+                onReplace={(oldId, newBrand) => {
                   setMyBrands((prev) => {
-                    const withoutOld = prev.filter((b) => b.name !== oldBrand.name);
+                    const withoutOld = prev.filter((b) => b.id !== oldId);
                     const alreadyPresent = withoutOld.some((b) => b.name === newBrand.name);
                     return alreadyPresent ? withoutOld : [...withoutOld, newBrand];
                   });
                 }}
-                onRemove={(name) =>
-                  setMyBrands((prev) => prev.filter((b) => b.name !== name))
-                }
-                onClear={() => setMyBrands([])}
-                onSelect={setSelected}
-                lang={lang}
-                ui={UI}
-                threshold={THRESHOLD}
               />
               
               <div style={{ marginTop: 28, marginBottom: 10 }}>
