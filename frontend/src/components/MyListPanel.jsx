@@ -576,6 +576,9 @@ export default function MyListPanel({
             {lang === "it"
               ? "Aggiungi i brand che usi più spesso. Ti mostreremo il loro giudizio e, se serve, alternative migliori."
               : "Add the brands you use most. We’ll show their ethical standing and, when needed, better alternatives."}
+            {lang === "it"
+              ? "Puoi cliccare su un brand per vedere fonti, note e dettagli del punteggio."
+              : "Click any brand to see sources, notes, and scoring details."}
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
