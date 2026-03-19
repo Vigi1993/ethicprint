@@ -779,17 +779,35 @@ export default function MyListPanel({
               )}
             </div>
 
-            <div
-              style={{
-                fontFamily: "Arial, Helvetica, sans-serif",
-                fontSize: 14,
-                lineHeight: 1.45,
-                color: "rgba(0,0,0,0.72)",
-                maxWidth: 620,
-              }}
-            >
-              {deckLine}
-            </div>
+<div
+  style={{
+    fontFamily: "Arial, Helvetica, sans-serif",
+    fontSize: 14,
+    lineHeight: 1.45,
+    color: "rgba(0,0,0,0.72)",
+    maxWidth: 620,
+  }}
+>
+  {deckLine}
+
+  <div style={{ marginTop: 10 }}>
+    <a
+      href="/sources.html"
+      style={{
+        fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+        fontSize: 14,
+        textTransform: "uppercase",
+        color: "#c4432c",
+        textDecoration: "none",
+        borderBottom: "2px solid #c4432c",
+        paddingBottom: 2,
+        display: "inline-block",
+      }}
+    >
+      {lang === "it" ? "Come valutiamo i brand" : "How do we score brands"}
+    </a>
+  </div>
+</div>
           </div>
 
 
