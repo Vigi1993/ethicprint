@@ -284,7 +284,6 @@ export default function App() {
               marginBottom: 18,
             }}
           >
-          </div>
 
             <div>
               <div
