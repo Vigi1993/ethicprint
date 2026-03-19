@@ -75,6 +75,8 @@ export default function App() {
       return [];
     }
   });
+  
+  const [showAllSectors, setShowAllSectors] = useState(false);
   const sourcesCount = useSourcesCount();
   const inputRef = useRef(null);
 
@@ -177,6 +179,10 @@ export default function App() {
     );
   }
 
+  const visibleSectors = showAllSectors
+  ? brandsBySector
+  : brandsBySector.slice(0, 4);
+  
   return (
     <CategoriesContext.Provider value={categories}>
       <LangToggle lang={lang} setLang={setLang} />
@@ -387,7 +393,7 @@ export default function App() {
               {t.ranking_title}
             </div>
 
-            {brandsBySector.map(({ sector, sectorIcon, brands }) => (
+            {visibleSectors.map(({ sector, sectorIcon, brands }) => (
               <SectorSection
                 key={sector}
                 sector={sector}
@@ -400,6 +406,30 @@ export default function App() {
                 defaultOpen={true}
               />
             ))}
+
+            {brandsBySector.length > 4 && (
+  <div style={{ marginTop: 12 }}>
+    <button
+      onClick={() => setShowAllSectors((prev) => !prev)}
+      style={{
+        border: "3px solid #181310",
+        background: showAllSectors ? "#181310" : "#efe7d8",
+        color: showAllSectors ? "#f4eee3" : "#181310",
+        padding: "10px 14px",
+        fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
+        fontSize: 14,
+        textTransform: "uppercase",
+        cursor: "pointer",
+      }}
+    >
+      {showAllSectors
+        ? (lang === "it" ? "Nascondi settori" : "Hide sectors")
+        : (lang === "it"
+            ? `Mostra altri ${brandsBySector.length - 4}`
+            : `Show ${brandsBySector.length - 4} more sectors`)}
+    </button>
+  </div>
+)}
           </div>
 
           <div
