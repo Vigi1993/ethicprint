@@ -7,6 +7,7 @@ import { CategoriesContext } from "./context/categoriesContext";
 import { useInitialData } from "./hooks/useInitialData";
 import { useSourcesCount } from "./hooks/useSourcesCount";
 import { useBrandSearch } from "./hooks/useBrandSearch";
+import WorstBrandsPanel from "./components/WorstBrandsPanel";
 import {
   getSectorAvgScore,
   getCatLabel,
@@ -368,6 +369,11 @@ export default function App() {
             />
           </div>
 
+          <WorstBrandsPanel
+  brands={db}
+  lang={lang}
+  onSelect={setSelected}
+/>
 
 
 
