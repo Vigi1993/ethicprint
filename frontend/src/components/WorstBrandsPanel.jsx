@@ -124,23 +124,18 @@ const sortedWorst = useMemo(() => {
       />
 
       <div style={{ position: "relative", zIndex: 1, padding: 22 }}>
-        <div
-          style={{
-            display: "inline-block",
-            background: "#e44723",
-            color: "#fff5ea",
-            border: "3px solid #181310",
-            boxShadow: "4px 4px 0 #181310",
-            padding: "8px 12px",
-            marginBottom: 14,
-            fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
-            fontSize: 18,
-            textTransform: "uppercase",
-            letterSpacing: "-0.03em",
-          }}
-        >
-          {lang === "it" ? "Brand con etica peggiore" : "Worst ethics brands"}
-        </div>
+<div
+  style={{
+    fontFamily: "'Bitter', serif",
+    fontSize: "clamp(22px, 3.2vw, 30px)",
+    lineHeight: 1.1,
+    marginBottom: 12,
+    fontWeight: 400,
+    letterSpacing: "-0.01em",
+  }}
+>
+  {lang === "it" ? "Peggiori brand per etica" : "Worst ethic brands"}
+</div>
 
         <div
           style={{
