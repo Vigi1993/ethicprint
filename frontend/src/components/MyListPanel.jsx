@@ -728,12 +728,6 @@ export default function MyListPanel({
         }
       `}</style>
 
-      <div style={{ fontFamily: "Arial, Helvetica, sans-serif", fontSize: 22, marginBottom: 14 }}>
-        <span style={{ fontWeight: 900 }}>A.</span>{" "}
-        <span style={{ letterSpacing: "0.04em" }}>
-          {lang === "it" ? "MANIFESTO ATTIVISTA" : "ACTIVIST MANIFEST"}
-        </span>
-      </div>
 
       <div className="ep-manifest ep-paper" style={{ padding: 26 }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 18 }} className="ep-top-grid">
