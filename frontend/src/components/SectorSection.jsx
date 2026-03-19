@@ -4,7 +4,6 @@ import RestBrands from "./RestBrands";
 import {
   getCatLabel,
   getDisplayScore,
-  getDisplayScoreColor,
   getSectorAvgDisplayScore,
 } from "../utils/brandHelpers";
 
@@ -26,8 +25,6 @@ export default function SectorSection({
   );
 
   const avgScore = getSectorAvgDisplayScore(brands);
-  const avgColor = getDisplayScoreColor(avgScore);
-
   const best = sorted[0];
   const rest = sorted.slice(1);
   const bestScore = best ? getDisplayScore(best) : null;
@@ -36,35 +33,82 @@ export default function SectorSection({
   return (
     <div
       style={{
-        marginBottom: 8,
-        border: "1px solid rgba(255,255,255,0.05)",
-        borderRadius: 14,
+        marginBottom: 16,
+        border: "4px solid #111",
+        background: "#f4eee3",
+        boxShadow: "6px 6px 0 #111",
+        position: "relative",
         overflow: "hidden",
-        background: "rgba(255,255,255,0.01)",
       }}
     >
       <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          opacity: 0.18,
+          backgroundImage:
+            "radial-gradient(circle at 18% 22%, rgba(0,0,0,0.2) 0 1px, transparent 1.2px), radial-gradient(circle at 78% 34%, rgba(0,0,0,0.12) 0 1px, transparent 1.2px), radial-gradient(circle at 60% 82%, rgba(0,0,0,0.12) 0 1px, transparent 1.2px)",
+          backgroundSize: "12px 12px, 16px 16px, 14px 14px",
+          mixBlendMode: "multiply",
+        }}
+      />
+
+      <div
         onClick={() => setExpanded((e) => !e)}
         style={{
-          display: "flex",
-          alignItems: "center",
+          display: "grid",
+          gridTemplateColumns: "auto 1fr auto auto",
           gap: 14,
+          alignItems: "center",
           padding: "14px 18px",
           cursor: "pointer",
           userSelect: "none",
+          position: "relative",
+          zIndex: 1,
+          borderBottom: expanded ? "4px solid #111" : "none",
+          background: expanded ? "#e7bb3a" : "#efe7d8",
         }}
       >
-        <span style={{ fontSize: 18, flexShrink: 0 }}>{sectorIcon}</span>
+        <div
+          style={{
+            width: 42,
+            height: 42,
+            border: "3px solid #111",
+            background: "#111",
+            color: "#f4eee3",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 18,
+            lineHeight: 1,
+            flexShrink: 0,
+          }}
+        >
+          {sectorIcon}
+        </div>
 
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>
+        <div style={{ minWidth: 0 }}>
+          <div
+            style={{
+              fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+              fontSize: 26,
+              lineHeight: 0.95,
+              letterSpacing: "0.01em",
+              textTransform: "uppercase",
+              color: "#111",
+            }}
+          >
             {sector}
           </div>
           <div
             style={{
-              fontSize: 11,
-              color: "rgba(255,255,255,0.3)",
-              marginTop: 1,
+              fontFamily: "Arial, Helvetica, sans-serif",
+              fontSize: 12,
+              color: "rgba(0,0,0,0.65)",
+              fontWeight: 700,
+              marginTop: 3,
+              textTransform: "uppercase",
             }}
           >
             {brands.length} {lang === "it" ? "brand" : "brands"}
@@ -73,26 +117,45 @@ export default function SectorSection({
 
         <div
           style={{
-            textAlign: "right",
+            minWidth: 78,
+            textAlign: "center",
             flexShrink: 0,
-            marginRight: 8,
+            border: "3px solid #111",
+            background: "#111",
+            color: "#fff",
+            padding: "7px 10px 6px",
           }}
         >
-          <div style={{ fontSize: 18, fontWeight: 700, color: avgColor }}>
+          <div
+            style={{
+              fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+              fontSize: 24,
+              lineHeight: 1,
+            }}
+          >
             {avgScore ?? "—"}
           </div>
-          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)" }}>
-            / 100
+          <div
+            style={{
+              fontFamily: "Arial, Helvetica, sans-serif",
+              fontSize: 10,
+              lineHeight: 1,
+              opacity: 0.8,
+              marginTop: 2,
+            }}
+          >
+            /100
           </div>
         </div>
 
         <div
           style={{
-            color: "rgba(255,255,255,0.25)",
-            fontSize: 11,
+            color: "#111",
+            fontSize: 16,
             transition: "transform 0.25s",
             transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
             flexShrink: 0,
+            fontWeight: 900,
           }}
         >
           ▼
@@ -102,126 +165,168 @@ export default function SectorSection({
       {expanded && best && (
         <div
           style={{
-            borderTop: "1px solid rgba(255,255,255,0.04)",
-            margin: "0 12px",
-            padding: "12px 6px 8px",
+            position: "relative",
+            zIndex: 1,
+            padding: "16px 16px 10px",
           }}
         >
           <div
             className="brand-row"
             style={{
-              display: "flex",
-              alignItems: "center",
+              display: "grid",
+              gridTemplateColumns: "1fr auto auto",
               gap: 12,
-              padding: "12px 14px",
-              borderRadius: 11,
-              background: `${getDisplayScoreColor(bestScore)}08`,
-              border: `1px solid ${getDisplayScoreColor(bestScore)}22`,
+              alignItems: "center",
+              padding: "14px 14px",
+              border: "3px solid #111",
+              background: "#f7f1e8",
               cursor: "pointer",
             }}
           >
             <div
               style={{
-                width: 34,
-                height: 34,
-                borderRadius: 9,
-                background: `${getDisplayScoreColor(bestScore)}20`,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 13,
-                fontWeight: 700,
-                color: getDisplayScoreColor(bestScore),
-                flexShrink: 0,
+                minWidth: 0,
+                display: "grid",
+                gridTemplateColumns: "44px 1fr",
+                gap: 12,
+                alignItems: "start",
               }}
+              onClick={() => onSelect(best)}
             >
-              {best.logo}
-            </div>
-
-            <div style={{ flex: 1, minWidth: 0 }} onClick={() => onSelect(best)}>
-              <div style={{ fontSize: 14, fontWeight: 600 }}>{best.name}</div>
-
               <div
                 style={{
+                  width: 44,
+                  height: 44,
+                  border: "3px solid #111",
+                  background: "#dd4a2f",
+                  color: "#fff",
                   display: "flex",
-                  gap: 6,
-                  marginTop: 4,
                   alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 16,
+                  fontWeight: 900,
+                  flexShrink: 0,
                 }}
               >
-                {categories.map((cat) => (
-                  <div
-                    key={cat.key}
-                    style={{ display: "flex", alignItems: "center", gap: 3 }}
-                  >
+                {best.logo || best.name?.slice(0, 1)?.toUpperCase() || "B"}
+              </div>
+
+              <div style={{ minWidth: 0 }}>
+                <div
+                  style={{
+                    fontFamily: "Arial, Helvetica, sans-serif",
+                    fontSize: 22,
+                    fontWeight: 900,
+                    color: "#111",
+                    lineHeight: 1,
+                    marginBottom: 5,
+                  }}
+                >
+                  {best.name}
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 8,
+                    marginTop: 2,
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {categories.map((cat) => (
                     <div
-                      style={{
-                        width: 6,
-                        height: 6,
-                        borderRadius: 99,
-                        background:
-                          best.scores?.[cat.key] !== null &&
-                          best.scores?.[cat.key] !== undefined
-                            ? "rgba(255,255,255,0.35)"
-                            : "rgba(255,255,255,0.12)",
-                      }}
-                    />
-                    <span
-                      style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}
+                      key={cat.key}
+                      style={{ display: "flex", alignItems: "center", gap: 4 }}
                     >
-                      {getCatLabel(cat, lang).split(" ")[0]}
-                    </span>
-                  </div>
-                ))}
+                      <div
+                        style={{
+                          width: 7,
+                          height: 7,
+                          borderRadius: 99,
+                          background:
+                            best.scores?.[cat.key] !== null &&
+                            best.scores?.[cat.key] !== undefined
+                              ? "#111"
+                              : "rgba(0,0,0,0.18)",
+                        }}
+                      />
+                      <span
+                        style={{
+                          fontFamily: "Arial, Helvetica, sans-serif",
+                          fontSize: 10,
+                          color: "rgba(0,0,0,0.66)",
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        {getCatLabel(cat, lang).split(" ")[0]}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
             <div
               style={{
-                fontSize: 22,
-                fontWeight: 700,
-                color: getDisplayScoreColor(bestScore),
+                minWidth: 82,
+                textAlign: "center",
+                border: "3px solid #111",
+                background: "#111",
+                color: "#fff",
+                padding: "10px 10px 8px",
                 flexShrink: 0,
               }}
               onClick={() => onSelect(best)}
             >
-              {bestScore ?? "—"}
+              <div
+                style={{
+                  fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+                  fontSize: 28,
+                  lineHeight: 1,
+                }}
+              >
+                {bestScore ?? "—"}
+              </div>
             </div>
 
             <button
               className="add-btn"
               onClick={() => onAdd(best)}
               style={{
-                background: bestInList
-                  ? "rgba(99,202,183,0.1)"
-                  : "transparent",
-                border: "1px solid rgba(255,255,255,0.08)",
-                color: bestInList ? "#63CAB7" : "rgba(255,255,255,0.3)",
-                padding: "4px 10px",
-                borderRadius: 8,
+                background: bestInList ? "#111" : "#e7bb3a",
+                color: bestInList ? "#f4eee3" : "#111",
+                border: "3px solid #111",
+                padding: "10px 12px 9px",
                 cursor: "pointer",
-                fontSize: 11,
-                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 13,
+                fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+                textTransform: "uppercase",
+                lineHeight: 1,
+                minWidth: 64,
                 flexShrink: 0,
               }}
             >
-              {bestInList ? "✓" : "+"}
+              {bestInList ? "✓" : lang === "it" ? "+ Aggiungi" : "+ Add"}
             </button>
           </div>
 
           {rest.length > 0 && (
-            <RestBrands
-              rest={rest}
-              myBrands={myBrands}
-              onAdd={onAdd}
-              onSelect={onSelect}
-              lang={lang}
-            />
+            <div style={{ marginTop: 10 }}>
+              <RestBrands
+                rest={rest}
+                myBrands={myBrands}
+                onAdd={onAdd}
+                onSelect={onSelect}
+                lang={lang}
+              />
+            </div>
           )}
         </div>
       )}
 
-      {expanded && <div style={{ height: 8 }} />}
+      {expanded && <div style={{ height: 6 }} />}
     </div>
   );
 }
