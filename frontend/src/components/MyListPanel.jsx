@@ -273,18 +273,19 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
     : `Stronger on ${improvements[0].label.toLowerCase()} and ${improvements[1].label.toLowerCase()}.`;
 }
 
-  export default function MyListPanel({
-    myBrands,
-    db,
-    onAdd,
-    onReplace,
-    onRemove,
-    onClear,
-    onSelect,
-    lang,
-    ui,
-    threshold,
-  }) {
+  
+export default function MyListPanel({
+  myBrands,
+  db,
+  onAdd,
+  onReplace,
+  onRemove,
+  onClear,
+  onSelect,
+  lang,
+  ui,
+  threshold,
+}) {
   const categories = useCategories();
   const t = ui[lang] || ui.en;
 
@@ -292,27 +293,26 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
   const [activeHintKey, setActiveHintKey] = useState(null);
 
   const hints = CATEGORY_HINTS[lang] || CATEGORY_HINTS.en;
-  
+
   const avgScores = {};
   const avgScoreCounts = {};
-  
+
   categories.forEach((c) => {
     avgScores[c.key] = 0;
     avgScoreCounts[c.key] = 0;
   });
-  
+
   if (myBrands.length > 0) {
     myBrands.forEach((b) => {
       categories.forEach((c) => {
         const rawValue = b.scores?.[c.key];
-  
         if (typeof rawValue === "number") {
           avgScores[c.key] += rawValue;
           avgScoreCounts[c.key] += 1;
         }
       });
     });
-  
+
     categories.forEach((c) => {
       avgScores[c.key] =
         avgScoreCounts[c.key] > 0
@@ -331,18 +331,18 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
           displayScores.length
       )
     : null;
-    
-    const problematic = myBrands.filter((b) => {
-      const score = getDisplayScore(b);
-      return !b.insufficient_data && score !== null && score < threshold;
-    });
-    
-    const insufficient = myBrands.filter((b) => b.insufficient_data);
-    
-    const positive = myBrands.filter((b) => {
-      const score = getDisplayScore(b);
-      return !b.insufficient_data && score !== null && score >= threshold;
-    });
+
+  const problematic = myBrands.filter((b) => {
+    const score = getDisplayScore(b);
+    return !b.insufficient_data && score !== null && score < threshold;
+  });
+
+  const insufficient = myBrands.filter((b) => b.insufficient_data);
+
+  const positive = myBrands.filter((b) => {
+    const score = getDisplayScore(b);
+    return !b.insufficient_data && score !== null && score >= threshold;
+  });
 
   const isEmpty = myBrands.length === 0;
   const trackedNames = useMemo(
@@ -354,7 +354,6 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
 
   const addResults = useMemo(() => {
     const cleanQuery = normalize(localQuery);
-
     let pool = Array.isArray(db) ? [...db] : [];
 
     pool = pool.filter((brand) => !trackedNames.has(normalize(brand.name)));
@@ -390,1183 +389,672 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
 
   const shouldShowResults = localQuery.trim().length > 0 || activeHint !== null;
 
-  return (
-    <div
-      style={{
-        marginTop: 18,
-        background: "rgba(255,255,255,0.04)",
-        border: "1px solid rgba(255,255,255,0.08)",
-        borderRadius: 16,
-        padding: 18,
-        backdropFilter: "blur(10px)",
-      }}
-    >
+  const paper = "#ede7dc";
+  const ink = "#111111";
+  const accent = "#d75a38";
+  const moss = "#5e7f71";
+  const line = "rgba(17,17,17,0.18)";
+  const softInk = "rgba(17,17,17,0.72)";
+  const mutedInk = "rgba(17,17,17,0.58)";
+
+  const sectionTitle = {
+    fontFamily: "Georgia, 'Times New Roman', serif",
+    fontWeight: 700,
+    fontSize: 28,
+    lineHeight: 1.05,
+    color: ink,
+    letterSpacing: "-0.03em",
+    margin: 0,
+  };
+
+  const rowBase = {
+    display: "grid",
+    gridTemplateColumns: "minmax(0, 1fr) auto",
+    gap: 18,
+    alignItems: "center",
+    padding: "18px 0",
+    borderTop: `1px solid ${line}`,
+  };
+
+  const actionButton = (tone = "dark") => ({
+    border: `1px solid ${tone === "dark" ? "rgba(255,255,255,0.2)" : "rgba(17,17,17,0.16)"}`,
+    background: tone === "dark" ? "rgba(255,255,255,0.08)" : "rgba(17,17,17,0.02)",
+    color: tone === "dark" ? "#fff" : ink,
+    padding: "12px 18px",
+    textTransform: "uppercase",
+    fontFamily: "Arial, Helvetica, sans-serif",
+    letterSpacing: "0.06em",
+    fontWeight: 800,
+    fontSize: 12,
+    cursor: "pointer",
+    boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.02)",
+  });
+
+  const scoreBadge = (score, mode = "paper") => ({
+    minWidth: 138,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 3,
+    padding: "12px 16px",
+    background:
+      mode === "circle"
+        ? "transparent"
+        : score !== null && score < threshold
+        ? accent
+        : moss,
+    color: mode === "circle" ? ink : "#fff",
+    border: mode === "circle" ? `4px solid ${ink}` : `1px solid rgba(17,17,17,0.12)`,
+    fontFamily: "Arial, Helvetica, sans-serif",
+    fontWeight: 900,
+    fontSize: 28,
+    lineHeight: 1,
+    letterSpacing: "-0.04em",
+    boxShadow: mode === "circle" ? "none" : "inset 0 0 0 1px rgba(255,255,255,0.06)",
+  });
+
+  const renderBrandRow = (brand, variant) => {
+    const displayScore = getDisplayScore(brand);
+    const issueLabel = getIssueLabel(brand, categories, lang);
+    const issueExplanation = getIssueExplanation(brand, categories, lang);
+    const topAlternative = getTopAlternative(brand);
+    const alternativeName = getAlternativeName(topAlternative);
+    const alternativeDelta = getAlternativeDelta(brand);
+    const replaceBrand = findAlternativeInDb(brand, db);
+    const alternativeAdvantageCopy = replaceBrand
+      ? getAlternativeAdvantageCopy(brand, replaceBrand, categories, lang)
+      : null;
+
+    const logoFallback = brand?.name?.slice(0, 1)?.toUpperCase() || "•";
+    const darkMode = variant === "insufficient";
+
+    return (
       <div
+        key={brand.name}
+        onClick={() => onSelect(brand)}
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          gap: 14,
-          marginBottom: 20,
-          flexWrap: "wrap",
+          ...rowBase,
+          cursor: "pointer",
+          color: darkMode ? "#fff" : ink,
         }}
       >
-        <div style={{ flex: 1, minWidth: 280 }}>
-          <div
-            style={{
-              fontSize: 13,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.45)",
-              fontFamily: "'DM Mono', monospace",
-              marginBottom: 8,
-            }}
-          >
-            {t.my_list_title}
-          </div>
-      
-          <div
-            style={{
-              color: "#fff",
-              fontSize: 18,
-              fontWeight: 600,
-              fontFamily: "'DM Sans', sans-serif",
-              marginBottom: 10,
-            }}
-          >
-            {isEmpty
-              ? lang === "it"
-                ? "Inizia a costruire la tua impronta etica"
-                : "Start building your ethical footprint"
-              : lang === "it"
-              ? `Monitori ${myBrands.length} brand · ${problematic.length} richiedono attenzione`
-              : `You track ${myBrands.length} brands · ${problematic.length} need attention`}
-          </div>
-      
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              flexWrap: "wrap",
-              marginBottom: 10,
-            }}
-          >
+        <div style={{ minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
             <div
               style={{
-                fontSize: 28,
-                fontWeight: 700,
-                color: getDisplayScoreColor(publicAverage),
-                fontFamily: "'DM Sans', sans-serif",
-                lineHeight: 1,
+                width: 34,
+                height: 34,
+                borderRadius: "50%",
+                background: darkMode ? "rgba(255,255,255,0.13)" : "rgba(17,17,17,0.1)",
+                color: darkMode ? "#fff" : ink,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontFamily: "Arial, Helvetica, sans-serif",
+                fontSize: 16,
+                fontWeight: 900,
+                flexShrink: 0,
+                marginTop: 2,
               }}
             >
-              {publicAverage ?? "—"}
-              <span
-                style={{
-                  fontSize: 13,
-                  color: "rgba(255,255,255,0.35)",
-                  marginLeft: 6,
-                }}
-              >
-                / 100
-              </span>
-            </div>
-      
-          {publicAverage !== null && (
-            <div
-              style={{
-                fontSize: 12,
-                color: "rgba(255,255,255,0.75)",
-                fontFamily: "'DM Sans', sans-serif",
-                padding: "4px 8px",
-                borderRadius: 999,
-                border: "1px solid rgba(255,255,255,0.08)",
-                background: "rgba(255,255,255,0.03)",
-              }}
-            >
-              {getDisplayLabel(
-                {
-                  public_score: publicAverage,
-                  insufficient_data: false,
-                },
-                lang
-              )}
-            </div>
-          )}
-          </div>
-      
-          <div
-            style={{
-              display: "flex",
-              gap: 8,
-              flexWrap: "wrap",
-              marginBottom: 10,
-            }}
-          >
-            {categories.map((cat) => {
-          const publicCatScore =
-            isEmpty || typeof avgScores[cat.key] !== "number"
-              ? null
-              : rawCategoryScoreToPublic(avgScores[cat.key]);
-      
-              return (
-                <div
-                  key={cat.key}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    padding: "6px 8px",
-                    borderRadius: 999,
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: 12,
-                      color: "rgba(255,255,255,0.6)",
-                    }}
-                  >
-                    {cat.icon}
-                  </span>
-      
-                  <span
-                    style={{
-                      fontSize: 12,
-                      color: "rgba(255,255,255,0.6)",
-                    }}
-                  >
-                    {getCatLabel(cat, lang)}
-                  </span>
-      
-                  <span
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 700,
-                      color: getDisplayScoreColor(publicCatScore),
-                    }}
-                  >
-                    {publicCatScore ?? "—"}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-      
-          <a
-            href="/sources.html"
-            style={{
-              fontSize: 12,
-              color: "rgba(99,202,183,0.72)",
-              textDecoration: "none",
-              fontFamily: "'DM Sans', sans-serif",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = "#63CAB7";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = "rgba(99,202,183,0.72)";
-            }}
-          >
-            {lang === "it"
-              ? "Come funzionano i punteggi? →"
-              : "How do scores work? →"}
-          </a>
-        </div>
-      
-        {!isEmpty && (
-          <button
-            onClick={onClear}
-            style={{
-              background: "transparent",
-              border: "1px solid rgba(255,255,255,0.12)",
-              color: "rgba(255,255,255,0.65)",
-              padding: "8px 12px",
-              borderRadius: 8,
-              cursor: "pointer",
-              fontSize: 12,
-              fontFamily: "'DM Sans', sans-serif",
-            }}
-          >
-            {t.clear_list}
-          </button>
-        )}
-      </div>
-
-              <div style={{ marginBottom: 20 }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 12,
-              marginBottom: 10,
-              flexWrap: "wrap",
-            }}
-          >
-            <div
-              style={{
-                color: "#fff",
-                fontSize: 14,
-                fontWeight: 600,
-                fontFamily: "'DM Sans', sans-serif",
-              }}
-            >
-              {lang === "it" ? "I tuoi brand" : "Your brands"}
-            </div>
-        
-            {!isEmpty && (
-              <div
-                style={{
-                  color: "rgba(255,255,255,0.42)",
-                  fontSize: 12,
-                  fontFamily: "'DM Sans', sans-serif",
-                }}
-              >
-                {lang === "it"
-                ? "Clicca un brand per aprire dettagli, fonti e note"
-                : "Click a brand to open details, sources, and notes"}
-              </div>
-            )}
-          </div>
-            {isEmpty ? (
-              <>
-                <div
-                  style={{
-                    padding: "8px 0 4px",
-                    color: "#fff",
-                    fontSize: 15,
-                    lineHeight: 1.5,
-                    fontWeight: 600,
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}
-                >
-                  {lang === "it"
-                    ? "Inizia dai brand che usi davvero ogni settimana."
-                    : "Start with the brands you actually use every week."}
-                </div>
-            
-                <div
-                  style={{
-                    padding: "0 0 4px",
-                    color: "rgba(255,255,255,0.62)",
-                    fontSize: 14,
-                    lineHeight: 1.6,
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}
-                >
-                  {lang === "it"
-                    ? "Ti mostreremo il loro giudizio etico, cosa non va quando emergono criticità, e alternative migliori quando servono."
-                    : "We’ll show their ethical standing, what’s problematic when issues emerge, and better alternatives when needed."}
-                </div>
-            
-                <div
-                  style={{
-                    padding: "2px 0 10px",
-                    color: "rgba(255,255,255,0.42)",
-                    fontSize: 12,
-                    lineHeight: 1.5,
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}
-                >
-                  {lang === "it"
-                    ? "Dopo averli aggiunti, puoi cliccare su ogni brand per vedere fonti, note e dettagli del punteggio."
-                    : "Once added, you can click any brand to see sources, notes, and scoring details."}
-                </div>
-              </>
-            ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-            <div>
-              <div
-                style={{
-                  fontSize: 12,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                  color: "rgba(255,255,255,0.45)",
-                  marginBottom: 8,
-                  fontFamily: "'DM Mono', monospace",
-                }}
-              >
-                {lang === "it" ? "Richiedono attenzione" : "Needs attention"}
-              </div>
-
-              {problematic.length === 0 ? (
-                <div
-                  style={{
-                    color: "rgba(255,255,255,0.6)",
-                    fontSize: 13,
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}
-                >
-                  {lang === "it"
-                    ? "Nessun brand problematico per ora."
-                    : "No problematic brands for now."}
-                </div>
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {problematic.map((b) => {
-                    const displayScore = getDisplayScore(b);
-                    const issueLabel = getIssueLabel(b, categories, lang);
-                    const issueExplanation = getIssueExplanation(b, categories, lang);
-                    const impactCopy = getImpactCopy(b, categories, lang);
-                    const topAlternative = getTopAlternative(b);
-                    const alternativeName = getAlternativeName(topAlternative);
-                    const alternativeDelta = getAlternativeDelta(b);
-                    const replaceBrand = findAlternativeInDb(b, db);
-                    const alternativeAdvantageCopy = replaceBrand
-                      ? getAlternativeAdvantageCopy(b, replaceBrand, categories, lang)
-                      : null;
-                  
-                    return (
-                      
-                      <div
-                        key={b.name}
-                        onClick={() => onSelect(b)}
-                        className="footprint-brand-card"
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          gap: 14,
-                          padding: "14px",
-                          borderRadius: 14,
-                          background: "rgba(255,255,255,0.045)",
-                          border: "1px solid rgba(255,255,255,0.08)",
-                          cursor: "pointer",
-                          transition: "transform 0.15s ease, border-color 0.15s ease, background 0.15s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = "rgba(255,255,255,0.065)";
-                          e.currentTarget.style.borderColor = "rgba(99,202,183,0.22)";
-                          e.currentTarget.style.transform = "translateY(-1px)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = "rgba(255,255,255,0.045)";
-                          e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
-                          e.currentTarget.style.transform = "translateY(0)";
-                        }}
-                      >
-                      
-                        <div style={{ minWidth: 0, flex: 1 }}>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 10,
-                              marginBottom: 8,
-                              flexWrap: "wrap",
-                            }}
-                          >
-                            <div style={{ fontSize: 16, minWidth: 18 }}>
-                              {b.insufficient_data ? "❔" : "⚠️"}
-                            </div>
-                  
-                            <div
-                              style={{
-                                color: "#fff",
-                                fontSize: 15,
-                                fontWeight: 700,
-                                fontFamily: "'DM Sans', sans-serif",
-                              }}
-                            >
-                              {b.name}
-                            </div>
-                  
-                            <div
-                              style={{
-                                fontSize: 12,
-                                fontWeight: 700,
-                                color: getDisplayScoreColor(displayScore),
-                                fontFamily: "'DM Sans', sans-serif",
-                                padding: "4px 8px",
-                                borderRadius: 999,
-                                background: "rgba(255,255,255,0.03)",
-                                border: "1px solid rgba(255,255,255,0.06)",
-                              }}
-                            >
-                              {displayScore ?? "—"} / 100
-                            </div>
-                          </div>
-                  
-                          <div
-                            style={{
-                              color: "rgba(255,255,255,0.86)",
-                              fontSize: 13,
-                              fontWeight: 600,
-                              fontFamily: "'DM Sans', sans-serif",
-                              marginBottom: 4,
-                            }}
-                          >
-                            {issueLabel}
-                          </div>
-                                              
-                            <div
-                              style={{
-                                color: "rgba(255,255,255,0.58)",
-                                fontSize: 12,
-                                lineHeight: 1.5,
-                                fontFamily: "'DM Sans', sans-serif",
-                                marginBottom: 6,
-                              }}
-                            >
-                              {issueExplanation}
-                            </div>
-                                                        
-                            <div
-                              style={{
-                                color: "rgba(255,255,255,0.8)",
-                                fontSize: 12,
-                                lineHeight: 1.5,
-                                fontFamily: "'DM Sans', sans-serif",
-                                marginBottom: alternativeName ? 10 : 0,
-                              }}
-                            >
-                              <span style={{ color: "rgba(255,255,255,0.42)" }}>
-                                {lang === "it" ? "Il tuo impatto: " : "Your impact: "}
-                              </span>
-                              {impactCopy}
-                            </div>
-                                          
-                          {alternativeName && (
-                            <div>
-                              <div
-                                style={{
-                                  marginBottom: 8,
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    color: "#63CAB7",
-                                    fontSize: 12,
-                                    fontWeight: 600,
-                                    fontFamily: "'DM Sans', sans-serif",
-                                    marginBottom: alternativeAdvantageCopy ? 2 : 0,
-                                  }}
-                                >
-                                  {lang === "it"
-                                    ? `Alternativa migliore: ${alternativeName}`
-                                    : `Better alternative: ${alternativeName}`}
-                                </div>
-                          
-                                {alternativeAdvantageCopy && (
-                                  <div
-                                    style={{
-                                      color: "rgba(255,255,255,0.52)",
-                                      fontSize: 11,
-                                      fontFamily: "'DM Sans', sans-serif",
-                                      lineHeight: 1.4,
-                                    }}
-                                  >
-                                    {alternativeAdvantageCopy}
-                                  </div>
-                                )}
-                              </div>
-                          
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 8,
-                                  flexWrap: "wrap",
-                                }}
-                              >
-                                {alternativeDelta !== null && (
-                                  <div
-                                    style={{
-                                      fontSize: 11,
-                                      color: "rgba(255,255,255,0.5)",
-                                      border: "1px solid rgba(255,255,255,0.08)",
-                                      background: "rgba(255,255,255,0.03)",
-                                      padding: "4px 8px",
-                                      borderRadius: 999,
-                                      fontFamily: "'DM Sans', sans-serif",
-                                    }}
-                                  >
-                                    {lang === "it"
-                                      ? `${alternativeDelta} punti meglio`
-                                      : `${alternativeDelta} points better`}
-                                  </div>
-                                )}
-                          
-                                {replaceBrand ? (
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      onReplace(b, replaceBrand);
-                                    }}
-                                    style={{
-                                      background: "#63CAB7",
-                                      border: "1px solid rgba(99,202,183,0.35)",
-                                      borderRadius: 8,
-                                      padding: "6px 10px",
-                                      color: "#08110f",
-                                      cursor: "pointer",
-                                      fontSize: 11,
-                                      fontWeight: 700,
-                                      fontFamily: "'DM Sans', sans-serif",
-                                      whiteSpace: "nowrap",
-                                    }}
-                                  >
-                                    {lang === "it"
-                                      ? `Sostituisci con ${replaceBrand.name}`
-                                      : `Replace with ${replaceBrand.name}`}
-                                  </button>
-                                ) : null}
-                          
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onSelect(b);
-                                  }}
-                                  style={{
-                                    background: "rgba(255,255,255,0.04)",
-                                    border: "1px solid rgba(255,255,255,0.08)",
-                                    borderRadius: 8,
-                                    padding: "6px 10px",
-                                    color: "rgba(255,255,255,0.72)",
-                                    cursor: "pointer",
-                                    fontSize: 11,
-                                    fontFamily: "'DM Sans', sans-serif",
-                                    whiteSpace: "nowrap",
-                                  }}
-                                >
-                                  {lang === "it" ? "Apri dettagli →" : "Open details →"}
-                                </button>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "flex-end",
-                              justifyContent: "space-between",
-                              gap: 10,
-                              flexShrink: 0,
-                            }}
-                          >
-                            <div
-                              style={{
-                                fontSize: 14,
-                                color: "rgba(255,255,255,0.3)",
-                                fontFamily: "'DM Sans', sans-serif",
-                                lineHeight: 1,
-                              }}
-                            >
-                              →
-                            </div>
-                        
-                          <div
-                            style={{
-                              fontSize: 11,
-                              color: "rgba(255,255,255,0.45)",
-                              fontFamily: "'DM Sans', sans-serif",
-                            }}
-                          >
-                            {getDisplayLabel(b, lang)}
-                          </div>
-                  
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onRemove(b.name);
-                            }}
-                            style={{
-                              background: "none",
-                              border: "none",
-                              color: "rgba(255,255,255,0.25)",
-                              cursor: "pointer",
-                              fontSize: 15,
-                              lineHeight: 1,
-                              padding: 0,
-                            }}
-                            aria-label={`Remove ${b.name}`}
-                          >
-                            ×
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
-<div>
-  <div
-    style={{
-      fontSize: 11,
-      textTransform: "uppercase",
-      letterSpacing: "0.08em",
-      color: "rgba(255,255,255,0.36)",
-      marginBottom: 8,
-      fontFamily: "'DM Mono', monospace",
-    }}
-  >
-    {lang === "it" ? "Evidenza limitata" : "Not enough evidence"}
-  </div>
-
-  {insufficient.length === 0 ? (
-    <div
-      style={{
-        color: "rgba(255,255,255,0.6)",
-        fontSize: 13,
-        fontFamily: "'DM Sans', sans-serif",
-      }}
-    >
-      {lang === "it"
-        ? "Tutti i brand hanno abbastanza elementi per una valutazione."
-        : "All tracked brands have enough evidence for an assessment."}
-    </div>
-  ) : (
-    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      {insufficient.map((b) => (
-        <div
-          key={b.name}
-          onClick={() => onSelect(b)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 12,
-            padding: "10px 12px",
-            borderRadius: 10,
-            background: "rgba(255,255,255,0.025)",
-            border: "1px solid rgba(255,255,255,0.05)",
-            cursor: "pointer",
-            transition:
-              "transform 0.15s ease, border-color 0.15s ease, background 0.15s ease",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-            e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
-            e.currentTarget.style.transform = "translateY(-1px)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "rgba(255,255,255,0.025)";
-            e.currentTarget.style.borderColor = "rgba(255,255,255,0.05)";
-            e.currentTarget.style.transform = "translateY(0)";
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              minWidth: 0,
-              flex: 1,
-            }}
-          >
-            <div
-              style={{
-                fontSize: 13,
-                color: "rgba(255,255,255,0.55)",
-                minWidth: 14,
-              }}
-            >
-              ?
+              {logoFallback}
             </div>
 
             <div style={{ minWidth: 0, flex: 1 }}>
               <div
                 style={{
-                  color: "#fff",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  fontFamily: "'DM Sans', sans-serif",
-                  marginBottom: 2,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  flexWrap: "wrap",
+                  marginBottom: 4,
                 }}
               >
-                {b.name}
+                <div
+                  style={{
+                    fontFamily: "Arial Black, Arial, Helvetica, sans-serif",
+                    fontWeight: 900,
+                    fontSize: 19,
+                    lineHeight: 1.05,
+                    color: darkMode ? "#fff" : ink,
+                  }}
+                >
+                  {brand.name}
+                </div>
+
+                {variant === "negative" && (
+                  <div
+                    style={{
+                      color: accent,
+                      fontFamily: "Arial, Helvetica, sans-serif",
+                      fontWeight: 800,
+                      fontSize: 11,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.08em",
+                    }}
+                  >
+                    {issueLabel}
+                  </div>
+                )}
               </div>
 
               <div
                 style={{
-                  color: "rgba(255,255,255,0.5)",
-                  fontSize: 12,
-                  fontFamily: "'DM Sans', sans-serif",
-                  lineHeight: 1.4,
+                  fontFamily: "Arial, Helvetica, sans-serif",
+                  color: darkMode ? "rgba(255,255,255,0.74)" : mutedInk,
+                  fontSize: 13,
+                  lineHeight: 1.38,
+                  maxWidth: 530,
+                  marginBottom: variant === "negative" && (alternativeName || replaceBrand) ? 10 : 0,
                 }}
               >
-                {lang === "it"
-                  ? "Non ci sono ancora abbastanza fonti pubbliche per valutarlo bene."
-                  : "There isn’t enough public evidence yet to assess it properly."}
+                {variant === "insufficient"
+                  ? lang === "it"
+                    ? "Non ci sono ancora abbastanza fonti per verificarlo con sicurezza."
+                    : "There aren’t enough sources to verify this brand confidently."
+                  : variant === "positive"
+                  ? alternativeAdvantageCopy || issueExplanation
+                  : issueExplanation}
               </div>
-            </div>
-          </div>
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              flexShrink: 0,
-            }}
-          >
-            <div
-              style={{
-                fontSize: 13,
-                color: "rgba(255,255,255,0.3)",
-                fontFamily: "'DM Sans', sans-serif",
-                lineHeight: 1,
-              }}
-            >
-              →
-            </div>
+              {variant === "negative" && (
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (replaceBrand) onReplace(brand, replaceBrand);
+                    }}
+                    style={actionButton(false)}
+                  >
+                    {lang === "it" ? "Scegli alternativa" : "Switch to a better option"}
+                  </button>
 
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onRemove(b.name);
-              }}
-              style={{
-                background: "none",
-                border: "none",
-                color: "rgba(255,255,255,0.22)",
-                cursor: "pointer",
-                fontSize: 14,
-                lineHeight: 1,
-                padding: 0,
-              }}
-              aria-label={`Remove ${b.name}`}
-            >
-              ×
-            </button>
-          </div>
-        </div>
-      ))}
-    </div>
-  )}
-</div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onRemove(brand.name);
+                    }}
+                    style={{ ...actionButton(false), opacity: 0.78 }}
+                  >
+                    {lang === "it" ? "Rimuovi" : "Remove"}
+                  </button>
+                </div>
+              )}
 
+              {variant === "insufficient" && (
+                <div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onRemove(brand.name);
+                    }}
+                    style={actionButton("dark")}
+                  >
+                    {lang === "it" ? "Togli dalla lista" : "Switch to a better option"}
+                  </button>
+                </div>
+              )}
 
-
-            
-            <div>
+              {variant === "positive" && alternativeName && (
                 <div
                   style={{
-                    fontSize: 11,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.08em",
-                    color: "rgba(255,255,255,0.36)",
-                    marginBottom: 8,
-                    fontFamily: "'DM Mono', monospace",
+                    fontFamily: "Arial, Helvetica, sans-serif",
+                    color: softInk,
+                    fontSize: 12,
+                    lineHeight: 1.35,
+                    marginTop: 6,
                   }}
                 >
-                  {lang === "it" ? "Brand solidi" : "Stronger brands"}
-                </div>
-
-              {positive.length === 0 ? (
-                <div
-                  style={{
-                    color: "rgba(255,255,255,0.6)",
-                    fontSize: 13,
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}
-                >
-                  {lang === "it"
-                    ? "Nessun brand positivo ancora."
-                    : "No positive brands yet."}
-                </div>
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-
-                    {positive.map((b) => {
-                        const displayScore = getDisplayScore(b);
-                      
-                        return (
-
-                          <div
-                              key={b.name}
-                              onClick={() => onSelect(b)}
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                gap: 12,
-                                padding: "10px 12px",
-                                borderRadius: 10,
-                                background: "rgba(255,255,255,0.025)",
-                                border: "1px solid rgba(255,255,255,0.05)",
-                                cursor: "pointer",
-                                transition: "transform 0.15s ease, border-color 0.15s ease, background 0.15s ease",
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-                                e.currentTarget.style.borderColor = "rgba(99,202,183,0.16)";
-                                e.currentTarget.style.transform = "translateY(-1px)";
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.background = "rgba(255,255,255,0.025)";
-                                e.currentTarget.style.borderColor = "rgba(255,255,255,0.05)";
-                                e.currentTarget.style.transform = "translateY(0)";
-                              }}
-                            >
-
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 10,
-                                minWidth: 0,
-                                flex: 1,
-                              }}
-                            >
-                              <div
-                                style={{
-                                  fontSize: 13,
-                                  color: "rgba(99,202,183,0.9)",
-                                  minWidth: 14,
-                                }}
-                              >
-                                ✓
-                              </div>
-                      
-                              <div
-                                style={{
-                                  color: "#fff",
-                                  fontSize: 13,
-                                  fontWeight: 600,
-                                  fontFamily: "'DM Sans', sans-serif",
-                                  overflow: "hidden",
-                                  textOverflow: "ellipsis",
-                                  whiteSpace: "nowrap",
-                                }}
-                              >
-                                {b.name}
-                              </div>
-                            </div>
-                            
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 8,
-                                flexShrink: 0,
-                              }}
-                            >
-                              <div
-                                style={{
-                                  fontSize: 13,
-                                  color: "rgba(255,255,255,0.3)",
-                                  fontFamily: "'DM Sans', sans-serif",
-                                  lineHeight: 1,
-                                }}
-                              >
-                                →
-                              </div>
-
-                              <div
-                                style={{
-                                  fontSize: 12,
-                                  color: "rgba(255,255,255,0.55)",
-                                  fontFamily: "'DM Sans', sans-serif",
-                                }}
-                              >
-                                {getDisplayLabel(b, lang)}
-                              </div>
-                      
-                              <div
-                                style={{
-                                  fontSize: 12,
-                                  fontWeight: 700,
-                                  color: getDisplayScoreColor(displayScore),
-                                  fontFamily: "'DM Sans', sans-serif",
-                                }}
-                              >
-                                {displayScore ?? "—"}
-                              </div>
-                      
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  onRemove(b.name);
-                                }}
-                                style={{
-                                  background: "none",
-                                  border: "none",
-                                  color: "rgba(255,255,255,0.22)",
-                                  cursor: "pointer",
-                                  fontSize: 14,
-                                  lineHeight: 1,
-                                  padding: 0,
-                                }}
-                                aria-label={`Remove ${b.name}`}
-                              >
-                                ×
-                              </button>
-                            </div>
-                          </div>
-                        );
-                      })}
-                  
+                  {alternativeDelta !== null
+                    ? lang === "it"
+                      ? `${alternativeName} migliora di ${alternativeDelta} punti.`
+                      : `${alternativeName} is ${alternativeDelta} points better.`
+                    : alternativeName}
                 </div>
               )}
             </div>
           </div>
+        </div>
+
+        {variant === "insufficient" ? (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(brand);
+            }}
+            style={actionButton("dark")}
+          >
+            {lang === "it" ? "Apri dettagli" : "Switch to a better option"}
+          </button>
+        ) : (
+          <div style={scoreBadge(displayScore)}>
+            <span>{displayScore ?? "—"}</span>
+            <span style={{ fontSize: 14, marginLeft: 2, opacity: 0.92 }}>/100</span>
+          </div>
         )}
       </div>
+    );
+  };
 
+  return (
+    <div
+      style={{
+        marginTop: 22,
+        background: paper,
+        color: ink,
+        border: "1px solid rgba(17,17,17,0.12)",
+        padding: 24,
+        boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+        position: "relative",
+        overflow: "hidden",
+        fontFamily: "Arial, Helvetica, sans-serif",
+      }}
+    >
       <div
+        aria-hidden="true"
         style={{
-          marginBottom: 22,
-          paddingTop: 2,
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          opacity: 0.18,
+          backgroundImage:
+            "radial-gradient(circle at 20% 10%, rgba(255,255,255,0.7) 0, transparent 18%), radial-gradient(circle at 80% 30%, rgba(0,0,0,0.08) 0, transparent 22%), radial-gradient(circle at 65% 75%, rgba(215,90,56,0.18) 0, transparent 18%), repeating-linear-gradient(0deg, rgba(0,0,0,0.03) 0, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 3px)",
+          mixBlendMode: "multiply",
         }}
-      >
+      />
+
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 18, marginBottom: 14 }}>
           <div
             style={{
-              color: "#fff",
-              fontSize: 14,
-              fontWeight: 600,
-              marginBottom: 6,
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: "Arial Black, Arial, Helvetica, sans-serif",
+              fontSize: 32,
+              lineHeight: 1,
+              color: ink,
             }}
           >
-            {lang === "it" ? "Aggiungi brand che usi" : "Add brands you use"}
+            B.
           </div>
-          
-          <div
-            style={{
-              color: "rgba(255,255,255,0.5)",
-              fontSize: 12,
-              lineHeight: 1.5,
-              marginBottom: 10,
-              fontFamily: "'DM Sans', sans-serif",
-            }}
-          >
-            {lang === "it"
-              ? "Inizia da 3–5 brand che usi davvero: ti daranno una footprint più utile."
-              : "Start with 3–5 brands you actually use for a more useful footprint."}
+          <div>
+            <div
+              style={{
+                fontFamily: "Arial, Helvetica, sans-serif",
+                fontSize: 19,
+                fontWeight: 800,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                color: ink,
+                marginTop: 2,
+              }}
+            >
+              {lang === "it" ? "Editorial impact" : "Editorial impact"}
+            </div>
           </div>
+        </div>
 
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            background: "rgba(255,255,255,0.03)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: 12,
-            padding: "10px 12px",
-            marginBottom: 10,
+            background:
+              "linear-gradient(180deg, rgba(8,8,8,0.98), rgba(20,20,20,0.97)), radial-gradient(circle at 88% 38%, rgba(215,90,56,0.8), transparent 20%)",
+            color: "#fff",
+            padding: "22px 18px 24px",
+            border: "1px solid rgba(0,0,0,0.55)",
+            position: "relative",
+            overflow: "hidden",
+            marginBottom: 0,
           }}
         >
-          <input
-            value={localQuery}
-            onChange={(e) => {
-              setLocalQuery(e.target.value);
-              if (activeHintKey) setActiveHintKey(null);
-            }}
-            placeholder={
-              lang === "it"
-                ? "Cerca un brand..."
-                : "Search a brand..."
-            }
+          <div
+            aria-hidden="true"
             style={{
-              flex: 1,
-              background: "transparent",
-              border: "none",
-              outline: "none",
-              color: "#fff",
-              fontSize: 14,
-              fontFamily: "'DM Sans', sans-serif",
+              position: "absolute",
+              inset: 0,
+              opacity: 0.16,
+              backgroundImage:
+                "radial-gradient(circle at 15% 15%, rgba(255,255,255,0.15) 0, transparent 18%), radial-gradient(circle at 70% 20%, rgba(255,255,255,0.12) 0, transparent 16%), radial-gradient(circle at 95% 40%, rgba(215,90,56,0.7) 0, transparent 11%), repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 4px)",
             }}
           />
 
-          {(localQuery || activeHintKey) && (
-            <button
-              onClick={() => {
-                setLocalQuery("");
-                setActiveHintKey(null);
-              }}
-              style={{
-                background: "none",
-                border: "none",
-                color: "rgba(255,255,255,0.35)",
-                cursor: "pointer",
-                fontSize: 16,
-                lineHeight: 1,
-                padding: 0,
-              }}
-              aria-label="Clear brand search"
-            >
-              ×
-            </button>
-          )}
-        </div>
-          <div
-            style={{
-              color: "rgba(255,255,255,0.42)",
-              fontSize: 12,
-              marginBottom: 8,
-              fontFamily: "'DM Sans', sans-serif",
-            }}
-          >
-            {lang === "it"
-              ? "Per iniziare, prova da qui:"
-              : "A good place to start:"}
-          </div>
-        <div
-          style={{
-            display: "flex",
-            gap: 8,
-            flexWrap: "wrap",
-            marginBottom: shouldShowResults ? 10 : 0,
-          }}
-        >
-          {hints.map((hint) => {
-            const isActive = hint.key === activeHintKey;
-
-            return (
-              <button
-                key={hint.key}
-                onClick={() => {
-                  setActiveHintKey(isActive ? null : hint.key);
-                  setLocalQuery("");
-                }}
-                style={{
-                  background: isActive
-                    ? "rgba(99,202,183,0.16)"
-                    : "rgba(255,255,255,0.04)",
-                  border: isActive
-                    ? "1px solid rgba(99,202,183,0.35)"
-                    : "1px solid rgba(255,255,255,0.08)",
-                  color: isActive ? "#63CAB7" : "rgba(255,255,255,0.72)",
-                  padding: "7px 10px",
-                  borderRadius: 999,
-                  cursor: "pointer",
-                  fontSize: 12,
-                  fontFamily: "'DM Sans', sans-serif",
-                }}
-              >
-                {hint.label}
-              </button>
-            );
-          })}
-        </div>
-
-        {shouldShowResults && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 8,
-              marginTop: 10,
-            }}
-          >
-            {addResults.length === 0 ? (
+          <div style={{ position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "minmax(0, 1fr) 156px", gap: 12, alignItems: "end" }}>
+            <div>
               <div
                 style={{
-                  color: "rgba(255,255,255,0.55)",
-                  fontSize: 13,
-                  fontFamily: "'DM Sans', sans-serif",
+                  fontFamily: "Arial Black, Arial, Helvetica, sans-serif",
+                  fontSize: 28,
+                  lineHeight: 1,
+                  marginBottom: 22,
+                }}
+              >
+                EthicPrint
+              </div>
+
+              <div style={{ height: 1, background: "rgba(255,255,255,0.26)", marginBottom: 20 }} />
+
+              <h2
+                style={{
+                  margin: 0,
+                  fontFamily: "Georgia, 'Times New Roman', serif",
+                  fontSize: 60,
+                  lineHeight: 0.95,
+                  fontWeight: 700,
+                  letterSpacing: "-0.05em",
+                  maxWidth: 540,
+                }}
+              >
+                {lang === "it" ? (
+                  <>
+                    Un mix di brand
+                    <br />
+                    <span style={{ color: accent }}>dannosi e incerti</span>
+                  </>
+                ) : (
+                  <>
+                    A mix of harmful
+                    <br />
+                    and <span style={{ color: accent }}>uncertain</span>
+                  </>
+                )}
+              </h2>
+
+              <div
+                style={{
+                  marginTop: 18,
+                  fontFamily: "Arial, Helvetica, sans-serif",
+                  color: "rgba(255,255,255,0.84)",
+                  fontSize: 16,
+                  lineHeight: 1.35,
+                  maxWidth: 380,
                 }}
               >
                 {lang === "it"
-                  ? "Nessun brand trovato."
-                  : "No brands found."}
+                  ? "Alcuni dei brand che usi causano danni, altri sono ancora troppo opachi per essere verificati bene."
+                  : "Some of the brands you use are causing harm, others are just too opaque."}
               </div>
-            ) : (
-              addResults.map((brand) => {
-                const displayScore = getDisplayScore(brand);
+            </div>
 
-                return (
-                  <div
-                    key={brand.name}
-                    onClick={() => onSelect(brand)}
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      gap: 12,
-                      padding: "10px 12px",
-                      borderRadius: 10,
-                      background: "rgba(255,255,255,0.03)",
-                      border: "1px solid rgba(255,255,255,0.06)",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <div style={{ minWidth: 0 }}>
-                      <div
-                        style={{
-                          color: "#fff",
-                          fontSize: 14,
-                          fontWeight: 600,
-                          fontFamily: "'DM Sans', sans-serif",
-                          marginBottom: 2,
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {brand.name}
-                      </div>
+            <div
+              style={{
+                width: 142,
+                height: 142,
+                borderRadius: "50%",
+                background: paper,
+                color: ink,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                justifySelf: "end",
+                position: "relative",
+                boxShadow: "0 0 0 7px rgba(255,255,255,0.04)",
+              }}
+            >
+              <div style={{ fontFamily: "Arial Black, Arial, Helvetica, sans-serif", fontSize: 66, lineHeight: 0.9 }}>
+                {publicAverage ?? "—"}
+              </div>
+              <div style={{ width: 70, height: 3, background: ink, margin: "4px 0 6px" }} />
+              <div
+                style={{
+                  fontFamily: "Arial Black, Arial, Helvetica, sans-serif",
+                  fontSize: 16,
+                  color: accent,
+                }}
+              >
+                /100
+              </div>
+            </div>
+          </div>
+        </div>
 
-                      <div
-                        style={{
-                          color: "rgba(255,255,255,0.55)",
-                          fontSize: 12,
-                          fontFamily: "'DM Sans', sans-serif",
-                        }}
-                      >
-                        {brand.sector || getDisplayLabel(brand, lang)}
-                      </div>
-                    </div>
+        <div style={{ borderLeft: `1px solid ${line}`, borderRight: `1px solid ${line}`, borderBottom: `1px solid ${line}` }}>
+          <section style={{ padding: "18px 18px 8px", background: paper }}>
+            <h3 style={sectionTitle}>
+              {lang === "it" ? "Brand che sostieni e che causano danno" : "Brands you support that cause harm"}
+            </h3>
 
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 10,
-                        flexShrink: 0,
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontSize: 13,
-                          fontWeight: 700,
-                          color: getDisplayScoreColor(displayScore),
-                          fontFamily: "'DM Sans', sans-serif",
-                        }}
-                      >
-                        {displayScore ?? "—"}
-                      </div>
+            <div>
+              {problematic.length === 0 ? (
+                <div style={{ ...rowBase, color: mutedInk, fontSize: 14 }}>
+                  <div>{lang === "it" ? "Nessun brand sotto soglia al momento." : "No harmful brands below threshold right now."}</div>
+                </div>
+              ) : (
+                problematic.map((brand) => renderBrandRow(brand, "negative"))
+              )}
+            </div>
+          </section>
 
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onAdd(brand);
-                          setLocalQuery("");
-                          setActiveHintKey(null);
-                        }}
-                        style={{
-                          background: "rgba(99,202,183,0.1)",
-                          border: "1px solid rgba(99,202,183,0.2)",
-                          color: "#63CAB7",
-                          padding: "6px 10px",
-                          borderRadius: 8,
-                          cursor: "pointer",
-                          fontSize: 11,
-                          fontFamily: "'DM Sans', sans-serif",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {lang === "it" ? "+ Aggiungi" : "+ Add"}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })
+          <section
+            style={{
+              padding: "18px 18px 8px",
+              background:
+                "linear-gradient(180deg, rgba(14,14,14,0.98), rgba(22,22,22,0.98))",
+              color: "#fff",
+              borderTop: `1px solid rgba(255,255,255,0.08)`,
+              borderBottom: `1px solid rgba(255,255,255,0.08)`,
+            }}
+          >
+            <h3 style={{ ...sectionTitle, color: "#fff" }}>
+              {lang === "it" ? "Brand che non riusciamo a verificare con sicurezza" : "Brands we can’t confidently verify"}
+            </h3>
+
+            <div>
+              {insufficient.length === 0 ? (
+                <div style={{ ...rowBase, color: "rgba(255,255,255,0.66)", borderTop: "1px solid rgba(255,255,255,0.12)" }}>
+                  <div>{lang === "it" ? "Tutti i brand hanno fonti sufficienti." : "All tracked brands have enough evidence."}</div>
+                </div>
+              ) : (
+                insufficient.map((brand) => renderBrandRow(brand, "insufficient"))
+              )}
+            </div>
+          </section>
+
+          <section style={{ padding: "18px 18px 8px", background: paper }}>
+            <h3 style={sectionTitle}>
+              {lang === "it" ? "Brand con uno storico migliore." : "Brands with a better record."}
+            </h3>
+
+            <div>
+              {positive.length === 0 ? (
+                <div style={{ ...rowBase, color: mutedInk, fontSize: 14 }}>
+                  <div>{lang === "it" ? "Nessun brand positivo ancora." : "No stronger brands yet."}</div>
+                </div>
+              ) : (
+                positive.map((brand) => renderBrandRow(brand, "positive"))
+              )}
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 12,
+                alignItems: "center",
+                borderTop: `1px solid ${line}`,
+                padding: "16px 0 6px",
+                flexWrap: "wrap",
+              }}
+            >
+              <button
+                onClick={() => window?.location?.assign?.('/sources.html')}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  padding: 0,
+                  color: ink,
+                  cursor: "pointer",
+                  fontFamily: "Arial, Helvetica, sans-serif",
+                  fontSize: 14,
+                }}
+              >
+                {lang === "it" ? "Esplora e migliora le tue scelte" : "Explore and improve your choices"} →
+              </button>
+
+              {!isEmpty && (
+                <button onClick={onClear} style={actionButton(false)}>
+                  {lang === "it" ? "Svuota lista" : t.clear_list}
+                </button>
+              )}
+            </div>
+          </section>
+        </div>
+
+        <section
+          style={{
+            marginTop: 18,
+            border: `1px solid ${line}`,
+            background: "rgba(255,255,255,0.45)",
+            padding: 18,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: 16,
+              alignItems: "end",
+              flexWrap: "wrap",
+              marginBottom: 10,
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  fontFamily: "Arial Black, Arial, Helvetica, sans-serif",
+                  fontSize: 20,
+                  color: ink,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.03em",
+                  marginBottom: 6,
+                }}
+              >
+                {lang === "it" ? "Aggiungi brand che usi" : "Add brands you use"}
+              </div>
+              <div style={{ color: mutedInk, fontSize: 13, maxWidth: 680, lineHeight: 1.45 }}>
+                {lang === "it"
+                  ? "Cerca un brand o usa i filtri rapidi. Ho lasciato anche il layout e la gerarchia visiva in stile poster/editoriale come nel riferimento."
+                  : "Search a brand or use the quick filters. The layout keeps the poster-like editorial hierarchy from the reference."}
+              </div>
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(0, 1fr) auto",
+              gap: 10,
+              marginBottom: 10,
+            }}
+          >
+            <input
+              value={localQuery}
+              onChange={(e) => {
+                setLocalQuery(e.target.value);
+                if (activeHintKey) setActiveHintKey(null);
+              }}
+              placeholder={lang === "it" ? "Cerca un brand..." : "Search a brand..."}
+              style={{
+                background: "rgba(255,255,255,0.65)",
+                border: `1px solid ${line}`,
+                padding: "14px 16px",
+                outline: "none",
+                color: ink,
+                fontSize: 15,
+                fontFamily: "Arial, Helvetica, sans-serif",
+              }}
+            />
+
+            {(localQuery || activeHintKey) && (
+              <button
+                onClick={() => {
+                  setLocalQuery("");
+                  setActiveHintKey(null);
+                }}
+                style={actionButton(false)}
+              >
+                {lang === "it" ? "Pulisci" : "Clear"}
+              </button>
             )}
           </div>
-        )}
+
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: shouldShowResults ? 12 : 0 }}>
+            {hints.map((hint) => {
+              const isActive = hint.key === activeHintKey;
+              return (
+                <button
+                  key={hint.key}
+                  onClick={() => {
+                    setActiveHintKey(isActive ? null : hint.key);
+                    setLocalQuery("");
+                  }}
+                  style={{
+                    ...actionButton(false),
+                    background: isActive ? accent : "rgba(17,17,17,0.02)",
+                    color: isActive ? "#fff" : ink,
+                    padding: "10px 14px",
+                  }}
+                >
+                  {hint.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {shouldShowResults && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+              {addResults.length === 0 ? (
+                <div style={{ ...rowBase, color: mutedInk, paddingBottom: 4 }}>
+                  <div>{lang === "it" ? "Nessun brand trovato." : "No brands found."}</div>
+                </div>
+              ) : (
+                addResults.map((brand) => {
+                  const displayScore = getDisplayScore(brand);
+                  return (
+                    <div
+                      key={brand.name}
+                      onClick={() => onSelect(brand)}
+                      style={{ ...rowBase, cursor: "pointer", paddingTop: 14, paddingBottom: 14 }}
+                    >
+                      <div style={{ minWidth: 0 }}>
+                        <div
+                          style={{
+                            fontFamily: "Arial Black, Arial, Helvetica, sans-serif",
+                            fontWeight: 900,
+                            fontSize: 18,
+                            color: ink,
+                            marginBottom: 4,
+                          }}
+                        >
+                          {brand.name}
+                        </div>
+                        <div style={{ color: mutedInk, fontSize: 13 }}>
+                          {brand.sector || getDisplayLabel(brand, lang)}
+                        </div>
+                      </div>
+
+                      <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", justifyContent: "flex-end" }}>
+                        <div style={scoreBadge(displayScore)}>
+                          <span>{displayScore ?? "—"}</span>
+                          <span style={{ fontSize: 14, marginLeft: 2, opacity: 0.92 }}>/100</span>
+                        </div>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onAdd(brand);
+                            setLocalQuery("");
+                            setActiveHintKey(null);
+                          }}
+                          style={actionButton(false)}
+                        >
+                          {lang === "it" ? "Aggiungi" : "+ Add"}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          )}
+        </section>
       </div>
     </div>
   );
