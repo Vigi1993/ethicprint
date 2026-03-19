@@ -298,11 +298,34 @@ export default function App() {
               }}
             >
               <div>
-
-                <div className="section-strip">
+                <div
+                  style={{
+                    fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
+                    fontSize: "clamp(28px, 5vw, 42px)",
+                    lineHeight: 0.95,
+                    letterSpacing: "-0.05em",
+                    textTransform: "uppercase",
+                    marginBottom: 16,
+                  }}
+                >
                   Your ethical
                   <br />
                   footprint
+                </div>
+
+                <div className="section-strip" style={{ padding: "12px 18px" }}>
+                  <img
+                    src={logoSrc}
+                    alt="EthicPrint"
+                    style={{
+                      display: "block",
+                      height: "clamp(42px, 6vw, 58px)",
+                      width: "auto",
+                      maxWidth: "100%",
+                      filter: "grayscale(1) contrast(1.5) brightness(0.08)",
+                    }}
+                  />
+                </div>
 
                 <div className="section-subtitle">
                   {lang === "it" ? "Stai sostenendo alcuni brand " : "You're supporting some "}
