@@ -139,7 +139,7 @@ const sortedWorst = useMemo(() => {
             letterSpacing: "-0.03em",
           }}
         >
-          {lang === "it" ? "Worst ethics overall" : "Worst ethics overall"}
+          {lang === "it" ? "Brand con etica peggiore" : "Worst ethics brands"}
         </div>
 
         <div
