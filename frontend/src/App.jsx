@@ -18,12 +18,6 @@ import { UI } from "./constants/uiText";
 const THRESHOLD = 50;
 const MY_BRANDS_STORAGE_KEY = "ethicprint_my_brands_v1";
 
-const PAPER = "#ece7df";
-const INK = "#12100d";
-const RED = "#d45735";
-const GREEN = "#557866";
-const LINE = "rgba(18,16,13,0.16)";
-
 function LangToggle({ lang, setLang }) {
   return (
     <div
@@ -34,11 +28,10 @@ function LangToggle({ lang, setLang }) {
         zIndex: 300,
         display: "flex",
         gap: 6,
-        background: "rgba(18,16,13,0.88)",
-        border: "1px solid rgba(255,255,255,0.08)",
-        borderRadius: 999,
-        padding: 4,
-        boxShadow: "0 8px 24px rgba(0,0,0,0.22)",
+        background: "rgba(24,19,16,0.9)",
+        border: "2px solid #181310",
+        boxShadow: "4px 4px 0 #181310",
+        padding: 6,
       }}
     >
       {["en", "it"].map((l) => (
@@ -46,17 +39,16 @@ function LangToggle({ lang, setLang }) {
           key={l}
           onClick={() => setLang(l)}
           style={{
-            background: lang === l ? PAPER : "transparent",
-            color: lang === l ? INK : "rgba(255,255,255,0.6)",
-            border: "none",
-            borderRadius: 999,
+            background: lang === l ? "#e44723" : "#f2eadc",
+            border: "2px solid #181310",
+            color: lang === l ? "#f8f2e9" : "#181310",
             padding: "6px 12px",
             cursor: "pointer",
             fontSize: 12,
-            fontWeight: 700,
+            fontWeight: 900,
             letterSpacing: "0.08em",
             textTransform: "uppercase",
-            fontFamily: "'Inter', 'Arial', sans-serif",
+            fontFamily: "'Archivo Narrow', 'Arial Narrow', sans-serif",
           }}
         >
           {l}
@@ -66,221 +58,62 @@ function LangToggle({ lang, setLang }) {
   );
 }
 
-function EditorialHero({ t, lang, categories, myBrands }) {
-  const total = myBrands.length || 0;
-  const withScores = myBrands.filter((b) => typeof getDisplayScore(b) === "number");
-  const average =
-    withScores.length > 0
-      ? Math.round(
-          withScores.reduce((sum, brand) => sum + getDisplayScore(brand), 0) /
-            withScores.length
-        )
-      : 53;
-
+function ScoreStamp({ value }) {
   return (
-    <div style={{ marginBottom: 28 }}>
+    <div
+      style={{
+        width: 142,
+        height: 142,
+        borderRadius: "50%",
+        background:
+          "radial-gradient(circle at 35% 35%, #27211d 0 38%, #0e0b09 38% 58%, #d94724 58% 100%)",
+        border: "6px solid #f7f0e6",
+        boxShadow: "0 0 0 3px #17120f, inset 0 0 0 3px rgba(255,255,255,0.06)",
+        color: "#fff8ef",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        transform: "rotate(-6deg)",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "72px 1fr",
-          gap: 14,
-          alignItems: "end",
-          marginBottom: 18,
+          position: "absolute",
+          inset: 0,
+          background:
+            "repeating-linear-gradient(135deg, rgba(255,255,255,0.07) 0 2px, transparent 2px 5px)",
+          mixBlendMode: "overlay",
+          opacity: 0.35,
         }}
-      >
-        <div
-          style={{
-            fontSize: 34,
-            lineHeight: 1,
-            fontWeight: 500,
-            color: INK,
-            fontFamily: "'Inter', 'Arial', sans-serif",
-          }}
-        >
-          B.
-        </div>
-        <div
-          style={{
-            fontSize: 20,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: INK,
-            fontWeight: 500,
-            fontFamily: "'Inter', 'Arial', sans-serif",
-          }}
-        >
-          Editorial impact
-        </div>
-      </div>
-
+      />
       <div
         style={{
           position: "relative",
-          overflow: "hidden",
-          background:
-            "radial-gradient(circle at 82% 26%, rgba(212,87,53,0.55), transparent 16%), radial-gradient(circle at 10% 10%, rgba(255,255,255,0.08), transparent 24%), linear-gradient(180deg, #171411 0%, #0f0d0b 100%)",
-          color: "#f5efe7",
-          border: `1px solid rgba(18,16,13,0.45)`,
-          boxShadow: "0 10px 30px rgba(0,0,0,0.12)",
+          fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
+          fontSize: 56,
+          lineHeight: 0.9,
+          letterSpacing: "-0.06em",
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "repeating-radial-gradient(circle at 20% 20%, rgba(255,255,255,0.045) 0 1px, transparent 1px 4px), repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0 2px, transparent 2px 5px)",
-            mixBlendMode: "screen",
-            opacity: 0.4,
-            pointerEvents: "none",
-          }}
-        />
-
-        <div style={{ position: "relative", padding: "18px 18px 20px" }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 18,
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <img src={logoSrc} alt="EthicPrint" style={{ height: 34, width: "auto", filter: "brightness(1.1)" }} />
-            </div>
-            <div
-              style={{
-                fontSize: 12,
-                letterSpacing: "0.06em",
-                color: "rgba(255,245,235,0.8)",
-                fontFamily: "'Inter', 'Arial', sans-serif",
-                textTransform: "uppercase",
-              }}
-            >
-              {lang === "it" ? "Impatto brand · IT" : "Brand impact · EN"}
-            </div>
-          </div>
-
-          <div
-            style={{
-              borderTop: "1px solid rgba(255,245,235,0.25)",
-              paddingTop: 20,
-              display: "grid",
-              gridTemplateColumns: "1fr 148px",
-              gap: 20,
-              alignItems: "end",
-            }}
-          >
-            <div>
-              <h1
-                style={{
-                  margin: 0,
-                  fontFamily: "Georgia, 'Times New Roman', serif",
-                  fontWeight: 700,
-                  fontSize: "clamp(38px, 7vw, 66px)",
-                  lineHeight: 0.95,
-                  letterSpacing: "-0.04em",
-                  maxWidth: 540,
-                }}
-              >
-                {lang === "it" ? (
-                  <>
-                    Un mix di impatti
-                    <br />
-                    dannosi e <span style={{ color: RED }}>incerti</span>
-                  </>
-                ) : (
-                  <>
-                    A mix of harmful
-                    <br />
-                    and <span style={{ color: RED }}>uncertain</span>
-                  </>
-                )}
-              </h1>
-
-              <p
-                style={{
-                  marginTop: 18,
-                  maxWidth: 430,
-                  color: "rgba(255,245,235,0.9)",
-                  fontSize: 17,
-                  lineHeight: 1.45,
-                  fontFamily: "'Inter', 'Arial', sans-serif",
-                }}
-              >
-                {lang === "it"
-                  ? "Alcuni dei brand che usi causano danni, altri sono ancora troppo opachi per essere verificati con fiducia."
-                  : "Some of the brands you use are causing harm, while others are still too opaque to verify with confidence."}
-              </p>
-            </div>
-
-            <div
-              style={{
-                justifySelf: "end",
-                width: 132,
-                height: 132,
-                borderRadius: "50%",
-                background: PAPER,
-                color: INK,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 0 0 2px rgba(18,16,13,0.08) inset",
-                transform: "rotate(-2deg)",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 34,
-                  fontWeight: 800,
-                  lineHeight: 0.9,
-                  fontFamily: "'Inter', 'Arial', sans-serif",
-                }}
-              >
-                {average}
-              </div>
-              <div
-                style={{
-                  width: 72,
-                  borderTop: `2px solid ${INK}`,
-                  margin: "8px 0 6px",
-                  opacity: 0.85,
-                }}
-              />
-              <div
-                style={{
-                  fontSize: 16,
-                  color: RED,
-                  fontWeight: 800,
-                  fontFamily: "'Inter', 'Arial', sans-serif",
-                }}
-              >
-                /100
-              </div>
-            </div>
-          </div>
-        </div>
+        {value}
+        <span style={{ fontSize: 26, marginLeft: 4 }}>/100</span>
       </div>
-
       <div
         style={{
-          display: "flex",
-          gap: 10,
-          flexWrap: "wrap",
-          marginTop: 12,
-          color: "rgba(18,16,13,0.72)",
+          position: "relative",
+          marginTop: 6,
           fontSize: 12,
-          letterSpacing: "0.04em",
+          fontWeight: 900,
+          letterSpacing: "0.08em",
           textTransform: "uppercase",
-          fontFamily: "'Inter', 'Arial', sans-serif",
+          textAlign: "center",
+          maxWidth: 90,
         }}
       >
-        <span>{t.tagline}</span>
-        <span>•</span>
-        <span>{categories.map((c) => getCatLabel(c, lang).split(" ")[0]).join(" · ")}</span>
-        <span>•</span>
-        <span>{total} {lang === "it" ? "brand salvati" : "saved brands"}</span>
+        Brand terroscope
       </div>
     </div>
   );
@@ -296,6 +129,7 @@ export default function App() {
     try {
       const raw = localStorage.getItem(MY_BRANDS_STORAGE_KEY);
       if (!raw) return [];
+
       const parsed = JSON.parse(raw);
       return Array.isArray(parsed) ? parsed : [];
     } catch {
@@ -311,8 +145,12 @@ export default function App() {
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href =
-      "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap";
+      "https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo+Narrow:wght@400;600;700;800&family=Bitter:wght@400;600;700;800&display=swap";
     document.head.appendChild(link);
+
+    return () => {
+      if (document.head.contains(link)) document.head.removeChild(link);
+    };
   }, []);
 
   useEffect(() => {
@@ -339,6 +177,7 @@ export default function App() {
         );
 
         if (!freshBrand) return savedBrand;
+
         if (freshBrand !== savedBrand) changed = true;
         return freshBrand;
       });
@@ -369,28 +208,32 @@ export default function App() {
     })
     .sort((a, b) => (b.avgScore ?? -9999) - (a.avgScore ?? -9999));
 
+  const headlineScore =
+    myBrands.length > 0
+      ? Math.round(
+          myBrands.reduce((sum, brand) => sum + (getDisplayScore(brand) || 0), 0) /
+            myBrands.length
+        )
+      : 53;
+
   if (loading) {
     return (
       <div
         style={{
           minHeight: "100vh",
-          background: PAPER,
+          background: "#d9d4cf",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          color: "#181310",
+          fontFamily: "'Archivo Narrow', sans-serif",
+          fontWeight: 800,
+          fontSize: 22,
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
         }}
       >
-        <div
-          style={{
-            color: "rgba(18,16,13,0.55)",
-            fontFamily: "'Inter', 'Arial', sans-serif",
-            fontSize: 13,
-            letterSpacing: "0.16em",
-            textTransform: "uppercase",
-          }}
-        >
-          {t.loading}
-        </div>
+        {t.loading}
       </div>
     );
   }
@@ -402,338 +245,378 @@ export default function App() {
       <div
         style={{
           minHeight: "100vh",
-          background: PAPER,
-          fontFamily: "'Inter', 'Arial', sans-serif",
-          color: INK,
-          backgroundImage:
-            "radial-gradient(rgba(0,0,0,0.028) 0.7px, transparent 0.7px), radial-gradient(rgba(0,0,0,0.02) 0.6px, transparent 0.6px)",
-          backgroundSize: "8px 8px, 13px 13px",
-          backgroundPosition: "0 0, 3px 4px",
+          background: "#d8d3ce",
+          color: "#181310",
+          fontFamily: "'Archivo Narrow', sans-serif",
         }}
       >
         <style>{`
           * { box-sizing: border-box; margin: 0; padding: 0; }
-          body { background: ${PAPER}; }
-          ::selection { background: rgba(212,87,53,0.22); }
+          html, body, #root { background: #d8d3ce; }
+          body {
+            background:
+              radial-gradient(circle at 20% 10%, rgba(255,255,255,0.18), transparent 18%),
+              radial-gradient(circle at 80% 18%, rgba(0,0,0,0.04), transparent 22%),
+              radial-gradient(circle at 10% 90%, rgba(0,0,0,0.05), transparent 18%),
+              #d8d3ce;
+          }
+          ::selection { background: rgba(228,71,35,0.25); }
           input:focus { outline: none; }
-          ::-webkit-scrollbar { width: 6px; }
-          ::-webkit-scrollbar-track { background: transparent; }
-          ::-webkit-scrollbar-thumb { background: rgba(18,16,13,0.18); border-radius: 99px; }
-          .brand-row:hover { background: rgba(18,16,13,0.05) !important; }
-          .add-btn:hover { transform: translateY(-1px); filter: brightness(0.98); }
-          .editorial-panel > * { position: relative; z-index: 1; }
-          @media (max-width: 760px) {
-            .editorial-hero-grid { grid-template-columns: 1fr !important; }
+          ::-webkit-scrollbar { width: 10px; }
+          ::-webkit-scrollbar-track { background: #d8d3ce; }
+          ::-webkit-scrollbar-thumb { background: #181310; }
+          .paper-panel {
+            background: #f2eadf;
+            border: 4px solid #181310;
+            box-shadow: 8px 8px 0 #181310;
+            position: relative;
+            overflow: hidden;
+          }
+          .paper-panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+              repeating-linear-gradient(0deg, rgba(0,0,0,0.018) 0 1px, transparent 1px 3px),
+              radial-gradient(circle at 15% 25%, rgba(0,0,0,0.08) 0 1px, transparent 1px 100%),
+              radial-gradient(circle at 85% 70%, rgba(0,0,0,0.06) 0 1px, transparent 1px 100%);
+            background-size: auto, 18px 18px, 24px 24px;
+            pointer-events: none;
+            opacity: 0.55;
+          }
+          .section-strip {
+            border-top: 4px solid #181310;
+            border-bottom: 4px solid #181310;
+            padding: 14px 18px 10px;
+            font-family: 'Archivo Black', 'Arial Black', sans-serif;
+            font-size: clamp(28px, 5vw, 42px);
+            line-height: 0.95;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+          }
+          .section-subtitle {
+            font-family: 'Bitter', serif;
+            font-size: clamp(18px, 2.9vw, 28px);
+            line-height: 1.05;
+            margin-top: 14px;
+          }
+          .section-subtitle .accent { color: #cc431f; }
+          .label-stamp {
+            font-family: 'Archivo Black', 'Arial Black', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            font-size: 18px;
+          }
+          .search-row:hover { background: rgba(0,0,0,0.035) !important; }
+          .poster-button {
+            background: #f0c741;
+            color: #181310;
+            border: 3px solid #181310;
+            box-shadow: 4px 4px 0 #181310;
+            font-family: 'Archivo Black', 'Arial Black', sans-serif;
+            font-size: 15px;
+            line-height: 1;
+            text-transform: uppercase;
+            padding: 12px 14px;
+            cursor: pointer;
+          }
+          .poster-button:hover { transform: translate(1px, 1px); box-shadow: 3px 3px 0 #181310; }
+          .poster-input {
+            width: 100%;
+            background: #fbf7f0;
+            border: 3px solid #181310;
+            padding: 14px 16px;
+            font-size: 18px;
+            color: #181310;
+            font-family: 'Archivo Narrow', sans-serif;
+            font-weight: 700;
+            box-shadow: 5px 5px 0 #181310;
           }
         `}</style>
 
-        <div style={{ maxWidth: 760, margin: "0 auto", padding: "34px 20px 80px" }}>
-          <EditorialHero
-            t={t}
-            lang={lang}
-            categories={categories}
-            myBrands={myBrands}
-          />
-
+        <div style={{ maxWidth: 980, margin: "0 auto", padding: "34px 24px 90px" }}>
           <div
-            className="editorial-panel"
             style={{
-              position: "relative",
-              border: `1px solid ${LINE}`,
-              background: "rgba(255,255,255,0.24)",
-              boxShadow: "0 8px 24px rgba(0,0,0,0.04)",
+              fontFamily: "'Archivo Narrow', sans-serif",
+              fontWeight: 800,
+              fontSize: 24,
+              letterSpacing: "0.01em",
+              textTransform: "uppercase",
+              marginBottom: 18,
             }}
           >
+            <span style={{ fontSize: 50, marginRight: 8, verticalAlign: "-2px" }}>A.</span>
+            Activist Manifest
+          </div>
+
+          <div className="paper-panel" style={{ padding: "26px 26px 30px", marginBottom: 30 }}>
             <div
               style={{
-                position: "absolute",
-                inset: 0,
-                pointerEvents: "none",
-                opacity: 0.2,
-                background:
-                  "linear-gradient(180deg, rgba(0,0,0,0.02), transparent 20%), repeating-linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.02) 1px, transparent 1px, transparent 4px)",
+                display: "grid",
+                gridTemplateColumns: "1.2fr auto",
+                gap: 20,
+                alignItems: "start",
+                position: "relative",
+                zIndex: 1,
               }}
-            />
+            >
+              <div>
+                <img
+                  src={logoSrc}
+                  alt="EthicPrint"
+                  style={{
+                    height: 40,
+                    width: "auto",
+                    marginBottom: 18,
+                    filter: "grayscale(1) contrast(1.5) brightness(0.08)",
+                  }}
+                />
 
-            <div style={{ padding: 18, borderBottom: `1px solid ${LINE}` }}>
-              <div
-                style={{
-                  fontFamily: "Georgia, 'Times New Roman', serif",
-                  fontWeight: 700,
-                  fontSize: 21,
-                  letterSpacing: "-0.04em",
-                  marginBottom: 8,
-                }}
-              >
-                {lang === "it" ? "La tua lista editoriale" : "Your editorial list"}
-              </div>
-              <div
-                style={{
-                  color: "rgba(18,16,13,0.72)",
-                  fontSize: 14,
-                  lineHeight: 1.45,
-                  maxWidth: 580,
-                }}
-              >
-                {lang === "it"
-                  ? "Una vista impaginata dei brand che supporti, con evidenza sui casi dannosi, incerti e con performance migliori."
-                  : "A newspaper-like view of the brands you support, highlighting harmful, uncertain and stronger performers."}
-              </div>
-            </div>
+                <div className="section-strip">
+                  Your ethical
+                  <br />
+                  footprint
+                </div>
 
-            <div style={{ padding: 18 }}>
-              <MyListPanel
-                myBrands={myBrands}
-                db={db}
-                onAdd={addToList}
-                onReplace={(oldBrand, newBrand) => {
-                  setMyBrands((prev) => {
-                    const withoutOld = prev.filter((b) => b.name !== oldBrand.name);
-                    const alreadyPresent = withoutOld.some((b) => b.name === newBrand.name);
-                    return alreadyPresent ? withoutOld : [...withoutOld, newBrand];
-                  });
-                }}
-                onRemove={(name) =>
-                  setMyBrands((prev) => prev.filter((b) => b.name !== name))
-                }
-                onClear={() => setMyBrands([])}
-                onSelect={setSelected}
-                lang={lang}
-                ui={UI}
-                threshold={THRESHOLD}
-              />
+                <div className="section-subtitle">
+                  {lang === "it" ? "Stai sostenendo alcuni brand " : "You're supporting some "}
+                  <span className="accent">
+                    {lang === "it" ? "problematici" : "problematic brands"}
+                  </span>
+                  {lang === "it" ? "." : "."}
+                </div>
+
+                <p
+                  style={{
+                    marginTop: 16,
+                    maxWidth: 540,
+                    fontFamily: "'Bitter', serif",
+                    fontSize: 16,
+                    lineHeight: 1.45,
+                  }}
+                >
+                  {t.subtitle} {categories.map((c) => getCatLabel(c, lang).split(" ")[0]).join(" · ")}
+                </p>
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <ScoreStamp value={headlineScore} />
+              </div>
             </div>
           </div>
 
-          <div style={{ marginTop: 22, borderTop: `1px solid ${LINE}`, paddingTop: 22 }}>
+          <div style={{ marginBottom: 30 }}>
+            <MyListPanel
+              myBrands={myBrands}
+              db={db}
+              onAdd={addToList}
+              onReplace={(oldBrand, newBrand) => {
+                setMyBrands((prev) => {
+                  const withoutOld = prev.filter((b) => b.name !== oldBrand.name);
+                  const alreadyPresent = withoutOld.some((b) => b.name === newBrand.name);
+                  return alreadyPresent ? withoutOld : [...withoutOld, newBrand];
+                });
+              }}
+              onRemove={(name) => setMyBrands((prev) => prev.filter((b) => b.name !== name))}
+              onClear={() => setMyBrands([])}
+              onSelect={setSelected}
+              lang={lang}
+              ui={UI}
+              threshold={THRESHOLD}
+            />
+          </div>
+
+          <div className="paper-panel" style={{ padding: 22, marginBottom: 34 }}>
             <div
               style={{
+                position: "relative",
+                zIndex: 1,
                 display: "flex",
                 justifyContent: "space-between",
-                alignItems: "end",
-                gap: 12,
+                gap: 20,
+                alignItems: "flex-end",
                 flexWrap: "wrap",
-                marginBottom: 10,
+                marginBottom: 14,
               }}
             >
               <div>
                 <div
+                  className="label-stamp"
                   style={{
-                    fontSize: 12,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.09em",
-                    color: "rgba(18,16,13,0.55)",
-                    marginBottom: 7,
+                    background: "#e44723",
+                    color: "#fff5ea",
+                    display: "inline-block",
+                    padding: "8px 12px",
+                    border: "3px solid #181310",
+                    boxShadow: "4px 4px 0 #181310",
+                    marginBottom: 12,
                   }}
                 >
-                  {lang === "it" ? "Database brand" : "Brand database"}
+                  {lang === "it" ? "Archivio attivo" : "Active archive"}
                 </div>
                 <div
                   style={{
-                    fontFamily: "Georgia, 'Times New Roman', serif",
-                    fontWeight: 700,
-                    fontSize: 22,
-                    letterSpacing: "-0.04em",
+                    fontFamily: "'Bitter', serif",
+                    fontSize: 18,
+                    lineHeight: 1.3,
+                    maxWidth: 580,
                   }}
                 >
                   {lang === "it"
-                    ? "Esplora e confronta i marchi"
-                    : "Explore and compare brands"}
+                    ? "Cerca tra tutti i brand, confronta i punteggi e aggiungili alla tua lista etica."
+                    : "Search all brands, compare scores, and add them to your ethical list."}
                 </div>
               </div>
 
               <div
                 style={{
-                  fontSize: 12,
-                  color: "rgba(18,16,13,0.52)",
-                  textAlign: "right",
-                  lineHeight: 1.45,
+                  fontFamily: "'Archivo Narrow', sans-serif",
+                  fontWeight: 800,
+                  fontSize: 15,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.04em",
+                  opacity: 0.8,
                 }}
               >
                 {t.db_info(db.length, sectors.length, sourcesCount)}
               </div>
             </div>
 
-            <div
-              style={{
-                color: "rgba(18,16,13,0.72)",
-                fontSize: 14,
-                marginBottom: 14,
-                lineHeight: 1.5,
-              }}
-            >
-              {lang === "it"
-                ? "Cerca un brand, aggiungilo alla lista e scorri il ranking per settore in stile editoriale."
-                : "Search a brand, add it to your list, and browse the sector ranking with an editorial layout."}
-            </div>
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <input
+                ref={inputRef}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t.search_placeholder}
+                className="poster-input"
+              />
 
-            <div style={{ position: "relative", marginBottom: 10 }}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  background: "rgba(255,255,255,0.42)",
-                  border: `1px solid ${LINE}`,
-                  padding: "14px 16px",
-                }}
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  fill="none"
-                  stroke="rgba(18,16,13,0.48)"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.35-4.35" />
-                </svg>
-
-                <input
-                  ref={inputRef}
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder={t.search_placeholder}
+              {query && (
+                <button
+                  onClick={() => setQuery("")}
                   style={{
-                    flex: 1,
-                    background: "transparent",
-                    border: "none",
-                    color: INK,
-                    fontSize: 16,
-                    fontFamily: "'Inter', 'Arial', sans-serif",
+                    position: "absolute",
+                    right: 12,
+                    top: 10,
+                    border: "3px solid #181310",
+                    background: "#181310",
+                    color: "#f8f2e9",
+                    width: 40,
+                    height: 40,
+                    cursor: "pointer",
+                    fontSize: 22,
+                    fontWeight: 900,
                   }}
-                />
-
-                {query && (
-                  <button
-                    onClick={() => setQuery("")}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      color: "rgba(18,16,13,0.55)",
-                      cursor: "pointer",
-                      fontSize: 20,
-                      lineHeight: 1,
-                    }}
-                  >
-                    ×
-                  </button>
-                )}
-              </div>
+                >
+                  ×
+                </button>
+              )}
 
               {results.length > 0 && (
                 <div
                   style={{
-                    position: "absolute",
-                    top: "calc(100% + 8px)",
-                    left: 0,
-                    right: 0,
-                    background: "#f3eee6",
-                    border: `1px solid ${LINE}`,
-                    zIndex: 50,
-                    boxShadow: "0 18px 30px rgba(0,0,0,0.08)",
+                    marginTop: 14,
+                    border: "3px solid #181310",
+                    background: "#fbf7f0",
+                    boxShadow: "6px 6px 0 #181310",
+                    overflow: "hidden",
                   }}
                 >
                   {results.map((brand) => {
                     const score = getDisplayScore(brand);
                     const inList = myBrands.find((b) => b.name === brand.name);
+                    const scoreColor = getDisplayScoreColor(score);
 
                     return (
                       <div
                         key={brand.name}
-                        className="brand-row"
+                        className="search-row"
                         style={{
                           display: "grid",
-                          gridTemplateColumns: "40px 1fr auto auto",
-                          alignItems: "center",
+                          gridTemplateColumns: "58px 1fr auto auto",
                           gap: 14,
-                          padding: "12px 16px",
-                          cursor: "pointer",
-                          borderBottom: `1px solid ${LINE}`,
-                          transition: "background 0.15s",
+                          alignItems: "center",
+                          padding: "14px 16px",
+                          borderBottom: "2px solid #181310",
                         }}
-                        onClick={() => setSelected(brand)}
                       >
                         <div
                           style={{
-                            width: 40,
-                            height: 40,
+                            width: 48,
+                            height: 48,
                             borderRadius: "50%",
-                            background: `${getDisplayScoreColor(score)}20`,
-                            border: `1px solid ${getDisplayScoreColor(score)}55`,
+                            border: "3px solid #181310",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            fontSize: 16,
+                            background: "#f2eadf",
+                            fontSize: 20,
                           }}
                         >
                           {brand.logo}
                         </div>
 
-                        <div>
+                        <div
+                          onClick={() => setSelected(brand)}
+                          style={{ cursor: "pointer", minWidth: 0 }}
+                        >
                           <div
                             style={{
-                              fontWeight: 700,
-                              color: INK,
-                              fontSize: 16,
-                              marginBottom: 2,
+                              fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
+                              fontSize: 26,
+                              lineHeight: 1,
+                              letterSpacing: "-0.04em",
                             }}
                           >
                             {brand.name}
                           </div>
                           <div
                             style={{
-                              fontSize: 12,
-                              color: "rgba(18,16,13,0.56)",
-                              textTransform: "uppercase",
-                              letterSpacing: "0.04em",
+                              marginTop: 4,
+                              fontFamily: "'Bitter', serif",
+                              fontSize: 15,
+                              opacity: 0.8,
                             }}
                           >
                             {brand.sector}
                           </div>
                         </div>
 
-                        <div style={{ textAlign: "right", marginRight: 4 }}>
+                        <div style={{ textAlign: "right", minWidth: 70 }}>
                           <div
                             style={{
-                              fontSize: 24,
-                              fontWeight: 800,
-                              color: getDisplayScoreColor(score),
+                              fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
+                              fontSize: 34,
                               lineHeight: 0.9,
+                              color: scoreColor,
                             }}
                           >
                             {score ?? "—"}
                           </div>
-                          <div style={{ fontSize: 11, color: "rgba(18,16,13,0.5)" }}>/100</div>
+                          <div
+                            style={{
+                              fontWeight: 800,
+                              fontSize: 12,
+                              textTransform: "uppercase",
+                            }}
+                          >
+                            /100
+                          </div>
                         </div>
 
                         <button
-                          className="add-btn"
                           onClick={(e) => {
                             e.stopPropagation();
                             addToList(brand);
                           }}
+                          className="poster-button"
                           style={{
-                            background: inList ? GREEN : INK,
-                            border: "none",
-                            color: "#f5efe7",
-                            padding: "10px 14px",
-                            cursor: "pointer",
-                            fontSize: 11,
-                            fontWeight: 800,
-                            letterSpacing: "0.05em",
-                            textTransform: "uppercase",
-                            whiteSpace: "nowrap",
+                            background: inList ? "#181310" : "#f0c741",
+                            color: inList ? "#f8f2e9" : "#181310",
+                            minWidth: 142,
                           }}
                         >
-                          {inList
-                            ? lang === "it"
-                              ? "In lista"
-                              : "In list"
-                            : lang === "it"
-                              ? "Aggiungi"
-                              : "Add"}
+                          {inList ? "In list" : "Add brand"}
                         </button>
                       </div>
                     );
@@ -743,96 +626,67 @@ export default function App() {
             </div>
           </div>
 
-          <div style={{ marginTop: 38 }}>
+          <div style={{ marginTop: 18 }}>
             <div
               style={{
-                fontSize: 12,
-                letterSpacing: "0.09em",
-                color: "rgba(18,16,13,0.55)",
+                display: "inline-block",
+                background: "#efc640",
+                color: "#181310",
+                border: "3px solid #181310",
+                boxShadow: "4px 4px 0 #181310",
+                padding: "10px 14px",
+                marginBottom: 18,
+                fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
+                fontSize: 20,
                 textTransform: "uppercase",
-                marginBottom: 14,
+                letterSpacing: "-0.03em",
               }}
             >
               {t.ranking_title}
             </div>
 
-            <div
-              style={{
-                fontFamily: "Georgia, 'Times New Roman', serif",
-                fontSize: 32,
-                lineHeight: 0.96,
-                fontWeight: 700,
-                letterSpacing: "-0.05em",
-                marginBottom: 22,
-              }}
-            >
-              {lang === "it"
-                ? "Brand con una traccia migliore."
-                : "Brands with a better record."}
-            </div>
-
             {brandsBySector.map(({ sector, sectorIcon, brands }) => (
-              <div key={sector} style={{ borderTop: `1px solid ${LINE}` }}>
-                <SectorSection
-                  sector={sector}
-                  sectorIcon={sectorIcon}
-                  brands={brands}
-                  myBrands={myBrands}
-                  onAdd={addToList}
-                  onSelect={setSelected}
-                  lang={lang}
-                  defaultOpen={true}
-                />
-              </div>
+              <SectorSection
+                key={sector}
+                sector={sector}
+                sectorIcon={sectorIcon}
+                brands={brands}
+                myBrands={myBrands}
+                onAdd={addToList}
+                onSelect={setSelected}
+                lang={lang}
+                defaultOpen={true}
+              />
             ))}
           </div>
 
           <div
             style={{
               marginTop: 56,
-              borderTop: `1px solid ${LINE}`,
-              paddingTop: 20,
-              display: "flex",
-              justifyContent: "space-between",
-              gap: 16,
-              flexWrap: "wrap",
+              paddingTop: 22,
+              borderTop: "4px solid #181310",
+              fontFamily: "'Bitter', serif",
+              fontSize: 15,
+              lineHeight: 1.6,
             }}
           >
-            <div
-              style={{
-                fontSize: 13,
-                color: "rgba(18,16,13,0.66)",
-                lineHeight: 1.7,
-                maxWidth: 540,
-              }}
-            >
-              {t.footer.split("\n").map((line, i) => (
-                <span key={i}>
-                  {line}
-                  {i === 0 && <br />}
-                </span>
-              ))}
+            {t.footer.split("\n").map((line, i) => (
+              <div key={i}>{line}</div>
+            ))}
+            <div style={{ marginTop: 10 }}>
+              <a
+                href="/contribute.html"
+                style={{
+                  color: "#c63f1d",
+                  textDecoration: "none",
+                  fontWeight: 700,
+                }}
+              >
+                {lang === "it"
+                  ? "➕ Contribuisci · Segnala un errore · Aggiungi un brand"
+                  : "➕ Contribute · Report an error · Add a brand"}
+              </a>
             </div>
-
-            <a
-              href="/contribute.html"
-              style={{
-                alignSelf: "flex-start",
-                color: INK,
-                textDecoration: "none",
-                border: `1px solid ${LINE}`,
-                padding: "10px 14px",
-                fontSize: 11,
-                fontWeight: 800,
-                textTransform: "uppercase",
-                letterSpacing: "0.06em",
-                background: "rgba(255,255,255,0.36)",
-              }}
-            >
-              {lang === "it"
-                ? "Esplora e migliora le tue scelte"
-                : "Explore and improve your choices"}
-            </a>
           </div>
         </div>
 
