@@ -791,51 +791,45 @@ export default function MyListPanel({
             </div>
           </div>
 
-          <div
-            className="ep-score-badge"
-            style={{
-              alignSelf: "start",
-              justifySelf: "end",
-              width: 168,
-              height: 168,
-              borderRadius: "50%",
-              background:
-                "radial-gradient(circle at 50% 38%, #1f1f1f 0 46%, transparent 47%), linear-gradient(180deg, #f04d2e 0%, #c63722 100%)",
-              border: "8px solid rgba(0,0,0,0.84)",
-              boxShadow: "inset 0 0 0 10px rgba(255,255,255,0.05)",
-              position: "relative",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#fff",
-              transform: "rotate(-4deg)",
-            }}
-          >
-            <div style={{ textAlign: "center", marginTop: -8 }}>
-              <div
-                style={{
-                  fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-                  fontSize: 60,
-                  lineHeight: 0.9,
-                }}
-              >
-                {scoreValue}
-                <span style={{ fontSize: 28 }}>/100</span>
-              </div>
-              <div
-                style={{
-                  fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-                  fontSize: 14,
-                  lineHeight: 1,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  marginTop: 5,
-                }}
-              >
-                {lang === "it" ? "Brand etici" : "Brand ethics"}
-              </div>
-            </div>
-          </div>
+
+
+          
+<div
+  className="ep-score-badge"
+  style={{
+    alignSelf: "start",
+    justifySelf: "end",
+    width: 168,
+    height: 168,
+    borderRadius: "50%",
+    background: "linear-gradient(180deg, #f04d2e 0%, #c63722 100%)",
+    border: "8px solid rgba(0,0,0,0.84)",
+    boxShadow: "inset 0 0 0 10px rgba(255,255,255,0.05)",
+    position: "relative",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#fff",
+    transform: "rotate(-4deg)",
+  }}
+>
+  <div style={{ textAlign: "center", marginTop: -4 }}>
+    <div
+      style={{
+        fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+        fontSize: 60,
+        lineHeight: 0.9,
+      }}
+    >
+      {scoreValue}
+      <span style={{ fontSize: 28 }}>/100</span>
+    </div>
+  </div>
+</div>
+
+
+
+          
         </div>
 
         <div style={{ marginTop: 24 }}>
