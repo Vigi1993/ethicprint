@@ -335,10 +335,6 @@ export default function App() {
                   {t.subtitle} {categories.map((c) => getCatLabel(c, lang).split(" ")[0]).join(" · ")}
                 </p>
               </div>
-
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <ScoreStamp value={headlineScore} />
-              </div>
             </div>
           </div>
 
