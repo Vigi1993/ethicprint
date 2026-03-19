@@ -425,22 +425,45 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
             {t.my_list_title}
           </div>
       
+         <div
+  style={{
+    color: "#fff",
+    fontSize: 20,
+    fontWeight: 700,
+    fontFamily: "'DM Sans', sans-serif",
+    marginBottom: 6,
+    lineHeight: 1.4,
+  }}
+>
+  {isEmpty
+    ? (lang === "it"
+        ? "Le tue scelte quotidiane hanno un impatto."
+        : "Your everyday choices have an impact.")
+    : problematic.length > 0
+    ? (lang === "it"
+        ? "Alcuni dei tuoi brand stanno creando impatto negativo."
+        : "Some of your brands are causing harm.")
+    : (lang === "it"
+        ? "Stai facendo scelte migliori della media."
+        : "You’re making better choices than average.")}
+</div>
+          
           <div
             style={{
-              color: "#fff",
-              fontSize: 18,
-              fontWeight: 600,
+              color: "rgba(255,255,255,0.55)",
+              fontSize: 14,
               fontFamily: "'DM Sans', sans-serif",
-              marginBottom: 10,
+              marginBottom: 12,
+              lineHeight: 1.5,
             }}
           >
             {isEmpty
-              ? lang === "it"
-                ? "Inizia a costruire la tua impronta etica"
-                : "Start building your ethical footprint"
-              : lang === "it"
-              ? `Monitori ${myBrands.length} brand · ${problematic.length} richiedono attenzione`
-              : `You track ${myBrands.length} brands · ${problematic.length} need attention`}
+              ? (lang === "it"
+                  ? "Aggiungi i brand che usi per capire cosa stai supportando davvero."
+                  : "Add the brands you use to understand what you’re really supporting.")
+              : (lang === "it"
+                  ? "Ti mostriamo cosa c'è dietro ai brand che usi e come migliorare facilmente."
+                  : "We show what’s behind the brands you use — and how to improve it.")}
           </div>
       
           <div
@@ -690,7 +713,9 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
                   fontFamily: "'DM Mono', monospace",
                 }}
               >
-                {lang === "it" ? "Richiedono attenzione" : "Needs attention"}
+                {lang === "it" 
+                  ? "Brand con impatto negativo" 
+                  : "Brands causing harm"}
               </div>
 
               {problematic.length === 0 ? (
@@ -722,222 +747,327 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
                   
                     return (
                       
-                      <div
-                        key={b.name}
-                        onClick={() => onSelect(b)}
-                        className="footprint-brand-card"
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          gap: 14,
-                          padding: "14px",
-                          borderRadius: 14,
-                          background: "rgba(255,255,255,0.045)",
-                          border: "1px solid rgba(255,255,255,0.08)",
-                          cursor: "pointer",
-                          transition: "transform 0.15s ease, border-color 0.15s ease, background 0.15s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = "rgba(255,255,255,0.065)";
-                          e.currentTarget.style.borderColor = "rgba(99,202,183,0.22)";
-                          e.currentTarget.style.transform = "translateY(-1px)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = "rgba(255,255,255,0.045)";
-                          e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
-                          e.currentTarget.style.transform = "translateY(0)";
-                        }}
-                      >
-                      
-                        <div style={{ minWidth: 0, flex: 1 }}>
                           <div
+                            key={b.name}
+                            onClick={() => onSelect(b)}
+                            className="footprint-brand-card"
                             style={{
                               display: "flex",
-                              alignItems: "center",
-                              gap: 10,
-                              marginBottom: 8,
-                              flexWrap: "wrap",
+                              flexDirection: "column",
+                              gap: 14,
+                              padding: "16px 16px 15px",
+                              borderRadius: 0,
+                              background: "rgba(255,255,255,0.02)",
+                              borderLeft: "4px solid #D84F4F",
+                              borderTop: "1px solid rgba(255,255,255,0.08)",
+                              borderRight: "1px solid rgba(255,255,255,0.08)",
+                              borderBottom: "1px solid rgba(255,255,255,0.08)",
+                              cursor: "pointer",
+                              transition: "transform 0.15s ease, background 0.15s ease, border-color 0.15s ease",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+                              e.currentTarget.style.transform = "translateY(-1px)";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+                              e.currentTarget.style.transform = "translateY(0)";
                             }}
                           >
-                            <div style={{ fontSize: 16, minWidth: 18 }}>
-                              {b.insufficient_data ? "❔" : "⚠️"}
-                            </div>
-                  
                             <div
                               style={{
-                                color: "#fff",
-                                fontSize: 15,
-                                fontWeight: 700,
-                                fontFamily: "'DM Sans', sans-serif",
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "flex-start",
+                                gap: 12,
+                                flexWrap: "wrap",
                               }}
                             >
-                              {b.name}
+                              <div style={{ minWidth: 0, flex: 1 }}>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 10,
+                                    flexWrap: "wrap",
+                                    marginBottom: 6,
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      fontSize: 11,
+                                      textTransform: "uppercase",
+                                      letterSpacing: "0.08em",
+                                      color: "rgba(216,79,79,0.95)",
+                                      fontFamily: "'DM Mono', monospace",
+                                    }}
+                                  >
+                                    {lang === "it" ? "Da cambiare" : "Needs change"}
+                                  </div>
+                        
+                                  <div
+                                    style={{
+                                      fontSize: 11,
+                                      color: "rgba(255,255,255,0.35)",
+                                      fontFamily: "'DM Mono', monospace",
+                                    }}
+                                  >
+                                    {displayScore ?? "—"}/100
+                                  </div>
+                                </div>
+                        
+                                <div
+                                  style={{
+                                    color: "#fff",
+                                    fontSize: 18,
+                                    fontWeight: 700,
+                                    fontFamily: "'DM Sans', sans-serif",
+                                    lineHeight: 1.2,
+                                    marginBottom: 8,
+                                  }}
+                                >
+                                  {b.name}
+                                </div>
+                        
+                                <div
+                                  style={{
+                                    color: "rgba(255,255,255,0.88)",
+                                    fontSize: 14,
+                                    fontWeight: 600,
+                                    fontFamily: "'DM Sans', sans-serif",
+                                    marginBottom: 4,
+                                    lineHeight: 1.4,
+                                  }}
+                                >
+                                  {issueLabel}
+                                </div>
+                        
+                                <div
+                                  style={{
+                                    color: "rgba(255,255,255,0.58)",
+                                    fontSize: 13,
+                                    lineHeight: 1.55,
+                                    fontFamily: "'DM Sans', sans-serif",
+                                    maxWidth: 680,
+                                  }}
+                                >
+                                  {issueExplanation}
+                                </div>
+                              </div>
+                        
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onRemove(b.name);
+                                }}
+                                style={{
+                                  background: "none",
+                                  border: "none",
+                                  color: "rgba(255,255,255,0.24)",
+                                  cursor: "pointer",
+                                  fontSize: 16,
+                                  lineHeight: 1,
+                                  padding: 0,
+                                  flexShrink: 0,
+                                }}
+                                aria-label={`Remove ${b.name}`}
+                              >
+                                ×
+                              </button>
                             </div>
-                  
+                        
                             <div
                               style={{
-                                fontSize: 12,
-                                fontWeight: 700,
-                                color: getDisplayScoreColor(displayScore),
-                                fontFamily: "'DM Sans', sans-serif",
-                                padding: "4px 8px",
-                                borderRadius: 999,
-                                background: "rgba(255,255,255,0.03)",
-                                border: "1px solid rgba(255,255,255,0.06)",
+                                display: "grid",
+                                gridTemplateColumns: "1fr",
+                                gap: 10,
                               }}
                             >
-                              {displayScore ?? "—"} / 100
-                            </div>
-                          </div>
-                  
-                          <div
-                            style={{
-                              color: "rgba(255,255,255,0.86)",
-                              fontSize: 13,
-                              fontWeight: 600,
-                              fontFamily: "'DM Sans', sans-serif",
-                              marginBottom: 4,
-                            }}
-                          >
-                            {issueLabel}
-                          </div>
-                                              
-                            <div
-                              style={{
-                                color: "rgba(255,255,255,0.58)",
-                                fontSize: 12,
-                                lineHeight: 1.5,
-                                fontFamily: "'DM Sans', sans-serif",
-                                marginBottom: 6,
-                              }}
-                            >
-                              {issueExplanation}
-                            </div>
-                                                        
-                            <div
-                              style={{
-                                color: "rgba(255,255,255,0.8)",
-                                fontSize: 12,
-                                lineHeight: 1.5,
-                                fontFamily: "'DM Sans', sans-serif",
-                                marginBottom: alternativeName ? 10 : 0,
-                              }}
-                            >
-                              <span style={{ color: "rgba(255,255,255,0.42)" }}>
-                                {lang === "it" ? "Il tuo impatto: " : "Your impact: "}
-                              </span>
-                              {impactCopy}
-                            </div>
-                                          
-                          {alternativeName && (
-                            <div>
                               <div
                                 style={{
-                                  marginBottom: 8,
+                                  padding: "10px 12px",
+                                  background: "rgba(216,79,79,0.08)",
+                                  border: "1px solid rgba(216,79,79,0.18)",
                                 }}
                               >
                                 <div
                                   style={{
-                                    color: "#63CAB7",
-                                    fontSize: 12,
-                                    fontWeight: 600,
-                                    fontFamily: "'DM Sans', sans-serif",
-                                    marginBottom: alternativeAdvantageCopy ? 2 : 0,
+                                    fontSize: 10,
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.08em",
+                                    color: "rgba(255,255,255,0.42)",
+                                    fontFamily: "'DM Mono', monospace",
+                                    marginBottom: 6,
                                   }}
                                 >
-                                  {lang === "it"
-                                    ? `Alternativa migliore: ${alternativeName}`
-                                    : `Better alternative: ${alternativeName}`}
+                                  {lang === "it" ? "Cosa sostiene la tua scelta" : "What your choice supports"}
                                 </div>
-                          
-                                {alternativeAdvantageCopy && (
-                                  <div
-                                    style={{
-                                      color: "rgba(255,255,255,0.52)",
-                                      fontSize: 11,
-                                      fontFamily: "'DM Sans', sans-serif",
-                                      lineHeight: 1.4,
-                                    }}
-                                  >
-                                    {alternativeAdvantageCopy}
-                                  </div>
-                                )}
+                        
+                                <div
+                                  style={{
+                                    color: "#fff",
+                                    fontSize: 13,
+                                    lineHeight: 1.6,
+                                    fontFamily: "'DM Sans', sans-serif",
+                                  }}
+                                >
+                                  {impactCopy}
+                                </div>
                               </div>
-                          
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 8,
-                                  flexWrap: "wrap",
-                                }}
-                              >
-                                {alternativeDelta !== null && (
+                        
+                              {alternativeName && (
+                                <div
+                                  style={{
+                                    padding: "10px 12px",
+                                    background: "rgba(99,202,183,0.06)",
+                                    border: "1px solid rgba(99,202,183,0.16)",
+                                  }}
+                                >
                                   <div
                                     style={{
-                                      fontSize: 11,
-                                      color: "rgba(255,255,255,0.5)",
-                                      border: "1px solid rgba(255,255,255,0.08)",
-                                      background: "rgba(255,255,255,0.03)",
-                                      padding: "4px 8px",
-                                      borderRadius: 999,
-                                      fontFamily: "'DM Sans', sans-serif",
+                                      fontSize: 10,
+                                      textTransform: "uppercase",
+                                      letterSpacing: "0.08em",
+                                      color: "rgba(99,202,183,0.92)",
+                                      fontFamily: "'DM Mono', monospace",
+                                      marginBottom: 6,
                                     }}
                                   >
-                                    {lang === "it"
-                                      ? `${alternativeDelta} punti meglio`
-                                      : `${alternativeDelta} points better`}
+                                    {lang === "it" ? "Alternativa migliore" : "Better alternative"}
                                   </div>
-                                )}
-                          
-                                {replaceBrand ? (
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      onReplace(b, replaceBrand);
-                                    }}
+                        
+                                  <div
                                     style={{
-                                      background: "#63CAB7",
-                                      border: "1px solid rgba(99,202,183,0.35)",
-                                      borderRadius: 8,
-                                      padding: "6px 10px",
-                                      color: "#08110f",
-                                      cursor: "pointer",
-                                      fontSize: 11,
+                                      color: "#fff",
+                                      fontSize: 15,
                                       fontWeight: 700,
                                       fontFamily: "'DM Sans', sans-serif",
-                                      whiteSpace: "nowrap",
+                                      marginBottom: alternativeAdvantageCopy ? 4 : 8,
                                     }}
                                   >
-                                    {lang === "it"
-                                      ? `Sostituisci con ${replaceBrand.name}`
-                                      : `Replace with ${replaceBrand.name}`}
-                                  </button>
-                                ) : null}
-                          
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onSelect(b);
-                                  }}
-                                  style={{
-                                    background: "rgba(255,255,255,0.04)",
-                                    border: "1px solid rgba(255,255,255,0.08)",
-                                    borderRadius: 8,
-                                    padding: "6px 10px",
-                                    color: "rgba(255,255,255,0.72)",
-                                    cursor: "pointer",
-                                    fontSize: 11,
-                                    fontFamily: "'DM Sans', sans-serif",
-                                    whiteSpace: "nowrap",
-                                  }}
-                                >
-                                  {lang === "it" ? "Apri dettagli →" : "Open details →"}
-                                </button>
+                                    {alternativeName}
+                                  </div>
+                        
+                                  {alternativeAdvantageCopy && (
+                                    <div
+                                      style={{
+                                        color: "rgba(255,255,255,0.62)",
+                                        fontSize: 12,
+                                        lineHeight: 1.5,
+                                        fontFamily: "'DM Sans', sans-serif",
+                                        marginBottom: 10,
+                                      }}
+                                    >
+                                      {alternativeAdvantageCopy}
+                                    </div>
+                                  )}
+                        
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: 8,
+                                      flexWrap: "wrap",
+                                    }}
+                                  >
+                                    {alternativeDelta !== null && (
+                                      <div
+                                        style={{
+                                          fontSize: 11,
+                                          color: "rgba(255,255,255,0.56)",
+                                          border: "1px solid rgba(255,255,255,0.08)",
+                                          background: "rgba(255,255,255,0.03)",
+                                          padding: "4px 8px",
+                                          fontFamily: "'DM Sans', sans-serif",
+                                        }}
+                                      >
+                                        {lang === "it"
+                                          ? `${alternativeDelta} punti meglio`
+                                          : `${alternativeDelta} points better`}
+                                      </div>
+                                    )}
+                        
+                                    {replaceBrand ? (
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          onReplace(b, replaceBrand);
+                                        }}
+                                        style={{
+                                          background: "#63CAB7",
+                                          border: "1px solid rgba(99,202,183,0.35)",
+                                          padding: "8px 12px",
+                                          color: "#08110f",
+                                          cursor: "pointer",
+                                          fontSize: 12,
+                                          fontWeight: 700,
+                                          fontFamily: "'DM Sans', sans-serif",
+                                          whiteSpace: "nowrap",
+                                        }}
+                                      >
+                                        {lang === "it"
+                                          ? `Passa a ${replaceBrand.name}`
+                                          : `Switch to ${replaceBrand.name}`}
+                                      </button>
+                                    ) : null}
+                        
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        onSelect(b);
+                                      }}
+                                      style={{
+                                        background: "transparent",
+                                        border: "1px solid rgba(255,255,255,0.1)",
+                                        padding: "8px 12px",
+                                        color: "rgba(255,255,255,0.78)",
+                                        cursor: "pointer",
+                                        fontSize: 12,
+                                        fontFamily: "'DM Sans', sans-serif",
+                                        whiteSpace: "nowrap",
+                                      }}
+                                    >
+                                      {lang === "it" ? "Apri dettagli" : "Open details"}
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                        
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                gap: 10,
+                                flexWrap: "wrap",
+                                paddingTop: 2,
+                              }}
+                            >
+                              <div
+                                style={{
+                                  fontSize: 11,
+                                  color: "rgba(255,255,255,0.45)",
+                                  fontFamily: "'DM Sans', sans-serif",
+                                }}
+                              >
+                                {getDisplayLabel(b, lang)}
+                              </div>
+                        
+                              <div
+                                style={{
+                                  fontSize: 11,
+                                  color: "rgba(255,255,255,0.28)",
+                                  fontFamily: "'DM Mono', monospace",
+                                  textTransform: "uppercase",
+                                  letterSpacing: "0.06em",
+                                }}
+                              >
+                                {lang === "it" ? "Apri per fonti e dettagli" : "Open for sources and details"}
                               </div>
                             </div>
-                          )}
-                        </div>
+                          </div>
+                        );
 
                           <div
                             style={{
@@ -1007,7 +1137,9 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
       fontFamily: "'DM Mono', monospace",
     }}
   >
-    {lang === "it" ? "Evidenza limitata" : "Not enough evidence"}
+    {lang === "it" 
+        ? "Trasparenza insufficiente" 
+        : "Lack of transparency"}
   </div>
 
   {insufficient.length === 0 ? (
@@ -1160,7 +1292,9 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
                     fontFamily: "'DM Mono', monospace",
                   }}
                 >
-                  {lang === "it" ? "Brand solidi" : "Stronger brands"}
+                  {lang === "it" 
+                    ? "Scelte migliori" 
+                    : "Better choices"}
                 </div>
 
               {positive.length === 0 ? (
