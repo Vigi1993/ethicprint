@@ -391,1048 +391,347 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
   const shouldShowResults = localQuery.trim().length > 0 || activeHint !== null;
 
   return (
+  <section
+    style={{
+      marginTop: 24,
+      borderTop: "2px solid rgba(255,255,255,0.12)",
+      borderBottom: "1px solid rgba(255,255,255,0.08)",
+      paddingTop: 22,
+      paddingBottom: 26,
+    }}
+  >
     <div
       style={{
-        marginTop: 18,
-        background: "rgba(255,255,255,0.04)",
-        border: "1px solid rgba(255,255,255,0.08)",
-        borderRadius: 16,
-        padding: 18,
-        backdropFilter: "blur(10px)",
+        display: "grid",
+        gridTemplateColumns: "minmax(0, 1.15fr) minmax(280px, 0.85fr)",
+        gap: 24,
+        alignItems: "start",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          gap: 14,
-          marginBottom: 20,
-          flexWrap: "wrap",
-        }}
-      >
-        <div style={{ flex: 1, minWidth: 280 }}>
+      <div style={{ minWidth: 0 }}>
+        <div
+          style={{
+            fontSize: 11,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "rgba(216,79,79,0.92)",
+            fontFamily: "'DM Mono', monospace",
+            marginBottom: 10,
+          }}
+        >
+          {t.my_list_title}
+        </div>
+
+        <div
+          style={{
+            color: "#fff",
+            fontSize: "clamp(28px, 4vw, 42px)",
+            fontWeight: 700,
+            lineHeight: 1.02,
+            letterSpacing: "-0.04em",
+            fontFamily: "'DM Sans', sans-serif",
+            maxWidth: 640,
+            marginBottom: 12,
+          }}
+        >
+          {isEmpty
+            ? lang === "it"
+              ? "Le tue scelte quotidiane hanno un impatto."
+              : "Your everyday choices have an impact."
+            : problematic.length > 0
+            ? lang === "it"
+              ? "Alcuni dei brand che usi stanno sostenendo sistemi problematici."
+              : "Some of the brands you use are supporting problematic systems."
+            : lang === "it"
+            ? "Stai facendo scelte migliori, ma puoi ancora alzare il livello."
+            : "You’re making better choices, but you can still raise the bar."}
+        </div>
+
+        <div
+          style={{
+            color: "rgba(255,255,255,0.62)",
+            fontSize: 15,
+            lineHeight: 1.65,
+            fontFamily: "'DM Sans', sans-serif",
+            maxWidth: 620,
+            marginBottom: 16,
+          }}
+        >
+          {isEmpty
+            ? lang === "it"
+              ? "Aggiungi i brand che usi davvero per capire cosa stai supportando e dove puoi cambiare facilmente."
+              : "Add the brands you actually use to understand what you support and where you can change more easily."
+            : lang === "it"
+            ? "Qui vedi dove emergono criticità, dove manca trasparenza e quali alternative possono migliorare davvero la tua footprint."
+            : "Here you can see where concerns emerge, where transparency is missing, and which alternatives can genuinely improve your footprint."}
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            gap: 10,
+            flexWrap: "wrap",
+            marginBottom: 18,
+          }}
+        >
           <div
             style={{
-              fontSize: 13,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.45)",
-              fontFamily: "'DM Mono', monospace",
-              marginBottom: 8,
+              padding: "8px 10px",
+              border: "1px solid rgba(255,255,255,0.1)",
+              background: "rgba(255,255,255,0.02)",
+              minWidth: 110,
             }}
           >
-            {t.my_list_title}
-          </div>
-      
             <div
               style={{
-                color: "#fff",
-                fontSize: 20,
-                fontWeight: 700,
-                fontFamily: "'DM Sans', sans-serif",
-                marginBottom: 6,
-                lineHeight: 1.4,
+                fontSize: 10,
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                color: "rgba(255,255,255,0.34)",
+                fontFamily: "'DM Mono', monospace",
+                marginBottom: 4,
               }}
             >
-              {isEmpty
-                ? (lang === "it"
-                    ? "Le tue scelte quotidiane hanno un impatto."
-                    : "Your everyday choices have an impact.")
-                : problematic.length > 0
-                ? (lang === "it"
-                    ? "Alcuni dei tuoi brand stanno creando impatto negativo."
-                    : "Some of your brands are causing harm.")
-                : (lang === "it"
-                    ? "Stai facendo scelte migliori della media."
-                    : "You’re making better choices than average.")}
+              {lang === "it" ? "Media" : "Average"}
             </div>
-                
-                <div
-                  style={{
-                    color: "rgba(255,255,255,0.55)",
-                    fontSize: 14,
-                    fontFamily: "'DM Sans', sans-serif",
-                    marginBottom: 12,
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {isEmpty
-                    ? (lang === "it"
-                        ? "Aggiungi i brand che usi per capire cosa stai supportando davvero."
-                        : "Add the brands you use to understand what you’re really supporting.")
-                    : (lang === "it"
-                        ? "Ti mostriamo cosa c'è dietro ai brand che usi e come migliorare facilmente."
-                        : "We show what’s behind the brands you use — and how to improve it.")}
-                </div>
-      
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              flexWrap: "wrap",
-              marginBottom: 10,
-            }}
-          >
+
             <div
               style={{
-                fontSize: 28,
+                fontSize: 24,
                 fontWeight: 700,
+                lineHeight: 1,
                 color: getDisplayScoreColor(publicAverage),
                 fontFamily: "'DM Sans', sans-serif",
-                lineHeight: 1,
               }}
             >
               {publicAverage ?? "—"}
               <span
                 style={{
-                  fontSize: 13,
-                  color: "rgba(255,255,255,0.35)",
-                  marginLeft: 6,
+                  fontSize: 11,
+                  color: "rgba(255,255,255,0.34)",
+                  marginLeft: 5,
                 }}
               >
-                / 100
+                /100
               </span>
             </div>
-      
-          {publicAverage !== null && (
+          </div>
+
+          <div
+            style={{
+              padding: "8px 10px",
+              border: "1px solid rgba(255,255,255,0.1)",
+              background: "rgba(255,255,255,0.02)",
+              minWidth: 110,
+            }}
+          >
             <div
               style={{
-                fontSize: 12,
-                color: "rgba(255,255,255,0.75)",
-                fontFamily: "'DM Sans', sans-serif",
-                padding: "4px 8px",
-                borderRadius: 999,
-                border: "1px solid rgba(255,255,255,0.08)",
-                background: "rgba(255,255,255,0.03)",
+                fontSize: 10,
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                color: "rgba(255,255,255,0.34)",
+                fontFamily: "'DM Mono', monospace",
+                marginBottom: 4,
               }}
             >
-              {getDisplayLabel(
-                {
-                  public_score: publicAverage,
-                  insufficient_data: false,
-                },
-                lang
-              )}
+              {lang === "it" ? "Brand tracciati" : "Tracked brands"}
             </div>
-          )}
-          </div>
-      
-          <div
-            style={{
-              display: "flex",
-              gap: 8,
-              flexWrap: "wrap",
-              marginBottom: 10,
-            }}
-          >
-            {categories.map((cat) => {
-          const publicCatScore =
-            isEmpty || typeof avgScores[cat.key] !== "number"
-              ? null
-              : rawCategoryScoreToPublic(avgScores[cat.key]);
-      
-              return (
-                <div
-                  key={cat.key}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    padding: "6px 8px",
-                    borderRadius: 999,
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: 12,
-                      color: "rgba(255,255,255,0.6)",
-                    }}
-                  >
-                    {cat.icon}
-                  </span>
-      
-                  <span
-                    style={{
-                      fontSize: 12,
-                      color: "rgba(255,255,255,0.6)",
-                    }}
-                  >
-                    {getCatLabel(cat, lang)}
-                  </span>
-      
-                  <span
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 700,
-                      color: getDisplayScoreColor(publicCatScore),
-                    }}
-                  >
-                    {publicCatScore ?? "—"}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-      
-          <a
-            href="/sources.html"
-            style={{
-              fontSize: 12,
-              color: "rgba(99,202,183,0.72)",
-              textDecoration: "none",
-              fontFamily: "'DM Sans', sans-serif",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = "#63CAB7";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = "rgba(99,202,183,0.72)";
-            }}
-          >
-            {lang === "it"
-              ? "Come funzionano i punteggi? →"
-              : "How do scores work? →"}
-          </a>
-        </div>
-      
-        {!isEmpty && (
-          <button
-            onClick={onClear}
-            style={{
-              background: "transparent",
-              border: "1px solid rgba(255,255,255,0.12)",
-              color: "rgba(255,255,255,0.65)",
-              padding: "8px 12px",
-              borderRadius: 8,
-              cursor: "pointer",
-              fontSize: 12,
-              fontFamily: "'DM Sans', sans-serif",
-            }}
-          >
-            {t.clear_list}
-          </button>
-        )}
-      </div>
 
-              <div style={{ marginBottom: 20 }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 12,
-              marginBottom: 10,
-              flexWrap: "wrap",
-            }}
-          >
             <div
               style={{
+                fontSize: 24,
+                fontWeight: 700,
+                lineHeight: 1,
                 color: "#fff",
-                fontSize: 14,
-                fontWeight: 600,
                 fontFamily: "'DM Sans', sans-serif",
               }}
             >
-              {lang === "it" ? "I tuoi brand" : "Your brands"}
+              {myBrands.length}
             </div>
-        
-            {!isEmpty && (
-              <div
-                style={{
-                  color: "rgba(255,255,255,0.42)",
-                  fontSize: 12,
-                  fontFamily: "'DM Sans', sans-serif",
-                }}
-              >
-                {lang === "it"
-                ? "Clicca un brand per aprire dettagli, fonti e note"
-                : "Click a brand to open details, sources, and notes"}
-              </div>
-            )}
           </div>
-            {isEmpty ? (
-              <>
-                <div
-                  style={{
-                    padding: "8px 0 4px",
-                    color: "#fff",
-                    fontSize: 15,
-                    lineHeight: 1.5,
-                    fontWeight: 600,
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}
-                >
-                  {lang === "it"
-                    ? "Inizia dai brand che usi davvero ogni settimana."
-                    : "Start with the brands you actually use every week."}
-                </div>
-            
-                <div
-                  style={{
-                    padding: "0 0 4px",
-                    color: "rgba(255,255,255,0.62)",
-                    fontSize: 14,
-                    lineHeight: 1.6,
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}
-                >
-                  {lang === "it"
-                    ? "Ti mostreremo il loro giudizio etico, cosa non va quando emergono criticità, e alternative migliori quando servono."
-                    : "We’ll show their ethical standing, what’s problematic when issues emerge, and better alternatives when needed."}
-                </div>
-            
-                <div
-                  style={{
-                    padding: "2px 0 10px",
-                    color: "rgba(255,255,255,0.42)",
-                    fontSize: 12,
-                    lineHeight: 1.5,
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}
-                >
-                  {lang === "it"
-                    ? "Dopo averli aggiunti, puoi cliccare su ogni brand per vedere fonti, note e dettagli del punteggio."
-                    : "Once added, you can click any brand to see sources, notes, and scoring details."}
-                </div>
-              </>
-            ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-            <div>
-              <div
-                style={{
-                  fontSize: 12,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                  color: "rgba(255,255,255,0.45)",
-                  marginBottom: 8,
-                  fontFamily: "'DM Mono', monospace",
-                }}
-              >
-                {lang === "it" 
-                  ? "Brand con impatto negativo" 
-                  : "Brands causing harm"}
-              </div>
 
-              {problematic.length === 0 ? (
-                <div
-                  style={{
-                    color: "rgba(255,255,255,0.6)",
-                    fontSize: 13,
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}
-                >
-                  {lang === "it"
-                    ? "Nessun brand problematico per ora."
-                    : "No problematic brands for now."}
-                </div>
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {problematic.map((b) => {
-                    const displayScore = getDisplayScore(b);
-                    const issueLabel = getIssueLabel(b, categories, lang);
-                    const issueExplanation = getIssueExplanation(b, categories, lang);
-                    const impactCopy = getImpactCopy(b, categories, lang);
-                    const topAlternative = getTopAlternative(b);
-                    const alternativeName = getAlternativeName(topAlternative);
-                    const alternativeDelta = getAlternativeDelta(b);
-                    const replaceBrand = findAlternativeInDb(b, db);
-                    const alternativeAdvantageCopy = replaceBrand
-                      ? getAlternativeAdvantageCopy(b, replaceBrand, categories, lang)
-                      : null;
-                  
-return (
-  <div
-    key={b.name}
-    onClick={() => onSelect(b)}
-    className="footprint-brand-card"
-    style={{
-      display: "flex",
-      flexDirection: "column",
-      gap: 14,
-      padding: "16px 16px 15px",
-      borderRadius: 0,
-      background: "rgba(255,255,255,0.02)",
-      borderLeft: "4px solid #D84F4F",
-      borderTop: "1px solid rgba(255,255,255,0.08)",
-      borderRight: "1px solid rgba(255,255,255,0.08)",
-      borderBottom: "1px solid rgba(255,255,255,0.08)",
-      cursor: "pointer",
-      transition: "transform 0.15s ease, background 0.15s ease, border-color 0.15s ease",
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-      e.currentTarget.style.transform = "translateY(-1px)";
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.background = "rgba(255,255,255,0.02)";
-      e.currentTarget.style.transform = "translateY(0)";
-    }}
-  >
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-        gap: 12,
-        flexWrap: "wrap",
-      }}
-    >
-      <div style={{ minWidth: 0, flex: 1 }}>
+          <div
+            style={{
+              padding: "8px 10px",
+              border: "1px solid rgba(216,79,79,0.22)",
+              background: "rgba(216,79,79,0.06)",
+              minWidth: 140,
+            }}
+          >
+            <div
+              style={{
+                fontSize: 10,
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                color: "rgba(255,255,255,0.34)",
+                fontFamily: "'DM Mono', monospace",
+                marginBottom: 4,
+              }}
+            >
+              {lang === "it" ? "Da cambiare" : "Need change"}
+            </div>
+
+            <div
+              style={{
+                fontSize: 24,
+                fontWeight: 700,
+                lineHeight: 1,
+                color: "#D84F4F",
+                fontFamily: "'DM Sans', sans-serif",
+              }}
+            >
+              {problematic.length}
+            </div>
+          </div>
+        </div>
+
         <div
           style={{
             display: "flex",
-            alignItems: "center",
-            gap: 10,
+            gap: 8,
             flexWrap: "wrap",
-            marginBottom: 6,
+            marginBottom: 16,
           }}
         >
-          <div
-            style={{
-              fontSize: 11,
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-              color: "rgba(216,79,79,0.95)",
-              fontFamily: "'DM Mono', monospace",
-            }}
-          >
-            {lang === "it" ? "Da cambiare" : "Needs change"}
-          </div>
+          {categories.map((cat) => {
+            const publicCatScore =
+              isEmpty || typeof avgScores[cat.key] !== "number"
+                ? null
+                : rawCategoryScoreToPublic(avgScores[cat.key]);
 
-          <div
-            style={{
-              fontSize: 11,
-              color: "rgba(255,255,255,0.35)",
-              fontFamily: "'DM Mono', monospace",
-            }}
-          >
-            {displayScore ?? "—"}/100
-          </div>
+            return (
+              <div
+                key={cat.key}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "7px 9px",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  background: "rgba(255,255,255,0.02)",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: 12,
+                    color: "rgba(255,255,255,0.56)",
+                  }}
+                >
+                  {cat.icon}
+                </span>
+
+                <span
+                  style={{
+                    fontSize: 12,
+                    color: "rgba(255,255,255,0.56)",
+                    fontFamily: "'DM Sans', sans-serif",
+                  }}
+                >
+                  {getCatLabel(cat, lang)}
+                </span>
+
+                <span
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: getDisplayScoreColor(publicCatScore),
+                    fontFamily: "'DM Sans', sans-serif",
+                  }}
+                >
+                  {publicCatScore ?? "—"}
+                </span>
+              </div>
+            );
+          })}
         </div>
 
+        <a
+          href="/sources.html"
+          style={{
+            fontSize: 12,
+            color: "rgba(99,202,183,0.82)",
+            textDecoration: "none",
+            fontFamily: "'DM Sans', sans-serif",
+          }}
+        >
+          {lang === "it"
+            ? "Come leggiamo punteggi e fonti →"
+            : "How we read scores and sources →"}
+        </a>
+      </div>
+
+      <aside
+        style={{
+          minWidth: 0,
+          borderLeft: "1px solid rgba(255,255,255,0.08)",
+          paddingLeft: 20,
+        }}
+      >
         <div
           style={{
-            color: "#fff",
-            fontSize: 18,
-            fontWeight: 700,
-            fontFamily: "'DM Sans', sans-serif",
-            lineHeight: 1.2,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            gap: 10,
             marginBottom: 8,
           }}
         >
-          {b.name}
-        </div>
-
-        <div
-          style={{
-            color: "rgba(255,255,255,0.88)",
-            fontSize: 14,
-            fontWeight: 600,
-            fontFamily: "'DM Sans', sans-serif",
-            marginBottom: 4,
-            lineHeight: 1.4,
-          }}
-        >
-          {issueLabel}
-        </div>
-
-        <div
-          style={{
-            color: "rgba(255,255,255,0.58)",
-            fontSize: 13,
-            lineHeight: 1.55,
-            fontFamily: "'DM Sans', sans-serif",
-            maxWidth: 680,
-          }}
-        >
-          {issueExplanation}
-        </div>
-      </div>
-
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onRemove(b.name);
-        }}
-        style={{
-          background: "none",
-          border: "none",
-          color: "rgba(255,255,255,0.24)",
-          cursor: "pointer",
-          fontSize: 16,
-          lineHeight: 1,
-          padding: 0,
-          flexShrink: 0,
-        }}
-        aria-label={`Remove ${b.name}`}
-      >
-        ×
-      </button>
-    </div>
-
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr",
-        gap: 10,
-      }}
-    >
-      <div
-        style={{
-          padding: "10px 12px",
-          background: "rgba(216,79,79,0.08)",
-          border: "1px solid rgba(216,79,79,0.18)",
-        }}
-      >
-        <div
-          style={{
-            fontSize: 10,
-            textTransform: "uppercase",
-            letterSpacing: "0.08em",
-            color: "rgba(255,255,255,0.42)",
-            fontFamily: "'DM Mono', monospace",
-            marginBottom: 6,
-          }}
-        >
-          {lang === "it" ? "Cosa sostiene la tua scelta" : "What your choice supports"}
-        </div>
-
-        <div
-          style={{
-            color: "#fff",
-            fontSize: 13,
-            lineHeight: 1.6,
-            fontFamily: "'DM Sans', sans-serif",
-          }}
-        >
-          {impactCopy}
-        </div>
-      </div>
-
-      {alternativeName && (
-        <div
-          style={{
-            padding: "10px 12px",
-            background: "rgba(99,202,183,0.06)",
-            border: "1px solid rgba(99,202,183,0.16)",
-          }}
-        >
-          <div
-            style={{
-              fontSize: 10,
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-              color: "rgba(99,202,183,0.92)",
-              fontFamily: "'DM Mono', monospace",
-              marginBottom: 6,
-            }}
-          >
-            {lang === "it" ? "Alternativa migliore" : "Better alternative"}
-          </div>
-
-          <div
-            style={{
-              color: "#fff",
-              fontSize: 15,
-              fontWeight: 700,
-              fontFamily: "'DM Sans', sans-serif",
-              marginBottom: alternativeAdvantageCopy ? 4 : 8,
-            }}
-          >
-            {alternativeName}
-          </div>
-
-          {alternativeAdvantageCopy && (
+          <div>
             <div
               style={{
-                color: "rgba(255,255,255,0.62)",
-                fontSize: 12,
-                lineHeight: 1.5,
+                color: "#fff",
+                fontSize: 15,
+                fontWeight: 700,
                 fontFamily: "'DM Sans', sans-serif",
-                marginBottom: 10,
+                marginBottom: 4,
               }}
             >
-              {alternativeAdvantageCopy}
+              {lang === "it" ? "Aggiungi brand che usi" : "Add brands you use"}
             </div>
-          )}
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              flexWrap: "wrap",
-            }}
-          >
-            {alternativeDelta !== null && (
-              <div
-                style={{
-                  fontSize: 11,
-                  color: "rgba(255,255,255,0.56)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  background: "rgba(255,255,255,0.03)",
-                  padding: "4px 8px",
-                  fontFamily: "'DM Sans', sans-serif",
-                }}
-              >
-                {lang === "it"
-                  ? `${alternativeDelta} punti meglio`
-                  : `${alternativeDelta} points better`}
-              </div>
-            )}
-
-            {replaceBrand ? (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onReplace(b, replaceBrand);
-                }}
-                style={{
-                  background: "#63CAB7",
-                  border: "1px solid rgba(99,202,183,0.35)",
-                  padding: "8px 12px",
-                  color: "#08110f",
-                  cursor: "pointer",
-                  fontSize: 12,
-                  fontWeight: 700,
-                  fontFamily: "'DM Sans', sans-serif",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {lang === "it"
-                  ? `Passa a ${replaceBrand.name}`
-                  : `Switch to ${replaceBrand.name}`}
-              </button>
-            ) : null}
-
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onSelect(b);
+            <div
+              style={{
+                color: "rgba(255,255,255,0.5)",
+                fontSize: 12,
+                lineHeight: 1.55,
+                fontFamily: "'DM Sans', sans-serif",
+                maxWidth: 360,
               }}
+            >
+              {lang === "it"
+                ? "Parti dai brand che usi davvero ogni settimana. Più la lista è reale, più la footprint è utile."
+                : "Start with the brands you actually use every week. The more real your list is, the more useful your footprint becomes."}
+            </div>
+          </div>
+
+          {!isEmpty && (
+            <button
+              onClick={onClear}
               style={{
                 background: "transparent",
-                border: "1px solid rgba(255,255,255,0.1)",
-                padding: "8px 12px",
-                color: "rgba(255,255,255,0.78)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                color: "rgba(255,255,255,0.62)",
+                padding: "7px 10px",
                 cursor: "pointer",
-                fontSize: 12,
+                fontSize: 11,
                 fontFamily: "'DM Sans', sans-serif",
-                whiteSpace: "nowrap",
+                flexShrink: 0,
               }}
             >
-              {lang === "it" ? "Apri dettagli" : "Open details"}
+              {t.clear_list}
             </button>
-          </div>
+          )}
         </div>
-      )}
-    </div>
-
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: 10,
-        flexWrap: "wrap",
-        paddingTop: 2,
-      }}
-    >
-      <div
-        style={{
-          fontSize: 11,
-          color: "rgba(255,255,255,0.45)",
-          fontFamily: "'DM Sans', sans-serif",
-        }}
-      >
-        {getDisplayLabel(b, lang)}
-      </div>
-
-      <div
-        style={{
-          fontSize: 11,
-          color: "rgba(255,255,255,0.28)",
-          fontFamily: "'DM Mono', monospace",
-          textTransform: "uppercase",
-          letterSpacing: "0.06em",
-        }}
-      >
-        {lang === "it" ? "Apri per fonti e dettagli" : "Open for sources and details"}
-      </div>
-    </div>
-  </div>
-);
-                  
-                  })}
-                </div>
-              )}
-            </div>
-
-<div>
-  <div
-    style={{
-      fontSize: 11,
-      textTransform: "uppercase",
-      letterSpacing: "0.08em",
-      color: "rgba(255,255,255,0.36)",
-      marginBottom: 8,
-      fontFamily: "'DM Mono', monospace",
-    }}
-  >
-    {lang === "it" 
-      ? "Trasparenza insufficiente" 
-      : "Lack of transparency"}
-  </div>
-
-  {insufficient.length === 0 ? (
-    <div
-      style={{
-        color: "rgba(255,255,255,0.6)",
-        fontSize: 13,
-        fontFamily: "'DM Sans', sans-serif",
-      }}
-    >
-      {lang === "it"
-        ? "Tutti i brand hanno abbastanza elementi per una valutazione."
-        : "All tracked brands have enough evidence for an assessment."}
-    </div>
-  ) : (
-    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      {insufficient.map((b) => (
-<div
-  key={b.name}
-  onClick={() => onSelect(b)}
-  style={{
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    gap: 14,
-    padding: "14px 14px 13px",
-    borderRadius: 0,
-    background: "rgba(255,255,255,0.02)",
-    borderLeft: "4px solid rgba(214,168,72,0.95)",
-    borderTop: "1px solid rgba(255,255,255,0.08)",
-    borderRight: "1px solid rgba(255,255,255,0.08)",
-    borderBottom: "1px solid rgba(255,255,255,0.08)",
-    cursor: "pointer",
-  }}
->
-  <div style={{ minWidth: 0, flex: 1 }}>
-    <div
-      style={{
-        fontSize: 11,
-        textTransform: "uppercase",
-        letterSpacing: "0.08em",
-        color: "rgba(214,168,72,0.95)",
-        fontFamily: "'DM Mono', monospace",
-        marginBottom: 6,
-      }}
-    >
-      {lang === "it" ? "Trasparenza insufficiente" : "Lack of transparency"}
-    </div>
-
-    <div
-      style={{
-        color: "#fff",
-        fontSize: 15,
-        fontWeight: 700,
-        fontFamily: "'DM Sans', sans-serif",
-        marginBottom: 4,
-      }}
-    >
-      {b.name}
-    </div>
-
-    <div
-      style={{
-        color: "rgba(255,255,255,0.58)",
-        fontSize: 13,
-        lineHeight: 1.55,
-        fontFamily: "'DM Sans', sans-serif",
-      }}
-    >
-      {lang === "it"
-        ? "Non ci sono ancora abbastanza fonti pubbliche per valutare questo brand con fiducia."
-        : "There isn’t enough public evidence yet to assess this brand with confidence."}
-    </div>
-
-    <div
-      style={{
-        color: "rgba(255,255,255,0.36)",
-        fontSize: 11,
-        lineHeight: 1.5,
-        fontFamily: "'DM Sans', sans-serif",
-        marginTop: 8,
-      }}
-    >
-      {lang === "it"
-        ? "L’assenza di dati non equivale a un giudizio positivo."
-        : "Lack of data does not mean a positive assessment."}
-    </div>
-  </div>
-
-  <div
-    style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "flex-end",
-      gap: 10,
-      flexShrink: 0,
-    }}
-  >
-    <div
-      style={{
-        fontSize: 11,
-        color: "rgba(255,255,255,0.28)",
-        fontFamily: "'DM Mono', monospace",
-        textTransform: "uppercase",
-        letterSpacing: "0.06em",
-      }}
-    >
-      {lang === "it" ? "Apri dettagli" : "Open details"}
-    </div>
-
-    <button
-      onClick={(e) => {
-        e.stopPropagation();
-        onRemove(b.name);
-      }}
-      style={{
-        background: "none",
-        border: "none",
-        color: "rgba(255,255,255,0.22)",
-        cursor: "pointer",
-        fontSize: 14,
-        lineHeight: 1,
-        padding: 0,
-      }}
-      aria-label={`Remove ${b.name}`}
-    >
-      ×
-    </button>
-  </div>
-</div>
-      ))}
-    </div>
-  )}
-</div>
-
-
-
-            
-            <div>
-                <div
-                  style={{
-                    fontSize: 11,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.08em",
-                    color: "rgba(255,255,255,0.36)",
-                    marginBottom: 8,
-                    fontFamily: "'DM Mono', monospace",
-                  }}
-                >
-                 {lang === "it" 
-                    ? "Scelte migliori" 
-                    : "Better choices"}
-                </div>
-
-              {positive.length === 0 ? (
-                <div
-                  style={{
-                    color: "rgba(255,255,255,0.6)",
-                    fontSize: 13,
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}
-                >
-                  {lang === "it"
-                    ? "Nessun brand positivo ancora."
-                    : "No positive brands yet."}
-                </div>
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-
-                    {positive.map((b) => {
-                        const displayScore = getDisplayScore(b);
-                      
-                        return (
-
-                          <div
-                              key={b.name}
-                              onClick={() => onSelect(b)}
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                gap: 12,
-                                padding: "10px 12px",
-                                borderRadius: 10,
-                                background: "rgba(255,255,255,0.025)",
-                                border: "1px solid rgba(255,255,255,0.05)",
-                                cursor: "pointer",
-                                transition: "transform 0.15s ease, border-color 0.15s ease, background 0.15s ease",
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-                                e.currentTarget.style.borderColor = "rgba(99,202,183,0.16)";
-                                e.currentTarget.style.transform = "translateY(-1px)";
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.background = "rgba(255,255,255,0.025)";
-                                e.currentTarget.style.borderColor = "rgba(255,255,255,0.05)";
-                                e.currentTarget.style.transform = "translateY(0)";
-                              }}
-                            >
-
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 10,
-                                minWidth: 0,
-                                flex: 1,
-                              }}
-                            >
-                              <div
-                                style={{
-                                  fontSize: 13,
-                                  color: "rgba(99,202,183,0.9)",
-                                  minWidth: 14,
-                                }}
-                              >
-                                ✓
-                              </div>
-                      
-                              <div
-                                style={{
-                                  color: "#fff",
-                                  fontSize: 13,
-                                  fontWeight: 600,
-                                  fontFamily: "'DM Sans', sans-serif",
-                                  overflow: "hidden",
-                                  textOverflow: "ellipsis",
-                                  whiteSpace: "nowrap",
-                                }}
-                              >
-                                {b.name}
-                              </div>
-                            </div>
-                            
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 8,
-                                flexShrink: 0,
-                              }}
-                            >
-                              <div
-                                style={{
-                                  fontSize: 13,
-                                  color: "rgba(255,255,255,0.3)",
-                                  fontFamily: "'DM Sans', sans-serif",
-                                  lineHeight: 1,
-                                }}
-                              >
-                                →
-                              </div>
-
-                              <div
-                                style={{
-                                  fontSize: 12,
-                                  color: "rgba(255,255,255,0.55)",
-                                  fontFamily: "'DM Sans', sans-serif",
-                                }}
-                              >
-                                {getDisplayLabel(b, lang)}
-                              </div>
-                      
-                              <div
-                                style={{
-                                  fontSize: 12,
-                                  fontWeight: 700,
-                                  color: getDisplayScoreColor(displayScore),
-                                  fontFamily: "'DM Sans', sans-serif",
-                                }}
-                              >
-                                {displayScore ?? "—"}
-                              </div>
-                      
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  onRemove(b.name);
-                                }}
-                                style={{
-                                  background: "none",
-                                  border: "none",
-                                  color: "rgba(255,255,255,0.22)",
-                                  cursor: "pointer",
-                                  fontSize: 14,
-                                  lineHeight: 1,
-                                  padding: 0,
-                                }}
-                                aria-label={`Remove ${b.name}`}
-                              >
-                                ×
-                              </button>
-                            </div>
-                          </div>
-                        );
-                      })}
-                  
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div
-        style={{
-          marginBottom: 22,
-          paddingTop: 2,
-        }}
-      >
-          <div
-            style={{
-              color: "#fff",
-              fontSize: 14,
-              fontWeight: 600,
-              marginBottom: 6,
-              fontFamily: "'DM Sans', sans-serif",
-            }}
-          >
-            {lang === "it" ? "Aggiungi brand che usi" : "Add brands you use"}
-          </div>
-          
-          <div
-            style={{
-              color: "rgba(255,255,255,0.5)",
-              fontSize: 12,
-              lineHeight: 1.5,
-              marginBottom: 10,
-              fontFamily: "'DM Sans', sans-serif",
-            }}
-          >
-            {lang === "it"
-              ? "Inizia da 3–5 brand che usi davvero: ti daranno una footprint più utile."
-              : "Start with 3–5 brands you actually use for a more useful footprint."}
-          </div>
 
         <div
           style={{
             display: "flex",
             alignItems: "center",
             gap: 10,
-            background: "rgba(255,255,255,0.03)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: 12,
-            padding: "10px 12px",
+            background: "rgba(255,255,255,0.02)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            padding: "11px 12px",
             marginBottom: 10,
           }}
         >
@@ -1442,11 +741,7 @@ return (
               setLocalQuery(e.target.value);
               if (activeHintKey) setActiveHintKey(null);
             }}
-            placeholder={
-              lang === "it"
-                ? "Cerca un brand..."
-                : "Search a brand..."
-            }
+            placeholder={lang === "it" ? "Cerca un brand..." : "Search a brand..."}
             style={{
               flex: 1,
               background: "transparent",
@@ -1479,18 +774,20 @@ return (
             </button>
           )}
         </div>
-          <div
-            style={{
-              color: "rgba(255,255,255,0.42)",
-              fontSize: 12,
-              marginBottom: 8,
-              fontFamily: "'DM Sans', sans-serif",
-            }}
-          >
-            {lang === "it"
-              ? "Per iniziare, prova da qui:"
-              : "A good place to start:"}
-          </div>
+
+        <div
+          style={{
+            color: "rgba(255,255,255,0.38)",
+            fontSize: 11,
+            marginBottom: 8,
+            fontFamily: "'DM Sans', sans-serif",
+            textTransform: "uppercase",
+            letterSpacing: "0.06em",
+          }}
+        >
+          {lang === "it" ? "Da dove iniziare" : "Where to start"}
+        </div>
+
         <div
           style={{
             display: "flex",
@@ -1511,14 +808,13 @@ return (
                 }}
                 style={{
                   background: isActive
-                    ? "rgba(99,202,183,0.16)"
-                    : "rgba(255,255,255,0.04)",
+                    ? "rgba(216,79,79,0.14)"
+                    : "rgba(255,255,255,0.03)",
                   border: isActive
-                    ? "1px solid rgba(99,202,183,0.35)"
+                    ? "1px solid rgba(216,79,79,0.32)"
                     : "1px solid rgba(255,255,255,0.08)",
-                  color: isActive ? "#63CAB7" : "rgba(255,255,255,0.72)",
+                  color: isActive ? "#fff" : "rgba(255,255,255,0.68)",
                   padding: "7px 10px",
-                  borderRadius: 999,
                   cursor: "pointer",
                   fontSize: 12,
                   fontFamily: "'DM Sans', sans-serif",
@@ -1547,9 +843,7 @@ return (
                   fontFamily: "'DM Sans', sans-serif",
                 }}
               >
-                {lang === "it"
-                  ? "Nessun brand trovato."
-                  : "No brands found."}
+                {lang === "it" ? "Nessun brand trovato." : "No brands found."}
               </div>
             ) : (
               addResults.map((brand) => {
@@ -1565,9 +859,8 @@ return (
                       alignItems: "center",
                       gap: 12,
                       padding: "10px 12px",
-                      borderRadius: 10,
-                      background: "rgba(255,255,255,0.03)",
-                      border: "1px solid rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      background: "rgba(255,255,255,0.02)",
                       cursor: "pointer",
                     }}
                   >
@@ -1589,7 +882,7 @@ return (
 
                       <div
                         style={{
-                          color: "rgba(255,255,255,0.55)",
+                          color: "rgba(255,255,255,0.5)",
                           fontSize: 12,
                           fontFamily: "'DM Sans', sans-serif",
                         }}
@@ -1625,11 +918,10 @@ return (
                           setActiveHintKey(null);
                         }}
                         style={{
-                          background: "rgba(99,202,183,0.1)",
-                          border: "1px solid rgba(99,202,183,0.2)",
-                          color: "#63CAB7",
+                          background: "rgba(216,79,79,0.08)",
+                          border: "1px solid rgba(216,79,79,0.2)",
+                          color: "#fff",
                           padding: "6px 10px",
-                          borderRadius: 8,
                           cursor: "pointer",
                           fontSize: 11,
                           fontFamily: "'DM Sans', sans-serif",
@@ -1645,7 +937,764 @@ return (
             )}
           </div>
         )}
-      </div>
+      </aside>
     </div>
-  );
-}
+
+    <div
+      style={{
+        marginTop: 26,
+        borderTop: "1px solid rgba(255,255,255,0.08)",
+        paddingTop: 20,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+          gap: 12,
+          marginBottom: 18,
+          flexWrap: "wrap",
+        }}
+      >
+        <div>
+          <div
+            style={{
+              fontSize: 11,
+              textTransform: "uppercase",
+              letterSpacing: "0.12em",
+              color: "rgba(255,255,255,0.34)",
+              marginBottom: 6,
+              fontFamily: "'DM Mono', monospace",
+            }}
+          >
+            {lang === "it" ? "La tua situazione attuale" : "Your current footprint"}
+          </div>
+
+          <div
+            style={{
+              color: "#fff",
+              fontSize: 18,
+              fontWeight: 700,
+              fontFamily: "'DM Sans', sans-serif",
+              lineHeight: 1.2,
+            }}
+          >
+            {lang === "it"
+              ? "Cosa stai sostenendo oggi"
+              : "What you are supporting today"}
+          </div>
+        </div>
+
+        {!isEmpty && (
+          <div
+            style={{
+              color: "rgba(255,255,255,0.38)",
+              fontSize: 12,
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          >
+            {lang === "it"
+              ? "Clicca un brand per aprire dettagli, fonti e note"
+              : "Click a brand to open details, sources, and notes"}
+          </div>
+        )}
+      </div>
+
+      {isEmpty ? (
+        <div
+          style={{
+            border: "1px solid rgba(255,255,255,0.08)",
+            background: "rgba(255,255,255,0.02)",
+            padding: "18px 16px",
+            maxWidth: 680,
+          }}
+        >
+          <div
+            style={{
+              color: "#fff",
+              fontSize: 16,
+              lineHeight: 1.45,
+              fontWeight: 700,
+              fontFamily: "'DM Sans', sans-serif",
+              marginBottom: 8,
+            }}
+          >
+            {lang === "it"
+              ? "Inizia dai brand che usi davvero ogni settimana."
+              : "Start with the brands you actually use every week."}
+          </div>
+
+          <div
+            style={{
+              color: "rgba(255,255,255,0.6)",
+              fontSize: 14,
+              lineHeight: 1.6,
+              fontFamily: "'DM Sans', sans-serif",
+              marginBottom: 8,
+              maxWidth: 620,
+            }}
+          >
+            {lang === "it"
+              ? "Ti mostreremo il loro impatto etico, dove emergono criticità e quali alternative possono migliorare davvero le tue scelte."
+              : "We’ll show their ethical impact, where concerns emerge, and which alternatives can genuinely improve your choices."}
+          </div>
+
+          <div
+            style={{
+              color: "rgba(255,255,255,0.36)",
+              fontSize: 12,
+              lineHeight: 1.55,
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          >
+            {lang === "it"
+              ? "Ogni brand aggiunto rende la tua footprint più concreta."
+              : "Every added brand makes your footprint more concrete."}
+          </div>
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          <div>
+            <div
+              style={{
+                fontSize: 11,
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+                color: "rgba(216,79,79,0.95)",
+                marginBottom: 10,
+                fontFamily: "'DM Mono', monospace",
+              }}
+            >
+              {lang === "it" ? "Brand che stanno facendo danno" : "Brands causing harm"}
+            </div>
+
+            {problematic.length === 0 ? (
+              <div
+                style={{
+                  color: "rgba(255,255,255,0.56)",
+                  fontSize: 13,
+                  fontFamily: "'DM Sans', sans-serif",
+                }}
+              >
+                {lang === "it"
+                  ? "Nessun brand problematico per ora."
+                  : "No problematic brands for now."}
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {problematic.map((b) => {
+                  const displayScore = getDisplayScore(b);
+                  const issueLabel = getIssueLabel(b, categories, lang);
+                  const issueExplanation = getIssueExplanation(b, categories, lang);
+                  const impactCopy = getImpactCopy(b, categories, lang);
+                  const topAlternative = getTopAlternative(b);
+                  const alternativeName = getAlternativeName(topAlternative);
+                  const alternativeDelta = getAlternativeDelta(b);
+                  const replaceBrand = findAlternativeInDb(b, db);
+                  const alternativeAdvantageCopy = replaceBrand
+                    ? getAlternativeAdvantageCopy(b, replaceBrand, categories, lang)
+                    : null;
+
+                  return (
+                    <div
+                      key={b.name}
+                      onClick={() => onSelect(b)}
+                      className="footprint-brand-card"
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 14,
+                        padding: "16px 16px 15px",
+                        borderRadius: 0,
+                        background: "rgba(255,255,255,0.02)",
+                        borderLeft: "4px solid #D84F4F",
+                        borderTop: "1px solid rgba(255,255,255,0.08)",
+                        borderRight: "1px solid rgba(255,255,255,0.08)",
+                        borderBottom: "1px solid rgba(255,255,255,0.08)",
+                        cursor: "pointer",
+                        transition: "transform 0.15s ease, background 0.15s ease, border-color 0.15s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+                        e.currentTarget.style.transform = "translateY(-1px)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+                        e.currentTarget.style.transform = "translateY(0)";
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "flex-start",
+                          gap: 12,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 10,
+                              flexWrap: "wrap",
+                              marginBottom: 6,
+                            }}
+                          >
+                            <div
+                              style={{
+                                fontSize: 11,
+                                textTransform: "uppercase",
+                                letterSpacing: "0.08em",
+                                color: "rgba(216,79,79,0.95)",
+                                fontFamily: "'DM Mono', monospace",
+                              }}
+                            >
+                              {lang === "it" ? "Scelta da rivedere" : "Choice to reconsider"}
+                            </div>
+
+                            <div
+                              style={{
+                                fontSize: 11,
+                                color: "rgba(255,255,255,0.35)",
+                                fontFamily: "'DM Mono', monospace",
+                              }}
+                            >
+                              {displayScore ?? "—"}/100
+                            </div>
+                          </div>
+
+                          <div
+                            style={{
+                              color: "#fff",
+                              fontSize: 18,
+                              fontWeight: 700,
+                              fontFamily: "'DM Sans', sans-serif",
+                              lineHeight: 1.2,
+                              marginBottom: 8,
+                            }}
+                          >
+                            {b.name}
+                          </div>
+
+                          <div
+                            style={{
+                              color: "rgba(255,255,255,0.88)",
+                              fontSize: 14,
+                              fontWeight: 600,
+                              fontFamily: "'DM Sans', sans-serif",
+                              marginBottom: 4,
+                              lineHeight: 1.4,
+                            }}
+                          >
+                            {issueLabel}
+                          </div>
+
+                          <div
+                            style={{
+                              color: "rgba(255,255,255,0.58)",
+                              fontSize: 13,
+                              lineHeight: 1.55,
+                              fontFamily: "'DM Sans', sans-serif",
+                              maxWidth: 680,
+                            }}
+                          >
+                            {issueExplanation}
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onRemove(b.name);
+                          }}
+                          style={{
+                            background: "none",
+                            border: "none",
+                            color: "rgba(255,255,255,0.24)",
+                            cursor: "pointer",
+                            fontSize: 16,
+                            lineHeight: 1,
+                            padding: 0,
+                            flexShrink: 0,
+                          }}
+                          aria-label={`Remove ${b.name}`}
+                        >
+                          ×
+                        </button>
+                      </div>
+
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "1fr",
+                          gap: 10,
+                        }}
+                      >
+                        <div
+                          style={{
+                            padding: "10px 12px",
+                            background: "rgba(216,79,79,0.08)",
+                            border: "1px solid rgba(216,79,79,0.18)",
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontSize: 10,
+                              textTransform: "uppercase",
+                              letterSpacing: "0.08em",
+                              color: "rgba(255,255,255,0.42)",
+                              fontFamily: "'DM Mono', monospace",
+                              marginBottom: 6,
+                            }}
+                          >
+                            {lang === "it" ? "Cosa sostiene la tua scelta" : "What your choice supports"}
+                          </div>
+
+                          <div
+                            style={{
+                              color: "#fff",
+                              fontSize: 13,
+                              lineHeight: 1.6,
+                              fontFamily: "'DM Sans', sans-serif",
+                            }}
+                          >
+                            {impactCopy}
+                          </div>
+                        </div>
+
+                        {alternativeName && (
+                          <div
+                            style={{
+                              padding: "10px 12px",
+                              background: "rgba(99,202,183,0.06)",
+                              border: "1px solid rgba(99,202,183,0.16)",
+                            }}
+                          >
+                            <div
+                              style={{
+                                fontSize: 10,
+                                textTransform: "uppercase",
+                                letterSpacing: "0.08em",
+                                color: "rgba(99,202,183,0.92)",
+                                fontFamily: "'DM Mono', monospace",
+                                marginBottom: 6,
+                              }}
+                            >
+                              {lang === "it" ? "Alternativa migliore" : "Better alternative"}
+                            </div>
+
+                            <div
+                              style={{
+                                color: "#fff",
+                                fontSize: 15,
+                                fontWeight: 700,
+                                fontFamily: "'DM Sans', sans-serif",
+                                marginBottom: alternativeAdvantageCopy ? 4 : 8,
+                              }}
+                            >
+                              {alternativeName}
+                            </div>
+
+                            {alternativeAdvantageCopy && (
+                              <div
+                                style={{
+                                  color: "rgba(255,255,255,0.62)",
+                                  fontSize: 12,
+                                  lineHeight: 1.5,
+                                  fontFamily: "'DM Sans', sans-serif",
+                                  marginBottom: 10,
+                                }}
+                              >
+                                {alternativeAdvantageCopy}
+                              </div>
+                            )}
+
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 8,
+                                flexWrap: "wrap",
+                              }}
+                            >
+                              {alternativeDelta !== null && (
+                                <div
+                                  style={{
+                                    fontSize: 11,
+                                    color: "rgba(255,255,255,0.56)",
+                                    border: "1px solid rgba(255,255,255,0.08)",
+                                    background: "rgba(255,255,255,0.03)",
+                                    padding: "4px 8px",
+                                    fontFamily: "'DM Sans', sans-serif",
+                                  }}
+                                >
+                                  {lang === "it"
+                                    ? `${alternativeDelta} punti meglio`
+                                    : `${alternativeDelta} points better`}
+                                </div>
+                              )}
+
+                              {replaceBrand ? (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onReplace(b, replaceBrand);
+                                  }}
+                                  style={{
+                                    background: "#63CAB7",
+                                    border: "1px solid rgba(99,202,183,0.35)",
+                                    padding: "8px 12px",
+                                    color: "#08110f",
+                                    cursor: "pointer",
+                                    fontSize: 12,
+                                    fontWeight: 700,
+                                    fontFamily: "'DM Sans', sans-serif",
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {lang === "it"
+                                    ? `Passa a ${replaceBrand.name}`
+                                    : `Switch to ${replaceBrand.name}`}
+                                </button>
+                              ) : null}
+
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onSelect(b);
+                                }}
+                                style={{
+                                  background: "transparent",
+                                  border: "1px solid rgba(255,255,255,0.1)",
+                                  padding: "8px 12px",
+                                  color: "rgba(255,255,255,0.78)",
+                                  cursor: "pointer",
+                                  fontSize: 12,
+                                  fontFamily: "'DM Sans', sans-serif",
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                {lang === "it" ? "Apri dettagli" : "Open details"}
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          gap: 10,
+                          flexWrap: "wrap",
+                          paddingTop: 2,
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontSize: 11,
+                            color: "rgba(255,255,255,0.45)",
+                            fontFamily: "'DM Sans', sans-serif",
+                          }}
+                        >
+                          {getDisplayLabel(b, lang)}
+                        </div>
+
+                        <div
+                          style={{
+                            fontSize: 11,
+                            color: "rgba(255,255,255,0.28)",
+                            fontFamily: "'DM Mono', monospace",
+                            textTransform: "uppercase",
+                            letterSpacing: "0.06em",
+                          }}
+                        >
+                          {lang === "it" ? "Apri per fonti e dettagli" : "Open for sources and details"}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          <div>
+            <div
+              style={{
+                fontSize: 11,
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+                color: "rgba(214,168,72,0.95)",
+                marginBottom: 10,
+                fontFamily: "'DM Mono', monospace",
+              }}
+            >
+              {lang === "it" ? "Trasparenza insufficiente" : "Lack of transparency"}
+            </div>
+
+            {insufficient.length === 0 ? (
+              <div
+                style={{
+                  color: "rgba(255,255,255,0.56)",
+                  fontSize: 13,
+                  fontFamily: "'DM Sans', sans-serif",
+                }}
+              >
+                {lang === "it"
+                  ? "Tutti i brand hanno abbastanza elementi per una valutazione."
+                  : "All tracked brands have enough evidence for an assessment."}
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {insufficient.map((b) => (
+                  <div
+                    key={b.name}
+                    onClick={() => onSelect(b)}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                      gap: 14,
+                      padding: "14px 14px 13px",
+                      borderRadius: 0,
+                      background: "rgba(255,255,255,0.02)",
+                      borderLeft: "4px solid rgba(214,168,72,0.95)",
+                      borderTop: "1px solid rgba(255,255,255,0.08)",
+                      borderRight: "1px solid rgba(255,255,255,0.08)",
+                      borderBottom: "1px solid rgba(255,255,255,0.08)",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <div
+                        style={{
+                          fontSize: 11,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.08em",
+                          color: "rgba(214,168,72,0.95)",
+                          fontFamily: "'DM Mono', monospace",
+                          marginBottom: 6,
+                        }}
+                      >
+                        {lang === "it" ? "Trasparenza insufficiente" : "Lack of transparency"}
+                      </div>
+
+                      <div
+                        style={{
+                          color: "#fff",
+                          fontSize: 15,
+                          fontWeight: 700,
+                          fontFamily: "'DM Sans', sans-serif",
+                          marginBottom: 4,
+                        }}
+                      >
+                        {b.name}
+                      </div>
+
+                      <div
+                        style={{
+                          color: "rgba(255,255,255,0.58)",
+                          fontSize: 13,
+                          lineHeight: 1.55,
+                          fontFamily: "'DM Sans', sans-serif",
+                        }}
+                      >
+                        {lang === "it"
+                          ? "Non ci sono ancora abbastanza fonti pubbliche per valutare questo brand con fiducia."
+                          : "There isn’t enough public evidence yet to assess this brand with confidence."}
+                      </div>
+
+                      <div
+                        style={{
+                          color: "rgba(255,255,255,0.36)",
+                          fontSize: 11,
+                          lineHeight: 1.5,
+                          fontFamily: "'DM Sans', sans-serif",
+                          marginTop: 8,
+                        }}
+                      >
+                        {lang === "it"
+                          ? "L’assenza di dati non equivale a un giudizio positivo."
+                          : "Lack of data does not mean a positive assessment."}
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        gap: 10,
+                        flexShrink: 0,
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: 11,
+                          color: "rgba(255,255,255,0.28)",
+                          fontFamily: "'DM Mono', monospace",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.06em",
+                        }}
+                      >
+                        {lang === "it" ? "Apri dettagli" : "Open details"}
+                      </div>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onRemove(b.name);
+                        }}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          color: "rgba(255,255,255,0.22)",
+                          cursor: "pointer",
+                          fontSize: 14,
+                          lineHeight: 1,
+                          padding: 0,
+                        }}
+                        aria-label={`Remove ${b.name}`}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div>
+            <div
+              style={{
+                fontSize: 11,
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+                color: "rgba(99,202,183,0.9)",
+                marginBottom: 10,
+                fontFamily: "'DM Mono', monospace",
+              }}
+            >
+              {lang === "it" ? "Scelte migliori" : "Better choices"}
+            </div>
+
+            {positive.length === 0 ? (
+              <div
+                style={{
+                  color: "rgba(255,255,255,0.56)",
+                  fontSize: 13,
+                  fontFamily: "'DM Sans', sans-serif",
+                }}
+              >
+                {lang === "it"
+                  ? "Nessun brand positivo ancora."
+                  : "No positive brands yet."}
+              </div>
+            ) : (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+                  gap: 10,
+                }}
+              >
+                {positive.map((b) => {
+                  const displayScore = getDisplayScore(b);
+
+                  return (
+                    <div
+                      key={b.name}
+                      onClick={() => onSelect(b)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: 12,
+                        padding: "12px 12px",
+                        border: "1px solid rgba(99,202,183,0.14)",
+                        background: "rgba(99,202,183,0.04)",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <div
+                          style={{
+                            color: "#fff",
+                            fontSize: 14,
+                            fontWeight: 700,
+                            fontFamily: "'DM Sans', sans-serif",
+                            marginBottom: 3,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {b.name}
+                        </div>
+
+                        <div
+                          style={{
+                            fontSize: 11,
+                            color: "rgba(255,255,255,0.48)",
+                            fontFamily: "'DM Sans', sans-serif",
+                          }}
+                        >
+                          {getDisplayLabel(b, lang)}
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          flexShrink: 0,
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontSize: 13,
+                            fontWeight: 700,
+                            color: getDisplayScoreColor(displayScore),
+                            fontFamily: "'DM Sans', sans-serif",
+                          }}
+                        >
+                          {displayScore ?? "—"}
+                        </div>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onRemove(b.name);
+                          }}
+                          style={{
+                            background: "none",
+                            border: "none",
+                            color: "rgba(255,255,255,0.22)",
+                            cursor: "pointer",
+                            fontSize: 14,
+                            lineHeight: 1,
+                            padding: 0,
+                          }}
+                          aria-label={`Remove ${b.name}`}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+);
