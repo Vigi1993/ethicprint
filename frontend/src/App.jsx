@@ -319,7 +319,7 @@ export default function App() {
                   {lang === "it" ? "problematici" : "problematic brands"}
                 </span>
                 {lang === "it" ? "." : "."}
-              </div>>
+              </div>
 
                 <p
                   style={{
