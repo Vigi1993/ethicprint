@@ -314,32 +314,42 @@ export default function App() {
               />
               
               <div style={{ marginTop: 28, marginBottom: 10 }}>
-                <div
-                  style={{
-                    fontSize: 12,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.08em",
-                    color: "rgba(255,255,255,0.45)",
-                    marginBottom: 8,
-                    fontFamily: "'DM Mono', monospace",
-                  }}
-                >
-                  {lang === "it" ? "Database brand" : "Brand database"}
-                </div>
+
               
-                <div
-                  style={{
-                    color: "rgba(255,255,255,0.62)",
-                    fontSize: 14,
-                    marginBottom: 14,
-                    fontFamily: "'DM Sans', sans-serif",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {lang === "it"
-                    ? "Esplora tutti i brand e confrontali per settore."
-                    : "Explore all brands and compare them by sector."}
-                </div>
+<div
+  style={{
+    marginBottom: 16,
+  }}
+>
+  <div
+    style={{
+      color: "#fff",
+      fontSize: 22,
+      fontWeight: 700,
+      fontFamily: "'DM Sans', sans-serif",
+      marginBottom: 6,
+      lineHeight: 1.2,
+    }}
+  >
+    {lang === "it"
+      ? "Esplora e confronta i brand"
+      : "Explore and compare brands"}
+  </div>
+
+  <div
+    style={{
+      color: "rgba(255,255,255,0.58)",
+      fontSize: 14,
+      lineHeight: 1.6,
+      fontFamily: "'DM Sans', sans-serif",
+      maxWidth: 520,
+    }}
+  >
+    {lang === "it"
+      ? "Scopri come si comportano nei diversi ambiti etici e trova alternative più solide."
+      : "See how brands perform across ethical areas and find stronger alternatives."}
+  </div>
+</div>
               
                 <div style={{ position: "relative", marginBottom: 8 }}>
                   
@@ -497,7 +507,9 @@ export default function App() {
               paddingLeft: 4,
             }}
           >
-            {t.db_info(db.length, sectors.length, sourcesCount)}
+            {lang === "it"
+  ? `${db.length} brand analizzati · ${sourcesCount} fonti`
+  : `${db.length} brands analyzed · ${sourcesCount} sources`}
           </div>
         </div>
 
