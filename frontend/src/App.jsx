@@ -284,42 +284,49 @@ export default function App() {
               marginBottom: 18,
             }}
           >
+          </div>
 
-            <div>
-              <div
-                style={{
-                  fontFamily: "'Bitter', serif",
-                  fontSize: "clamp(34px, 5.5vw, 48px)",
-                  lineHeight: 1.1,
-                  marginBottom: 12,
-                  fontWeight: 600,
-                }}
-              >
-                Your ethical footprint
-              </div>
-            
-              <div className="section-strip" style={{ padding: "14px 20px" }}>
+
+                    <div className="paper-panel" style={{ padding: "26px 26px 30px", marginBottom: 30 }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1.2fr auto",
+                gap: 20,
+                alignItems: "start",
+                position: "relative",
+                zIndex: 1,
+              }}
+            >
+              <div>
                 <img
                   src={logoSrc}
                   alt="EthicPrint"
                   style={{
-                    display: "block",
-                    height: "clamp(52px, 7vw, 72px)", // ⬅️ aumentato
+                    height: 40,
                     width: "auto",
-                    maxWidth: "100%",
+                    marginBottom: 18,
                     filter: "grayscale(1) contrast(1.5) brightness(0.08)",
                   }}
                 />
-              </div>
-            
-              <div className="section-subtitle">
-                {lang === "it" ? "Stai sostenendo alcuni brand " : "You're supporting some "}
-                <span className="accent">
-                  {lang === "it" ? "problematici" : "problematic brands"}
-                </span>
-                {lang === "it" ? "." : "."}
-              </div>
 
+                <div className="section-strip">
+                  Your ethical
+                  <br />
+                  footprint
+                </div>
+
+                <div className="section-subtitle">
+                  {lang === "it" ? "Stai sostenendo alcuni brand " : "You're supporting some "}
+                  <span className="accent">
+                    {lang === "it" ? "problematici" : "problematic brands"}
+                  </span>
+                  {lang === "it" ? "." : "."}
+                </div>
+
+
+
+              
                 <p
                   style={{
                     marginTop: 16,
