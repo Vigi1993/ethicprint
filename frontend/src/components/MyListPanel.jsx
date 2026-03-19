@@ -658,15 +658,16 @@ export default function MyListPanel({
   };
 
   return (
-    <div
-      style={{
-        marginTop: 18,
-        background: "#d9d5d1",
-        padding: "26px 24px 30px",
-        borderRadius: 0,
-        boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.05)",
-      }}
-    >
+<div
+  style={{
+    marginTop: 18,
+    background: "#f2eadf", 
+    padding: "26px 24px 30px",
+    border: "4px solid #181310",
+    boxShadow: "8px 8px 0 #181310",
+    position: "relative",
+  }}
+>
       <style>{`
         .ep-manifest * { box-sizing: border-box; }
         .ep-manifest {
