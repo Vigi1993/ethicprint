@@ -291,7 +291,7 @@ export default function App() {
             }}
           >
           </div>
-         <div style={{ padding: "26px 0 30px", marginBottom: 30 }}>
+         <div className="paper-panel" style={{ padding: "26px 26px 30px", marginBottom: 30 }}>
             <div
               style={{
                 display: "grid",
