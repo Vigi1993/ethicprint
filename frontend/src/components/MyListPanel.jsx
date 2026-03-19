@@ -8,43 +8,38 @@ import {
   rawCategoryScoreToPublic,
 } from "../utils/brandHelpers";
 
-// ─── Google Fonts injection (Bebas Neue + Playfair Display) ───────────────────
 if (typeof document !== "undefined" && !document.getElementById("ep-fonts")) {
   const link = document.createElement("link");
   link.id = "ep-fonts";
   link.rel = "stylesheet";
   link.href =
-    "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500&display=swap";
+    "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500&display=swap";
   document.head.appendChild(link);
 }
 
-// ─── Design tokens ────────────────────────────────────────────────────────────
 const T = {
-  paper: "#E8E4D8",
-  paperDark: "#DDD8C8",
-  ink: "#1C1409",
-  inkMid: "#5a4830",
-  inkLight: "#9a8870",
-  inkFaint: "#c8bfaa",
-  white: "#FFFFFF",
-  offWhite: "#F5F1E8",
-  red: "#B8301F",
-  redLight: "#F5E8E6",
-  amber: "#C8860A",
-  amberLight: "#FBF0D8",
-  green: "#1A6B45",
-  greenLight: "#E0F0E8",
-  border: "#ccc4b0",
-  borderLight: "#ddd8c8",
+  paper: "#F0EDE4",
+  white: "#FAFAF5",
+  ink: "#0A0A0A",
+  inkMid: "#3a3028",
+  inkLight: "#7a6e60",
+  inkFaint: "#b8afa0",
+  red: "#C02617",
+  redBg: "#FBE8E6",
+  amber: "#B87000",
+  amberBg: "#FBF2DC",
+  green: "#165C38",
+  greenBg: "#E2F0E8",
+  border: "#C8C0B0",
+  borderLight: "#E0D8C8",
 };
 
 const F = {
-  display: "'Bebas Neue', sans-serif",
+  display: "'Bebas Neue', Impact, sans-serif",
   serif: "'Playfair Display', Georgia, serif",
   sans: "'DM Sans', sans-serif",
 };
 
-// ─── Score color (maps to paper palette, not dark palette) ───────────────────
 function scoreColor(score) {
   if (score === null || score === undefined) return T.inkLight;
   if (score >= 65) return T.green;
@@ -52,59 +47,22 @@ function scoreColor(score) {
   return T.red;
 }
 
-// ─── Shared micro-components ─────────────────────────────────────────────────
-
 function ScoreBadge({ score, size = "md" }) {
   const color = scoreColor(score);
-  const sizes = {
-    sm: { fontSize: 16, padding: "2px 8px", minWidth: 38 },
-    md: { fontSize: 22, padding: "2px 10px", minWidth: 48 },
-    lg: { fontSize: 28, padding: "3px 12px", minWidth: 58 },
-  };
-  const s = sizes[size];
+  const fs = size === "lg" ? 32 : size === "md" ? 24 : 18;
+  const pad = size === "lg" ? "4px 14px" : size === "md" ? "3px 10px" : "2px 8px";
   return (
-    <span
-      style={{
-        fontFamily: F.display,
-        fontSize: s.fontSize,
-        padding: s.padding,
-        minWidth: s.minWidth,
-        textAlign: "center",
-        background: color,
-        color: "#fff",
-        borderRadius: 2,
-        display: "inline-block",
-        lineHeight: 1.15,
-        flexShrink: 0,
-      }}
-    >
+    <span style={{ fontFamily: F.display, fontSize: fs, padding: pad, background: color, color: "#fff", borderRadius: 0, display: "inline-block", lineHeight: 1.2, letterSpacing: "0.02em", flexShrink: 0 }}>
       {score ?? "—"}
     </span>
   );
 }
 
-function ScoreBar({ score, color }) {
+function ScoreBar({ score }) {
   const pct = score != null ? Math.max(2, score) : 0;
-  const c = color || scoreColor(score);
   return (
-    <div
-      style={{
-        background: T.paperDark,
-        height: 3,
-        borderRadius: 1,
-        overflow: "hidden",
-        marginBottom: 12,
-      }}
-    >
-      <div
-        style={{
-          width: `${pct}%`,
-          height: "100%",
-          background: c,
-          borderRadius: 1,
-          transition: "width 0.6s cubic-bezier(.4,0,.2,1)",
-        }}
-      />
+    <div style={{ background: T.borderLight, height: 4, marginBottom: 14 }}>
+      <div style={{ width: `${pct}%`, height: "100%", background: scoreColor(score), transition: "width 0.7s cubic-bezier(.4,0,.2,1)" }} />
     </div>
   );
 }
@@ -112,62 +70,22 @@ function ScoreBar({ score, color }) {
 function SectionHeader({ label, count, variant }) {
   const bg = variant === "red" ? T.red : variant === "green" ? T.green : T.ink;
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        padding: "8px 14px",
-        background: bg,
-        borderRadius: "2px 2px 0 0",
-      }}
-    >
-      <span
-        style={{
-          fontFamily: F.display,
-          fontSize: 18,
-          letterSpacing: "0.06em",
-          color: "#fff",
-          flex: 1,
-        }}
-      >
-        {label}
-      </span>
-      <span
-        style={{
-          fontFamily: F.display,
-          fontSize: 24,
-          color: "rgba(255,255,255,0.45)",
-          lineHeight: 1,
-        }}
-      >
-        {count}
-      </span>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px", background: bg }}>
+      <span style={{ fontFamily: F.display, fontSize: 22, letterSpacing: "0.1em", color: "#fff" }}>{label}</span>
+      <span style={{ fontFamily: F.display, fontSize: 28, color: "rgba(255,255,255,0.35)", lineHeight: 1 }}>{count}</span>
     </div>
   );
 }
 
 function RemoveBtn({ onClick, name }) {
   return (
-    <button
-      onClick={onClick}
-      aria-label={`Remove ${name}`}
-      style={{
-        background: "none",
-        border: "none",
-        color: T.inkFaint,
-        cursor: "pointer",
-        fontSize: 16,
-        lineHeight: 1,
-        padding: 0,
-        flexShrink: 0,
-      }}
-    >
+    <button onClick={onClick} aria-label={`Remove ${name}`} style={{ background: "none", border: "none", color: T.inkFaint, cursor: "pointer", fontSize: 18, lineHeight: 1, padding: "0 2px", flexShrink: 0 }}>
       ×
     </button>
   );
 }
 
-// ─── Helper functions (identical logic, unchanged) ───────────────────────────
+// ─── Unchanged logic ──────────────────────────────────────────────────────────
 
 const CATEGORY_HINTS = {
   en: [
@@ -186,28 +104,22 @@ const CATEGORY_HINTS = {
   ],
 };
 
-function normalize(text) {
-  return String(text || "").toLowerCase().trim();
-}
+function normalize(text) { return String(text || "").toLowerCase().trim(); }
 
 function matchesHint(brand, hint) {
-  const haystack = [brand?.name, brand?.sector, brand?.sector_icon, brand?.description, brand?.parent_company]
-    .filter(Boolean).join(" ").toLowerCase();
-  return hint.terms.some((term) => haystack.includes(term));
+  const h = [brand?.name, brand?.sector, brand?.sector_icon, brand?.description, brand?.parent_company].filter(Boolean).join(" ").toLowerCase();
+  return hint.terms.some((t) => h.includes(t));
 }
 
 function getWorstCategory(brand, categories) {
   if (!brand?.scores) return null;
-  const scored = categories
-    .map((cat) => {
-      const raw = brand.scores?.[cat.key];
-      const publicScore = typeof raw === "number" ? rawCategoryScoreToPublic(raw) : null;
-      return { cat, raw, publicScore };
-    })
-    .filter((item) => typeof item.publicScore === "number");
+  const scored = categories.map((cat) => {
+    const raw = brand.scores?.[cat.key];
+    const publicScore = typeof raw === "number" ? rawCategoryScoreToPublic(raw) : null;
+    return { cat, publicScore };
+  }).filter((item) => typeof item.publicScore === "number");
   if (!scored.length) return null;
-  scored.sort((a, b) => a.publicScore - b.publicScore);
-  return scored[0];
+  return scored.sort((a, b) => a.publicScore - b.publicScore)[0];
 }
 
 function getIssueLabel(brand, categories, lang) {
@@ -219,56 +131,22 @@ function getIssueLabel(brand, categories, lang) {
 
 function getIssueExplanation(brand, categories, lang) {
   if (brand?.insufficient_data)
-    return lang === "it"
-      ? "Non ci sono ancora abbastanza fonti pubblicate per valutarlo bene."
-      : "There aren't enough published sources yet to assess it properly.";
-  const worst = getWorstCategory(brand, categories);
-  const key = worst?.cat?.key;
+    return lang === "it" ? "Non ci sono ancora abbastanza fonti pubblicate per valutarlo bene." : "There aren't enough published sources yet to assess it properly.";
+  const key = getWorstCategory(brand, categories)?.cat?.key;
   const copy = {
-    it: {
-      environment: "Impatto ambientale debole rispetto ad alternative migliori.",
-      labor: "Possibili criticità su lavoro, filiera o condizioni produttive.",
-      conflicts: "Possibile esposizione a conflitti o aree controverse.",
-      transparency: "Trasparenza limitata su filiera, pratiche o governance.",
-      animals: "Possibili criticità su benessere animale o materiali usati.",
-      default: "Questo brand mostra segnali etici più deboli del previsto.",
-    },
-    en: {
-      environment: "Weaker environmental performance than better alternatives.",
-      labor: "Possible concerns around labor, supply chain, or production conditions.",
-      conflicts: "Possible exposure to conflicts or controversial areas.",
-      transparency: "Limited transparency on supply chain, practices, or governance.",
-      animals: "Possible concerns around animal welfare or materials used.",
-      default: "This brand shows weaker ethical signals than stronger alternatives.",
-    },
+    it: { environment: "Impatto ambientale debole rispetto ad alternative migliori.", labor: "Possibili criticità su lavoro, filiera o condizioni produttive.", conflicts: "Possibile esposizione a conflitti o aree controverse.", transparency: "Trasparenza limitata su filiera, pratiche o governance.", animals: "Possibili criticità su benessere animale o materiali usati.", default: "Questo brand mostra segnali etici più deboli del previsto." },
+    en: { environment: "Weaker environmental performance than better alternatives.", labor: "Possible concerns around labor, supply chain, or production conditions.", conflicts: "Possible exposure to conflicts or controversial areas.", transparency: "Limited transparency on supply chain, practices, or governance.", animals: "Possible concerns around animal welfare or materials used.", default: "This brand shows weaker ethical signals than stronger alternatives." },
   };
   return copy[lang]?.[key] || copy[lang]?.default || copy.en.default;
 }
 
 function getImpactCopy(brand, categories, lang) {
   if (brand?.insufficient_data)
-    return lang === "it"
-      ? "Usandolo continui a sostenere un brand che oggi non è ancora valutabile con abbastanza evidenza pubblica."
-      : "Using it still supports a brand that cannot yet be assessed with enough public evidence.";
-  const worst = getWorstCategory(brand, categories);
-  const key = worst?.cat?.key;
+    return lang === "it" ? "Usandolo continui a sostenere un brand che oggi non è ancora valutabile con abbastanza evidenza pubblica." : "Using it still supports a brand that cannot yet be assessed with enough public evidence.";
+  const key = getWorstCategory(brand, categories)?.cat?.key;
   const copy = {
-    it: {
-      environment: "Usandolo continui a sostenere un modello con impatto ambientale più debole del necessario.",
-      labor: "Usandolo continui a sostenere possibili criticità su lavoro, filiera o produzione.",
-      conflicts: "Usandolo continui a sostenere possibili legami con aree o dinamiche controverse.",
-      transparency: "Usandolo continui a sostenere un brand meno trasparente su pratiche e filiera.",
-      animals: "Usandolo continui a sostenere possibili criticità su materiali o benessere animale.",
-      default: "Usandolo continui a sostenere un brand con segnali etici più deboli di alternative migliori.",
-    },
-    en: {
-      environment: "Using it continues to support a weaker environmental model than necessary.",
-      labor: "Using it continues to support possible labor, supply chain, or production concerns.",
-      conflicts: "Using it continues to support possible links to controversial areas or dynamics.",
-      transparency: "Using it continues to support a brand with lower transparency on practices and supply chain.",
-      animals: "Using it continues to support possible concerns around materials or animal welfare.",
-      default: "Using it continues to support a brand with weaker ethical signals than better alternatives.",
-    },
+    it: { environment: "Usandolo continui a sostenere un modello con impatto ambientale più debole del necessario.", labor: "Usandolo continui a sostenere possibili criticità su lavoro, filiera o produzione.", conflicts: "Usandolo continui a sostenere possibili legami con aree o dinamiche controverse.", transparency: "Usandolo continui a sostenere un brand meno trasparente su pratiche e filiera.", animals: "Usandolo continui a sostenere possibili criticità su materiali o benessere animale.", default: "Usandolo continui a sostenere un brand con segnali etici più deboli di alternative migliori." },
+    en: { environment: "Using it continues to support a weaker environmental model than necessary.", labor: "Using it continues to support possible labor, supply chain, or production concerns.", conflicts: "Using it continues to support possible links to controversial areas or dynamics.", transparency: "Using it continues to support a brand with lower transparency on practices and supply chain.", animals: "Using it continues to support possible concerns around materials or animal welfare.", default: "Using it continues to support a brand with weaker ethical signals than better alternatives." },
   };
   return copy[lang]?.[key] || copy[lang]?.default || copy.en.default;
 }
@@ -293,16 +171,14 @@ function getTopAlternative(brand) {
 
 function getAlternativeDelta(brand) {
   const current = getDisplayScore(brand);
-  const topAlt = getTopAlternative(brand);
-  const altScore = getAlternativeScore(topAlt);
+  const altScore = getAlternativeScore(getTopAlternative(brand));
   if (typeof current !== "number" || typeof altScore !== "number") return null;
   const delta = altScore - current;
   return delta > 0 ? delta : null;
 }
 
 function findAlternativeInDb(brand, db) {
-  const topAlt = getTopAlternative(brand);
-  const altName = normalize(getAlternativeName(topAlt));
+  const altName = normalize(getAlternativeName(getTopAlternative(brand)));
   if (!altName || !Array.isArray(db)) return null;
   return db.find((item) => normalize(item.name) === altName) || null;
 }
@@ -316,52 +192,34 @@ function getCategoryPublicScoreMap(brand, categories) {
   return map;
 }
 
-function getAlternativeAdvantages(currentBrand, alternativeBrand, categories, lang) {
-  if (!currentBrand || !alternativeBrand) return [];
-  const currentScores = getCategoryPublicScoreMap(currentBrand, categories);
-  const altScores = getCategoryPublicScoreMap(alternativeBrand, categories);
-  return categories
-    .map((cat) => {
-      const current = currentScores[cat.key];
-      const alt = altScores[cat.key];
-      if (typeof current !== "number" || typeof alt !== "number") return null;
-      return { key: cat.key, label: getCatLabel(cat, lang), delta: alt - current };
-    })
-    .filter(Boolean)
-    .filter((item) => item.delta >= 8)
-    .sort((a, b) => b.delta - a.delta)
-    .slice(0, 2);
-}
-
 function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories, lang) {
-  const improvements = getAlternativeAdvantages(currentBrand, alternativeBrand, categories, lang);
-  if (!improvements.length)
-    return lang === "it" ? "Alternativa con segnali etici più solidi." : "Alternative with stronger ethical signals.";
-  if (improvements.length === 1)
-    return lang === "it"
-      ? `Più forte su ${improvements[0].label.toLowerCase()}.`
-      : `Stronger on ${improvements[0].label.toLowerCase()}.`;
+  if (!currentBrand || !alternativeBrand) return null;
+  const cur = getCategoryPublicScoreMap(currentBrand, categories);
+  const alt = getCategoryPublicScoreMap(alternativeBrand, categories);
+  const improvements = categories.map((cat) => {
+    const c = cur[cat.key], a = alt[cat.key];
+    if (typeof c !== "number" || typeof a !== "number") return null;
+    return { label: getCatLabel(cat, lang), delta: a - c };
+  }).filter(Boolean).filter((i) => i.delta >= 8).sort((a, b) => b.delta - a.delta).slice(0, 2);
+  if (!improvements.length) return lang === "it" ? "Alternativa con segnali etici più solidi." : "Alternative with stronger ethical signals.";
+  if (improvements.length === 1) return lang === "it" ? `Più forte su ${improvements[0].label.toLowerCase()}.` : `Stronger on ${improvements[0].label.toLowerCase()}.`;
   return lang === "it"
     ? `Più forte su ${improvements[0].label.toLowerCase()} e ${improvements[1].label.toLowerCase()}.`
     : `Stronger on ${improvements[0].label.toLowerCase()} and ${improvements[1].label.toLowerCase()}.`;
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
+// ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function MyListPanel({ myBrands, db, onAdd, onReplace, onRemove, onClear, onSelect, lang, ui, threshold }) {
   const categories = useCategories();
   const t = ui[lang] || ui.en;
-
   const [localQuery, setLocalQuery] = useState("");
   const [activeHintKey, setActiveHintKey] = useState(null);
-
   const hints = CATEGORY_HINTS[lang] || CATEGORY_HINTS.en;
 
-  // ── Score aggregation (unchanged logic) ────────────────────────────────────
   const avgScores = {};
   const avgScoreCounts = {};
   categories.forEach((c) => { avgScores[c.key] = 0; avgScoreCounts[c.key] = 0; });
-
   if (myBrands.length > 0) {
     myBrands.forEach((b) => {
       categories.forEach((c) => {
@@ -379,497 +237,332 @@ export default function MyListPanel({ myBrands, db, onAdd, onReplace, onRemove, 
     ? Math.round(displayScores.reduce((sum, b) => sum + b.public_score, 0) / displayScores.length)
     : null;
 
-  const problematic = myBrands.filter((b) => {
-    const score = getDisplayScore(b);
-    return !b.insufficient_data && score !== null && score < threshold;
-  });
+  const problematic = myBrands.filter((b) => { const s = getDisplayScore(b); return !b.insufficient_data && s !== null && s < threshold; });
   const insufficient = myBrands.filter((b) => b.insufficient_data);
-  const positive = myBrands.filter((b) => {
-    const score = getDisplayScore(b);
-    return !b.insufficient_data && score !== null && score >= threshold;
-  });
-
+  const positive = myBrands.filter((b) => { const s = getDisplayScore(b); return !b.insufficient_data && s !== null && s >= threshold; });
   const isEmpty = myBrands.length === 0;
+
   const trackedNames = useMemo(() => new Set(myBrands.map((b) => normalize(b.name))), [myBrands]);
   const activeHint = hints.find((h) => h.key === activeHintKey) || null;
 
   const addResults = useMemo(() => {
-    const cleanQuery = normalize(localQuery);
+    const q = normalize(localQuery);
     let pool = Array.isArray(db) ? [...db] : [];
     pool = pool.filter((brand) => !trackedNames.has(normalize(brand.name)));
     if (activeHint) pool = pool.filter((brand) => matchesHint(brand, activeHint));
-    if (cleanQuery) {
-      pool = pool.filter((brand) => {
-        const haystack = [brand?.name, brand?.sector, brand?.description, brand?.parent_company]
-          .filter(Boolean).join(" ").toLowerCase();
-        return haystack.includes(cleanQuery);
-      });
-    }
+    if (q) pool = pool.filter((brand) => [brand?.name, brand?.sector, brand?.description, brand?.parent_company].filter(Boolean).join(" ").toLowerCase().includes(q));
     return pool.sort((a, b) => (getDisplayScore(b) ?? -1) - (getDisplayScore(a) ?? -1)).slice(0, 6);
   }, [db, trackedNames, localQuery, activeHint]);
 
   const shouldShowResults = localQuery.trim().length > 0 || activeHint !== null;
-  const avgScoreColor = scoreColor(publicAverage);
+  const avgColor = scoreColor(publicAverage);
 
-  // ── Render ─────────────────────────────────────────────────────────────────
   return (
-    <div style={{ fontFamily: F.sans, background: T.paper }}>
+    <div style={{ fontFamily: F.sans }}>
 
-      {/* ── HEADER ─────────────────────────────────────────────────────────── */}
-      <div
-        style={{
-          background: T.ink,
-          padding: "20px 18px 16px",
-          marginBottom: 14,
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        {/* decorative circle */}
-        <div style={{
-          position: "absolute", bottom: -20, right: -20,
-          width: 100, height: 100,
-          background: T.red, opacity: 0.1, borderRadius: "50%",
-          pointerEvents: "none",
-        }} />
+      {/* ══ HERO HEADER ═══════════════════════════════════════════════════════ */}
+      <div style={{ background: T.ink, padding: "28px 20px 24px", marginBottom: 20, position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: -50, right: -50, width: 200, height: 200, background: T.red, opacity: 0.12, borderRadius: "50%", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -30, left: -20, width: 120, height: 120, background: "#1a1a2e", borderRadius: "50%", pointerEvents: "none" }} />
 
-        <div style={{ fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: "#6b5e48", marginBottom: 14, fontFamily: F.sans }}>
-          {t.my_list_title || "EthicPrint · your ethical footprint"}
+        <div style={{ fontFamily: F.display, fontSize: 12, letterSpacing: "0.24em", color: "rgba(240,237,228,0.3)", marginBottom: 10 }}>
+          ETHICPRINT
         </div>
 
-        {/* Score number */}
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 4, marginBottom: 0 }}>
-          <span style={{ fontFamily: F.display, fontSize: 88, color: "#EDE8DC", lineHeight: 0.88, letterSpacing: "0.01em" }}>
+        <div style={{ fontFamily: F.display, fontSize: "clamp(42px, 10vw, 68px)", letterSpacing: "0.04em", color: "#F0EDE4", lineHeight: 0.9, marginBottom: 20 }}>
+          YOUR ETHICAL<br />FOOTPRINT
+        </div>
+
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 8, marginBottom: 16 }}>
+          <div style={{ fontFamily: F.display, fontSize: "clamp(96px, 22vw, 140px)", color: publicAverage !== null ? avgColor : "rgba(240,237,228,0.12)", lineHeight: 0.82, letterSpacing: "-0.02em" }}>
             {publicAverage ?? "—"}
-          </span>
-          <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", paddingBottom: 8, gap: 4 }}>
-            <span style={{ fontFamily: F.display, fontSize: 26, color: "#5a4a32", lineHeight: 1 }}>/100</span>
+          </div>
+          <div style={{ paddingBottom: 12 }}>
+            <div style={{ fontFamily: F.display, fontSize: 32, color: "rgba(240,237,228,0.25)", lineHeight: 1 }}>/100</div>
             {publicAverage !== null && (
-              <span style={{
-                background: avgScoreColor,
-                color: "#fff",
-                fontFamily: F.display,
-                fontSize: 12,
-                letterSpacing: "0.06em",
-                padding: "3px 8px",
+              <div style={{
                 display: "inline-block",
-                transform: "rotate(-1.5deg)",
+                fontFamily: F.display, fontSize: 15, letterSpacing: "0.1em",
+                padding: "4px 10px", marginTop: 6,
+                background: avgColor, color: "#fff",
+                transform: "rotate(-1deg)",
               }}>
-                {getDisplayLabel({ public_score: publicAverage, insufficient_data: false }, lang)}
-              </span>
+                {getDisplayLabel({ public_score: publicAverage, insufficient_data: false }, lang).toUpperCase()}
+              </div>
             )}
           </div>
         </div>
 
-        {/* Progress bar */}
-        <div style={{ background: "#2e2010", height: 4, borderRadius: 1, margin: "12px 0 10px" }}>
-          <div style={{ width: `${publicAverage ?? 0}%`, height: "100%", background: avgScoreColor, borderRadius: 1, transition: "width 0.8s cubic-bezier(.4,0,.2,1)" }} />
+        <div style={{ background: "rgba(255,255,255,0.07)", height: 6, marginBottom: 16 }}>
+          <div style={{ width: `${publicAverage ?? 0}%`, height: "100%", background: avgColor, transition: "width 0.9s cubic-bezier(.4,0,.2,1)" }} />
         </div>
 
-        {/* Summary insight */}
         {!isEmpty && (
-          <div style={{ fontSize: 12, color: "#7a6648", lineHeight: 1.6, fontFamily: F.sans }}>
-            <span style={{ color: "#c9b898", fontWeight: 500 }}>{myBrands.length}</span>
-            {" "}{lang === "it" ? "brand monitorati" : "brands tracked"}{" · "}
-            <span style={{ color: "#c9b898", fontWeight: 500 }}>{problematic.length}</span>
-            {" "}{lang === "it" ? "richiedono attenzione" : "need attention"}
+          <div>
+            <div style={{ fontSize: 13, color: "rgba(240,237,228,0.45)", marginBottom: 14, fontFamily: F.sans }}>
+              <span style={{ color: "#F0EDE4", fontWeight: 500 }}>{myBrands.length}</span>{" "}
+              {lang === "it" ? "brand monitorati" : "brands tracked"}{" · "}
+              <span style={{ color: problematic.length > 0 ? "#ff6b57" : "rgba(240,237,228,0.45)", fontWeight: problematic.length > 0 ? 500 : 400 }}>
+                {problematic.length}
+              </span>{" "}
+              {lang === "it" ? "richiedono attenzione" : "need attention"}
+            </div>
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+              {categories.map((cat) => {
+                const ps = typeof avgScores[cat.key] === "number" ? rawCategoryScoreToPublic(avgScores[cat.key]) : null;
+                const cc = scoreColor(ps);
+                return (
+                  <div key={cat.key} style={{ display: "flex", alignItems: "center", gap: 5, padding: "4px 10px", background: "rgba(255,255,255,0.05)", border: "0.5px solid rgba(255,255,255,0.1)" }}>
+                    <span style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>{cat.icon}</span>
+                    <span style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", fontFamily: F.sans }}>{getCatLabel(cat, lang)}</span>
+                    <span style={{ fontFamily: F.display, fontSize: 15, color: ps != null ? cc : "rgba(255,255,255,0.2)" }}>{ps ?? "—"}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
 
         {isEmpty && (
-          <div style={{ fontSize: 12, color: "#7a6648", fontStyle: "italic", fontFamily: F.sans }}>
-            {lang === "it" ? "Inizia ad aggiungere brand per vedere la tua impronta." : "Add brands to see your ethical footprint."}
+          <div style={{ fontSize: 14, color: "rgba(240,237,228,0.3)", fontStyle: "italic", fontFamily: F.sans }}>
+            {lang === "it" ? "Aggiungi brand per vedere la tua impronta etica." : "Add brands to see your ethical footprint."}
           </div>
         )}
 
-        {/* Category pills */}
-        {!isEmpty && (
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 12 }}>
-            {categories.map((cat) => {
-              const pubCatScore = typeof avgScores[cat.key] === "number" ? rawCategoryScoreToPublic(avgScores[cat.key]) : null;
-              const c = scoreColor(pubCatScore);
-              return (
-                <div key={cat.key} style={{
-                  display: "flex", alignItems: "center", gap: 5,
-                  padding: "4px 8px",
-                  background: "rgba(255,255,255,0.05)",
-                  border: "0.5px solid rgba(255,255,255,0.1)",
-                  borderRadius: 2,
-                  fontFamily: F.sans,
-                }}>
-                  <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>{cat.icon}</span>
-                  <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>{getCatLabel(cat, lang)}</span>
-                  <span style={{ fontSize: 11, fontWeight: 500, color: pubCatScore != null ? c : "rgba(255,255,255,0.3)" }}>{pubCatScore ?? "—"}</span>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Clear + how scores work */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 14, flexWrap: "wrap", gap: 8 }}>
-          <a href="/sources.html" style={{ fontSize: 11, color: "rgba(200,182,130,0.7)", textDecoration: "none", fontFamily: F.sans, letterSpacing: "0.02em" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 18, flexWrap: "wrap", gap: 8 }}>
+          <a href="/sources.html" style={{ fontSize: 11, color: "rgba(240,237,228,0.25)", textDecoration: "none", fontFamily: F.sans, letterSpacing: "0.04em" }}>
             {lang === "it" ? "Come funzionano i punteggi? →" : "How do scores work? →"}
           </a>
           {!isEmpty && (
-            <button onClick={onClear} style={{
-              background: "transparent",
-              border: "0.5px solid rgba(255,255,255,0.15)",
-              color: "rgba(255,255,255,0.5)",
-              padding: "6px 10px",
-              borderRadius: 2,
-              cursor: "pointer",
-              fontSize: 11,
-              fontFamily: F.sans,
-              letterSpacing: "0.04em",
-            }}>
+            <button onClick={onClear} style={{ background: "transparent", border: "0.5px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.35)", padding: "5px 10px", cursor: "pointer", fontSize: 11, fontFamily: F.sans }}>
               {t.clear_list}
             </button>
           )}
         </div>
       </div>
 
-      {/* ── BRAND SECTIONS ─────────────────────────────────────────────────── */}
+      {/* ══ BRAND SECTIONS ════════════════════════════════════════════════════ */}
       {!isEmpty && (
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
 
           {/* NEEDS ATTENTION */}
           <div>
-            <SectionHeader
-              label={lang === "it" ? "Richiedono attenzione" : "Needs attention"}
-              count={problematic.length}
-              variant="red"
-            />
+            <SectionHeader label={lang === "it" ? "Richiedono attenzione" : "Needs attention"} count={problematic.length} variant="red" />
             {problematic.length === 0 ? (
-              <div style={{ background: T.offWhite, border: `0.5px solid ${T.border}`, borderTop: "none", borderRadius: "0 0 2px 2px", padding: "12px 14px", fontSize: 13, color: T.inkLight, fontStyle: "italic", fontFamily: F.sans }}>
+              <div style={{ background: T.white, border: `0.5px solid ${T.border}`, borderTop: "none", padding: "14px 16px", fontSize: 13, color: T.inkLight, fontStyle: "italic", fontFamily: F.sans }}>
                 {lang === "it" ? "Nessun brand problematico per ora." : "No problematic brands for now."}
               </div>
             ) : (
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                {problematic.map((b, i) => {
-                  const displayScore = getDisplayScore(b);
-                  const issueLabel = getIssueLabel(b, categories, lang);
-                  const issueExplanation = getIssueExplanation(b, categories, lang);
-                  const impactCopy = getImpactCopy(b, categories, lang);
-                  const topAlternative = getTopAlternative(b);
-                  const alternativeName = getAlternativeName(topAlternative);
-                  const alternativeDelta = getAlternativeDelta(b);
-                  const replaceBrand = findAlternativeInDb(b, db);
-                  const advantageCopy = replaceBrand ? getAlternativeAdvantageCopy(b, replaceBrand, categories, lang) : null;
-                  const isLast = i === problematic.length - 1;
+              problematic.map((b, i) => {
+                const displayScore = getDisplayScore(b);
+                const issueLabel = getIssueLabel(b, categories, lang);
+                const issueExplanation = getIssueExplanation(b, categories, lang);
+                const impactCopy = getImpactCopy(b, categories, lang);
+                const topAlt = getTopAlternative(b);
+                const altName = getAlternativeName(topAlt);
+                const altDelta = getAlternativeDelta(b);
+                const replaceBrand = findAlternativeInDb(b, db);
+                const advantageCopy = replaceBrand ? getAlternativeAdvantageCopy(b, replaceBrand, categories, lang) : null;
+                const isLast = i === problematic.length - 1;
+                const bColor = scoreColor(displayScore);
 
-                  return (
-                    <div
-                      key={b.name}
-                      style={{
-                        background: T.white,
-                        border: `0.5px solid ${T.border}`,
-                        borderTop: "none",
-                        borderRadius: isLast ? "0 0 2px 2px" : 0,
-                        padding: 0,
-                      }}
-                    >
-                      {/* inner card */}
-                      <div
-                        style={{
-                          margin: 12,
-                          background: T.offWhite,
-                          border: `0.5px solid ${T.borderLight}`,
-                          borderRadius: 1,
-                          padding: "14px",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => onSelect(b)}
-                      >
-                        {/* brand row */}
-                        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-                          <span style={{ fontSize: 14, color: T.red, minWidth: 16, fontFamily: F.sans }}>!</span>
-                          <span style={{ fontFamily: F.serif, fontSize: 20, fontWeight: 900, color: T.ink, flex: 1, letterSpacing: "-0.01em" }}>
+                return (
+                  <div key={b.name} style={{
+                    background: T.white,
+                    border: `0.5px solid ${T.border}`,
+                    borderTop: "none",
+                    borderLeft: `5px solid ${bColor}`,
+                  }}>
+                    <div style={{ padding: "18px 16px 14px", cursor: "pointer" }} onClick={() => onSelect(b)}>
+                      <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 14 }}>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontFamily: F.serif, fontSize: 28, fontWeight: 900, color: T.ink, lineHeight: 1, letterSpacing: "-0.02em", marginBottom: 4 }}>
                             {b.name}
-                          </span>
-                          <ScoreBadge score={displayScore} size="md" />
+                          </div>
+                          <div style={{ fontFamily: F.display, fontSize: 13, letterSpacing: "0.14em", color: bColor }}>
+                            {issueLabel.toUpperCase()}
+                          </div>
                         </div>
+                        <ScoreBadge score={displayScore} size="lg" />
+                      </div>
 
-                        <ScoreBar score={displayScore} />
+                      <ScoreBar score={displayScore} />
 
-                        {/* issue */}
-                        <div style={{ fontSize: 10, color: T.red, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 3, fontWeight: 500, fontFamily: F.sans }}>
-                          {issueLabel}
+                      <div style={{ fontSize: 14, color: T.inkMid, lineHeight: 1.65, marginBottom: 12, fontFamily: F.sans }}>
+                        {issueExplanation}
+                      </div>
+
+                      <div style={{ borderLeft: `3px solid ${T.borderLight}`, paddingLeft: 12, marginBottom: altName ? 16 : 0 }}>
+                        <div style={{ fontFamily: F.display, fontSize: 11, letterSpacing: "0.14em", color: T.inkFaint, marginBottom: 3 }}>
+                          {lang === "it" ? "IL TUO IMPATTO" : "YOUR IMPACT"}
                         </div>
-                        <div style={{ fontSize: 13, color: T.inkMid, lineHeight: 1.55, marginBottom: 8, fontFamily: F.sans }}>
-                          {issueExplanation}
-                        </div>
-
-                        {/* impact */}
-                        <div style={{ fontSize: 12, color: T.inkLight, lineHeight: 1.5, marginBottom: alternativeName ? 12 : 0, fontFamily: F.sans }}>
-                          <span style={{ color: T.inkFaint }}>{lang === "it" ? "Il tuo impatto: " : "Your impact: "}</span>
+                        <div style={{ fontSize: 13, color: T.inkLight, lineHeight: 1.6, fontFamily: F.sans }}>
                           {impactCopy}
                         </div>
+                      </div>
 
-                        {/* alternative */}
-                        {alternativeName && (
-                          <div>
-                            <div style={{
-                              display: "flex", alignItems: "center", gap: 8,
-                              marginBottom: 10, padding: "8px 10px",
-                              background: T.greenLight,
-                              borderLeft: `3px solid ${T.green}`,
-                              borderRadius: "0 2px 2px 0",
-                            }}>
-                              <span style={{ fontSize: 11, color: T.inkLight, flex: 1, fontFamily: F.sans }}>
-                                {lang === "it" ? "Alternativa migliore" : "Better alternative"}
-                              </span>
-                              <span style={{ fontFamily: F.serif, fontSize: 14, fontWeight: 900, color: T.ink }}>{alternativeName}</span>
-                              {getAlternativeScore(topAlternative) && (
-                                <span style={{ fontFamily: F.display, fontSize: 18, color: T.green }}>
-                                  {getAlternativeScore(topAlternative)}
-                                </span>
+                      {altName && (
+                        <div style={{ marginTop: 16 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", background: T.greenBg, borderLeft: `4px solid ${T.green}`, marginBottom: 12 }}>
+                            <div style={{ flex: 1 }}>
+                              <div style={{ fontFamily: F.display, fontSize: 12, letterSpacing: "0.14em", color: T.green, marginBottom: 3 }}>
+                                {lang === "it" ? "ALTERNATIVA MIGLIORE" : "BETTER ALTERNATIVE"}
+                              </div>
+                              <div style={{ fontFamily: F.serif, fontSize: 22, fontWeight: 900, color: T.ink, lineHeight: 1 }}>
+                                {altName}
+                              </div>
+                              {advantageCopy && (
+                                <div style={{ fontSize: 12, color: T.inkLight, marginTop: 4, fontStyle: "italic", fontFamily: F.sans }}>
+                                  {advantageCopy}
+                                </div>
                               )}
                             </div>
-                            {advantageCopy && (
-                              <div style={{ fontSize: 11, color: T.inkLight, marginBottom: 10, fontStyle: "italic", fontFamily: F.sans }}>
-                                {advantageCopy}
+                            {getAlternativeScore(topAlt) && (
+                              <div style={{ fontFamily: F.display, fontSize: 42, color: T.green, lineHeight: 1 }}>
+                                {getAlternativeScore(topAlt)}
                               </div>
                             )}
-                            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                              {alternativeDelta !== null && (
-                                <span style={{
-                                  fontSize: 11, color: T.green,
-                                  border: `0.5px solid ${T.green}`,
-                                  padding: "3px 8px", borderRadius: 2,
-                                  fontFamily: F.sans,
-                                }}>
-                                  +{alternativeDelta} {lang === "it" ? "punti" : "points"}
-                                </span>
-                              )}
-                              {replaceBrand && (
-                                <button
-                                  onClick={(e) => { e.stopPropagation(); onReplace(b, replaceBrand); }}
-                                  style={{
-                                    background: T.ink, color: "#EDE8DC",
-                                    border: "none", borderRadius: 2,
-                                    padding: "8px 12px",
-                                    fontFamily: F.display, fontSize: 13,
-                                    letterSpacing: "0.06em", cursor: "pointer",
-                                    whiteSpace: "nowrap",
-                                  }}
-                                >
-                                  {lang === "it" ? `Sostituisci con ${replaceBrand.name}` : `Replace with ${replaceBrand.name}`} →
-                                </button>
-                              )}
-                              <button
-                                onClick={(e) => { e.stopPropagation(); onSelect(b); }}
-                                style={{
-                                  background: "transparent", color: T.inkLight,
-                                  border: `0.5px solid ${T.border}`, borderRadius: 2,
-                                  padding: "7px 10px",
-                                  fontFamily: F.sans, fontSize: 11,
-                                  cursor: "pointer", whiteSpace: "nowrap",
-                                }}
-                              >
-                                {lang === "it" ? "Apri dettagli →" : "Open details →"}
-                              </button>
-                            </div>
                           </div>
-                        )}
-                      </div>
 
-                      {/* remove row */}
-                      <div style={{ display: "flex", justifyContent: "flex-end", padding: "0 12px 10px" }}>
-                        <RemoveBtn onClick={(e) => { e.stopPropagation(); onRemove(b.name); }} name={b.name} />
-                      </div>
+                          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                            {altDelta !== null && (
+                              <span style={{ fontFamily: F.display, fontSize: 14, color: T.green, border: `1.5px solid ${T.green}`, padding: "4px 10px", letterSpacing: "0.06em" }}>
+                                +{altDelta} {lang === "it" ? "PUNTI" : "PTS"}
+                              </span>
+                            )}
+                            {replaceBrand && (
+                              <button
+                                onClick={(e) => { e.stopPropagation(); onReplace(b, replaceBrand); }}
+                                style={{ background: T.ink, color: "#F0EDE4", border: "none", padding: "11px 18px", fontFamily: F.display, fontSize: 16, letterSpacing: "0.1em", cursor: "pointer", whiteSpace: "nowrap" }}
+                              >
+                                {lang === "it" ? `SOSTITUISCI CON ${replaceBrand.name.toUpperCase()}` : `REPLACE WITH ${replaceBrand.name.toUpperCase()}`} →
+                              </button>
+                            )}
+                            <button
+                              onClick={(e) => { e.stopPropagation(); onSelect(b); }}
+                              style={{ background: "transparent", color: T.inkLight, border: `0.5px solid ${T.border}`, padding: "10px 12px", fontFamily: F.sans, fontSize: 12, cursor: "pointer" }}
+                            >
+                              {lang === "it" ? "Dettagli →" : "Details →"}
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  );
-                })}
-              </div>
+                    <div style={{ display: "flex", justifyContent: "flex-end", padding: "0 14px 12px" }}>
+                      <RemoveBtn onClick={(e) => { e.stopPropagation(); onRemove(b.name); }} name={b.name} />
+                    </div>
+                  </div>
+                );
+              })
             )}
           </div>
 
           {/* NOT ENOUGH EVIDENCE */}
           <div>
-            <SectionHeader
-              label={lang === "it" ? "Evidenza limitata" : "Not enough evidence"}
-              count={insufficient.length}
-              variant="dark"
-            />
+            <SectionHeader label={lang === "it" ? "Evidenza limitata" : "Not enough evidence"} count={insufficient.length} variant="dark" />
             {insufficient.length === 0 ? (
-              <div style={{ background: T.offWhite, border: `0.5px solid ${T.border}`, borderTop: "none", borderRadius: "0 0 2px 2px", padding: "12px 14px", fontSize: 13, color: T.inkLight, fontStyle: "italic", fontFamily: F.sans }}>
+              <div style={{ background: T.white, border: `0.5px solid ${T.border}`, borderTop: "none", padding: "14px 16px", fontSize: 13, color: T.inkLight, fontStyle: "italic", fontFamily: F.sans }}>
                 {lang === "it" ? "Tutti i brand hanno abbastanza elementi per una valutazione." : "All tracked brands have enough evidence for an assessment."}
               </div>
             ) : (
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                {insufficient.map((b, i) => {
-                  const isLast = i === insufficient.length - 1;
-                  return (
-                    <div
-                      key={b.name}
-                      onClick={() => onSelect(b)}
-                      style={{
-                        background: T.offWhite,
-                        border: `0.5px dashed ${T.border}`,
-                        borderTop: "none",
-                        borderRadius: isLast ? "0 0 2px 2px" : 0,
-                        padding: "12px 14px",
-                        cursor: "pointer",
-                        display: "flex", alignItems: "center", gap: 10,
-                      }}
-                    >
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontFamily: F.serif, fontSize: 17, fontWeight: 700, color: T.inkLight, marginBottom: 3 }}>
-                          {b.name}
-                        </div>
-                        <div style={{ fontSize: 12, color: T.inkFaint, lineHeight: 1.5, fontStyle: "italic", fontFamily: F.sans }}>
-                          {lang === "it"
-                            ? "Non ci sono ancora abbastanza fonti pubbliche per valutarlo bene."
-                            : "There isn't enough public evidence yet to assess it properly."}
-                        </div>
-                      </div>
-                      <span style={{ fontSize: 10, color: T.inkFaint, border: `0.5px dashed ${T.border}`, padding: "3px 8px", borderRadius: 2, fontFamily: F.sans, letterSpacing: "0.06em", textTransform: "uppercase", flexShrink: 0 }}>
-                        no data
-                      </span>
-                      <RemoveBtn onClick={(e) => { e.stopPropagation(); onRemove(b.name); }} name={b.name} />
+              insufficient.map((b) => (
+                <div key={b.name} onClick={() => onSelect(b)} style={{ background: T.white, border: `0.5px dashed ${T.border}`, borderTop: "none", padding: "14px 16px", cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontFamily: F.serif, fontSize: 22, fontWeight: 700, color: T.inkLight, marginBottom: 3 }}>{b.name}</div>
+                    <div style={{ fontSize: 12, color: T.inkFaint, fontStyle: "italic", fontFamily: F.sans, lineHeight: 1.5 }}>
+                      {lang === "it" ? "Non ci sono ancora abbastanza fonti pubbliche per valutarlo." : "Not enough public evidence yet to assess this brand."}
                     </div>
-                  );
-                })}
-              </div>
+                  </div>
+                  <div style={{ fontFamily: F.display, fontSize: 12, color: T.inkFaint, border: `0.5px dashed ${T.border}`, padding: "3px 10px", letterSpacing: "0.1em", flexShrink: 0 }}>
+                    NO DATA
+                  </div>
+                  <RemoveBtn onClick={(e) => { e.stopPropagation(); onRemove(b.name); }} name={b.name} />
+                </div>
+              ))
             )}
           </div>
 
           {/* STRONGER BRANDS */}
           <div>
-            <SectionHeader
-              label={lang === "it" ? "Brand solidi" : "Stronger brands"}
-              count={positive.length}
-              variant="green"
-            />
+            <SectionHeader label={lang === "it" ? "Brand solidi" : "Stronger brands"} count={positive.length} variant="green" />
             {positive.length === 0 ? (
-              <div style={{ background: T.offWhite, border: `0.5px solid ${T.border}`, borderTop: "none", borderRadius: "0 0 2px 2px", padding: "12px 14px", fontSize: 13, color: T.inkLight, fontStyle: "italic", fontFamily: F.sans }}>
+              <div style={{ background: T.white, border: `0.5px solid ${T.border}`, borderTop: "none", padding: "14px 16px", fontSize: 13, color: T.inkLight, fontStyle: "italic", fontFamily: F.sans }}>
                 {lang === "it" ? "Nessun brand positivo ancora." : "No positive brands yet."}
               </div>
             ) : (
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                {positive.map((b, i) => {
-                  const displayScore = getDisplayScore(b);
-                  const isLast = i === positive.length - 1;
-                  return (
-                    <div
-                      key={b.name}
-                      onClick={() => onSelect(b)}
-                      style={{
-                        background: T.greenLight,
-                        border: `0.5px solid ${T.border}`,
-                        borderTop: "none",
-                        borderRadius: isLast ? "0 0 2px 2px" : 0,
-                        padding: "10px 14px",
-                        cursor: "pointer",
-                        display: "flex", alignItems: "center", gap: 10,
-                      }}
-                    >
-                      <span style={{ fontSize: 11, color: T.green, fontWeight: 500, minWidth: 12, fontFamily: F.sans }}>✓</span>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontFamily: F.serif, fontSize: 16, fontWeight: 700, color: T.ink, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                          {b.name}
-                        </div>
-                        <div style={{ fontSize: 11, color: T.inkLight, marginTop: 1, fontFamily: F.sans }}>
-                          {getDisplayLabel(b, lang)}
-                        </div>
-                      </div>
-                      <ScoreBadge score={displayScore} size="sm" />
-                      <RemoveBtn onClick={(e) => { e.stopPropagation(); onRemove(b.name); }} name={b.name} />
+              positive.map((b) => {
+                const ds = getDisplayScore(b);
+                return (
+                  <div key={b.name} onClick={() => onSelect(b)} style={{ background: T.greenBg, border: `0.5px solid ${T.border}`, borderTop: "none", padding: "12px 16px", cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{ color: T.green, fontFamily: F.display, fontSize: 18 }}>✓</div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontFamily: F.serif, fontSize: 20, fontWeight: 700, color: T.ink, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{b.name}</div>
+                      <div style={{ fontSize: 11, color: T.inkLight, fontFamily: F.sans, marginTop: 1 }}>{getDisplayLabel(b, lang)}</div>
                     </div>
-                  );
-                })}
-              </div>
+                    <ScoreBadge score={ds} size="md" />
+                    <RemoveBtn onClick={(e) => { e.stopPropagation(); onRemove(b.name); }} name={b.name} />
+                  </div>
+                );
+              })
             )}
           </div>
-
         </div>
       )}
 
-      {/* ── EMPTY STATE ────────────────────────────────────────────────────── */}
+      {/* ══ EMPTY STATE ═══════════════════════════════════════════════════════ */}
       {isEmpty && (
-        <div style={{ padding: "4px 0 16px" }}>
-          <div style={{ fontFamily: F.serif, fontSize: 18, fontWeight: 900, color: T.ink, lineHeight: 1.35, marginBottom: 8 }}>
-            {lang === "it"
-              ? "Inizia dai brand che usi davvero ogni settimana."
-              : "Start with the brands you actually use every week."}
+        <div style={{ padding: "4px 0 20px" }}>
+          <div style={{ fontFamily: F.serif, fontSize: 24, fontWeight: 900, color: T.ink, lineHeight: 1.3, marginBottom: 10 }}>
+            {lang === "it" ? "Inizia dai brand che usi davvero ogni settimana." : "Start with the brands you actually use every week."}
           </div>
-          <div style={{ fontSize: 13, color: T.inkMid, lineHeight: 1.65, marginBottom: 6, fontFamily: F.sans }}>
-            {lang === "it"
-              ? "Ti mostreremo il loro giudizio etico, cosa non va quando emergono criticità, e alternative migliori quando servono."
-              : "We'll show their ethical standing, what's problematic when issues emerge, and better alternatives when needed."}
+          <div style={{ fontSize: 14, color: T.inkMid, lineHeight: 1.7, marginBottom: 6, fontFamily: F.sans }}>
+            {lang === "it" ? "Ti mostreremo il loro giudizio etico, cosa non va quando emergono criticità, e alternative migliori quando servono." : "We'll show their ethical standing, what's problematic when issues emerge, and better alternatives when needed."}
           </div>
           <div style={{ fontSize: 12, color: T.inkLight, lineHeight: 1.5, fontFamily: F.sans }}>
-            {lang === "it"
-              ? "Dopo averli aggiunti, puoi cliccare su ogni brand per vedere fonti, note e dettagli del punteggio."
-              : "Once added, you can click any brand to see sources, notes, and scoring details."}
+            {lang === "it" ? "Dopo averli aggiunti, puoi cliccare su ogni brand per vedere fonti, note e dettagli del punteggio." : "Once added, click any brand to see sources, notes, and scoring details."}
           </div>
         </div>
       )}
 
-      {/* ── ADD BRANDS SECTION ─────────────────────────────────────────────── */}
-      <div style={{ marginTop: 16 }}>
-        <div style={{ fontFamily: F.serif, fontSize: 16, fontWeight: 700, color: T.ink, marginBottom: 8 }}>
+      {/* ══ ADD BRANDS ════════════════════════════════════════════════════════ */}
+      <div style={{ marginTop: 24 }}>
+        <div style={{ fontFamily: F.display, fontSize: 28, letterSpacing: "0.08em", color: T.ink, marginBottom: 6 }}>
           {lang === "it" ? "Aggiungi brand che usi" : "Add brands you use"}
         </div>
-        <div style={{ fontSize: 12, color: T.inkLight, marginBottom: 10, fontFamily: F.sans }}>
-          {lang === "it"
-            ? "Inizia da 3–5 brand che usi davvero: ti daranno una footprint più utile."
-            : "Start with 3–5 brands you actually use for a more useful footprint."}
+        <div style={{ fontSize: 13, color: T.inkLight, marginBottom: 14, fontFamily: F.sans }}>
+          {lang === "it" ? "Inizia da 3–5 brand che usi davvero." : "Start with 3–5 brands you actually use."}
         </div>
 
-        {/* Search input */}
-        <div style={{
-          display: "flex", alignItems: "center", gap: 10,
-          background: T.white, border: `0.5px solid ${T.border}`,
-          borderRadius: 2, padding: "9px 12px", marginBottom: 10,
-        }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, background: T.white, border: `1px solid ${T.border}`, padding: "11px 14px", marginBottom: 10 }}>
           <input
             value={localQuery}
             onChange={(e) => { setLocalQuery(e.target.value); if (activeHintKey) setActiveHintKey(null); }}
             placeholder={lang === "it" ? "Cerca un brand..." : "Search a brand..."}
-            style={{
-              flex: 1, background: "transparent", border: "none", outline: "none",
-              color: T.ink, fontSize: 13, fontFamily: F.sans,
-            }}
+            style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: T.ink, fontSize: 14, fontFamily: F.sans }}
           />
           {(localQuery || activeHintKey) && (
-            <button
-              onClick={() => { setLocalQuery(""); setActiveHintKey(null); }}
-              style={{ background: "none", border: "none", color: T.inkFaint, cursor: "pointer", fontSize: 16, lineHeight: 1, padding: 0 }}
-              aria-label="Clear search"
-            >
-              ×
-            </button>
+            <button onClick={() => { setLocalQuery(""); setActiveHintKey(null); }} style={{ background: "none", border: "none", color: T.inkFaint, cursor: "pointer", fontSize: 18, lineHeight: 1, padding: 0 }}>×</button>
           )}
         </div>
 
-        {/* Hint pills */}
-        <div style={{ fontSize: 11, color: T.inkLight, marginBottom: 8, fontFamily: F.sans }}>
-          {lang === "it" ? "Per iniziare, prova da qui:" : "A good place to start:"}
-        </div>
-        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: shouldShowResults ? 10 : 0 }}>
+        <div style={{ fontSize: 11, color: T.inkLight, marginBottom: 8, fontFamily: F.sans }}>{lang === "it" ? "Per iniziare, prova da qui:" : "A good place to start:"}</div>
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: shouldShowResults ? 12 : 0 }}>
           {hints.map((hint) => {
             const isActive = hint.key === activeHintKey;
             return (
-              <button
-                key={hint.key}
-                onClick={() => { setActiveHintKey(isActive ? null : hint.key); setLocalQuery(""); }}
-                style={{
-                  background: isActive ? T.greenLight : T.offWhite,
-                  border: isActive ? `1px solid ${T.green}` : `0.5px solid ${T.border}`,
-                  color: isActive ? T.green : T.inkMid,
-                  padding: "6px 10px", borderRadius: 2,
-                  cursor: "pointer", fontSize: 12, fontFamily: F.sans,
-                }}
-              >
-                {hint.label}
+              <button key={hint.key} onClick={() => { setActiveHintKey(isActive ? null : hint.key); setLocalQuery(""); }} style={{
+                background: isActive ? T.ink : T.white,
+                border: `0.5px solid ${isActive ? T.ink : T.border}`,
+                color: isActive ? "#F0EDE4" : T.inkMid,
+                padding: "7px 14px", cursor: "pointer",
+                fontFamily: F.display, fontSize: 14, letterSpacing: "0.08em",
+              }}>
+                {hint.label.toUpperCase()}
               </button>
             );
           })}
         </div>
 
-        {/* Search results */}
         {shouldShowResults && (
           <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 8 }}>
             {addResults.length === 0 ? (
@@ -878,40 +571,20 @@ export default function MyListPanel({ myBrands, db, onAdd, onReplace, onRemove, 
               </div>
             ) : (
               addResults.map((brand) => {
-                const displayScore = getDisplayScore(brand);
+                const ds = getDisplayScore(brand);
                 return (
-                  <div
-                    key={brand.name}
-                    onClick={() => onSelect(brand)}
-                    style={{
-                      display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12,
-                      padding: "10px 12px",
-                      background: T.white, border: `0.5px solid ${T.borderLight}`,
-                      borderRadius: 2, cursor: "pointer",
-                    }}
-                  >
+                  <div key={brand.name} onClick={() => onSelect(brand)} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, padding: "11px 14px", background: T.white, border: `0.5px solid ${T.borderLight}`, cursor: "pointer" }}>
                     <div style={{ minWidth: 0 }}>
-                      <div style={{ color: T.ink, fontSize: 14, fontFamily: F.serif, fontWeight: 700, marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                        {brand.name}
-                      </div>
-                      <div style={{ color: T.inkLight, fontSize: 11, fontFamily: F.sans }}>
-                        {brand.sector || getDisplayLabel(brand, lang)}
-                      </div>
+                      <div style={{ fontFamily: F.serif, fontSize: 17, fontWeight: 700, color: T.ink, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{brand.name}</div>
+                      <div style={{ fontSize: 11, color: T.inkLight, fontFamily: F.sans }}>{brand.sector || getDisplayLabel(brand, lang)}</div>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
-                      <ScoreBadge score={displayScore} size="sm" />
+                      <ScoreBadge score={ds} size="sm" />
                       <button
                         onClick={(e) => { e.stopPropagation(); onAdd(brand); setLocalQuery(""); setActiveHintKey(null); }}
-                        style={{
-                          background: T.ink, color: "#EDE8DC",
-                          border: "none", borderRadius: 2,
-                          padding: "6px 10px",
-                          fontFamily: F.display, fontSize: 13,
-                          letterSpacing: "0.06em", cursor: "pointer",
-                          whiteSpace: "nowrap",
-                        }}
+                        style={{ background: T.ink, color: "#F0EDE4", border: "none", padding: "8px 14px", fontFamily: F.display, fontSize: 15, letterSpacing: "0.08em", cursor: "pointer", whiteSpace: "nowrap" }}
                       >
-                        {lang === "it" ? "+ Aggiungi" : "+ Add"}
+                        {lang === "it" ? "+ AGGIUNGI" : "+ ADD"}
                       </button>
                     </div>
                   </div>
