@@ -299,23 +299,10 @@ export default function App() {
             >
               <div>
 
-
                 <div className="section-strip">
                   Your ethical
                   <br />
                   footprint
-                </div>
-
-              <img
-                  src={logoSrc}
-                  alt="EthicPrint"
-                  style={{
-                    height: 40,
-                    width: "auto",
-                    marginBottom: 18,
-                    filter: "grayscale(1) contrast(1.5) brightness(0.08)",
-                  }}
-                />
 
                 <div className="section-subtitle">
                   {lang === "it" ? "Stai sostenendo alcuni brand " : "You're supporting some "}
