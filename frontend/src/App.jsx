@@ -371,6 +371,32 @@ export default function App() {
       />
     );
   })}
+
+
+          
+<div
+  style={{
+    marginTop: 16,
+    fontFamily: "'Bitter', serif",
+    fontSize: 15,
+    lineHeight: 1.4,
+  }}
+>
+  <a href="/contribute.html" style={{ fontWeight: 700, textDecoration: "none", color: "#c63f1d" }}>
+    ➕ Contribute
+  </a>{" "}
+  ·{" "}
+  <a href="/contribute.html" style={{ fontWeight: 700, textDecoration: "none", color: "#c63f1d" }}>
+    Report an error
+  </a>{" "}
+  ·{" "}
+  <a href="/contribute.html" style={{ fontWeight: 700, textDecoration: "none", color: "#c63f1d" }}>
+    Add a brand
+  </a>
+</div>
+
+
+          
 </div>
               </div>
             </div>
