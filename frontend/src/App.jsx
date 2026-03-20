@@ -337,10 +337,16 @@ export default function App() {
   {t.subtitle.map((line, i) => {
     const boldWords = [
       "consequences",
+      "conseguenze",
       "shape the world",
+      "plasmare il mondo",
       "EthicPrint",
       "aware",
+      "consapevoli",
       "change",
+      "cambiamento",
+      "people",
+      "persone",
     ];
 
     let formatted = line;
