@@ -345,8 +345,6 @@ export default function App() {
       "consapevoli",
       "change",
       "cambiamento",
-      "people",
-      "persone",
     ];
 
     let formatted = line;
