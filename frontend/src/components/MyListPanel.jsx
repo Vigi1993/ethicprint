@@ -407,17 +407,11 @@ export default function MyListPanel({
       ? "LA TUA IMPRONTA\nETICA"
       : "YOUR ETHICAL\nFOOTPRINT";
 
-  const subtitle = isEmpty
-    ? lang === "it"
+  const subtitle = 
+    lang === "it"
       ? "Scopri l'impatto etico dei brand che usi e passa ad alternative migliori."
       : "Learn the ethical impact of the brands you use and switch to better options."
-    : problematic.length > 0
-    ? lang === "it"
-      ? "Stai ancora sostenendo alcuni brand problematici."
-      : "You're supporting some problematic brands."
-    : lang === "it"
-    ? "La tua lista appare più solida, ma puoi migliorarla ancora."
-    : "Your list looks stronger, but there is still room to improve.";
+    ;
 
   const deckLine =
     lang === "it"
