@@ -350,6 +350,13 @@ export default function App() {
       formatted = formatted.replace(regex, "<strong>$1</strong>");
     });
 
+    if (formatted.includes("better alternatives")) {
+  formatted = formatted.replace(
+    "better alternatives.",
+    `better alternatives. <a href="/methodology.html" style="text-decoration: underline; font-weight: 700;">Discover how we score brands →</a>`
+  );
+}
+
     return (
       <p
         key={i}
