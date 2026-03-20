@@ -347,7 +347,7 @@ export default function App() {
     let formatted = line;
 
     boldWords.forEach((word) => {
-      const regex = new RegExp(`(${word})`, "gi");
+      const regex = new RegExp(`\\b(${word})\\b`, "gi");
       formatted = formatted.replace(regex, "<strong>$1</strong>");
     });
 
