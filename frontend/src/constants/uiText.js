@@ -27,7 +27,19 @@ export const UI = {
   },
   it: {
     tagline: "Open Source · Community Driven",
-    subtitle: "Non sempre decidiamo le conseguenze delle nostre scelte. Ma le produciamo comunque. Le aziende che finanziamo ogni giorno usano quei soldi, quei dati, quel tempo per plasmare il mondo attorno a noi: guerre, ambiente, diritti, tasse. ",
+    subtitle: [
+      "Non sempre decidiamo le conseguenze delle nostre scelte. Ma le produciamo comunque.",
+    
+      "Le aziende che finanziamo ogni giorno usano quei soldi, quei dati, quel tempo per plasmare il mondo attorno a noi: guerre, ambiente, diritti, tasse.",
+    
+      "EthicPrint raccoglie fonti, valuta comportamenti, propone alternative.",
+    
+      "Non per farci sentire migliori — per renderci consapevoli.",
+    
+      "Perché la consapevolezza è il primo passo verso il cambiamento.",
+    
+      "Perché le persone sono il motore del sistema."
+    ]
     search_placeholder: "Cerca brand, piattaforma, fornitore...",
     db_info: (n, s, src) => `${n} brand · ${s} settori · ${src || "–"} fonti · open source`,
     my_list_title: "La tua impronta etica",
