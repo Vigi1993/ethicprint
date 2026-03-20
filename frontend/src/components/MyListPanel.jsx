@@ -85,7 +85,7 @@ function getIssueExplanation(brand, categories, lang) {
   if (brand?.insufficient_data) {
     return lang === "it"
       ? "Non ci sono ancora abbastanza fonti pubblicate per valutarlo bene."
-      : "There aren’t enough published sources yet to assess it properly.";
+      : "There aren't enough published sources yet to assess it properly.";
   }
 
   const worst = getWorstCategory(brand, categories);
@@ -273,7 +273,6 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
     : `Stronger on ${improvements[0].label.toLowerCase()} and ${improvements[1].label.toLowerCase()}.`;
 }
 
-  
 export default function MyListPanel({
   myBrands,
   db,
@@ -321,17 +320,6 @@ export default function MyListPanel({
           : null;
     });
   }
-
-  const displayScores = myBrands.filter(
-    (b) => typeof b.public_score === "number" && !b.insufficient_data
-  );
-
-  const publicAverage = displayScores.length
-    ? Math.round(
-        displayScores.reduce((sum, b) => sum + b.public_score, 0) /
-          displayScores.length
-      )
-    : null;
 
   const problematic = myBrands.filter((b) => {
     const score = getDisplayScore(b);
@@ -391,7 +379,29 @@ export default function MyListPanel({
 
   const shouldShowResults = localQuery.trim().length > 0 || activeHint !== null;
 
-  const scoreValue = publicAverage ?? "-";
+  // Messaggio etico aggregato — solo se ci sono brand in lista
+  const scoredBrands = myBrands.filter(
+    (b) => !b.insufficient_data && getDisplayScore(b) !== null
+  );
+  const majorityCritical =
+    scoredBrands.length > 0 &&
+    problematic.length > scoredBrands.length / 2;
+  const majorityPositive =
+    scoredBrands.length > 0 &&
+    positive.length > scoredBrands.length / 2;
+
+  const ethicalStatusMsg = !isEmpty && scoredBrands.length > 0
+    ? majorityCritical
+      ? lang === "it"
+        ? "⚠️ La maggior parte dei brand che usi presenta criticità etiche significative."
+        : "⚠️ Most of the brands you use have significant ethical concerns."
+      : majorityPositive
+      ? lang === "it"
+        ? "✅ La maggior parte dei brand che usi è eticamente positiva."
+        : "✅ Most of the brands you use are ethically positive."
+      : null
+    : null;
+
   const headlineText =
     lang === "it"
       ? "LA TUA IMPRONTA\nETICA"
@@ -404,7 +414,7 @@ export default function MyListPanel({
     : problematic.length > 0
     ? lang === "it"
       ? "Stai ancora sostenendo alcuni brand problematici."
-      : "You’re supporting some problematic brands."
+      : "You're supporting some problematic brands."
     : lang === "it"
     ? "La tua lista appare più solida, ma puoi migliorarla ancora."
     : "Your list looks stronger, but there is still room to improve.";
@@ -658,16 +668,16 @@ export default function MyListPanel({
   };
 
   return (
-<div
-  style={{
-    marginTop: 18,
-    background: "#f2eadf", 
-    padding: "26px 24px 30px",
-    border: "4px solid #181310",
-    boxShadow: "8px 8px 0 #181310",
-    position: "relative",
-  }}
->
+    <div
+      style={{
+        marginTop: 18,
+        background: "#f2eadf",
+        padding: "26px 24px 30px",
+        border: "4px solid #181310",
+        boxShadow: "8px 8px 0 #181310",
+        position: "relative",
+      }}
+    >
       <style>{`
         .ep-manifest * { box-sizing: border-box; }
         .ep-manifest {
@@ -695,25 +705,6 @@ export default function MyListPanel({
           box-shadow: inset 0 0 80px rgba(0,0,0,0.04);
           overflow: hidden;
         }
-        .ep-paper::before,
-        .ep-paper::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          pointer-events: none;
-        }
-        .ep-paper::before {
-          background:
-            radial-gradient(circle at 10% 15%, rgba(0,0,0,0.08) 0 1px, transparent 1px),
-            radial-gradient(circle at 80% 30%, rgba(0,0,0,0.06) 0 1px, transparent 1px),
-            radial-gradient(circle at 55% 70%, rgba(0,0,0,0.07) 0 1px, transparent 1px);
-          background-size: 10px 10px, 13px 13px, 11px 11px;
-          opacity: 0.32;
-        }
-        .ep-paper::after {
-          box-shadow: inset 0 0 0 2px rgba(0,0,0,0.04), inset 0 0 40px rgba(0,0,0,0.05);
-          opacity: 0.85;
-        }
         .ep-row:hover {
           background: rgba(255,255,255,0.36) !important;
         }
@@ -724,17 +715,14 @@ export default function MyListPanel({
         }
         @media (max-width: 860px) {
           .ep-top-grid { grid-template-columns: 1fr !important; }
-          .ep-score-badge { margin-top: 10px; justify-self: start !important; }
           .ep-row { grid-template-columns: 1fr !important; }
         }
       `}</style>
 
-
       <div className="ep-manifest" style={{ padding: 26 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 18 }} className="ep-top-grid">
+        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 18 }} className="ep-top-grid">
           <div>
-
-
+            {/* Titolo */}
             <div
               style={{
                 fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
@@ -751,6 +739,7 @@ export default function MyListPanel({
               {headlineText}
             </div>
 
+            {/* Subtitle */}
             <div
               style={{
                 fontFamily: "Georgia, 'Times New Roman', serif",
@@ -779,78 +768,42 @@ export default function MyListPanel({
               )}
             </div>
 
-<div
-  style={{
-    fontFamily: "Arial, Helvetica, sans-serif",
-    fontSize: 14,
-    lineHeight: 1.45,
-    color: "rgba(0,0,0,0.72)",
-    maxWidth: 620,
-  }}
->
-  {deckLine}
+            {/* Deck line — senza link */}
+            <div
+              style={{
+                fontFamily: "Arial, Helvetica, sans-serif",
+                fontSize: 14,
+                lineHeight: 1.45,
+                color: "rgba(0,0,0,0.72)",
+                maxWidth: 620,
+              }}
+            >
+              {deckLine}
+            </div>
 
-  <div style={{ marginTop: 10 }}>
-    <a
-      href="/sources.html"
-      style={{
-        fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-        fontSize: 14,
-        textTransform: "uppercase",
-        color: "#c4432c",
-        textDecoration: "none",
-        borderBottom: "2px solid #c4432c",
-        paddingBottom: 2,
-        display: "inline-block",
-      }}
-    >
-      {lang === "it" ? "Scopri come valutiamo i brand ->" : "Discover how do we score brands ->"}
-    </a>
-  </div>
-</div>
+            {/* Messaggio etico aggregato */}
+            {ethicalStatusMsg && (
+              <div
+                style={{
+                  marginTop: 16,
+                  padding: "12px 16px",
+                  border: `3px solid ${majorityCritical ? "#c4432c" : "#2e7d32"}`,
+                  background: majorityCritical ? "#fde8e4" : "#e8f5e9",
+                  color: majorityCritical ? "#c4432c" : "#2e7d32",
+                  fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+                  fontSize: 16,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.02em",
+                  lineHeight: 1.3,
+                }}
+              >
+                {ethicalStatusMsg}
+              </div>
+            )}
           </div>
-
-
-
-          
-<div
-  className="ep-score-badge"
-  style={{
-    alignSelf: "start",
-    justifySelf: "end",
-    width: 168,
-    height: 168,
-    borderRadius: "50%",
-    background: "linear-gradient(180deg, #f04d2e 0%, #c63722 100%)",
-    border: "8px solid rgba(0,0,0,0.84)",
-    boxShadow: "inset 0 0 0 10px rgba(255,255,255,0.05)",
-    position: "relative",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "#fff",
-    transform: "rotate(-4deg)",
-  }}
->
-  <div style={{ textAlign: "center", marginTop: -4 }}>
-    <div
-      style={{
-        fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-        fontSize: 60,
-        lineHeight: 0.9,
-      }}
-    >
-      {scoreValue}
-      <span style={{ fontSize: 28 }}>/100</span>
-    </div>
-  </div>
-</div>
-
-
-
-          
         </div>
 
+        {/* Sezioni brand */}
         <div style={{ marginTop: 24 }}>
           <div style={sectionStyle}>
             <div style={bandTitleStyle("#dd4a2f", "#fff")}>{lang === "it" ? "Danno attivo" : "Active harm"}</div>
@@ -888,6 +841,7 @@ export default function MyListPanel({
           </div>
         </div>
 
+        {/* Sezione aggiungi brand */}
         <div
           style={{
             borderTop: "6px solid #111",
@@ -920,6 +874,7 @@ export default function MyListPanel({
               : "Start with the brands you actually use every week. Click on them to see details and sources and add them to your footprint."}
           </div>
 
+          {/* Barra di ricerca */}
           <div
             style={{
               display: "flex",
@@ -938,7 +893,7 @@ export default function MyListPanel({
                 setLocalQuery(e.target.value);
                 if (activeHintKey) setActiveHintKey(null);
               }}
-              placeholder={lang === "it" ? "Cerca un brand, piattaforme, servizi o un settore intero" : "Search brands, platforms, services or an entire sector "}
+              placeholder={lang === "it" ? "Cerca un brand, piattaforme, servizi o un settore intero" : "Search brands, platforms, services or an entire sector"}
               style={{
                 flex: 1,
                 background: "transparent",
@@ -972,6 +927,24 @@ export default function MyListPanel({
             )}
           </div>
 
+          {/* Etichetta sopra i bottoni categoria */}
+          <div
+            style={{
+              fontFamily: "Arial, Helvetica, sans-serif",
+              fontSize: 12,
+              color: "rgba(0,0,0,0.52)",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              marginBottom: 8,
+            }}
+          >
+            {lang === "it"
+              ? "Oppure parti da una categoria"
+              : "Or start from a category"}
+          </div>
+
+          {/* Bottoni categoria + clear */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: shouldShowResults ? 12 : 0 }}>
             {hints.map((hint) => {
               const isActive = hint.key === activeHintKey;
@@ -1018,6 +991,7 @@ export default function MyListPanel({
             )}
           </div>
 
+          {/* Risultati ricerca */}
           {shouldShowResults && (
             <div style={{ border: "4px solid #111", background: "#f4eee3" }}>
               {addResults.length === 0 ? (
