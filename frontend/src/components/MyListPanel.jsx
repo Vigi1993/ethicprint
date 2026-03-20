@@ -404,8 +404,8 @@ export default function MyListPanel({
 
   const headlineText =
     lang === "it"
-      ? "LA TUA IMPRONTA\nETICA"
-      : "YOUR ETHICAL\nFOOTPRINT";
+      ? "I TUOI BRAND, IL LORO IMPATTO"
+      : "YOUR BRANDS, THEIR IMPACT";
 
   const subtitle = 
     lang === "it"
@@ -415,8 +415,8 @@ export default function MyListPanel({
 
   const deckLine =
     lang === "it"
-      ? "Cerca un brand nella barra oppure sfoglia per categoria in fondo alla pagina. Clicca su un brand per vederne i dettagli e leggere direttamente le fonti — poi aggiungilo per scoprire la tua impronta etica."
-      : "Search for a brand using the bar or browse by sector at the end of the page. Click on any brand to explore its details and read the sources yourself — then add it to discover your ethical footprint.";
+      ? "Cerca un brand nella barra oppure sfoglia per categoria in fondo alla pagina. Clicca su un brand per vederne i dettagli e leggere direttamente le fonti — poi aggiungilo per vedere il quadro d'insieme."
+      : "Search for a brand using the bar or browse by sector at the end of the page. Click on any brand to explore its details and read the sources yourself — then add it to see the bigger picture.";
 
   const sectionStyle = {
     border: "4px solid #111",
