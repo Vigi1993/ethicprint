@@ -343,7 +343,7 @@ export default function App() {
                     fontWeight: 500,
                   }}
                 >
-                    {t.subtitle.map((line, i) => (
+                    {t.subtitle.map((line, i) => {
                     const boldWords = ["consequences", "shape the world", "EthicPrint", "aware", "change", "people"];
                     
                       let formatted = line;
@@ -367,7 +367,7 @@ export default function App() {
                       >
                         {line}
                       </p>
-                    ))} 
+                     })} 
                 </p>
               </div>
             </div>
