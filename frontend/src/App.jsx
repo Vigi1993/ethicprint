@@ -308,11 +308,13 @@ export default function App() {
               <div
                 style={{
                   fontFamily: "'Bitter', serif",
-                  lineHeight: 1.1,
-                  marginBottom: 12,
-                  fontSize: "clamp(22px, 3.2vw, 30px)",
-                  fontWeight: 400,
-                  letterSpacing: "-0.01em",
+                  lineHeight: 1.2,
+                     marginBottom: 10,
+                  fontSize: 16,
+                  fontWeight: 500,
+                  letterSpacing: "0.02em",
+                  textTransform: "uppercase",
+                  opacity: 0.7,
                 }}
               >
                 Open Source   -  Community Driven
@@ -336,8 +338,9 @@ export default function App() {
                     marginTop: 16,
                     maxWidth: 540,
                     fontFamily: "'Bitter', serif",
-                    fontSize: 16,
-                    lineHeight: 1.45,
+                    fontSize: "clamp(20px, 3vw, 28px)",
+                    lineHeight: 1.25,
+                    fontWeight: 500,
                   }}
                 >
                   {t.subtitle} 
