@@ -343,7 +343,21 @@ export default function App() {
                     fontWeight: 500,
                   }}
                 >
-                  {t.subtitle} 
+                    {t.subtitle.map((line, i) => (
+                      <p
+                        key={i}
+                        style={{
+                          marginTop: i === 0 ? 16 : 10,
+                          maxWidth: 540,
+                          fontFamily: "'Bitter', serif",
+                          fontSize: "clamp(20px, 3vw, 28px)",
+                          lineHeight: 1.25,
+                          fontWeight: 500,
+                        }}
+                      >
+                        {line}
+                      </p>
+                    ))} 
                   <br />
                   {categories.map((c) => getCatLabel(c, lang).split(" ")[0]).join(" · ")}
                 </p>
