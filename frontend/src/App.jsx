@@ -446,7 +446,7 @@ if (formatted.includes("better alternatives")) {
             <div
               style={{
                 display: "inline-block",
-                background: "#2c4a6e",
+                background: "#3570b2",
                 color: "#181310",
                 border: "3px solid #181310",
                 boxShadow: "4px 4px 0 #181310",
@@ -481,7 +481,7 @@ if (formatted.includes("better alternatives")) {
       onClick={() => setShowAllSectors((prev) => !prev)}
       style={{
         border: "3px solid #181310",
-        background: showAllSectors ? "#181310" : "#2c4a6e",
+        background: showAllSectors ? "#181310" : "#efe7d8",
         color: showAllSectors ? "#f4eee3" : "#181310",
         padding: "10px 14px",
         fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
