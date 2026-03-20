@@ -409,8 +409,8 @@ export default function MyListPanel({
 
   const subtitle = isEmpty
     ? lang === "it"
-      ? "Aggiungi i brand che usi per vedere la tua impronta etica."
-      : "Add the brands you use to see your ethical footprint."
+      ? "Scopri l'impatto etico dei brand che usi e passa ad alternative migliori."
+      : "Learn the ethical impact of the brands you use and switch to better options."
     : problematic.length > 0
     ? lang === "it"
       ? "Stai ancora sostenendo alcuni brand problematici."
@@ -421,8 +421,8 @@ export default function MyListPanel({
 
   const deckLine =
     lang === "it"
-      ? "Scopri l'impatto etico dei brand che usi e passa ad alternative migliori."
-      : "Learn the ethical impact of the brands you use and switch to better options.";
+      ? "Cerca un brand nella barra oppure sfoglia per categoria in fondo alla pagina. Clicca su un brand per vederne i dettagli e leggere direttamente le fonti — poi aggiungilo per scoprire la tua impronta etica."
+      : "Search for a brand using the bar or browse by sector at the end of the page. Click on any brand to explore its details and read the sources yourself — then add it to discover your ethical footprint.";
 
   const sectionStyle = {
     border: "4px solid #111",
@@ -940,8 +940,8 @@ export default function MyListPanel({
             }}
           >
             {lang === "it"
-              ? "Oppure parti da una categoria"
-              : "Or start from a category"}
+              ? "Ecco alcune categorie per aiutarti. Clicca e scegli il brand"
+              : "Here some hint categories to help you. Click and choose your brand"}
           </div>
 
           {/* Bottoni categoria + clear */}
