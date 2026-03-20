@@ -135,7 +135,28 @@ export default function App() {
     setQuery("");
   };
 
-  const recentSourceUpdates = [];
+ const recentSourceUpdates = [
+  {
+    brand_name: "Nike",
+    category_key: "ambiente",
+    title: "New report on emissions increase",
+    publisher: "The Guardian",
+    url: "https://example.com",
+    value: -10,
+    judgment: "negative",
+    created_at: "2026-03-20T10:20:00Z",
+  },
+  {
+    brand_name: "Meta",
+    category_key: "diritti",
+    title: "New investigation on labor conditions",
+    publisher: "Reuters",
+    url: "https://example.com",
+    value: -5,
+    judgment: "prev_negative",
+    created_at: "2026-03-19T09:10:00Z",
+  },
+];
 
   const sectors = [...new Set(db.map((b) => b.sector))].sort();
 
