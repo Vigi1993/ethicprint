@@ -135,6 +135,8 @@ export default function App() {
     setQuery("");
   };
 
+  const recentSourceUpdates = [];
+
   const sectors = [...new Set(db.map((b) => b.sector))].sort();
 
   const brandsBySector = sectors
