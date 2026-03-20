@@ -351,10 +351,10 @@ export default function App() {
     });
 
 if (formatted.includes("better alternatives")) {
-  formatted = formatted.replace(
+    formatted = formatted.replace(
     "better alternatives.",
-    `better alternatives.<br/><a href="/methodology.html" style="font-weight: 700; color: #c63f1d; text-decoration: none;">Discover how we score brands →</a>`
-  );
+    `better alternatives.<br/><a href="/methodology.html" style="font-weight: 700; color: #c63f1d; text-decoration: none; font-size: 15px;">Discover how we score brands →</a>`
+    );
 }
 
     return (
