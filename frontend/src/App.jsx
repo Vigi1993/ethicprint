@@ -7,7 +7,7 @@ import { CategoriesContext } from "./context/categoriesContext";
 import { useInitialData } from "./hooks/useInitialData";
 import { useSourcesCount } from "./hooks/useSourcesCount";
 import { useBrandSearch } from "./hooks/useBrandSearch";
-import WorstBrandsPanel from "./components/WorstBrandsPanel";
+import RecentSourcesPanel from "./components/RecentSourcesPanel";
 import {
   getSectorAvgScore,
   getCatLabel,
@@ -427,10 +427,10 @@ if (formatted.includes("better alternatives")) {
             />
           </div>
 
-          <WorstBrandsPanel
-  brands={db}
+<RecentSourcesPanel
+  updates={recentSourceUpdates}
   lang={lang}
-  onSelect={setSelected}
+  onSelectBrand={setSelected}
 />
 
 
