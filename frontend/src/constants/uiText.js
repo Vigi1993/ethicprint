@@ -10,9 +10,7 @@ export const UI = {
     
       "Not to make us feel better — but to make us aware.",
     
-      "Because people's awareness is where change begins.",
-    
-      "And people are what drives the system."
+      "Because awareness is where change begins."
     ],
     search_placeholder: "Search brand, platform, service...",
     db_info: (n, s, src) => `${n} brands · ${s} sectors · ${src || "–"} sources · open source`,
@@ -48,9 +46,7 @@ export const UI = {
     
       "Non per farci sentire migliori — per renderci consapevoli.",
     
-      "Perchè la consapevolezza delle persone è il primo passo verso il cambiamento.",
-    
-      "E le persone sono il motore del sistema."
+      "Perchè la consapevolezza è il primo passo verso il cambiamento."
     ],
     search_placeholder: "Cerca brand, piattaforma, fornitore...",
     db_info: (n, s, src) => `${n} brand · ${s} settori · ${src || "–"} fonti · open source`,
