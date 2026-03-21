@@ -67,7 +67,7 @@ export default function SectorSection({
           position: "relative",
           zIndex: 1,
           borderBottom: expanded ? "4px solid #111" : "none",
-          background: expanded ? "#e7bb3a" : "#efe7d8",
+          background: expanded ? "#5d9fd4" : "#efe7d8",
         }}
       >
 <div style={{ width: 0 }} />
