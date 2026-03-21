@@ -11,9 +11,8 @@ import {
   rawCategoryScoreToPublic,
 } from "../utils/brandHelpers";
 
-function ScoreBar({ value, color, max = 20 }) {
-  const pct = Math.min(100, Math.abs(Math.round((value / max) * 50)));
-  const positive = value >= 0;
+function ScoreBar({ value, color }) {
+  const pct = Math.min(100, Math.max(0, value ?? 0));
 
   return (
     <div
@@ -29,29 +28,17 @@ function ScoreBar({ value, color, max = 20 }) {
       <div
         style={{
           position: "absolute",
-          left: "50%",
           top: 0,
-          width: 2,
-          height: "100%",
-          background: "rgba(0,0,0,0.5)",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
+          left: 0,
           height: "100%",
           width: `${pct}%`,
           background: color,
           transition: "width 1s cubic-bezier(.4,0,.2,1)",
-          left: positive ? "50%" : undefined,
-          right: positive ? undefined : "50%",
         }}
       />
     </div>
   );
 }
-
 const UI = {
   en: {
     notes_title: "Notes & Sources",
@@ -480,9 +467,8 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                     </div>
 
                     <ScoreBar
-                      value={criteria_met ? (publicCategoryScore ?? 0) - 50 : 0}
+                      value={criteria_met ? publicCategoryScore : 0}
                       color={catColor}
-                      max={50}
                     />
                   </div>
                 );
