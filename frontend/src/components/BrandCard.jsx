@@ -415,6 +415,7 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                 const criteria_met = conf.criteria_met;
                 const rawScore = b.scores?.[cat.key];
                 const publicCategoryScore = criteria_met ? rawCategoryScoreToPublic(rawScore) : null;
+        console.log(cat.key, { conf, criteria_met, rawScore, publicCategoryScore });
                 const catColor = criteria_met ? getDisplayScoreColor(publicCategoryScore) : "#b8aa90";
                 const t1 = conf.tier1 ?? conf.t1 ?? 0;
                 const t2 = conf.tier2 ?? conf.t2 ?? 0;
