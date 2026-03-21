@@ -622,8 +622,8 @@ export default function MyListPanel({
             <button
               onClick={(e) => { e.stopPropagation(); onSelect(b); }}
               style={{
-                background: buttonBg,
-                color: buttonColor,
+                background: "transparent",
+                color: "#111",
                 border: "3px solid rgba(0,0,0,0.85)",
                 padding: "10px 12px 9px",
                 fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
