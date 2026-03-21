@@ -99,7 +99,6 @@ export function getSectorAvgDisplayScore(brands) {
 
 export function rawCategoryScoreToPublic(score) {
   if (score === null || score === undefined) return null;
-
-  const clamped = Math.max(-20, Math.min(20, score));
-  return Math.round(((clamped + 20) / 40) * 100);
+  const clamped = Math.max(-100, Math.min(100, score));
+  return Math.round(((clamped + 100) / 200) * 100);
 }
