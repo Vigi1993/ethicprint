@@ -112,6 +112,19 @@ export default function SectorSection({
         >
           <div
             style={{
+              fontFamily: "Arial, Helvetica, sans-serif",
+              fontSize: 9,
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              opacity: 0.8,
+              marginBottom: 2,
+            }}
+          >
+            avg
+          </div>
+          <div
+            style={{
               fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
               fontSize: 24,
               lineHeight: 1,
