@@ -390,17 +390,17 @@ if (formatted.includes("better alternatives")) {
     lineHeight: 1.4,
   }}
 >
-  <a href="/contribute.html" style={{ fontWeight: 700, textDecoration: "none", color: "#c63f1d" }}>
-    Contribute
-  </a>{" "}
-  ·{" "}
-  <a href="/contribute.html" style={{ fontWeight: 700, textDecoration: "none", color: "#c63f1d" }}>
-    Report an error
-  </a>{" "}
-  ·{" "}
-  <a href="/contribute.html" style={{ fontWeight: 700, textDecoration: "none", color: "#c63f1d" }}>
-    Add a brand
-  </a>
+    <a href="/contribute.html" style={{ fontWeight: 700, textDecoration: "none", color: "#c63f1d" }}>
+      {lang === "it" ? "Contribuisci" : "Contribute"}
+    </a>{" "}
+    ·{" "}
+    <a href="/contribute.html" style={{ fontWeight: 700, textDecoration: "none", color: "#c63f1d" }}>
+      {lang === "it" ? "Segnala un errore" : "Report an error"}
+    </a>{" "}
+    ·{" "}
+    <a href="/contribute.html" style={{ fontWeight: 700, textDecoration: "none", color: "#c63f1d" }}>
+      {lang === "it" ? "Aggiungi un brand" : "Add a brand"}
+    </a>
 </div>
 
 
