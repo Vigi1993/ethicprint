@@ -971,8 +971,8 @@ export default function MyListPanel({
             }}
           >
             {lang === "it"
-              ? "Oppure parti da una categoria"
-              : "Or start from a category"}
+              ? "Oppure parti da un settore"
+              : "Or start from a sector"}
           </div>
 
           {/* Bottoni categoria + clear */}
