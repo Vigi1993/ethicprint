@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import logoSrc from "./assets/logo.svg";
+import logoSrc from "./assets/logo.png";
 import BrandCard from "./components/BrandCard";
 import MyListPanel from "./components/MyListPanel";
 import SectorSection from "./components/SectorSection";
