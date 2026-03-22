@@ -334,6 +334,7 @@ const recentSourceUpdates = useRecentSourceUpdates();
                     width: "auto",
                     maxWidth: "100%",
                     filter: "grayscale(1) contrast(1.5) brightness(0.08)",
+                    margin: "0 auto",
                   }}
                 />
               </div>              
