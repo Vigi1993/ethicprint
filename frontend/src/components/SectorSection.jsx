@@ -227,8 +227,14 @@ export default function SectorSection({
                 minWidth: 82,
                 textAlign: "center",
                 border: "3px solid #111",
-                background: "#111",
-                color: "#fff",
+                background: bestScore === null
+                  ? "#111"
+                  : bestScore >= 70
+                  ? "#4a9e5c"
+                  : bestScore >= 50
+                  ? "#e7bb3a"
+                  : "#c4432c",
+                color: bestScore !== null && bestScore >= 50 && bestScore < 70 ? "#111" : "#fff",
                 padding: "10px 10px 8px",
                 flexShrink: 0,
               }}
@@ -237,14 +243,16 @@ export default function SectorSection({
               <div
                 style={{
                   fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-                  fontSize: 28,
+                  fontSize: 24,
                   lineHeight: 1,
                 }}
               >
                 {bestScore ?? "—"}
+                {bestScore !== null && (
+                  <span style={{ fontSize: 13 }}>/100</span>
+                )}
               </div>
             </div>
-
             <button
               className="add-btn"
               onClick={() => onAdd(best)}
