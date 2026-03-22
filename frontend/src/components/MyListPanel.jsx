@@ -285,6 +285,9 @@ export default function MyListPanel({
   lang,
   ui,
   threshold,
+  totalBrands = 0,
+  totalSectors = 0,
+  totalSources = 0,
 }) {
   const categories = useCategories();
   const t = ui[lang] || ui.en;
@@ -852,7 +855,57 @@ export default function MyListPanel({
             )}
           </div>
         </div>
-
+{/* Stats bar */}
+<div
+  style={{
+    display: "flex",
+    gap: 0,
+    marginBottom: 12,
+    border: "3px solid #111",
+    overflow: "hidden",
+  }}
+>
+  {[
+    { value: totalBrands, label: lang === "it" ? "brand" : "brands" },
+    { value: totalSectors, label: lang === "it" ? "settori" : "sectors" },
+    { value: totalSources, label: lang === "it" ? "fonti" : "sources" },
+  ].map((item, i) => (
+    <div
+      key={i}
+      style={{
+        flex: 1,
+        textAlign: "center",
+        padding: "10px 8px",
+        borderRight: i < 2 ? "3px solid #111" : "none",
+        background: i % 2 === 0 ? "#efe7d8" : "#f4eee3",
+      }}
+    >
+      <div
+        style={{
+          fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+          fontSize: 28,
+          lineHeight: 1,
+          color: "#111",
+        }}
+      >
+        {item.value}
+      </div>
+      <div
+        style={{
+          fontFamily: "Arial, Helvetica, sans-serif",
+          fontSize: 11,
+          fontWeight: 800,
+          textTransform: "uppercase",
+          letterSpacing: "0.06em",
+          color: "rgba(0,0,0,0.55)",
+          marginTop: 3,
+        }}
+      >
+        {item.label}
+      </div>
+    </div>
+  ))}
+</div>
         {/* Sezione aggiungi brand */}
         <div
           style={{
