@@ -9,6 +9,16 @@ export default function BrandRow({
   const score = getDisplayScore(brand);
   const inList = myBrands.find((b) => b.name === brand.name);
 
+  const scoreBg = score === null
+    ? "#111"
+    : score >= 70
+    ? "#4a9e5c"
+    : score >= 50
+    ? "#e7bb3a"
+    : "#c4432c";
+
+  const scoreColor = score !== null && score >= 50 && score < 70 ? "#111" : "#fff";
+
   return (
     <div
       className="brand-row"
@@ -37,7 +47,6 @@ export default function BrandRow({
         >
           {brand.name}
         </div>
-
         <div
           style={{
             fontFamily: "Arial, Helvetica, sans-serif",
@@ -55,8 +64,8 @@ export default function BrandRow({
           minWidth: 60,
           textAlign: "center",
           border: "3px solid #111",
-          background: "#111",
-          color: "#fff",
+          background: scoreBg,
+          color: scoreColor,
           padding: "6px 8px",
           fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
           fontSize: 18,
@@ -64,6 +73,9 @@ export default function BrandRow({
         }}
       >
         {score ?? "—"}
+        {score !== null && (
+          <span style={{ fontSize: 11 }}>/100</span>
+        )}
       </div>
 
       <button
@@ -72,8 +84,8 @@ export default function BrandRow({
           onAdd(brand);
         }}
         style={{
-          background: inList ? "#111" : "#e7bb3a",
-          color: inList ? "#f4eee3" : "#111",
+          background: inList ? "#111" : "#3570b2",
+          color: "#fff",
           border: "3px solid #111",
           padding: "6px 10px",
           fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
