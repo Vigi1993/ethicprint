@@ -405,25 +405,20 @@ export default function MyListPanel({
 
   const headlineText =
     lang === "it"
-      ? "LA TUA IMPRONTA\nETICA"
-      : "YOUR ETHICAL\nFOOTPRINT";
+      ? "I TUOI BRAND, IL LORO IMPATTO"
+      : "YOUR BRANDS, THEIR IMPACT";
 
-  const subtitle = isEmpty
-    ? lang === "it"
-      ? "Aggiungi i brand che usi per vedere la tua impronta etica."
-      : "Add the brands you use to see your ethical footprint."
-    : problematic.length > 0
-    ? lang === "it"
-      ? "Stai ancora sostenendo alcuni brand problematici."
-      : "You're supporting some problematic brands."
-    : lang === "it"
-    ? "La tua lista appare più solida, ma puoi migliorarla ancora."
-    : "Your list looks stronger, but there is still room to improve.";
+  const subtitle = 
+    lang === "it"
+      ? "Scopri l'impatto etico dei brand che usi e passa ad alternative migliori."
+      : "Learn the ethical impact of the brands you use and switch to better options."
+    ;
 
   const deckLine =
     lang === "it"
-      ? "Scopri l'impatto etico dei brand che usi e passa ad alternative migliori."
-      : "Learn the ethical impact of the brands you use and switch to better options.";
+      ? "Cerca un brand nella barra oppure sfoglia per categoria in fondo alla pagina. Clicca su un brand per vederne i dettagli e leggere direttamente le fonti — poi aggiungilo per vedere il quadro d'insieme."
+      : "Search for a brand using the bar or browse by sector at the end of the page. Click on any brand to explore its details and read the sources yourself — then add it to see the bigger picture.";
+
 
   const sectionStyle = {
     border: "4px solid #111",
