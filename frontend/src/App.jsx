@@ -432,6 +432,9 @@ const recentSourceUpdates = useRecentSourceUpdates();
               lang={lang}
               ui={UI}
               threshold={THRESHOLD}
+              totalBrands={db.length}
+              totalSectors={[...new Set(db.map((b) => b.sector).filter(Boolean))].length}
+              totalSources={sourcesCount}
             />
           </div>
 
