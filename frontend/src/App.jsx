@@ -380,7 +380,17 @@ if (formatted.includes("better alternatives")) {
     );
   })}
 
-
+<p style={{
+  marginTop: 10,
+  fontFamily: "'Bitter', serif",
+  fontSize: 15,
+  lineHeight: 1.4,
+  fontWeight: 500,
+}}>
+  <a href="/sources.html" style={{ fontWeight: 700, color: "#c63f1d", textDecoration: "none" }}>
+    {lang === "it" ? "Scopri come valutiamo i brand →" : "Discover how we score brands →"}
+  </a>
+</p>
           
 <div
   style={{
