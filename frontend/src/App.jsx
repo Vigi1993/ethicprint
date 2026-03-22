@@ -358,13 +358,6 @@ const recentSourceUpdates = useRecentSourceUpdates();
       formatted = formatted.replace(regex, "<strong>$1</strong>");
     });
 
-if (formatted.includes("better alternatives")) {
-    formatted = formatted.replace(
-    "better alternatives.",
-    `better alternatives.<br/><a href="/sources.html" style="font-weight: 700; color: #c63f1d; text-decoration: none; font-size: 15px;">Discover how we score brands </a>`
-    );
-}
-
     return (
       <p
         key={i}
@@ -388,7 +381,7 @@ if (formatted.includes("better alternatives")) {
   fontWeight: 500,
 }}>
   <a href="/sources.html" style={{ fontWeight: 700, color: "#c63f1d", textDecoration: "none" }}>
-    {lang === "it" ? "Scopri come valutiamo i brand →" : "Discover how we score brands →"}
+    {lang === "it" ? "Scopri come valutiamo i brand " : "Discover how we score brands "}
   </a>
 </p>
           
