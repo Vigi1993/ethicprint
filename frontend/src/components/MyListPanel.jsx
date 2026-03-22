@@ -889,56 +889,20 @@ export default function MyListPanel({
               : "Start with the brands you actually use every week. Click on them to see details and sources and add them to your footprint."}
           </div>
 
-          {/* Stats bar */}
 <div
   style={{
-    display: "flex",
-    gap: 0,
-    marginBottom: 12,
-    border: "3px solid #111",
-    overflow: "hidden",
+    fontFamily: "Arial, Helvetica, sans-serif",
+    fontSize: 11,
+    color: "rgba(0,0,0,0.5)",
+    fontWeight: 800,
+    textTransform: "uppercase",
+    letterSpacing: "0.06em",
+    marginBottom: 8,
   }}
 >
-  {[
-    { value: totalBrands, label: lang === "it" ? "brand" : "brands" },
-    { value: totalSectors, label: lang === "it" ? "settori" : "sectors" },
-    { value: totalSources, label: lang === "it" ? "fonti" : "sources" },
-  ].map((item, i) => (
-    <div
-      key={i}
-      style={{
-        flex: 1,
-        textAlign: "center",
-        padding: "10px 8px",
-        borderRight: i < 2 ? "3px solid #111" : "none",
-        background: i % 2 === 0 ? "#efe7d8" : "#f4eee3",
-      }}
-    >
-      <div
-        style={{
-          fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-          fontSize: 28,
-          lineHeight: 1,
-          color: "#111",
-        }}
-      >
-        {item.value}
-      </div>
-      <div
-        style={{
-          fontFamily: "Arial, Helvetica, sans-serif",
-          fontSize: 11,
-          fontWeight: 800,
-          textTransform: "uppercase",
-          letterSpacing: "0.06em",
-          color: "rgba(0,0,0,0.55)",
-          marginTop: 3,
-        }}
-      >
-        {item.label}
-      </div>
-    </div>
-  ))}
+  {lang === "it"
+    ? `${totalBrands} brand · ${totalSectors} settori · ${totalSources} fonti`
+    : `${totalBrands} brands · ${totalSectors} sectors · ${totalSources} sources`}
 </div>
 
           {/* Barra di ricerca */}
