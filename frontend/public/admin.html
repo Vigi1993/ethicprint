@@ -409,7 +409,12 @@ async function approveProposal(id) {
     document.getElementById('badge-approved').textContent=counts.approved;
     document.getElementById('s-pending').textContent =counts.pending;
     document.getElementById('s-approved').textContent=counts.approved;
-    allProposals.pending=allProposals.pending.filter(p=>p.id!==id);
+   const approvedProposal = allProposals.pending.find(p => p.id === id);
+    allProposals.pending = allProposals.pending.filter(p => p.id !== id);
+    if (approvedProposal) {
+      approvedProposal.status = 'approved';
+      allProposals.approved.unshift(approvedProposal);
+    }
     showToast('✓ Source approved');
   } catch(e){showToast('✗ Error',true);card.querySelectorAll('button').forEach(b=>b.disabled=false);}
 }
@@ -426,7 +431,12 @@ async function rejectProposal(id) {
     document.getElementById('badge-rejected').textContent=counts.rejected;
     document.getElementById('s-pending').textContent =counts.pending;
     document.getElementById('s-rejected').textContent=counts.rejected;
-    allProposals.pending=allProposals.pending.filter(p=>p.id!==id);
+    const rejectedProposal = allProposals.pending.find(p => p.id === id);
+    allProposals.pending = allProposals.pending.filter(p => p.id !== id);
+    if (rejectedProposal) {
+      rejectedProposal.status = 'rejected';
+      allProposals.rejected.unshift(rejectedProposal);
+    }
     showToast('Proposal rejected');
   } catch(e){showToast('✗ Error',true);card.querySelectorAll('button').forEach(b=>b.disabled=false);}
 }
