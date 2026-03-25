@@ -295,10 +295,8 @@ export default function App() {
 
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
   {[
-    { href: "/sources.html",    en: "How we score →",   it: "Come valutiamo →" },
-    { href: "/contribute.html", en: "Contribute →",     it: "Contribuisci →" },
-    { href: "/contribute.html", en: "Report an error →",it: "Segnala un errore →" },
-    { href: "/contribute.html", en: "Add a brand →",    it: "Aggiungi un brand →" },
+    { href: "/sources.html",    en: "How we score ",   it: "Come valutiamo " },
+    { href: "/sources.html", en: "Our mission ",   it: "La nostra missione " },
   ].map((link, i) => (
     <a
       key={i}
@@ -548,6 +546,31 @@ export default function App() {
                     {lang === "it" ? "Tutti i settori →" : "All sectors →"}
                   </button>
                 </div>
+
+        <div style={{ width: "100%", marginTop: 10, display: "flex", gap: 12, flexWrap: "wrap" }}>
+  {[
+    { href: "/contribute.html", en: "Contribute →",      it: "Contribuisci →" },
+    { href: "/contribute.html", en: "Report an error →", it: "Segnala un errore →" },
+    { href: "/contribute.html", en: "Add a brand →",     it: "Aggiungi un brand →" },
+  ].map((link, i) => (
+    
+      key={i}
+      href={link.href}
+      style={{
+        fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
+        fontSize: 12,
+        textTransform: "uppercase",
+        letterSpacing: "-0.01em",
+        color: "#c63f1d",
+        textDecoration: "none",
+        borderBottom: "2px solid #c63f1d",
+        paddingBottom: 1,
+      }}
+    >
+      {lang === "it" ? link.it : link.en}
+    </a>
+  ))}
+</div>
               )}
             </div>
           </div>
