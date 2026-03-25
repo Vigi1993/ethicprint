@@ -345,8 +345,8 @@ export default function App() {
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder={
                       lang === "it"
-                        ? "Cerca un brand, piattaforma o servizio..."
-                        : "Search a brand, platform or service..."
+                        ? "Cerca un brand e cliccalo per vedere dettagli e fonti"
+                        : "Search a brand and click it to see details and sources"
                     }
                     style={{
                       flex: 1,
