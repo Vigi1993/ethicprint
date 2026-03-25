@@ -491,6 +491,7 @@ export default function App() {
               </div>
 
               {!query && (
+        <>
                 <div
                   style={{
                     marginTop: 14,
@@ -571,6 +572,7 @@ export default function App() {
     </a>
   ))}
 </div>
+          </>
               )}
             </div>
           </div>
