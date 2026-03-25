@@ -293,53 +293,7 @@ export default function App() {
                     : "Discover the ethical impact of the brands you use every day. Every score is backed by verified sources."}
                 </div>
 
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-                  <a
-                    href="/sources.html"
-                    style={{
-                      fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
-                      fontSize: 13,
-                      textTransform: "uppercase",
-                      letterSpacing: "-0.01em",
-                      color: "#c63f1d",
-                      textDecoration: "none",
-                      borderBottom: "2px solid #c63f1d",
-                      paddingBottom: 1,
-                    }}
-                  >
-                    {lang === "it" ? "Come valutiamo →" : "How we score →"}
-                  </a>
 
-                  <span style={{ opacity: 0.3, fontSize: 13 }}>·</span>
-
-                  <a
-                    href="/contribute.html"
-                    style={{
-                      fontFamily: "'Bitter', serif",
-                      fontSize: 13,
-                      color: "#181310",
-                      opacity: 0.6,
-                      textDecoration: "none",
-                    }}
-                  >
-                    {lang === "it" ? "Contribuisci" : "Contribute"}
-                  </a>
-
-                  <span style={{ opacity: 0.3, fontSize: 13 }}>·</span>
-
-                  <a
-                    href="/contribute.html"
-                    style={{
-                      fontFamily: "'Bitter', serif",
-                      fontSize: 13,
-                      color: "#181310",
-                      opacity: 0.6,
-                      textDecoration: "none",
-                    }}
-                  >
-                    {lang === "it" ? "Aggiungi un brand" : "Add a brand"}
-                  </a>
-                </div>
               </div>
 
               <div
