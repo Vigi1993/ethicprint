@@ -289,8 +289,8 @@ export default function App() {
                   }}
                 >
                   {lang === "it"
-                    ? "Scopri l'impatto etico dei brand che usi ogni giorno. Ogni punteggio è supportato da fonti verificate."
-                    : "Discover the ethical impact of the brands you use every day. Every score is backed by verified sources."}
+                    ? "Scopri l'impatto sul mondo dei brand che usi ogni giorno e passa ad alternative migliori."
+                    : "Discover the impact on the world made by the brands you use every day and switch to better options."}
                 </div>
 
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
