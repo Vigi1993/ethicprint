@@ -292,6 +292,8 @@ export default function App() {
                     ? "Scopri l'impatto etico dei brand che usi ogni giorno. Ogni punteggio è supportato da fonti verificate."
                     : "Discover the ethical impact of the brands you use every day. Every score is backed by verified sources."}
                 </div>
+
+                
 <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
   {[
     { href: "/sources.html",    en: "How we score →",   it: "Come valutiamo →" },
@@ -317,7 +319,6 @@ export default function App() {
     </a>
   ))}
 </div>
-              </div>
 
               <div
                 style={{
