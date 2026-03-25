@@ -19,11 +19,11 @@ const THRESHOLD = 50;
 const MY_BRANDS_STORAGE_KEY = "ethicprint_my_brands_v1";
 
 const QUICK_SECTORS = [
-  { key: "tech_software", en: "Tech", it: "Tech", icon: "☁️" },
-  { key: "social_media", en: "Social Media", it: "Social Media", icon: "📱" },
-  { key: "moda", en: "Fashion", it: "Moda", icon: "👗" },
-  { key: "food_industry", en: "Food", it: "Alimentare", icon: "🥫" },
-  { key: "gdo", en: "Supermarkets", it: "Supermercati", icon: "🛍️" },
+  { en: "Tech Software & Cloud", it: "Tech Software & Cloud", icon: "☁️" },
+  { en: "Social Media",          it: "Social Media",          icon: "📱" },
+  { en: "Fashion & Apparel",     it: "Moda & Abbigliamento",  icon: "👗" },
+  { en: "Food & Beverages",      it: "Alimentare & Bevande",  icon: "🥫" },
+  { en: "Retail & Supermarkets", it: "Grande Distribuzione",  icon: "🛍️" },
 ];
 
 function LangToggle({ lang, setLang }) {
@@ -536,7 +536,7 @@ export default function App() {
                   {QUICK_SECTORS.map((s) => (
                     <button
                       key={s.key}
-                      onClick={() => openSectorModal(s.key)}
+                      onClick={() => openSectorModal(lang === "it" ? s.it : s.en)}
                       style={{
                         border: "3px solid #181310",
                         background: "#efe7d8",
@@ -548,7 +548,7 @@ export default function App() {
                         cursor: "pointer",
                       }}
                     >
-                      {s.icon} {lang === "it" ? s.it : s.en}
+                      {s.icon} {lang === "it" ? s.it.split(" ")[0] : s.en.split(" ")[0]}
                     </button>
                   ))}
 
