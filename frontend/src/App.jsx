@@ -292,54 +292,31 @@ export default function App() {
                     ? "Scopri l'impatto etico dei brand che usi ogni giorno. Ogni punteggio è supportato da fonti verificate."
                     : "Discover the ethical impact of the brands you use every day. Every score is backed by verified sources."}
                 </div>
-
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-                  <a
-                    href="/sources.html"
-                    style={{
-                      fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
-                      fontSize: 13,
-                      textTransform: "uppercase",
-                      letterSpacing: "-0.01em",
-                      color: "#c63f1d",
-                      textDecoration: "none",
-                      borderBottom: "2px solid #c63f1d",
-                      paddingBottom: 1,
-                    }}
-                  >
-                    {lang === "it" ? "Come valutiamo →" : "How we score →"}
-                  </a>
-
-                  <span style={{ opacity: 0.3, fontSize: 13 }}>·</span>
-
-                  <a
-                    href="/contribute.html"
-                    style={{
-                      fontFamily: "'Bitter', serif",
-                      fontSize: 13,
-                      color: "#181310",
-                      opacity: 0.6,
-                      textDecoration: "none",
-                    }}
-                  >
-                    {lang === "it" ? "Contribuisci" : "Contribute"}
-                  </a>
-
-                  <span style={{ opacity: 0.3, fontSize: 13 }}>·</span>
-
-                  <a
-                    href="/contribute.html"
-                    style={{
-                      fontFamily: "'Bitter', serif",
-                      fontSize: 13,
-                      color: "#181310",
-                      opacity: 0.6,
-                      textDecoration: "none",
-                    }}
-                  >
-                    {lang === "it" ? "Aggiungi un brand" : "Add a brand"}
-                  </a>
-                </div>
+<div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+  {[
+    { href: "/sources.html",    en: "How we score →",   it: "Come valutiamo →" },
+    { href: "/contribute.html", en: "Contribute →",     it: "Contribuisci →" },
+    { href: "/contribute.html", en: "Report an error →",it: "Segnala un errore →" },
+    { href: "/contribute.html", en: "Add a brand →",    it: "Aggiungi un brand →" },
+  ].map((link, i) => (
+    
+      key={i}
+      href={link.href}
+      style={{
+        fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
+        fontSize: 13,
+        textTransform: "uppercase",
+        letterSpacing: "-0.01em",
+        color: "#c63f1d",
+        textDecoration: "none",
+        borderBottom: "2px solid #c63f1d",
+        paddingBottom: 1,
+      }}
+    >
+      {lang === "it" ? link.it : link.en}
+    </a>
+  ))}
+</div>
               </div>
 
               <div
