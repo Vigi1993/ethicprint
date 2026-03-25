@@ -295,7 +295,7 @@ export default function App() {
 
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
   {[
-    { href: "/sources.html",    en: "How we score ",   it: "Come valutiamo " },
+    { href: "/sources.html",    en: "How we score -",   it: "Come valutiamo -" },
     { href: "/sources.html", en: "Our mission ",   it: "La nostra missione " },
   ].map((link, i) => (
     <a
@@ -550,8 +550,8 @@ export default function App() {
 
         <div style={{ width: "100%", marginTop: 10, display: "flex", gap: 12, flexWrap: "wrap" }}>
   {[
-    { href: "/contribute.html", en: "Contribute ",      it: "Contribuisci " },
-    { href: "/contribute.html", en: "Report an error ", it: "Segnala un errore " },
+    { href: "/contribute.html", en: "Contribute -",      it: "Contribuisci -" },
+    { href: "/contribute.html", en: "Report an error -", it: "Segnala un errore -" },
     { href: "/contribute.html", en: "Add a brand ",     it: "Aggiungi un brand " },
   ].map((link, i) => (
     <a
