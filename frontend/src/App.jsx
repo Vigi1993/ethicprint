@@ -289,8 +289,8 @@ export default function App() {
                   }}
                 >
                   {lang === "it"
-                    ? "Scopri l'impatto sul mondo dei brand che usi ogni giorno e passa ad alternative migliori."
-                    : "Discover the impact on the world made by the brands you use every day and switch to better options."}
+                    ? "Scopri l'impatto sul mondo dei brand che usi ogni giorno per aiutarti a passare ad alternative migliori."
+                    : "Discover the impact on the world made by the brands you use every day to help you switch to better options."}
                 </div>
 
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
