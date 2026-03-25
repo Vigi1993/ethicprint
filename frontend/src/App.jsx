@@ -11,14 +11,20 @@ import RecentSourcesPanel from "./components/RecentSourcesPanel";
 import { useRecentSourceUpdates } from "./hooks/useRecentSourceUpdates";
 import {
   getSectorAvgScore,
-  getCatLabel,
   getDisplayScore,
-  getDisplayScoreColor,
 } from "./utils/brandHelpers";
 import { UI } from "./constants/uiText";
 
 const THRESHOLD = 50;
 const MY_BRANDS_STORAGE_KEY = "ethicprint_my_brands_v1";
+
+const QUICK_SECTORS = [
+  { key: "tech_software", en: "Tech", it: "Tech", icon: "☁️" },
+  { key: "social_media", en: "Social Media", it: "Social Media", icon: "📱" },
+  { key: "moda", en: "Fashion", it: "Moda", icon: "👗" },
+  { key: "food_industry", en: "Food", it: "Alimentare", icon: "🥫" },
+  { key: "gdo", en: "Supermarkets", it: "Supermercati", icon: "🛍️" },
+];
 
 function LangToggle({ lang, setLang }) {
   return (
@@ -70,17 +76,19 @@ export default function App() {
     try {
       const raw = localStorage.getItem(MY_BRANDS_STORAGE_KEY);
       if (!raw) return [];
-
       const parsed = JSON.parse(raw);
       return Array.isArray(parsed) ? parsed : [];
     } catch {
       return [];
     }
   });
-  
+
   const [showAllSectors, setShowAllSectors] = useState(false);
+  const [activeSectorFilter, setActiveSectorFilter] = useState(null);
   const sourcesCount = useSourcesCount();
-  const inputRef = useRef(null);
+  const recentSourceUpdates = useRecentSourceUpdates();
+  const searchRef = useRef(null);
+  const rankingRef = useRef(null);
 
   const t = UI[lang] || UI.en;
 
@@ -90,41 +98,28 @@ export default function App() {
     link.href =
       "https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo+Narrow:wght@400;600;700;800&family=Bitter:wght@400;600;700;800&display=swap";
     document.head.appendChild(link);
-
-    return () => {
-      if (document.head.contains(link)) document.head.removeChild(link);
-    };
+    return () => { if (document.head.contains(link)) document.head.removeChild(link); };
   }, []);
 
   useEffect(() => {
     try {
       localStorage.setItem(MY_BRANDS_STORAGE_KEY, JSON.stringify(myBrands));
-    } catch {
-      // ignore storage errors
-    }
+    } catch {}
   }, [myBrands]);
 
   useEffect(() => {
     if (!Array.isArray(db) || db.length === 0) return;
-
     setMyBrands((prev) => {
       if (!Array.isArray(prev) || prev.length === 0) return prev;
-
       let changed = false;
-
       const next = prev.map((savedBrand) => {
         const freshBrand = db.find(
-          (brand) =>
-            String(brand.name || "").toLowerCase() ===
-            String(savedBrand.name || "").toLowerCase()
+          (brand) => String(brand.name || "").toLowerCase() === String(savedBrand.name || "").toLowerCase()
         );
-
         if (!freshBrand) return savedBrand;
-
         if (freshBrand !== savedBrand) changed = true;
         return freshBrand;
       });
-
       return changed ? next : prev;
     });
   }, [db]);
@@ -136,70 +131,46 @@ export default function App() {
     setQuery("");
   };
 
-const recentSourceUpdates = useRecentSourceUpdates();
-
-
   const sectors = [...new Set(db.map((b) => b.sector))].sort();
 
   const brandsBySector = sectors
     .map((sector) => {
       const brands = db.filter((b) => b.sector === sector);
       const sectorIcon = brands[0]?.sector_icon || "🏢";
-      return {
-        sector,
-        sectorIcon,
-        brands,
-        avgScore: getSectorAvgScore(brands),
-      };
+      return { sector, sectorIcon, brands, avgScore: getSectorAvgScore(brands) };
     })
     .sort((a, b) => (b.avgScore ?? -9999) - (a.avgScore ?? -9999));
 
-  const headlineScore =
-    myBrands.length > 0
-      ? Math.round(
-          myBrands.reduce((sum, brand) => sum + (getDisplayScore(brand) || 0), 0) /
-            myBrands.length
-        )
-      : 53;
+  const filteredSectors = activeSectorFilter
+    ? brandsBySector.filter((s) => s.sector === activeSectorFilter)
+    : brandsBySector;
+
+  const visibleSectors = showAllSectors
+    ? filteredSectors
+    : filteredSectors.slice(0, 4);
+
+  const scrollToRanking = () => {
+    rankingRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   if (loading) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#d9d4cf",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#181310",
-          fontFamily: "'Archivo Narrow', sans-serif",
-          fontWeight: 800,
-          fontSize: 22,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-        }}
-      >
+      <div style={{
+        minHeight: "100vh", background: "#d9d4cf", display: "flex",
+        alignItems: "center", justifyContent: "center", color: "#181310",
+        fontFamily: "'Archivo Narrow', sans-serif", fontWeight: 800,
+        fontSize: 22, letterSpacing: "0.08em", textTransform: "uppercase",
+      }}>
         {t.loading}
       </div>
     );
   }
 
-  const visibleSectors = showAllSectors
-  ? brandsBySector
-  : brandsBySector.slice(0, 4);
-  
   return (
     <CategoriesContext.Provider value={categories}>
       <LangToggle lang={lang} setLang={setLang} />
 
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#d8d3ce",
-          color: "#181310",
-          fontFamily: "'Archivo Narrow', sans-serif",
-        }}
-      >
+      <div style={{ minHeight: "100vh", background: "#d8d3ce", color: "#181310", fontFamily: "'Archivo Narrow', sans-serif" }}>
         <style>{`
           * { box-sizing: border-box; margin: 0; padding: 0; }
           html, body, #root { background: #d8d3ce; }
@@ -234,187 +205,279 @@ const recentSourceUpdates = useRecentSourceUpdates();
             pointer-events: none;
             opacity: 0.55;
           }
-          .section-strip {
-            border-top: 4px solid #181310;
-            border-bottom: 4px solid #181310;
-            padding: 14px 18px 10px;
-            font-family: 'Archivo Black', 'Arial Black', sans-serif;
-            font-size: clamp(28px, 5vw, 42px);
-            line-height: 0.95;
-            letter-spacing: -0.05em;
-            text-transform: uppercase;
-          }
-          .section-subtitle {
-            font-family: 'Bitter', serif;
-            font-size: clamp(18px, 2.9vw, 28px);
-            line-height: 1.05;
-            margin-top: 14px;
-          }
-          .section-subtitle .accent { color: #cc431f; }
-          .label-stamp {
-            font-family: 'Archivo Black', 'Arial Black', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: -0.03em;
-            font-size: 18px;
-          }
-          .search-row:hover { background: rgba(0,0,0,0.035) !important; }
-          .poster-button {
-            background: #f0c741;
-            color: #181310;
-            border: 3px solid #181310;
-            box-shadow: 4px 4px 0 #181310;
-            font-family: 'Archivo Black', 'Arial Black', sans-serif;
-            font-size: 15px;
-            line-height: 1;
-            text-transform: uppercase;
-            padding: 12px 14px;
-            cursor: pointer;
-          }
-          .poster-button:hover { transform: translate(1px, 1px); box-shadow: 3px 3px 0 #181310; }
-          .poster-input {
-            width: 100%;
-            background: #fbf7f0;
-            border: 3px solid #181310;
-            padding: 14px 16px;
-            font-size: 18px;
-            color: #181310;
-            font-family: 'Archivo Narrow', sans-serif;
-            font-weight: 700;
-            box-shadow: 5px 5px 0 #181310;
-          }
+          .search-result-row:hover { background: rgba(0,0,0,0.04) !important; }
+          .ep-search::placeholder { color: rgba(0,0,0,0.38); }
         `}</style>
 
         <div style={{ maxWidth: 980, margin: "0 auto", padding: "34px 24px 90px" }}>
-          <div
-            style={{
-              fontFamily: "'Archivo Narrow', sans-serif",
-              fontWeight: 800,
-              fontSize: 24,
-              letterSpacing: "0.01em",
-              textTransform: "uppercase",
-              marginBottom: 18,
-            }}
-          >
-          </div>
-         <div className="paper-panel" style={{ padding: "26px 26px 30px", marginBottom: 30 }}>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1.2fr auto",
-                gap: 20,
-                alignItems: "start",
-                position: "relative",
-                zIndex: 1,
-              }}
-            >
 
-               <div>
-              <div
-                style={{
-                  fontFamily: "'Bitter', serif",
-                  lineHeight: 1.2,
-                     marginBottom: 10,
-                  fontSize: 16,
-                  fontWeight: 500,
-                  letterSpacing: "0.02em",
-                  textTransform: "uppercase",
-                  opacity: 0.7,
-                }}
-              >
-                Open Source   -  Community Driven  -  No Profit
-              </div>
-        
-              <div className="section-strip" style={{ padding: "14px 20px" }}>
+          {/* ── HERO ───────────────────────────────────────────── */}
+          <div className="paper-panel" style={{ padding: "36px 32px 32px", marginBottom: 24 }}>
+            <div style={{ position: "relative", zIndex: 1 }}>
+
+              {/* Logo + eyebrow */}
+              <div style={{ marginBottom: 20 }}>
+                <div style={{
+                  fontFamily: "'Bitter', serif", fontSize: 13, fontWeight: 500,
+                  letterSpacing: "0.06em", textTransform: "uppercase",
+                  opacity: 0.55, marginBottom: 10,
+                }}>
+                  Open Source · Community Driven · No Profit
+                </div>
                 <img
                   src={logoSrc}
                   alt="EthicPrint"
                   style={{
                     display: "block",
-                    height: "clamp(52px, 7vw, 72px)",
+                    height: "clamp(44px, 6vw, 64px)",
                     width: "auto",
-                    maxWidth: "100%",
                     filter: "grayscale(1) contrast(1.5) brightness(0.08)",
-                    margin: "0 auto",
+                    marginBottom: 18,
                   }}
                 />
-              </div>              
-        <div style={{ marginTop: 16, maxWidth: "100%" }}>
-  {t.subtitle.map((line, i) => {
-    const boldWords = [
-      "consequences",
-      "conseguenze",
-      "shape the world",
-      "plasmare il mondo",
-      "EthicPrint",
-      "aware",
-      "consapevoli",
-      "change",
-      "cambiamento",
-    ];
-
-    let formatted = line;
-
-    boldWords.forEach((word) => {
-      const regex = new RegExp(`\\b(${word})\\b`, "gi");
-      formatted = formatted.replace(regex, "<strong>$1</strong>");
-    });
-
-    return (
-      <p
-        key={i}
-        style={{
-          marginTop: i === 0 ? 0 : 10,
-          fontFamily: "'Bitter', serif",
-          fontSize: "clamp(20px, 3vw, 28px)",
-          lineHeight: 1.3,
-          fontWeight: 500,
-        }}
-        dangerouslySetInnerHTML={{ __html: formatted }}
-      />
-    );
-  })}
-
-<p style={{
-  marginTop: 10,
-  fontFamily: "'Bitter', serif",
-  fontSize: 15,
-  lineHeight: 1.4,
-  fontWeight: 500,
-}}>
-  <a href="/sources.html" style={{ fontWeight: 700, color: "#c63f1d", textDecoration: "none" }}>
-    {lang === "it" ? "Scopri come valutiamo i brand " : "Discover how we score brands "}
-  </a>
-</p>
-          
-<div
-  style={{
-    marginTop: 16,
-    fontFamily: "'Bitter', serif",
-    fontSize: 15,
-    lineHeight: 1.4,
-  }}
->
-    <a href="/contribute.html" style={{ fontWeight: 700, textDecoration: "none", color: "#c63f1d" }}>
-      {lang === "it" ? "Contribuisci" : "Contribute"}
-    </a>{" "}
-    ·{" "}
-    <a href="/contribute.html" style={{ fontWeight: 700, textDecoration: "none", color: "#c63f1d" }}>
-      {lang === "it" ? "Segnala un errore" : "Report an error"}
-    </a>{" "}
-    ·{" "}
-    <a href="/contribute.html" style={{ fontWeight: 700, textDecoration: "none", color: "#c63f1d" }}>
-      {lang === "it" ? "Aggiungi un brand" : "Add a brand"}
-    </a>
-</div>
-
-
-          
-</div>
+                <div style={{
+                  fontFamily: "'Bitter', serif",
+                  fontSize: "clamp(20px, 2.8vw, 26px)",
+                  lineHeight: 1.3,
+                  fontWeight: 500,
+                  maxWidth: 680,
+                  marginBottom: 16,
+                }}>
+                  {lang === "it"
+                    ? "Scopri l'impatto etico dei brand che usi ogni giorno. Ogni punteggio è supportato da fonti verificate."
+                    : "Discover the ethical impact of the brands you use every day. Every score is backed by verified sources."}
+                </div>
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+                  <a
+                    href="/sources.html"
+                    style={{
+                      fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
+                      fontSize: 13, textTransform: "uppercase", letterSpacing: "-0.01em",
+                      color: "#c63f1d", textDecoration: "none",
+                      borderBottom: "2px solid #c63f1d", paddingBottom: 1,
+                    }}
+                  >
+                    {lang === "it" ? "Come valutiamo →" : "How we score →"}
+                  </a>
+                  <span style={{ opacity: 0.3, fontSize: 13 }}>·</span>
+                  <a href="/contribute.html" style={{ fontFamily: "'Bitter', serif", fontSize: 13, color: "#181310", opacity: 0.6, textDecoration: "none" }}>
+                    {lang === "it" ? "Contribuisci" : "Contribute"}
+                  </a>
+                  <span style={{ opacity: 0.3, fontSize: 13 }}>·</span>
+                  <a href="/contribute.html" style={{ fontFamily: "'Bitter', serif", fontSize: 13, color: "#181310", opacity: 0.6, textDecoration: "none" }}>
+                    {lang === "it" ? "Aggiungi un brand" : "Add a brand"}
+                  </a>
+                </div>
               </div>
+
+              {/* ── SEARCH BAR ── */}
+              <div style={{
+                border: "4px solid #181310",
+                background: "#fbf7f0",
+                boxShadow: "6px 6px 0 #181310",
+                marginBottom: 0,
+              }}>
+                <div style={{ display: "flex", alignItems: "center", padding: "4px 16px", borderBottom: query ? "3px solid #181310" : "none" }}>
+                  <span style={{ fontSize: 22, marginRight: 10, opacity: 0.5 }}>🔍</span>
+                  <input
+                    ref={searchRef}
+                    className="ep-search"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder={lang === "it" ? "Cerca un brand, piattaforma o servizio..." : "Search a brand, platform or service..."}
+                    style={{
+                      flex: 1, background: "transparent", border: "none", outline: "none",
+                      color: "#181310", fontSize: 20, fontWeight: 700,
+                      fontFamily: "'Archivo Narrow', sans-serif",
+                      padding: "14px 0",
+                    }}
+                  />
+                  {query && (
+                    <button
+                      onClick={() => setQuery("")}
+                      style={{ background: "transparent", border: "none", fontSize: 26, cursor: "pointer", color: "rgba(0,0,0,0.5)", lineHeight: 1 }}
+                    >×</button>
+                  )}
+                </div>
+
+                {/* Search results */}
+                {query.length >= 2 && (
+                  <div style={{ background: "#f4eee3" }}>
+                    {results.length === 0 ? (
+                      <div style={{ padding: "14px 16px", fontFamily: "'Bitter', serif", fontSize: 14, color: "rgba(0,0,0,0.5)" }}>
+                        {lang === "it" ? "Nessun brand trovato." : "No brands found."}
+                      </div>
+                    ) : (
+                      results.slice(0, 6).map((brand) => {
+                        const score = getDisplayScore(brand);
+                        const inList = myBrands.find((b) => b.name === brand.name);
+                        const scoreBg = score === null ? "#111" : score >= 70 ? "#4a9e5c" : score >= 50 ? "#e7bb3a" : "#c4432c";
+                        const scoreColor = score !== null && score >= 50 && score < 70 ? "#111" : "#fff";
+                        return (
+                          <div
+                            key={brand.name}
+                            className="search-result-row"
+                            onClick={() => setSelected(brand)}
+                            style={{
+                              display: "grid", gridTemplateColumns: "1fr auto auto",
+                              gap: 12, padding: "14px 16px",
+                              borderBottom: "2px solid rgba(0,0,0,0.1)",
+                              cursor: "pointer", alignItems: "center",
+                            }}
+                          >
+                            <div>
+                              <div style={{ fontFamily: "Arial, Helvetica, sans-serif", fontWeight: 900, fontSize: 19, color: "#111", lineHeight: 1, marginBottom: 3 }}>
+                                {brand.name}
+                              </div>
+                              <div style={{ fontFamily: "Arial, Helvetica, sans-serif", fontSize: 12, color: "rgba(0,0,0,0.55)", fontWeight: 700 }}>
+                                {brand.sector || ""}
+                              </div>
+                            </div>
+                            <div style={{
+                              background: scoreBg, color: scoreColor,
+                              border: "3px solid #111", padding: "6px 10px",
+                              fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+                              fontSize: 18, lineHeight: 1, textAlign: "center", minWidth: 60,
+                            }}>
+                              {score ?? "—"}{score !== null && <span style={{ fontSize: 11 }}>/100</span>}
+                            </div>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); addToList(brand); }}
+                              style={{
+                                background: inList ? "#111" : "#3570b2",
+                                color: "#fff", border: "3px solid #111",
+                                padding: "8px 12px", cursor: "pointer",
+                                fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+                                fontSize: 13, textTransform: "uppercase",
+                              }}
+                            >
+                              {inList ? "✓" : lang === "it" ? "+ Aggiungi" : "+ Add"}
+                            </button>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Quick sector filters */}
+              {!query && (
+                <div style={{ marginTop: 14, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                  <span style={{ fontFamily: "'Bitter', serif", fontSize: 13, opacity: 0.55, marginRight: 4 }}>
+                    {lang === "it" ? "Sfoglia per categoria:" : "Browse by category:"}
+                  </span>
+                  {QUICK_SECTORS.map((s) => (
+                    <button
+                      key={s.key}
+                      onClick={() => {
+                        setActiveSectorFilter(activeSectorFilter === s.key ? null : s.key);
+                        scrollToRanking();
+                      }}
+                      style={{
+                        border: "3px solid #181310",
+                        background: activeSectorFilter === s.key ? "#181310" : "#efe7d8",
+                        color: activeSectorFilter === s.key ? "#f4eee3" : "#181310",
+                        padding: "7px 12px",
+                        fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+                        fontSize: 13, textTransform: "uppercase", cursor: "pointer",
+                      }}
+                    >
+                      {s.icon} {lang === "it" ? s.it : s.en}
+                    </button>
+                  ))}
+                  <button
+                    onClick={scrollToRanking}
+                    style={{
+                      border: "3px solid #3570b2", background: "transparent",
+                      color: "#3570b2", padding: "7px 12px",
+                      fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+                      fontSize: 13, textTransform: "uppercase", cursor: "pointer",
+                    }}
+                  >
+                    {lang === "it" ? "Tutti i settori →" : "All sectors →"}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
-          <div style={{ marginBottom: 30 }}>
+          {/* ── RECENT SOURCES ─────────────────────────────────── */}
+          <RecentSourcesPanel
+            updates={recentSourceUpdates}
+            lang={lang}
+            onSelectBrand={(brandRef) => {
+              const found = db.find((b) => b.name === brandRef.name || b.id === brandRef.id);
+              if (found) setSelected(found);
+            }}
+          />
+
+          {/* ── RANKING BY SECTOR ──────────────────────────────── */}
+          <div style={{ marginTop: 18 }} ref={rankingRef}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18, flexWrap: "wrap" }}>
+              <div style={{
+                display: "inline-block", background: "#3570b2", color: "#ffffff",
+                border: "3px solid #181310", boxShadow: "4px 4px 0 #181310",
+                padding: "10px 14px",
+                fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
+                fontSize: 20, textTransform: "uppercase", letterSpacing: "-0.03em",
+              }}>
+                {t.ranking_title}
+              </div>
+
+              {/* Filtri settore attivi */}
+              {activeSectorFilter && (
+                <button
+                  onClick={() => setActiveSectorFilter(null)}
+                  style={{
+                    border: "3px solid #181310", background: "#181310", color: "#f4eee3",
+                    padding: "8px 12px", cursor: "pointer",
+                    fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+                    fontSize: 13, textTransform: "uppercase",
+                  }}
+                >
+                  ✕ {lang === "it" ? "Rimuovi filtro" : "Clear filter"}
+                </button>
+              )}
+            </div>
+
+            {visibleSectors.map(({ sector, sectorIcon, brands }) => (
+              <SectorSection
+                key={sector}
+                sector={sector}
+                sectorIcon={sectorIcon}
+                brands={brands}
+                myBrands={myBrands}
+                onAdd={addToList}
+                onSelect={setSelected}
+                lang={lang}
+                defaultOpen={false}
+              />
+            ))}
+
+            {filteredSectors.length > 4 && (
+              <div style={{ marginTop: 12 }}>
+                <button
+                  onClick={() => setShowAllSectors((prev) => !prev)}
+                  style={{
+                    border: "3px solid #181310",
+                    background: showAllSectors ? "#181310" : "#efe7d8",
+                    color: showAllSectors ? "#f4eee3" : "#181310",
+                    padding: "10px 14px",
+                    fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
+                    fontSize: 14, textTransform: "uppercase", cursor: "pointer",
+                  }}
+                >
+                  {showAllSectors
+                    ? (lang === "it" ? "Nascondi settori" : "Hide sectors")
+                    : (lang === "it" ? `Mostra altri ${filteredSectors.length - 4}` : `Show ${filteredSectors.length - 4} more sectors`)}
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* ── MY LIST PANEL ──────────────────────────────────── */}
+          <div style={{ marginTop: 40 }}>
             <MyListPanel
               myBrands={myBrands}
               db={db}
@@ -438,85 +501,11 @@ const recentSourceUpdates = useRecentSourceUpdates();
             />
           </div>
 
-<RecentSourcesPanel
-  updates={recentSourceUpdates}
-  lang={lang}
-  onSelectBrand={setSelected}
-/>
-
-
-
-
-          
-
-          <div style={{ marginTop: 18 }}>
-            <div
-              style={{
-                display: "inline-block",
-                background: "#3570b2",
-                color: "#181310",
-                border: "3px solid #181310",
-                boxShadow: "4px 4px 0 #181310",
-                padding: "10px 14px",
-                marginBottom: 18,
-                fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
-                fontSize: 20,
-                textTransform: "uppercase",
-                letterSpacing: "-0.03em",
-              }}
-            >
-              {t.ranking_title}
-            </div>
-
-            {visibleSectors.map(({ sector, sectorIcon, brands }) => (
-              <SectorSection
-                key={sector}
-                sector={sector}
-                sectorIcon={sectorIcon}
-                brands={brands}
-                myBrands={myBrands}
-                onAdd={addToList}
-                onSelect={setSelected}
-                lang={lang}
-                defaultOpen={true}
-              />
-            ))}
-
-            {brandsBySector.length > 4 && (
-  <div style={{ marginTop: 12 }}>
-    <button
-      onClick={() => setShowAllSectors((prev) => !prev)}
-      style={{
-        border: "3px solid #181310",
-        background: showAllSectors ? "#181310" : "#efe7d8",
-        color: showAllSectors ? "#f4eee3" : "#181310",
-        padding: "10px 14px",
-        fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
-        fontSize: 14,
-        textTransform: "uppercase",
-        cursor: "pointer",
-      }}
-    >
-      {showAllSectors
-        ? (lang === "it" ? "Nascondi settori" : "Hide sectors")
-        : (lang === "it"
-            ? `Mostra altri ${brandsBySector.length - 4}`
-            : `Show ${brandsBySector.length - 4} more sectors`)}
-    </button>
-  </div>
-)}
-          </div>
-
-          <div
-            style={{
-              marginTop: 56,
-              paddingTop: 22,
-              borderTop: "4px solid #181310",
-              fontFamily: "'Bitter', serif",
-              fontSize: 15,
-              lineHeight: 1.6,
-            }}
-          >
+          {/* ── FOOTER ─────────────────────────────────────────── */}
+          <div style={{
+            marginTop: 56, paddingTop: 22, borderTop: "4px solid #181310",
+            fontFamily: "'Bitter', serif", fontSize: 15, lineHeight: 1.6,
+          }}>
             {t.footer.split("\n").map((line, i) => (
               <div key={i}>{line}</div>
             ))}
