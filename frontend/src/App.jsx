@@ -300,7 +300,7 @@ export default function App() {
     { href: "/contribute.html", en: "Report an error →",it: "Segnala un errore →" },
     { href: "/contribute.html", en: "Add a brand →",    it: "Aggiungi un brand →" },
   ].map((link, i) => (
-    
+    <a
       key={i}
       href={link.href}
       style={{
