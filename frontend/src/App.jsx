@@ -19,11 +19,11 @@ const THRESHOLD = 50;
 const MY_BRANDS_STORAGE_KEY = "ethicprint_my_brands_v1";
 
 const QUICK_SECTORS = [
-  { en: "Tech Software & Cloud", it: "Tech Software & Cloud", icon: "☁️" },
-  { en: "Social Media",          it: "Social Media",          icon: "📱" },
-  { en: "Fashion & Apparel",     it: "Moda & Abbigliamento",  icon: "👗" },
-  { en: "Food & Beverages",      it: "Alimentare & Bevande",  icon: "🥫" },
-  { en: "Retail & Supermarkets", it: "Grande Distribuzione",  icon: "🛍️" },
+  { en: "Tech Software & Cloud", it: "Tech Software & Cloud" },
+  { en: "Social Media",          it: "Social Media" },
+  { en: "Fashion & Apparel",     it: "Moda & Abbigliamento" },
+  { en: "Food & Beverages",      it: "Alimentare & Bevande" },
+  { en: "Retail & Supermarkets", it: "Grande Distribuzione" },
 ];
 
 function LangToggle({ lang, setLang }) {
