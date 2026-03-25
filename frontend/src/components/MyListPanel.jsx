@@ -419,8 +419,8 @@ export default function MyListPanel({
 
   const deckLine =
     lang === "it"
-      ? "Cerca un brand nella barra oppure sfoglia per categoria in fondo alla pagina. Clicca su un brand per vederne i dettagli e leggere direttamente le fonti — poi aggiungilo per vedere il quadro d'insieme."
-      : "Search for a brand using the bar or browse by sector at the end of the page. Click on any brand to explore its details and read the sources yourself — then add it to see the bigger picture.";
+      ? "Cerca un brand nella barra sopra oppure sfoglia tra i settori. Clicca su un brand per vederne i dettagli e leggere direttamente le fonti — poi aggiungilo per vedere il quadro d'insieme."
+      : "Search for a brand using the bar above or browse by sectors. Click on any brand to explore its details and read the sources yourself — then add it to see the bigger picture.";
 
 
   const sectionStyle = {
