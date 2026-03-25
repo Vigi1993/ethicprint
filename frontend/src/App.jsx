@@ -293,6 +293,32 @@ export default function App() {
                     : "Discover the ethical impact of the brands you use every day. Every score is backed by verified sources."}
                 </div>
 
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+  {[
+    { href: "/sources.html",    en: "How we score →",   it: "Come valutiamo →" },
+    { href: "/contribute.html", en: "Contribute →",     it: "Contribuisci →" },
+    { href: "/contribute.html", en: "Report an error →",it: "Segnala un errore →" },
+    { href: "/contribute.html", en: "Add a brand →",    it: "Aggiungi un brand →" },
+  ].map((link, i) => (
+    
+      key={i}
+      href={link.href}
+      style={{
+        fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
+        fontSize: 13,
+        textTransform: "uppercase",
+        letterSpacing: "-0.01em",
+        color: "#c63f1d",
+        textDecoration: "none",
+        borderBottom: "2px solid #c63f1d",
+        paddingBottom: 1,
+      }}
+    >
+      {lang === "it" ? link.it : link.en}
+    </a>
+  ))}
+</div>
+
 
               </div>
 
