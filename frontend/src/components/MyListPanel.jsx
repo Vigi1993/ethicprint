@@ -954,7 +954,7 @@ export default function MyListPanel({
 
 
 
-        <div style={{ marginTop: 6 }}>
+        <div style={{ marginTop: 12 }}>
           <div style={sectionStyle}>
             <div style={bandTitleStyle("harm")}>
               {lang === "it" ? "Danno attivo" : "Active harm"}
