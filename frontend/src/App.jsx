@@ -12,6 +12,7 @@ import { useRecentSourceUpdates } from "./hooks/useRecentSourceUpdates";
 import {
   getSectorAvgScore,
   getDisplayScore,
+  getDisplayScoreColor,
 } from "./utils/brandHelpers";
 import { UI } from "./constants/uiText";
 
@@ -28,38 +29,23 @@ const QUICK_SECTORS = [
 
 function LangToggle({ lang, setLang }) {
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: 18,
-        right: 18,
-        zIndex: 300,
-        display: "flex",
-        gap: 6,
-        background: "rgba(24,19,16,0.9)",
-        border: "2px solid #181310",
-        boxShadow: "4px 4px 0 #181310",
-        padding: 6,
-      }}
-    >
+    <div style={{
+      position: "fixed", top: 20, right: 20, zIndex: 300,
+      display: "flex", gap: 4,
+      background: "rgba(255,255,255,0.06)",
+      border: "1px solid rgba(255,255,255,0.12)",
+      borderRadius: 99, padding: 4,
+    }}>
       {["en", "it"].map((l) => (
-        <button
-          key={l}
-          onClick={() => setLang(l)}
-          style={{
-            background: lang === l ? "#e44723" : "#f2eadc",
-            border: "2px solid #181310",
-            color: lang === l ? "#f8f2e9" : "#181310",
-            padding: "6px 12px",
-            cursor: "pointer",
-            fontSize: 12,
-            fontWeight: 900,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            fontFamily: "'Archivo Narrow', 'Arial Narrow', sans-serif",
-          }}
-        >
-          {l}
+        <button key={l} onClick={() => setLang(l)} style={{
+          background: lang === l ? "rgba(99,202,183,0.2)" : "transparent",
+          border: lang === l ? "1px solid rgba(99,202,183,0.4)" : "1px solid transparent",
+          color: lang === l ? "#63CAB7" : "rgba(255,255,255,0.35)",
+          padding: "4px 12px", borderRadius: 99, cursor: "pointer",
+          fontSize: 12, fontWeight: 600, fontFamily: "'DM Sans', sans-serif",
+          transition: "all 0.15s",
+        }}>
+          {l.toUpperCase()}
         </button>
       ))}
     </div>
@@ -79,9 +65,7 @@ export default function App() {
       if (!raw) return [];
       const parsed = JSON.parse(raw);
       return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
+    } catch { return []; }
   });
 
   const [showAllSectors, setShowAllSectors] = useState(false);
@@ -91,50 +75,33 @@ export default function App() {
   const sourcesCount = useSourcesCount();
   const recentSourceUpdates = useRecentSourceUpdates();
   const searchRef = useRef(null);
-
   const t = UI[lang] || UI.en;
 
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href =
-      "https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo+Narrow:wght@400;600;700;800&family=Bitter:wght@400;600;700;800&display=swap";
+    link.href = "https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap";
     document.head.appendChild(link);
-
-    return () => {
-      if (document.head.contains(link)) {
-        document.head.removeChild(link);
-      }
-    };
+    return () => { if (document.head.contains(link)) document.head.removeChild(link); };
   }, []);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(MY_BRANDS_STORAGE_KEY, JSON.stringify(myBrands));
-    } catch {}
+    try { localStorage.setItem(MY_BRANDS_STORAGE_KEY, JSON.stringify(myBrands)); } catch {}
   }, [myBrands]);
 
   useEffect(() => {
     if (!Array.isArray(db) || db.length === 0) return;
-
     setMyBrands((prev) => {
       if (!Array.isArray(prev) || prev.length === 0) return prev;
-
       let changed = false;
-
       const next = prev.map((savedBrand) => {
         const freshBrand = db.find(
-          (brand) =>
-            String(brand.name || "").toLowerCase() ===
-            String(savedBrand.name || "").toLowerCase()
+          (brand) => String(brand.name || "").toLowerCase() === String(savedBrand.name || "").toLowerCase()
         );
-
         if (!freshBrand) return savedBrand;
         if (freshBrand !== savedBrand) changed = true;
-
         return freshBrand;
       });
-
       return changed ? next : prev;
     });
   }, [db]);
@@ -152,13 +119,7 @@ export default function App() {
     .map((sector) => {
       const brands = db.filter((b) => b.sector === sector);
       const sectorIcon = brands[0]?.sector_icon || "🏢";
-
-      return {
-        sector,
-        sectorIcon,
-        brands,
-        avgScore: getSectorAvgScore(brands),
-      };
+      return { sector, sectorIcon, brands, avgScore: getSectorAvgScore(brands) };
     })
     .sort((a, b) => (b.avgScore ?? -9999) - (a.avgScore ?? -9999));
 
@@ -168,7 +129,7 @@ export default function App() {
 
   const modalVisibleSectors = showAllSectors
     ? modalFilteredSectors
-    : modalFilteredSectors.slice(0, 4);
+    : modalFilteredSectors.slice(0, 6);
 
   const openSectorModal = (sectorKey = null) => {
     setModalSectorFilter(sectorKey);
@@ -178,22 +139,10 @@ export default function App() {
 
   if (loading) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#d9d4cf",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#181310",
-          fontFamily: "'Archivo Narrow', sans-serif",
-          fontWeight: 800,
-          fontSize: 22,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-        }}
-      >
-        {t.loading}
+      <div style={{ minHeight: "100vh", background: "#08080f", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ color: "rgba(255,255,255,0.3)", fontFamily: "'DM Sans', sans-serif", fontSize: 14, letterSpacing: 2 }}>
+          {t.loading}
+        </div>
       </div>
     );
   }
@@ -202,381 +151,207 @@ export default function App() {
     <CategoriesContext.Provider value={categories}>
       <LangToggle lang={lang} setLang={setLang} />
 
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#d8d3ce",
-          color: "#181310",
-          fontFamily: "'Archivo Narrow', sans-serif",
-        }}
-      >
+      <div style={{ minHeight: "100vh", background: "#08080f", color: "#e8e8f0", fontFamily: "'DM Sans', sans-serif" }}>
         <style>{`
           * { box-sizing: border-box; margin: 0; padding: 0; }
-          html, body, #root { background: #d8d3ce; }
-          body {
-            background:
-              radial-gradient(circle at 20% 10%, rgba(255,255,255,0.18), transparent 18%),
-              radial-gradient(circle at 80% 18%, rgba(0,0,0,0.04), transparent 22%),
-              radial-gradient(circle at 10% 90%, rgba(0,0,0,0.05), transparent 18%),
-              #d8d3ce;
-          }
-          ::selection { background: rgba(228,71,35,0.25); }
+          html, body, #root { background: #08080f; }
+          ::selection { background: rgba(99,202,183,0.3); }
           input:focus { outline: none; }
-          ::-webkit-scrollbar { width: 10px; }
-          ::-webkit-scrollbar-track { background: #d8d3ce; }
-          ::-webkit-scrollbar-thumb { background: #181310; }
-          .paper-panel {
-            background: #f2eadf;
-            border: 4px solid #181310;
-            box-shadow: 8px 8px 0 #181310;
-            position: relative;
-            overflow: hidden;
-          }
-          .paper-panel::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background:
-              repeating-linear-gradient(0deg, rgba(0,0,0,0.018) 0 1px, transparent 1px 3px),
-              radial-gradient(circle at 15% 25%, rgba(0,0,0,0.08) 0 1px, transparent 1px 100%),
-              radial-gradient(circle at 85% 70%, rgba(0,0,0,0.06) 0 1px, transparent 1px 100%);
-            background-size: auto, 18px 18px, 24px 24px;
-            pointer-events: none;
-            opacity: 0.55;
-          }
-          .search-result-row:hover { background: rgba(0,0,0,0.04) !important; }
-          .ep-search::placeholder { color: rgba(0,0,0,0.38); }
+          ::-webkit-scrollbar { width: 4px; }
+          ::-webkit-scrollbar-track { background: transparent; }
+          ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
+          .search-result-row:hover { background: rgba(255,255,255,0.04) !important; }
+          .ep-search::placeholder { color: rgba(255,255,255,0.25); }
+          .sector-btn:hover { background: rgba(99,202,183,0.1) !important; border-color: rgba(99,202,183,0.3) !important; color: #63CAB7 !important; }
+          .add-btn:hover { background: rgba(99,202,183,0.15) !important; color: #63CAB7 !important; }
         `}</style>
 
-        <div style={{ maxWidth: 980, margin: "0 auto", padding: "34px 24px 90px" }}>
-          <div className="paper-panel" style={{ padding: "36px 32px 32px", marginBottom: 24 }}>
-            <div style={{ position: "relative", zIndex: 1 }}>
-              <div style={{ marginBottom: 20 }}>
-                <div
-                  style={{
-                    fontFamily: "'Bitter', serif",
-                    fontSize: 13,
-                    fontWeight: 500,
-                    letterSpacing: "0.06em",
-                    textTransform: "uppercase",
-                    opacity: 0.55,
-                    marginBottom: 10,
-                  }}
-                >
-                  Open Source · Community Driven · No Profit
-                </div>
+        <div style={{ maxWidth: 860, margin: "0 auto", padding: "48px 24px 80px" }}>
 
-                <img
-                  src={logoSrc}
-                  alt="EthicPrint"
-                  style={{
-                    display: "block",
-                    height: "clamp(44px, 6vw, 64px)",
-                    width: "auto",
-                    filter: "grayscale(1) contrast(1.5) brightness(0.08)",
-                    marginBottom: 18,
-                  }}
-                />
+          {/* ── HERO ── */}
+          <div style={{
+            background: "rgba(255,255,255,0.03)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: 20, padding: "36px 32px 32px", marginBottom: 20,
+          }}>
+            <div style={{
+              fontSize: 11, letterSpacing: 3, color: "rgba(99,202,183,0.6)",
+              textTransform: "uppercase", marginBottom: 16, fontFamily: "'DM Mono', monospace",
+            }}>
+              Open Source · Community Driven · No Profit
+            </div>
 
-                <div
-                  style={{
-                    fontFamily: "'Bitter', serif",
-                    fontSize: "clamp(20px, 2.8vw, 26px)",
-                    lineHeight: 1.3,
-                    fontWeight: 500,
-                    maxWidth: 680,
-                    marginBottom: 16,
-                  }}
-                >
-                  {lang === "it"
-                    ? "Scopri l'impatto sul mondo dei brand che usi ogni giorno per aiutarti a passare ad alternative migliori."
-                    : "Discover the impact on the world made by the brands you use every day to help you switch to better options."}
-                </div>
+            <img src={logoSrc} alt="EthicPrint" style={{
+              display: "block", height: "clamp(40px, 6vw, 60px)", width: "auto",
+              filter: "brightness(1.05) drop-shadow(0 0 18px rgba(99,202,183,0.2))",
+              marginBottom: 20,
+            }} />
 
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-  {[
-    { href: "/sources.html",    en: "How we score -",   it: "Come valutiamo -" },
-    { href: "/sources.html", en: "Our mission ",   it: "La nostra missione " },
-  ].map((link, i) => (
-    <a
-      key={i}
-      href={link.href}
-      style={{
-        fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
-        fontSize: 13,
-        textTransform: "uppercase",
-        letterSpacing: "-0.01em",
-        color: "#c63f1d",
-        textDecoration: "none",
-        borderBottom: "2px solid #c63f1d",
-        paddingBottom: 1,
-      }}
-    >
-      {lang === "it" ? link.it : link.en}
-    </a>
-  ))}
-</div>
+            <div style={{
+              fontSize: "clamp(17px, 2.4vw, 22px)", lineHeight: 1.5,
+              color: "rgba(255,255,255,0.7)", maxWidth: 620, marginBottom: 18, fontWeight: 300,
+            }}>
+              {lang === "it"
+                ? "Scopri l'impatto sul mondo dei brand che usi ogni giorno per aiutarti a passare ad alternative migliori."
+                : "Discover the impact on the world made by the brands you use every day to help you switch to better options."}
+            </div>
 
+            <div style={{ display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center", marginBottom: 28 }}>
+              {[
+                { href: "/sources.html", en: "How we score →", it: "Come valutiamo →" },
+                { href: "/sources.html", en: "Our mission →",  it: "La nostra missione →" },
+              ].map((link, i) => (
+                <a key={i} href={link.href} style={{
+                  fontSize: 12, color: "#63CAB7", textDecoration: "none",
+                  fontFamily: "'DM Mono', monospace", letterSpacing: "0.05em",
+                  borderBottom: "1px solid rgba(99,202,183,0.3)", paddingBottom: 1,
+                }}>
+                  {lang === "it" ? link.it : link.en}
+                </a>
+              ))}
+            </div>
 
-              </div>
-
-              <div
+            {/* Search bar */}
+            <div style={{
+              display: "flex", alignItems: "center", gap: 12,
+              background: "rgba(255,255,255,0.06)",
+              border: `1px solid ${query ? "rgba(99,202,183,0.3)" : "rgba(255,255,255,0.1)"}`,
+              borderRadius: 14, padding: "14px 18px",
+              boxShadow: query ? "0 0 0 3px rgba(99,202,183,0.08)" : "none",
+              transition: "all 0.2s",
+            }}>
+              <svg width="16" height="16" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+              <input
+                ref={searchRef} className="ep-search" value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={lang === "it"
+                  ? "Cerca un brand e cliccalo per vedere dettagli e fonti"
+                  : "Search a brand and click it to see details and sources"}
                 style={{
-                  border: "4px solid #181310",
-                  background: "#fbf7f0",
-                  boxShadow: "6px 6px 0 #181310",
-                  marginBottom: 0,
+                  flex: 1, background: "transparent", border: "none",
+                  color: "#fff", fontSize: 16, fontFamily: "'DM Sans', sans-serif",
                 }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    padding: "4px 16px",
-                    borderBottom: query ? "3px solid #181310" : "none",
-                  }}
-                >
-                  <span style={{ fontSize: 22, marginRight: 10, opacity: 0.5 }}>🔍</span>
+              />
+              {query && (
+                <button onClick={() => setQuery("")} style={{
+                  background: "none", border: "none", color: "rgba(255,255,255,0.3)",
+                  cursor: "pointer", fontSize: 20, lineHeight: 1,
+                }}>×</button>
+              )}
+            </div>
 
-                  <input
-                    ref={searchRef}
-                    className="ep-search"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder={
-                      lang === "it"
-                        ? "Cerca un brand e cliccalo per vedere dettagli e fonti"
-                        : "Search a brand and click it to see details and sources"
-                    }
-                    style={{
-                      flex: 1,
-                      background: "transparent",
-                      border: "none",
-                      outline: "none",
-                      color: "#181310",
-                      fontSize: 20,
-                      fontWeight: 700,
-                      fontFamily: "'Archivo Narrow', sans-serif",
-                      padding: "14px 0",
-                    }}
-                  />
-
-                  {query && (
-                    <button
-                      onClick={() => setQuery("")}
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        fontSize: 26,
-                        cursor: "pointer",
-                        color: "rgba(0,0,0,0.5)",
-                        lineHeight: 1,
-                      }}
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-
-                {query.length >= 2 && (
-                  <div style={{ background: "#f4eee3" }}>
-                    {results.length === 0 ? (
-                      <div
+            {/* Search results */}
+            {query.length >= 2 && (
+              <div style={{
+                marginTop: 8, background: "#0f0f1a",
+                border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14,
+                overflow: "hidden", boxShadow: "0 20px 40px rgba(0,0,0,0.5)",
+              }}>
+                {results.length === 0 ? (
+                  <div style={{ padding: "14px 18px", color: "rgba(255,255,255,0.3)", fontSize: 14 }}>
+                    {lang === "it" ? "Nessun brand trovato." : "No brands found."}
+                  </div>
+                ) : (
+                  results.slice(0, 6).map((brand) => {
+                    const score = getDisplayScore(brand);
+                    const inList = myBrands.find((b) => b.name === brand.name);
+                    const scoreColor = getDisplayScoreColor(score);
+                    return (
+                      <div key={brand.name} className="search-result-row" onClick={() => setSelected(brand)}
                         style={{
-                          padding: "14px 16px",
-                          fontFamily: "'Bitter', serif",
-                          fontSize: 14,
-                          color: "rgba(0,0,0,0.5)",
+                          display: "flex", alignItems: "center", gap: 14,
+                          padding: "12px 18px", cursor: "pointer",
+                          borderBottom: "1px solid rgba(255,255,255,0.04)",
                         }}
                       >
-                        {lang === "it" ? "Nessun brand trovato." : "No brands found."}
-                      </div>
-                    ) : (
-                      results.slice(0, 6).map((brand) => {
-                        const score = getDisplayScore(brand);
-                        const inList = myBrands.find((b) => b.name === brand.name);
-                        const scoreBg =
-                          score === null
-                            ? "#111"
-                            : score >= 70
-                              ? "#4a9e5c"
-                              : score >= 50
-                                ? "#e7bb3a"
-                                : "#c4432c";
-                        const scoreColor =
-                          score !== null && score >= 50 && score < 70 ? "#111" : "#fff";
-
-                        return (
-                          <div
-                            key={brand.name}
-                            className="search-result-row"
-                            onClick={() => setSelected(brand)}
-                            style={{
-                              display: "grid",
-                              gridTemplateColumns: "1fr auto auto",
-                              gap: 12,
-                              padding: "14px 16px",
-                              borderBottom: "2px solid rgba(0,0,0,0.1)",
-                              cursor: "pointer",
-                              alignItems: "center",
-                            }}
-                          >
-                            <div>
-                              <div
-                                style={{
-                                  fontFamily: "Arial, Helvetica, sans-serif",
-                                  fontWeight: 900,
-                                  fontSize: 19,
-                                  color: "#111",
-                                  lineHeight: 1,
-                                  marginBottom: 3,
-                                }}
-                              >
-                                {brand.name}
-                              </div>
-
-                              <div
-                                style={{
-                                  fontFamily: "Arial, Helvetica, sans-serif",
-                                  fontSize: 12,
-                                  color: "rgba(0,0,0,0.55)",
-                                  fontWeight: 700,
-                                }}
-                              >
-                                {brand.sector || ""}
-                              </div>
-                            </div>
-
-                            <div
-                              style={{
-                                background: scoreBg,
-                                color: scoreColor,
-                                border: "3px solid #111",
-                                padding: "6px 10px",
-                                fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-                                fontSize: 18,
-                                lineHeight: 1,
-                                textAlign: "center",
-                                minWidth: 60,
-                              }}
-                            >
-                              {score ?? "—"}
-                              {score !== null && <span style={{ fontSize: 11 }}>/100</span>}
-                            </div>
-
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                addToList(brand);
-                              }}
-                              style={{
-                                background: inList ? "#111" : "#3570b2",
-                                color: "#fff",
-                                border: "3px solid #111",
-                                padding: "8px 12px",
-                                cursor: "pointer",
-                                fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-                                fontSize: 13,
-                                textTransform: "uppercase",
-                              }}
-                            >
-                              {inList ? "✓" : lang === "it" ? "+ Aggiungi" : "+ Add"}
-                            </button>
+                        <div style={{
+                          width: 36, height: 36, borderRadius: 10,
+                          background: `${scoreColor}22`, border: `1px solid ${scoreColor}44`,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          fontSize: 14, fontWeight: 700, color: scoreColor, flexShrink: 0,
+                        }}>
+                          {brand.logo || brand.name?.[0]}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: 15, fontWeight: 600, color: "#e8e8f0", lineHeight: 1, marginBottom: 3 }}>
+                            {brand.name}
                           </div>
-                        );
-                      })
-                    )}
-                  </div>
+                          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>{brand.sector || ""}</div>
+                        </div>
+                        <div style={{ textAlign: "right", marginRight: 8 }}>
+                          <div style={{ fontSize: 18, fontWeight: 700, color: scoreColor, fontFamily: "'DM Mono', monospace" }}>
+                            {score ?? "—"}
+                          </div>
+                          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)" }}>/100</div>
+                        </div>
+                        <button className="add-btn" onClick={(e) => { e.stopPropagation(); addToList(brand); }} style={{
+                          background: inList ? "rgba(99,202,183,0.1)" : "rgba(255,255,255,0.06)",
+                          border: "1px solid rgba(255,255,255,0.1)",
+                          color: inList ? "#63CAB7" : "rgba(255,255,255,0.5)",
+                          padding: "6px 12px", borderRadius: 8, cursor: "pointer",
+                          fontSize: 11, fontFamily: "'DM Sans', sans-serif",
+                          transition: "all 0.15s", whiteSpace: "nowrap",
+                        }}>
+                          {inList ? "✓" : lang === "it" ? "+ Aggiungi" : "+ Add"}
+                        </button>
+                      </div>
+                    );
+                  })
                 )}
               </div>
+            )}
 
-              {!query && (
-        <>
-                <div
-                  style={{
-                    marginTop: 14,
-                    display: "flex",
-                    gap: 8,
-                    flexWrap: "wrap",
-                    alignItems: "center",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: "'Bitter', serif",
-                      fontSize: 13,
-                      opacity: 0.55,
-                      marginRight: 4,
-                    }}
-                  >
-                    {lang === "it" ? "Sfoglia per categoria:" : "Browse by category:"}
+            {/* Quick sectors + contribute */}
+            {!query && (
+              <>
+                <div style={{ marginTop: 16, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", fontFamily: "'DM Mono', monospace", marginRight: 4 }}>
+                    {lang === "it" ? "Sfoglia:" : "Browse:"}
                   </span>
-
-                  {QUICK_SECTORS.map((s) => (
-                    <button
-                      key={s.key}
+                  {QUICK_SECTORS.map((s, i) => (
+                    <button key={i} className="sector-btn"
                       onClick={() => openSectorModal(lang === "it" ? s.it : s.en)}
                       style={{
-                        border: "3px solid #181310",
-                        background: "#efe7d8",
-                        color: "#181310",
-                        padding: "7px 12px",
-                        fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-                        fontSize: 13,
-                        textTransform: "uppercase",
-                        cursor: "pointer",
+                        background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
+                        color: "rgba(255,255,255,0.6)", padding: "6px 12px", borderRadius: 99,
+                        cursor: "pointer", fontSize: 12, fontFamily: "'DM Sans', sans-serif",
+                        transition: "all 0.15s",
                       }}
                     >
-                      {s.icon} {lang === "it" ? s.it.split(" ")[0] : s.en.split(" ")[0]}
+                      {lang === "it" ? s.it.split(" ")[0] : s.en.split(" ")[0]}
                     </button>
                   ))}
-
-                  <button
-                    onClick={() => openSectorModal(null)}
-                    style={{
-                      border: "3px solid #3570b2",
-                      background: "transparent",
-                      color: "#3570b2",
-                      padding: "7px 12px",
-                      fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-                      fontSize: 13,
-                      textTransform: "uppercase",
-                      cursor: "pointer",
-                    }}
-                  >
+                  <button className="sector-btn" onClick={() => openSectorModal(null)} style={{
+                    background: "transparent", border: "1px solid rgba(99,202,183,0.3)",
+                    color: "#63CAB7", padding: "6px 12px", borderRadius: 99,
+                    cursor: "pointer", fontSize: 12, fontFamily: "'DM Mono', monospace",
+                    transition: "all 0.15s",
+                  }}>
                     {lang === "it" ? "Tutti i settori →" : "All sectors →"}
                   </button>
                 </div>
 
-        <div style={{ width: "100%", marginTop: 10, display: "flex", gap: 12, flexWrap: "wrap" }}>
-  {[
-    { href: "/contribute.html", en: "Contribute -",      it: "Contribuisci -" },
-    { href: "/contribute.html", en: "Report an error -", it: "Segnala un errore -" },
-    { href: "/contribute.html", en: "Add a brand ",     it: "Aggiungi un brand " },
-  ].map((link, i) => (
-    <a
-      key={i}
-      href={link.href}
-      style={{
-        fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
-        fontSize: 12,
-        textTransform: "uppercase",
-        letterSpacing: "-0.01em",
-        color: "#c63f1d",
-        textDecoration: "none",
-        borderBottom: "2px solid #c63f1d",
-        paddingBottom: 1,
-      }}
-    >
-      {lang === "it" ? link.it : link.en}
-    </a>
-  ))}
-</div>
-          </>
-              )}
-            </div>
+                <div style={{ marginTop: 12, display: "flex", gap: 16, flexWrap: "wrap" }}>
+                  {[
+                    { href: "/contribute.html", en: "Contribute →",      it: "Contribuisci →" },
+                    { href: "/contribute.html", en: "Report an error →", it: "Segnala un errore →" },
+                    { href: "/contribute.html", en: "Add a brand →",     it: "Aggiungi un brand →" },
+                  ].map((link, i) => (
+                    <a key={i} href={link.href} style={{
+                      fontSize: 12, color: "rgba(255,255,255,0.35)", textDecoration: "none",
+                      fontFamily: "'DM Mono', monospace", letterSpacing: "0.03em",
+                    }}>
+                      {lang === "it" ? link.it : link.en}
+                    </a>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
 
+          {/* ── RECENT SOURCES ── */}
           <RecentSourcesPanel
             updates={recentSourceUpdates}
             lang={lang}
@@ -586,7 +361,8 @@ export default function App() {
             }}
           />
 
-          <div style={{ marginTop: 40 }}>
+          {/* ── MY LIST PANEL ── */}
+          <div style={{ marginTop: 20 }}>
             <MyListPanel
               myBrands={myBrands}
               db={db}
@@ -610,156 +386,82 @@ export default function App() {
             />
           </div>
 
-          <div
-            style={{
-              marginTop: 56,
-              paddingTop: 22,
-              borderTop: "4px solid #181310",
-              fontFamily: "'Bitter', serif",
-              fontSize: 15,
-              lineHeight: 1.6,
-            }}
-          >
-            {t.footer.split("\n").map((line, i) => (
-              <div key={i}>{line}</div>
-            ))}
+          {/* ── FOOTER ── */}
+          <div style={{
+            marginTop: 64, paddingTop: 24,
+            borderTop: "1px solid rgba(255,255,255,0.06)", textAlign: "center",
+          }}>
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", lineHeight: 1.8, fontFamily: "'DM Sans', sans-serif" }}>
+              {t.footer.split("\n").map((line, i) => <span key={i}>{line}{i === 0 && <br />}</span>)}
+            </div>
           </div>
         </div>
 
+        {/* ── SECTOR MODAL ── */}
         {isSectorModalOpen && (
-          <div
-            onClick={() => setIsSectorModalOpen(false)}
-            style={{
-              position: "fixed",
-              inset: 0,
-              background: "rgba(0,0,0,0.55)",
-              zIndex: 500,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 20,
-            }}
-          >
-            <div
-              className="paper-panel"
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                width: "min(1100px, 100%)",
-                maxHeight: "85vh",
-                overflowY: "auto",
-                padding: "24px 22px 20px",
-                background: "#f2eadf",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: 16,
-                  marginBottom: 18,
-                  position: "sticky",
-                  top: 0,
-                  background: "#f2eadf",
-                  zIndex: 2,
-                  paddingBottom: 10,
-                }}
-              >
+          <div onClick={() => setIsSectorModalOpen(false)} style={{
+            position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)",
+            zIndex: 500, display: "flex", alignItems: "center",
+            justifyContent: "center", padding: 20,
+          }}>
+            <div onClick={(e) => e.stopPropagation()} style={{
+              width: "min(1100px, 100%)", maxHeight: "85vh", overflowY: "auto",
+              background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: 20, padding: "24px 22px 20px",
+              boxShadow: "0 40px 80px rgba(0,0,0,0.6)",
+            }}>
+              <div style={{
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+                gap: 16, marginBottom: 18, position: "sticky", top: 0,
+                background: "#0f0f1a", zIndex: 2, paddingBottom: 16,
+                borderBottom: "1px solid rgba(255,255,255,0.06)",
+              }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-                  <div
-                    style={{
-                      display: "inline-block",
-                      background: "#3570b2",
-                      color: "#ffffff",
-                      border: "3px solid #181310",
-                      boxShadow: "4px 4px 0 #181310",
-                      padding: "10px 14px",
-                      fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
-                      fontSize: 20,
-                      textTransform: "uppercase",
-                      letterSpacing: "-0.03em",
-                    }}
-                  >
+                  <div style={{
+                    fontSize: 11, letterSpacing: 3, color: "rgba(99,202,183,0.7)",
+                    textTransform: "uppercase", fontFamily: "'DM Mono', monospace",
+                  }}>
                     {modalSectorFilter
                       ? `${t.ranking_title} · ${modalFilteredSectors[0]?.sector || ""}`
                       : t.ranking_title}
                   </div>
-
                   {modalSectorFilter && (
-                    <button
-                      onClick={() => {
-                        setModalSectorFilter(null);
-                        setShowAllSectors(false);
-                      }}
-                      style={{
-                        border: "3px solid #181310",
-                        background: "#181310",
-                        color: "#f4eee3",
-                        padding: "8px 12px",
-                        cursor: "pointer",
-                        fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-                        fontSize: 13,
-                        textTransform: "uppercase",
-                      }}
-                    >
+                    <button onClick={() => { setModalSectorFilter(null); setShowAllSectors(false); }} style={{
+                      background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
+                      color: "rgba(255,255,255,0.5)", padding: "4px 12px", borderRadius: 99,
+                      cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif",
+                    }}>
                       {lang === "it" ? "Tutti i settori" : "All sectors"}
                     </button>
                   )}
                 </div>
-
-                <button
-                  onClick={() => setIsSectorModalOpen(false)}
-                  style={{
-                    border: "3px solid #181310",
-                    background: "#e44723",
-                    color: "#fff",
-                    padding: "8px 12px",
-                    cursor: "pointer",
-                    fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-                    fontSize: 14,
-                    textTransform: "uppercase",
-                  }}
-                >
+                <button onClick={() => setIsSectorModalOpen(false)} style={{
+                  background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
+                  color: "rgba(255,255,255,0.5)", padding: "6px 14px", borderRadius: 99,
+                  cursor: "pointer", fontSize: 12, fontFamily: "'DM Sans', sans-serif",
+                }}>
                   ✕ {lang === "it" ? "Chiudi" : "Close"}
                 </button>
               </div>
 
               {modalVisibleSectors.map(({ sector, sectorIcon, brands }) => (
                 <SectorSection
-                  key={sector}
-                  sector={sector}
-                  sectorIcon={sectorIcon}
-                  brands={brands}
-                  myBrands={myBrands}
-                  onAdd={addToList}
-                  onSelect={setSelected}
-                  lang={lang}
-                  defaultOpen={true}
+                  key={sector} sector={sector} sectorIcon={sectorIcon}
+                  brands={brands} myBrands={myBrands} onAdd={addToList}
+                  onSelect={setSelected} lang={lang} defaultOpen={true}
                 />
               ))}
 
-              {modalFilteredSectors.length > 4 && (
+              {modalFilteredSectors.length > 6 && (
                 <div style={{ marginTop: 12 }}>
-                  <button
-                    onClick={() => setShowAllSectors((prev) => !prev)}
-                    style={{
-                      border: "3px solid #181310",
-                      background: showAllSectors ? "#181310" : "#efe7d8",
-                      color: showAllSectors ? "#f4eee3" : "#181310",
-                      padding: "10px 14px",
-                      fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
-                      fontSize: 14,
-                      textTransform: "uppercase",
-                      cursor: "pointer",
-                    }}
-                  >
+                  <button onClick={() => setShowAllSectors((prev) => !prev)} style={{
+                    background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
+                    color: "rgba(255,255,255,0.5)", padding: "8px 18px", borderRadius: 99,
+                    cursor: "pointer", fontSize: 12, fontFamily: "'DM Sans', sans-serif",
+                  }}>
                     {showAllSectors
-                      ? lang === "it"
-                        ? "Nascondi settori"
-                        : "Hide sectors"
-                      : lang === "it"
-                        ? `Mostra altri ${modalFilteredSectors.length - 4}`
-                        : `Show ${modalFilteredSectors.length - 4} more sectors`}
+                      ? lang === "it" ? "Nascondi" : "Hide"
+                      : lang === "it" ? `Mostra altri ${modalFilteredSectors.length - 6}` : `Show ${modalFilteredSectors.length - 6} more`}
                   </button>
                 </div>
               )}
