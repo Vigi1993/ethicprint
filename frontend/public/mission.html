@@ -43,17 +43,16 @@
     /* ── TOPBAR ── */
     .topbar {
       position: fixed;
-      top: 20px;
-      left: 20px;
-      right: 20px;
+      top: 0; left: 0; right: 0;
       z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      pointer-events: none;
+      padding: 16px 32px;
+      background: rgba(8,8,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
     }
-
 
     .back-link {
       display: inline-flex;
@@ -363,13 +362,10 @@
 </head>
 <body>
 
-<div class="topbar">
-  <a href="/" class="back">&#8592; EthicPrint</a>
-  <div class="lang-toggle">
-    <button class="lang-btn active" onclick="setLang('en')" id="btn-en">EN</button>
-    <button class="lang-btn" onclick="setLang('it')" id="btn-it">IT</button>
-  </div>
-</div>
+<nav class="topbar">
+  <a href="/" class="back-link">← EthicPrint</a>
+  <span class="topbar-label">Our Mission</span>
+</nav>
 
 <div class="wrap">
 
