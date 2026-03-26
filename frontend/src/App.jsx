@@ -219,6 +219,7 @@ export default function App() {
 
             {/* Search bar */}
             <div style={{
+              position: "relative",
               display: "flex", alignItems: "center", gap: 12,
               width: "80%",  
               background: "rgba(255,255,255,0.06)",
