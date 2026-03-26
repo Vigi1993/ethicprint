@@ -170,8 +170,7 @@ export default function App() {
 
           {/* ── HERO ── */}
           <div style={{
-            background: "rgba(255,255,255,0.03)",
-            border: "1px solid rgba(255,255,255,0.08)",
+            background: "transparent",
             borderRadius: 20, padding: "36px 32px 32px", marginBottom: 20,
           }}>
             <div style={{
