@@ -591,7 +591,7 @@ export default function MyListPanel({
               </div>
             </div>
           </div>
-
+      {!b.insufficient_data && (
           <div style={{ textAlign: "right", flexShrink: 0 }}>
             <div
               style={{
@@ -614,6 +614,7 @@ export default function MyListPanel({
               /100
             </div>
           </div>
+      )}
         </div>
 
         <div
