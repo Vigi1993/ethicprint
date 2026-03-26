@@ -20,9 +20,9 @@ function getImpactMeta(item, lang) {
       ? "Positive impact"
       : "Negative impact";
 
-  const tone = isPositive ? "#2f6a3b" : "#c63f1d";
-  const bg = isPositive ? "#d4edda" : "#fde8e4";
-  const border = isPositive ? "#2f6a3b" : "#c63f1d";
+  const tone = isPositive ? "#63CAB7" : "#ff9a9a";
+  const bg = isPositive ? "rgba(99,202,183,0.1)" : "rgba(255,107,107,0.1)";
+  const border = isPositive ? "rgba(99,202,183,0.22)" : "rgba(255,107,107,0.22)";
   const arrow = isPositive ? "↑" : "↓";
 
   return { label, tone, bg, border, arrow };
@@ -55,10 +55,10 @@ export default function RecentSourcesPanel({
   return (
     <div
       style={{
-        marginBottom: 30,
-        border: "4px solid #181310",
-        background: "#f2eadf",
-        boxShadow: "8px 8px 0 #181310",
+        marginBottom: 20,
+        background: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        borderRadius: 20,
         position: "relative",
         overflow: "hidden",
       }}
@@ -68,41 +68,46 @@ export default function RecentSourcesPanel({
           position: "absolute",
           inset: 0,
           pointerEvents: "none",
-          opacity: 0.18,
-          backgroundImage:
-            "radial-gradient(circle at 18% 22%, rgba(0,0,0,0.2) 0 1px, transparent 1.2px), radial-gradient(circle at 78% 34%, rgba(0,0,0,0.12) 0 1px, transparent 1.2px), radial-gradient(circle at 60% 82%, rgba(0,0,0,0.12) 0 1px, transparent 1.2px)",
-          backgroundSize: "12px 12px, 16px 16px, 14px 14px",
-          mixBlendMode: "multiply",
+          background:
+            "radial-gradient(circle at top left, rgba(99,202,183,0.05), transparent 28%), radial-gradient(circle at bottom right, rgba(255,255,255,0.03), transparent 22%)",
         }}
       />
 
       <div style={{ position: "relative", zIndex: 1, padding: 22 }}>
-
-        {/* Titolo stile "Ranking by sector" */}
         <div style={{ marginBottom: 18 }}>
           <div
             style={{
-              display: "inline-block",
-              background: "#3570b2",
-              color: "#181310",
-              border: "3px solid #181310",
-              boxShadow: "4px 4px 0 #181310",
-              padding: "10px 14px",
-              fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
-              fontSize: 20,
+              fontSize: 11,
+              letterSpacing: 3,
+              color: "rgba(99,202,183,0.6)",
               textTransform: "uppercase",
-              letterSpacing: "-0.03em",
+              marginBottom: 12,
+              fontFamily: "'DM Mono', monospace",
+            }}
+          >
+            {lang === "it" ? "Fonti recenti" : "Recent sources"}
+          </div>
+
+          <div
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: "clamp(20px, 3vw, 28px)",
+              lineHeight: 1.1,
+              color: "#e8e8f0",
+              fontWeight: 600,
+              marginBottom: 10,
             }}
           >
             {lang === "it" ? "Ultime fonti aggiunte" : "Latest source updates"}
           </div>
+
           <div
             style={{
-              fontFamily: "'Bitter', serif",
-              fontSize: 15,
-              lineHeight: 1.4,
-              color: "rgba(0,0,0,0.65)",
-              marginTop: 10,
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 14,
+              lineHeight: 1.55,
+              color: "rgba(255,255,255,0.45)",
+              maxWidth: 760,
             }}
           >
             {lang === "it"
@@ -131,22 +136,22 @@ export default function RecentSourcesPanel({
                   minWidth: 300,
                   maxWidth: 300,
                   flex: "0 0 300px",
-                  border: "3px solid #181310",
-                  background: idx % 2 === 0 ? "#f7f1e8" : "#efe7d8",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  background: "rgba(255,255,255,0.03)",
+                  borderRadius: 16,
                   padding: "14px 14px 13px",
                   scrollSnapAlign: "start",
                 }}
               >
-                {/* Brand name + categoria */}
                 <div style={{ marginBottom: 10 }}>
                   <div
                     style={{
-                      fontFamily: "Arial, Helvetica, sans-serif",
-                      fontSize: 22,
-                      fontWeight: 900,
-                      color: "#111",
-                      lineHeight: 1,
-                      marginBottom: 5,
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 18,
+                      fontWeight: 600,
+                      color: "#e8e8f0",
+                      lineHeight: 1.1,
+                      marginBottom: 6,
                       cursor: onSelectBrand ? "pointer" : "default",
                     }}
                     onClick={() => {
@@ -160,50 +165,51 @@ export default function RecentSourcesPanel({
 
                   <div
                     style={{
-                      fontFamily: "Arial, Helvetica, sans-serif",
-                      fontSize: 12,
-                      color: "rgba(0,0,0,0.62)",
-                      fontWeight: 800,
+                      fontFamily: "'DM Mono', monospace",
+                      fontSize: 11,
+                      color: "rgba(255,255,255,0.32)",
+                      fontWeight: 500,
                       textTransform: "uppercase",
+                      letterSpacing: "0.05em",
                     }}
                   >
                     {categoryLabel}
                   </div>
                 </div>
 
-                {/* Label impatto colorata, senza numero */}
                 <div
                   style={{
-                    display: "inline-block",
-                    border: `2px solid ${impact.border}`,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    border: `1px solid ${impact.border}`,
                     background: impact.bg,
                     color: impact.tone,
-                    padding: "5px 8px 4px",
-                    marginBottom: 10,
-                    fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
-                    fontSize: 12,
+                    padding: "6px 10px",
+                    marginBottom: 12,
+                    borderRadius: 99,
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: 11,
                     textTransform: "uppercase",
                     lineHeight: 1,
+                    letterSpacing: "0.04em",
                   }}
                 >
                   {impact.arrow} {impact.label}
                 </div>
 
-                {/* Titolo fonte */}
                 <div
                   style={{
-                    fontFamily: "'Bitter', serif",
-                    fontSize: 15,
-                    lineHeight: 1.45,
-                    color: "rgba(0,0,0,0.78)",
-                    marginBottom: 10,
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 14,
+                    lineHeight: 1.5,
+                    color: "rgba(255,255,255,0.72)",
+                    marginBottom: 12,
                     minHeight: 64,
                   }}
                 >
                   {item.title || item.publisher || item.url}
                 </div>
 
-                {/* Link + data */}
                 <div
                   style={{
                     display: "flex",
@@ -217,11 +223,12 @@ export default function RecentSourcesPanel({
                     target="_blank"
                     rel="noreferrer"
                     style={{
-                      fontWeight: 700,
-                      color: "#c63f1d",
+                      fontWeight: 500,
+                      color: "#63CAB7",
                       textDecoration: "none",
-                      fontSize: 15,
-                      fontFamily: "'Bitter', serif",
+                      fontSize: 12,
+                      fontFamily: "'DM Mono', monospace",
+                      letterSpacing: "0.03em",
                     }}
                   >
                     {lang === "it" ? "Apri la fonte →" : "Open source →"}
@@ -230,12 +237,11 @@ export default function RecentSourcesPanel({
                   {item.created_at && (
                     <div
                       style={{
-                        fontFamily: "'Archivo Narrow', sans-serif",
-                        fontWeight: 800,
-                        fontSize: 11,
+                        fontFamily: "'DM Mono', monospace",
+                        fontSize: 10,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
-                        color: "rgba(0,0,0,0.5)",
+                        color: "rgba(255,255,255,0.28)",
                         whiteSpace: "nowrap",
                       }}
                     >
