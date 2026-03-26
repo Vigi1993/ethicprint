@@ -80,7 +80,8 @@ export default function App() {
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap";
+    link.href =
+      "https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap";
     document.head.appendChild(link);
     return () => { if (document.head.contains(link)) document.head.removeChild(link); };
   }, []);
@@ -119,7 +120,12 @@ export default function App() {
     .map((sector) => {
       const brands = db.filter((b) => b.sector === sector);
       const sectorIcon = brands[0]?.sector_icon || "🏢";
-      return { sector, sectorIcon, brands, avgScore: getSectorAvgScore(brands) };
+      return {
+        sector,
+        sectorIcon,
+        brands,
+        avgScore: getSectorAvgScore(brands),
+      };
     })
     .sort((a, b) => (b.avgScore ?? -9999) - (a.avgScore ?? -9999));
 
