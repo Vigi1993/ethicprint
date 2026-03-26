@@ -220,7 +220,7 @@ export default function App() {
             {/* Search bar */}
             <div style={{
               display: "flex", alignItems: "center", gap: 12,
-              width: "100%",  
+              width: "80%",  
               background: "rgba(255,255,255,0.06)",
               border: `1px solid ${query ? "rgba(99,202,183,0.3)" : "rgba(255,255,255,0.1)"}`,
               borderRadius: 14, padding: "14px 18px",
@@ -254,6 +254,7 @@ export default function App() {
               <div style={{
                 marginTop: 8, background: "#0f0f1a",
                 border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14,
+                width: "80%",
                 overflow: "hidden", boxShadow: "0 20px 40px rgba(0,0,0,0.5)",
               }}>
                 {results.length === 0 ? (
