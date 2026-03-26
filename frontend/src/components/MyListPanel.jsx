@@ -545,25 +545,8 @@ export default function MyListPanel({
             marginBottom: 12,
           }}
         >
-          <div style={{ display: "flex", gap: 12, minWidth: 0, flex: 1 }}>
-            <div
-              style={{
-                width: 42,
-                height: 42,
-                borderRadius: 12,
-                background: `${scoreColor}22`,
-                border: `1px solid ${scoreColor}44`,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: scoreColor,
-                fontSize: 15,
-                fontWeight: 700,
-                flexShrink: 0,
-              }}
-            >
-              {b.logo || b.name?.[0]}
-            </div>
+          <div style={{ display: "flex", gap: 6, minWidth: 0, flex: 1 }}>
+
 
             <div style={{ minWidth: 0 }}>
               <div
