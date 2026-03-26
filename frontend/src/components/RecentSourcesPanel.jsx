@@ -88,11 +88,11 @@ export default function RecentSourcesPanel({
 
           <div
             style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: "clamp(20px, 3vw, 28px)",
-              lineHeight: 1.1,
+              fontFamily: "'DM Mono', monospace",
+              fontSize: 11,
+              letterSpacing: 3,
+              textTransform: "uppercase",
               color: "#e8e8f0",
-              fontWeight: 600,
               marginBottom: 10,
             }}
           >
