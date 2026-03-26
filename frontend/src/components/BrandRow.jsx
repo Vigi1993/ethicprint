@@ -1,4 +1,4 @@
-import { getDisplayScore } from "../utils/brandHelpers";
+import { getDisplayScore, getDisplayScoreColor } from "../utils/brandHelpers";
 
 export default function BrandRow({
   brand,
@@ -8,16 +8,7 @@ export default function BrandRow({
 }) {
   const score = getDisplayScore(brand);
   const inList = myBrands.find((b) => b.name === brand.name);
-
-  const scoreBg = score === null
-    ? "#111"
-    : score >= 70
-    ? "#4a9e5c"
-    : score >= 50
-    ? "#e7bb3a"
-    : "#c4432c";
-
-  const scoreColor = score !== null && score >= 50 && score < 70 ? "#111" : "#fff";
+  const scoreColor = getDisplayScoreColor(score);
 
   return (
     <div
@@ -29,33 +20,55 @@ export default function BrandRow({
         gap: 12,
         alignItems: "center",
         padding: "12px 14px",
-        borderBottom: "2px solid rgba(0,0,0,0.18)",
+        borderBottom: "1px solid rgba(255,255,255,0.06)",
         cursor: "pointer",
-        background: "#f7f1e8",
+        background: "transparent",
+        transition: "background 0.15s ease",
       }}
     >
-      <div style={{ minWidth: 0 }}>
+      <div style={{ minWidth: 0, display: "flex", alignItems: "center", gap: 12 }}>
         <div
           style={{
-            fontFamily: "Arial, Helvetica, sans-serif",
-            fontSize: 18,
-            fontWeight: 900,
-            color: "#111",
-            lineHeight: 1,
-            marginBottom: 2,
-          }}
-        >
-          {brand.name}
-        </div>
-        <div
-          style={{
-            fontFamily: "Arial, Helvetica, sans-serif",
-            fontSize: 12,
-            color: "rgba(0,0,0,0.6)",
+            width: 34,
+            height: 34,
+            borderRadius: 10,
+            background: `${scoreColor}22`,
+            border: `1px solid ${scoreColor}44`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: scoreColor,
+            fontSize: 13,
             fontWeight: 700,
+            flexShrink: 0,
           }}
         >
-          {brand.parent || brand.parent_company || brand.sector || ""}
+          {brand.logo || brand.name?.[0]}
+        </div>
+
+        <div style={{ minWidth: 0 }}>
+          <div
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 16,
+              fontWeight: 600,
+              color: "#e8e8f0",
+              lineHeight: 1.1,
+              marginBottom: 3,
+            }}
+          >
+            {brand.name}
+          </div>
+          <div
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 12,
+              color: "rgba(255,255,255,0.35)",
+              fontWeight: 400,
+            }}
+          >
+            {brand.parent || brand.parent_company || brand.sector || ""}
+          </div>
         </div>
       </div>
 
@@ -63,18 +76,22 @@ export default function BrandRow({
         style={{
           minWidth: 60,
           textAlign: "center",
-          border: "3px solid #111",
-          background: scoreBg,
+          border: "1px solid rgba(255,255,255,0.08)",
+          background: `${scoreColor}14`,
           color: scoreColor,
-          padding: "6px 8px",
-          fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-          fontSize: 18,
+          padding: "8px 10px",
+          borderRadius: 12,
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 17,
+          fontWeight: 700,
           lineHeight: 1,
         }}
       >
         {score ?? "—"}
         {score !== null && (
-          <span style={{ fontSize: 11 }}>/100</span>
+          <span style={{ fontSize: 10, color: "rgba(255,255,255,0.28)", marginLeft: 2 }}>
+            /100
+          </span>
         )}
       </div>
 
@@ -84,15 +101,19 @@ export default function BrandRow({
           onAdd(brand);
         }}
         style={{
-          background: inList ? "#111" : "#3570b2",
-          color: "#fff",
-          border: "3px solid #111",
-          padding: "6px 10px",
-          fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+          background: inList ? "rgba(99,202,183,0.12)" : "rgba(255,255,255,0.06)",
+          color: inList ? "#63CAB7" : "rgba(255,255,255,0.72)",
+          border: inList
+            ? "1px solid rgba(99,202,183,0.24)"
+            : "1px solid rgba(255,255,255,0.1)",
+          padding: "8px 10px",
+          fontFamily: "'DM Sans', sans-serif",
           fontSize: 12,
-          textTransform: "uppercase",
+          fontWeight: 600,
           cursor: "pointer",
-          minWidth: 50,
+          minWidth: 52,
+          borderRadius: 10,
+          transition: "all 0.15s ease",
         }}
       >
         {inList ? "✓" : "+"}
