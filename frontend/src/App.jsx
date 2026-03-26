@@ -220,6 +220,7 @@ export default function App() {
             {/* Search bar */}
             <div style={{
               display: "flex", alignItems: "center", gap: 12,
+              width: "100%",  
               background: "rgba(255,255,255,0.06)",
               border: `1px solid ${query ? "rgba(99,202,183,0.3)" : "rgba(255,255,255,0.1)"}`,
               borderRadius: 14, padding: "14px 18px",
