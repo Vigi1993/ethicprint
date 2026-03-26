@@ -5,45 +5,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sources &amp; Methodology — EthicPrint</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo+Narrow:wght@400;600;700;800&family=Bitter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #d8d3ce;
-      --paper: #f2eadf;
-      --paper-2: #f7f1e8;
-      --paper-3: #efe7d8;
-      --ink: #181310;
-      --ink-soft: rgba(24,19,16,0.72);
-      --ink-muted: rgba(24,19,16,0.55);
-      --red: #e44723;
-      --yellow: #efc640;
-      --green: #2f6a3b;
-      --cream: #fff5ea;
-      --line: rgba(24,19,16,0.16);
+      --bg: #08080f;
+      --panel: #0f0f1a;
+      --panel-soft: rgba(255,255,255,0.03);
+      --panel-strong: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.1);
+      --text: #e8e8f0;
+      --text-soft: rgba(255,255,255,0.72);
+      --text-muted: rgba(255,255,255,0.45);
+      --text-faint: rgba(255,255,255,0.28);
+      --accent: #63CAB7;
+      --accent-soft: rgba(99,202,183,0.1);
+      --accent-border: rgba(99,202,183,0.28);
+      --danger: #ff9a9a;
+      --danger-soft: rgba(255,107,107,0.1);
+      --danger-border: rgba(255,107,107,0.22);
+      --warning: #f1d37a;
+      --warning-soft: rgba(255,214,102,0.1);
+      --warning-border: rgba(255,214,102,0.22);
+      --success: #63CAB7;
+      --success-soft: rgba(99,202,183,0.1);
+      --success-border: rgba(99,202,183,0.22);
+      --line: rgba(255,255,255,0.06);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; background: var(--bg); }
     body {
       background:
-        radial-gradient(circle at 20% 10%, rgba(255,255,255,0.18), transparent 18%),
-        radial-gradient(circle at 80% 18%, rgba(0,0,0,0.04), transparent 22%),
-        radial-gradient(circle at 10% 90%, rgba(0,0,0,0.05), transparent 18%),
+        radial-gradient(circle at top left, rgba(99,202,183,0.04), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.03), transparent 18%),
         var(--bg);
-      color: var(--ink);
-      font-family: 'Archivo Narrow', sans-serif;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
       min-height: 100vh;
       line-height: 1.5;
     }
 
-    ::selection { background: rgba(228,71,35,0.25); }
+    ::selection { background: rgba(99,202,183,0.3); }
     a { color: inherit; }
+
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
 
     .topbar {
       position: fixed;
-      top: 18px;
-      left: 18px;
-      right: 18px;
+      top: 20px;
+      left: 20px;
+      right: 20px;
       z-index: 100;
       display: flex;
       align-items: center;
@@ -59,43 +73,52 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: var(--paper);
-      color: var(--ink);
-      border: 3px solid var(--ink);
-      box-shadow: 4px 4px 0 var(--ink);
-      padding: 10px 14px 9px;
-      font-family: 'Archivo Black', 'Arial Black', sans-serif;
-      font-size: 13px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border: 1px solid var(--border-strong);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
       line-height: 1;
-      text-transform: uppercase;
-      letter-spacing: -0.02em;
+      letter-spacing: 0.04em;
+      transition: all 0.15s ease;
+    }
+
+    .back:hover {
+      color: var(--accent);
+      border-color: var(--accent-border);
+      background: var(--accent-soft);
     }
 
     .lang-toggle {
       display: flex;
-      gap: 6px;
-      background: rgba(24,19,16,0.9);
-      border: 2px solid var(--ink);
-      box-shadow: 4px 4px 0 var(--ink);
-      padding: 6px;
+      gap: 4px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 99px;
+      padding: 4px;
     }
 
     .lang-btn {
-      background: var(--paper);
-      border: 2px solid var(--ink);
-      color: var(--ink);
-      padding: 6px 12px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: rgba(255,255,255,0.35);
+      padding: 4px 12px;
       cursor: pointer;
       font-size: 12px;
-      font-weight: 900;
-      letter-spacing: 0.08em;
+      font-weight: 600;
+      letter-spacing: 0;
       text-transform: uppercase;
-      font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif;
+      font-family: 'DM Sans', sans-serif;
+      border-radius: 99px;
+      transition: all 0.15s ease;
     }
 
     .lang-btn.active {
-      background: var(--red);
-      color: var(--cream);
+      background: rgba(99,202,183,0.2);
+      border-color: rgba(99,202,183,0.4);
+      color: var(--accent);
     }
 
     .wrap {
@@ -104,26 +127,23 @@
       padding: 96px 24px 72px;
     }
 
-    .paper-panel {
-      background: var(--paper);
-      border: 4px solid var(--ink);
-      box-shadow: 8px 8px 0 var(--ink);
+    .panel {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 20px;
       position: relative;
       overflow: hidden;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
 
-    .paper-panel::before {
+    .panel::before {
       content: "";
       position: absolute;
       inset: 0;
-      background:
-        repeating-linear-gradient(0deg, rgba(0,0,0,0.018) 0 1px, transparent 1px 3px),
-        radial-gradient(circle at 15% 25%, rgba(0,0,0,0.08) 0 1px, transparent 1px 100%),
-        radial-gradient(circle at 85% 70%, rgba(0,0,0,0.06) 0 1px, transparent 1px 100%);
-      background-size: auto, 18px 18px, 24px 24px;
       pointer-events: none;
-      opacity: 0.55;
+      background:
+        radial-gradient(circle at top left, rgba(99,202,183,0.04), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.02), transparent 22%);
     }
 
     .panel-inner {
@@ -140,40 +160,37 @@
     .section-label,
     .mini-label {
       display: inline-block;
-      background: var(--red);
-      color: var(--cream);
-      border: 3px solid var(--ink);
-      box-shadow: 4px 4px 0 var(--ink);
-      padding: 8px 12px;
-      margin-bottom: 14px;
-      font-family: 'Archivo Black', 'Arial Black', sans-serif;
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: rgba(99,202,183,0.6);
       text-transform: uppercase;
-      letter-spacing: -0.03em;
-      font-size: 18px;
-      line-height: 1;
+      margin-bottom: 14px;
+      font-family: 'DM Mono', monospace;
     }
 
     .hero-title {
-      font-family: 'Archivo Black', 'Arial Black', sans-serif;
-      font-size: clamp(40px, 7vw, 80px);
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(34px, 7vw, 62px);
       line-height: 0.92;
-      letter-spacing: -0.05em;
-      text-transform: uppercase;
+      letter-spacing: -0.04em;
       margin-bottom: 14px;
       max-width: 760px;
+      font-weight: 600;
+      color: var(--text);
     }
 
-    .hero-title span { color: var(--red); }
+    .hero-title span { color: var(--accent); }
 
     .hero-desc,
     .section-intro,
     .note-box,
     .tier3-note {
-      font-family: 'Bitter', serif;
-      font-size: 16px;
+      font-size: 15px;
       line-height: 1.6;
-      max-width: 700px;
-      color: var(--ink-soft);
+      max-width: 720px;
+      color: var(--text-soft);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
     }
 
     .tier-cards {
@@ -187,38 +204,38 @@
     }
 
     .tier-card {
-      border: 3px solid var(--ink);
-      background: var(--paper-2);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
       padding: 16px 16px 14px;
       min-height: 140px;
+      border-radius: 16px;
     }
 
-    .tier-card.t1 { background: #f5ebcb; }
-    .tier-card.t2 { background: #e8edf2; }
-    .tier-card.t3 { background: #efe0d6; }
-
-    .tier-card::before { display: none; }
+    .tier-card.t1 { background: rgba(99,202,183,0.06); }
+    .tier-card.t2 { background: rgba(255,255,255,0.03); }
+    .tier-card.t3 { background: rgba(255,214,102,0.06); }
 
     .tier-num {
-      font-family: 'Archivo Black', 'Arial Black', sans-serif;
-      font-size: 28px;
+      font-family: 'DM Mono', monospace;
+      font-size: 24px;
       line-height: 1;
-      margin-bottom: 6px;
-      color: var(--ink);
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-weight: 500;
     }
 
     .tier-name {
-      font-family: 'Archivo Narrow', sans-serif;
+      font-family: 'DM Sans', sans-serif;
       font-size: 16px;
-      font-weight: 800;
-      text-transform: uppercase;
+      font-weight: 600;
       margin-bottom: 8px;
+      color: var(--text);
     }
 
     .tier-desc {
       font-size: 13px;
       line-height: 1.55;
-      color: var(--ink-soft);
+      color: var(--text-muted);
     }
 
     .tier-block,
@@ -232,60 +249,79 @@
       align-items: center;
       gap: 12px;
       padding: 14px 16px;
-      background: var(--paper-3);
-      border: 3px solid var(--ink);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
       cursor: pointer;
       user-select: none;
-      transition: background .15s ease;
+      transition: background .15s ease, border-color .15s ease;
+      border-radius: 16px;
     }
 
     .tier-header:hover,
-    .cat-header-row:hover { background: #eadfcb; }
+    .cat-header-row:hover {
+      background: rgba(255,255,255,0.05);
+    }
 
     .tier-header.open,
     .cat-header-row.open {
-      border-bottom: none;
-      background: var(--yellow);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-bottom-color: transparent;
+      background: rgba(255,255,255,0.04);
     }
 
     .tier-badge {
-      font-family: 'Archivo Black', 'Arial Black', sans-serif;
-      font-size: 13px;
-      letter-spacing: -0.02em;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.04em;
       padding: 6px 10px 5px;
-      border: 3px solid var(--ink);
+      border: 1px solid var(--border);
       text-transform: uppercase;
       flex-shrink: 0;
-      background: var(--paper);
-      color: var(--ink);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      color: var(--text-soft);
     }
 
-    .tier-badge.t1 { background: #f4df97; }
-    .tier-badge.t2 { background: #dce4ec; }
-    .tier-badge.t3 { background: #e7c8b8; }
+    .tier-badge.t1 {
+      background: rgba(99,202,183,0.1);
+      border-color: rgba(99,202,183,0.22);
+      color: var(--accent);
+    }
+
+    .tier-badge.t2 {
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.6);
+    }
+
+    .tier-badge.t3 {
+      background: rgba(255,214,102,0.1);
+      border-color: rgba(255,214,102,0.22);
+      color: var(--warning);
+    }
 
     .tier-hcount,
     .cat-count,
     .criterion-num,
     .pub-topic,
     .page-footer a {
-      font-family: 'Archivo Narrow', sans-serif;
-      font-weight: 800;
+      font-family: 'DM Mono', monospace;
+      font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      font-size: 12px;
-      color: var(--ink-muted);
+      font-size: 11px;
+      color: var(--text-faint);
     }
 
     .tier-hcount { margin-left: auto; }
 
     .tier-chevron,
     .cat-chev {
-      color: var(--ink);
-      font-size: 16px;
+      color: rgba(255,255,255,0.5);
+      font-size: 14px;
       transition: transform .25s;
       flex-shrink: 0;
-      font-weight: 900;
+      font-weight: 700;
     }
 
     .tier-chevron.open,
@@ -295,9 +331,11 @@
     .cat-body {
       overflow: hidden;
       transition: max-height .35s ease;
-      background: var(--paper-2);
-      border: 3px solid var(--ink);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
       border-top: none;
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
     }
 
     .pub-scroll {
@@ -305,11 +343,8 @@
       overflow-y: auto;
       padding: 0;
       scrollbar-width: thin;
-      scrollbar-color: rgba(24,19,16,0.28) transparent;
+      scrollbar-color: rgba(255,255,255,0.1) transparent;
     }
-
-    .pub-scroll::-webkit-scrollbar { width: 8px; }
-    .pub-scroll::-webkit-scrollbar-thumb { background: rgba(24,19,16,0.28); }
 
     .pub-card {
       display: flex;
@@ -317,32 +352,35 @@
       justify-content: space-between;
       gap: 10px;
       padding: 12px 14px;
-      border-bottom: 2px solid var(--line);
+      border-bottom: 1px solid var(--line);
       text-decoration: none;
       transition: background .15s;
     }
 
     .pub-card:last-child { border-bottom: none; }
-    .pub-card:hover { background: rgba(0,0,0,0.04); }
+    .pub-card:hover { background: rgba(255,255,255,0.04); }
 
     .pub-name {
       font-size: 15px;
-      color: var(--ink);
-      font-weight: 800;
+      color: var(--text);
+      font-weight: 600;
       line-height: 1.2;
+      font-family: 'DM Sans', sans-serif;
     }
 
-    .pub-topic { margin-top: 2px; }
+    .pub-topic {
+      margin-top: 4px;
+    }
 
     .pub-arrow {
       font-size: 16px;
-      color: var(--ink-muted);
+      color: var(--text-faint);
       flex-shrink: 0;
       transition: color .2s;
-      font-weight: 900;
+      font-weight: 700;
     }
 
-    .pub-card:hover .pub-arrow { color: var(--red); }
+    .pub-card:hover .pub-arrow { color: var(--accent); }
 
     .tier3-note {
       padding: 16px;
@@ -353,9 +391,10 @@
       flex-direction: column;
       gap: 10px;
       margin-bottom: 16px;
-      background: var(--paper-2);
-      border: 3px solid var(--ink);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
       padding: 16px;
+      border-radius: 16px;
     }
 
     .scale-row {
@@ -377,21 +416,23 @@
     }
 
     .metric-box {
-      border: 3px solid var(--ink);
+      border: 1px solid var(--border);
       padding: 12px;
-      background: var(--paper);
+      background: rgba(255,255,255,0.03);
+      border-radius: 14px;
     }
 
-    .metric-box.t1 { background: #f5ebcb; }
-    .metric-box.t2 { background: #e8edf2; }
-    .metric-box.t3 { background: #efe0d6; }
+    .metric-box.t1 { background: rgba(99,202,183,0.06); }
+    .metric-box.t2 { background: rgba(255,255,255,0.03); }
+    .metric-box.t3 { background: rgba(255,214,102,0.06); }
 
     .cat-title {
-      font-size: 18px;
-      font-weight: 900;
+      font-size: 16px;
+      font-weight: 600;
       flex: 1;
-      text-transform: uppercase;
-      line-height: 1;
+      line-height: 1.1;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
     }
 
     .criterion-row {
@@ -400,45 +441,50 @@
       gap: 12px;
       align-items: start;
       padding: 12px 16px;
-      border-bottom: 2px solid var(--line);
+      border-bottom: 1px solid var(--line);
     }
 
     .criterion-row:last-child { border-bottom: none; }
 
     .criterion-label {
       font-size: 15px;
-      color: var(--ink);
+      color: var(--text);
       line-height: 1.45;
-      font-weight: 800;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
     }
 
     .criterion-desc {
       font-size: 13px;
-      color: var(--ink-soft);
+      color: var(--text-muted);
       line-height: 1.6;
       margin-top: 4px;
-      font-family: 'Bitter', serif;
+      font-family: 'DM Sans', sans-serif;
     }
 
     .note-box {
-      background: var(--paper-3);
-      border: 3px solid var(--ink);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
       padding: 18px 20px;
+      border-radius: 16px;
     }
 
     .note-box strong {
-      color: var(--ink);
-      font-weight: 800;
+      color: var(--text);
+      font-weight: 600;
     }
 
     .note-box a {
-      color: var(--red);
+      color: var(--accent);
       text-decoration: none;
-      font-weight: 700;
+      font-weight: 500;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.03em;
     }
 
     .page-footer {
-      border-top: 4px solid var(--ink);
+      border-top: 1px solid rgba(255,255,255,0.06);
       padding: 22px 0 48px;
       display: flex;
       justify-content: space-between;
@@ -450,18 +496,29 @@
 
     .page-footer a {
       text-decoration: none;
+      color: var(--accent);
     }
 
-    .page-footer a:hover { color: var(--red); }
+    .page-footer a:hover { color: var(--accent); opacity: 0.9; }
 
     .pub-loading {
       padding: 16px;
-      font-size: 13px;
-      color: var(--ink-muted);
-      font-family: 'Archivo Narrow', sans-serif;
-      font-weight: 800;
+      font-size: 12px;
+      color: var(--text-faint);
+      font-family: 'DM Mono', monospace;
+      font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+    }
+
+    code {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--text-soft);
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
     }
 
     @media (max-width: 640px) {
@@ -485,7 +542,7 @@
       .hero-eyebrow,
       .section-label,
       .mini-label {
-        font-size: 15px;
+        font-size: 11px;
       }
     }
   </style>
@@ -502,7 +559,7 @@
 
 <div class="wrap">
 
-  <div class="paper-panel">
+  <div class="panel">
     <div class="panel-inner hero">
       <div class="hero-eyebrow" data-en="Transparency · Methodology" data-it="Trasparenza · Metodologia">Transparency · Methodology</div>
       <h1 class="hero-title" data-en="Sources &amp;<br><span>Methodology</span>" data-it="Fonti &amp;<br><span>Metodologia</span>">Sources &amp;<br><span>Methodology</span></h1>
@@ -514,7 +571,7 @@
     </div>
   </div>
 
-  <div class="paper-panel section">
+  <div class="panel section">
     <div class="panel-inner">
       <div class="section-label" data-en="The source tier system" data-it="Il sistema a tier delle fonti">The source tier system</div>
       <div class="tier-cards">
@@ -537,7 +594,7 @@
     </div>
   </div>
 
-  <div class="paper-panel section">
+  <div class="panel section">
     <div class="panel-inner">
       <div class="section-label" data-en="Trusted publishers" data-it="Publisher di riferimento">Trusted publishers</div>
       <div class="tier-block">
@@ -577,7 +634,7 @@
     </div>
   </div>
 
-  <div class="paper-panel section">
+  <div class="panel section">
     <div class="panel-inner">
       <div class="section-label" data-en="How we score brands" data-it="Come valutiamo i brand">How we score brands</div>
       <p class="section-intro" style="margin-bottom:24px"
@@ -590,30 +647,30 @@
         <div class="mini-label" data-en="Source values by tier" data-it="Valori per tier di fonte">Source values by tier</div>
         <div class="metric-grid">
           <div class="metric-box t1">
-            <div style="font-family:'Archivo Black','Arial Black',sans-serif;font-size:14px;color:#181310;margin-bottom:8px">Tier 1</div>
-            <div style="font-size:12px;color:var(--ink-soft);line-height:2">
-              <span style="color:#2f6a3b;font-weight:800">+20</span> Positive<br>
-              <span style="color:#509a62;font-weight:800">+10</span> Prev. positive<br>
-              <span style="color:#c66b2f;font-weight:800">−10</span> Prev. negative<br>
-              <span style="color:#c63f1d;font-weight:800">−20</span> Negative
+            <div style="font-family:'DM Sans',sans-serif;font-size:14px;color:#e8e8f0;margin-bottom:8px;font-weight:600">Tier 1</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.62);line-height:2">
+              <span style="color:#63CAB7;font-weight:600">+20</span> Positive<br>
+              <span style="color:#89d9ca;font-weight:600">+10</span> Prev. positive<br>
+              <span style="color:#f1d37a;font-weight:600">−10</span> Prev. negative<br>
+              <span style="color:#ff9a9a;font-weight:600">−20</span> Negative
             </div>
           </div>
           <div class="metric-box t2">
-            <div style="font-family:'Archivo Black','Arial Black',sans-serif;font-size:14px;color:#181310;margin-bottom:8px">Tier 2</div>
-            <div style="font-size:12px;color:var(--ink-soft);line-height:2">
-              <span style="color:#2f6a3b;font-weight:800">+10</span> Positive<br>
-              <span style="color:#509a62;font-weight:800">+5</span> Prev. positive<br>
-              <span style="color:#c66b2f;font-weight:800">−5</span> Prev. negative<br>
-              <span style="color:#c63f1d;font-weight:800">−10</span> Negative
+            <div style="font-family:'DM Sans',sans-serif;font-size:14px;color:#e8e8f0;margin-bottom:8px;font-weight:600">Tier 2</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.62);line-height:2">
+              <span style="color:#63CAB7;font-weight:600">+10</span> Positive<br>
+              <span style="color:#89d9ca;font-weight:600">+5</span> Prev. positive<br>
+              <span style="color:#f1d37a;font-weight:600">−5</span> Prev. negative<br>
+              <span style="color:#ff9a9a;font-weight:600">−10</span> Negative
             </div>
           </div>
           <div class="metric-box t3">
-            <div style="font-family:'Archivo Black','Arial Black',sans-serif;font-size:14px;color:#181310;margin-bottom:8px">Tier 3</div>
-            <div style="font-size:12px;color:var(--ink-soft);line-height:2">
-              <span style="color:#2f6a3b;font-weight:800">+2</span> Positive<br>
-              <span style="color:#509a62;font-weight:800">+1</span> Prev. positive<br>
-              <span style="color:#c66b2f;font-weight:800">−1</span> Prev. negative<br>
-              <span style="color:#c63f1d;font-weight:800">−2</span> Negative
+            <div style="font-family:'DM Sans',sans-serif;font-size:14px;color:#e8e8f0;margin-bottom:8px;font-weight:600">Tier 3</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.62);line-height:2">
+              <span style="color:#63CAB7;font-weight:600">+2</span> Positive<br>
+              <span style="color:#89d9ca;font-weight:600">+1</span> Prev. positive<br>
+              <span style="color:#f1d37a;font-weight:600">−1</span> Prev. negative<br>
+              <span style="color:#ff9a9a;font-weight:600">−2</span> Negative
             </div>
           </div>
         </div>
@@ -621,79 +678,77 @@
 
       <div class="scale-box" style="margin-bottom:16px">
         <div class="mini-label" data-en="Minimum threshold per criterion" data-it="Soglia minima per criterio">Minimum threshold per criterion</div>
-        <div style="font-size:13px;color:var(--ink-soft);line-height:2.1">
-          <span style="color:#181310;font-family:'Archivo Black','Arial Black',sans-serif">T1</span>
+        <div style="font-size:13px;color:var(--text-soft);line-height:2.1">
+          <span style="color:#63CAB7;font-family:'DM Mono',monospace">T1</span>
           &nbsp;<span data-en="At least 1 Tier 1 source → uses the average of all T1 sources" data-it="Almeno 1 fonte Tier 1 → usa la media delle fonti T1">At least 1 Tier 1 source → uses the average of all T1 sources</span><br>
-          <span style="color:#181310;font-family:'Archivo Black','Arial Black',sans-serif">T2</span>
+          <span style="color:#63CAB7;font-family:'DM Mono',monospace">T2</span>
           &nbsp;<span data-en="No T1, at least 2 Tier 2 sources → uses the average of T2 sources" data-it="Nessun T1, almeno 2 fonti Tier 2 → usa la media delle T2">No T1, at least 2 Tier 2 sources → uses the average of T2 sources</span><br>
-          <span style="color:#181310;font-family:'Archivo Black','Arial Black',sans-serif">T3</span>
+          <span style="color:#63CAB7;font-family:'DM Mono',monospace">T3</span>
           &nbsp;<span data-en="No T1, 1 T2 + at least 3 T3 → T2 value + average of T3 (summed, capped at ±20)" data-it="Nessun T1, 1 T2 + almeno 3 T3 → valore T2 + media T3 (sommati, cap ±20)">No T1, 1 T2 + at least 3 T3 → T2 value + average of T3 (summed, capped at ±20)</span>
         </div>
       </div>
 
-<div class="scale-box">
-  <div class="mini-label" data-en="From raw score to visible score" data-it="Dal punteggio grezzo al punteggio visibile">From raw score to visible score</div>
+      <div class="scale-box">
+        <div class="mini-label" data-en="From raw score to visible score" data-it="Dal punteggio grezzo al punteggio visibile">From raw score to visible score</div>
 
-  <!-- Step 1 -->
-  <div style="margin-bottom:14px">
-    <div style="font-family:'Archivo Black','Arial Black',sans-serif;font-size:12px;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em"
-      data-en="Step 1 — Category score (raw: −100 / +100)"
-      data-it="Step 1 — Punteggio per categoria (grezzo: −100 / +100)">
-      Step 1 — Category score (raw: −100 / +100)
-    </div>
-    <div style="font-size:12px;color:var(--ink-soft);line-height:1.8;font-family:'Bitter',serif"
-      data-en="Each category has 5 criteria, each worth up to ±20 (Tier 1). The raw category score is the sum of all published criteria scores, ranging from −100 to +100."
-      data-it="Ogni categoria ha 5 criteri, ognuno vale fino a ±20 (Tier 1). Il punteggio grezzo di categoria è la somma dei criteri pubblicati, da −100 a +100.">
-      Each category has 5 criteria, each worth up to ±20 (Tier 1). The raw category score is the sum of all published criteria scores, ranging from −100 to +100.
-    </div>
-    <div style="margin-top:8px;font-size:12px;color:var(--ink-soft);font-family:'Bitter',serif"
-      data-en="Converted to 0–100 scale: (raw + 100) / 200 × 100"
-      data-it="Convertito in scala 0–100: (grezzo + 100) / 200 × 100">
-      Converted to 0–100 scale: <code style="background:var(--paper-3);padding:2px 5px;border:1px solid var(--line)">(raw + 100) / 200 × 100</code>
-    </div>
-  </div>
+        <div style="margin-bottom:14px">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.7)"
+            data-en="Step 1 — Category score (raw: −100 / +100)"
+            data-it="Step 1 — Punteggio per categoria (grezzo: −100 / +100)">
+            Step 1 — Category score (raw: −100 / +100)
+          </div>
+          <div style="font-size:12px;color:var(--text-soft);line-height:1.8"
+            data-en="Each category has 5 criteria, each worth up to ±20 (Tier 1). The raw category score is the sum of all published criteria scores, ranging from −100 to +100."
+            data-it="Ogni categoria ha 5 criteri, ognuno vale fino a ±20 (Tier 1). Il punteggio grezzo di categoria è la somma dei criteri pubblicati, da −100 a +100.">
+            Each category has 5 criteria, each worth up to ±20 (Tier 1). The raw category score is the sum of all published criteria scores, ranging from −100 to +100.
+          </div>
+          <div style="margin-top:8px;font-size:12px;color:var(--text-soft)"
+            data-en="Converted to 0–100 scale: (raw + 100) / 200 × 100"
+            data-it="Convertito in scala 0–100: (grezzo + 100) / 200 × 100">
+            Converted to 0–100 scale: <code>(raw + 100) / 200 × 100</code>
+          </div>
+        </div>
 
-  <!-- Step 2 -->
-  <div style="margin-bottom:16px">
-    <div style="font-family:'Archivo Black','Arial Black',sans-serif;font-size:12px;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em"
-      data-en="Step 2 — Total score (visible: 0 / 100)"
-      data-it="Step 2 — Punteggio totale (visibile: 0 / 100)">
-      Step 2 — Total score (visible: 0 / 100)
-    </div>
-    <div style="font-size:12px;color:var(--ink-soft);line-height:1.8;font-family:'Bitter',serif"
-      data-en="The total visible score is the average of the category scores (0–100) for categories with sufficient sources."
-      data-it="Il punteggio totale visibile è la media dei punteggi di categoria (0–100) per le categorie con fonti sufficienti.">
-      The total visible score is the average of the category scores (0–100) for categories with sufficient sources.
-    </div>
-  </div>
+        <div style="margin-bottom:16px">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.7)"
+            data-en="Step 2 — Total score (visible: 0 / 100)"
+            data-it="Step 2 — Punteggio totale (visibile: 0 / 100)">
+            Step 2 — Total score (visible: 0 / 100)
+          </div>
+          <div style="font-size:12px;color:var(--text-soft);line-height:1.8"
+            data-en="The total visible score is the average of the category scores (0–100) for categories with sufficient sources."
+            data-it="Il punteggio totale visibile è la media dei punteggi di categoria (0–100) per le categorie con fonti sufficienti.">
+            The total visible score is the average of the category scores (0–100) for categories with sufficient sources.
+          </div>
+        </div>
 
-  <!-- Fasce -->
-  <div style="font-family:'Archivo Black','Arial Black',sans-serif;font-size:12px;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.04em"
-    data-en="Score bands (visible 0–100)"
-    data-it="Fasce di punteggio (visibile 0–100)">
-    Score bands (visible 0–100)
-  </div>
-<div class="scale-row">
-  <span style="background:#4a9e5c;color:#fff;font-family:'Archivo Black','Arial Black',sans-serif;font-size:11px;padding:3px 7px;min-width:80px;text-align:center">75 → 100</span>
-  <span style="color:#4a9e5c;font-weight:800" data-en="Deeply Ethical" data-it="Profondamente Etico">Deeply Ethical</span>
-</div>
-<div class="scale-row">
-  <span style="background:#7ab87a;color:#fff;font-family:'Archivo Black','Arial Black',sans-serif;font-size:11px;padding:3px 7px;min-width:80px;text-align:center">55 → 74</span>
-  <span style="color:#5d8b66;font-weight:800" data-en="Fairly Ethical" data-it="Abbastanza Etico">Fairly Ethical</span>
-</div>
-<div class="scale-row">
-  <span style="background:#e7bb3a;color:#111;font-family:'Archivo Black','Arial Black',sans-serif;font-size:11px;padding:3px 7px;min-width:80px;text-align:center">45 → 54</span>
-  <span style="color:#caa11e;font-weight:800" data-en="Partially Ethical" data-it="Parzialmente Etico">Partially Ethical</span>
-</div>
-<div class="scale-row">
-  <span style="background:#e8803a;color:#fff;font-family:'Archivo Black','Arial Black',sans-serif;font-size:11px;padding:3px 7px;min-width:80px;text-align:center">25 → 44</span>
-  <span style="color:#c66b2f;font-weight:800" data-en="Scarcely Ethical" data-it="Scarsamente Etico">Scarcely Ethical</span>
-</div>
-<div class="scale-row">
-  <span style="background:#c4432c;color:#fff;font-family:'Archivo Black','Arial Black',sans-serif;font-size:11px;padding:3px 7px;min-width:80px;text-align:center">0 → 24</span>
-  <span style="color:#c4432c;font-weight:800" data-en="Ethically Compromised" data-it="Eticamente Inadeguato">Ethically Compromised</span>
-</div>
-</div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.7)"
+          data-en="Score bands (visible 0–100)"
+          data-it="Fasce di punteggio (visibile 0–100)">
+          Score bands (visible 0–100)
+        </div>
+
+        <div class="scale-row">
+          <span style="background:rgba(99,202,183,0.14);border:1px solid rgba(99,202,183,0.24);color:#63CAB7;font-family:'DM Mono',monospace;font-size:11px;padding:4px 8px;min-width:80px;text-align:center;border-radius:999px">75 → 100</span>
+          <span style="color:#63CAB7;font-weight:600" data-en="Deeply Ethical" data-it="Profondamente Etico">Deeply Ethical</span>
+        </div>
+        <div class="scale-row">
+          <span style="background:rgba(99,202,183,0.08);border:1px solid rgba(99,202,183,0.18);color:#89d9ca;font-family:'DM Mono',monospace;font-size:11px;padding:4px 8px;min-width:80px;text-align:center;border-radius:999px">55 → 74</span>
+          <span style="color:#89d9ca;font-weight:600" data-en="Fairly Ethical" data-it="Abbastanza Etico">Fairly Ethical</span>
+        </div>
+        <div class="scale-row">
+          <span style="background:rgba(255,214,102,0.1);border:1px solid rgba(255,214,102,0.2);color:#f1d37a;font-family:'DM Mono',monospace;font-size:11px;padding:4px 8px;min-width:80px;text-align:center;border-radius:999px">45 → 54</span>
+          <span style="color:#f1d37a;font-weight:600" data-en="Partially Ethical" data-it="Parzialmente Etico">Partially Ethical</span>
+        </div>
+        <div class="scale-row">
+          <span style="background:rgba(255,214,102,0.07);border:1px solid rgba(255,214,102,0.16);color:#dcb86c;font-family:'DM Mono',monospace;font-size:11px;padding:4px 8px;min-width:80px;text-align:center;border-radius:999px">25 → 44</span>
+          <span style="color:#dcb86c;font-weight:600" data-en="Scarcely Ethical" data-it="Scarsamente Etico">Scarcely Ethical</span>
+        </div>
+        <div class="scale-row">
+          <span style="background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.22);color:#ff9a9a;font-family:'DM Mono',monospace;font-size:11px;padding:4px 8px;min-width:80px;text-align:center;border-radius:999px">0 → 24</span>
+          <span style="color:#ff9a9a;font-weight:600" data-en="Ethically Compromised" data-it="Eticamente Inadeguato">Ethically Compromised</span>
+        </div>
+      </div>
 
       <div id="criteria-container" style="margin-top:16px">
         <div class="pub-loading">Loading criteria...</div>
@@ -701,7 +756,7 @@
     </div>
   </div>
 
-  <div class="paper-panel note-section">
+  <div class="panel note-section">
     <div class="panel-inner">
       <div class="note-box">
         <strong data-en="Every score change requires human review." data-it="Ogni modifica al punteggio richiede revisione umana.">Every score change requires human review.</strong>
