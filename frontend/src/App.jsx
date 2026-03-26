@@ -215,7 +215,7 @@ export default function App() {
 <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", marginBottom: 28 }}>
   {[
     { href: "/sources.html", en: "How we score brands", it: "Come valutiamo i brand" },
-    { href: "/sources.html", en: "Our mission ",  it: "La nostra missione " },
+    { href: "/mission.html", en: "Our mission ",  it: "La nostra missione " },
   ].map((link, i, arr) => (
     <span key={i} style={{ display: "flex", alignItems: "center" }}>
       
