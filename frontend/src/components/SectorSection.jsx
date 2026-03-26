@@ -96,25 +96,6 @@ export default function SectorSection({
               minWidth: 0,
             }}
           >
-            {sectorIcon && (
-              <div
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 10,
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                  fontSize: 14,
-                }}
-              >
-                {sectorIcon}
-              </div>
-            )}
-
             <div
               style={{
                 fontFamily: "'DM Sans', sans-serif",
