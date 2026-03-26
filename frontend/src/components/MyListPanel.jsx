@@ -410,11 +410,6 @@ export default function MyListPanel({
       ? "I TUOI BRAND, IL LORO IMPATTO"
       : "YOUR BRANDS, THEIR IMPACT";
 
-  const subtitle =
-    lang === "it"
-      ? "Scopri l'impatto etico dei brand che usi e passa ad alternative migliori."
-      : "Learn the ethical impact of the brands you use and switch to better options.";
-
   const deckLine =
     lang === "it"
       ? "Cerca un brand nella barra sopra oppure sfoglia tra i settori. Clicca su un brand per vederne i dettagli e leggere direttamente le fonti — poi aggiungilo per vedere il quadro d'insieme."
@@ -914,20 +909,6 @@ export default function MyListPanel({
               }}
             >
               {headlineText}
-            </div>
-
-            <div
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: "clamp(16px, 2.5vw, 20px)",
-                lineHeight: 1.45,
-                fontWeight: 300,
-                maxWidth: 720,
-                marginBottom: 14,
-                color: "rgba(255,255,255,0.72)",
-              }}
-            >
-              {subtitle}
             </div>
 
             <div
