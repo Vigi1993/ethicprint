@@ -17,9 +17,10 @@ function ScoreBar({ value, color }) {
   return (
     <div
       style={{
-        background: "rgba(0,0,0,0.08)",
-        border: "2px solid rgba(0,0,0,0.78)",
-        height: 16,
+        background: "rgba(255,255,255,0.05)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        borderRadius: 999,
+        height: 10,
         width: "100%",
         overflow: "hidden",
         position: "relative",
@@ -34,11 +35,13 @@ function ScoreBar({ value, color }) {
           width: `${pct}%`,
           background: color,
           transition: "width 1s cubic-bezier(.4,0,.2,1)",
+          borderRadius: 999,
         }}
       />
     </div>
   );
 }
+
 const UI = {
   en: {
     notes_title: "Notes & Sources",
@@ -96,31 +99,33 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
         style={{
           position: "fixed",
           inset: 0,
-          background: "rgba(0,0,0,0.62)",
+          background: "rgba(0,0,0,0.72)",
           zIndex: 100,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           padding: 20,
+          backdropFilter: "blur(4px)",
         }}
         onClick={onClose}
       >
         <div
           style={{
-            background: "#f4eee3",
-            border: "4px solid #111",
-            boxShadow: "8px 8px 0 #111",
+            background: "#0f0f1a",
+            border: "1px solid rgba(255,255,255,0.1)",
+            borderRadius: 20,
+            boxShadow: "0 40px 80px rgba(0,0,0,0.6)",
             padding: 36,
           }}
           onClick={(e) => e.stopPropagation()}
         >
           <div
             style={{
-              color: "#111",
-              fontSize: 13,
-              fontFamily: "Arial, Helvetica, sans-serif",
-              fontWeight: 800,
-              letterSpacing: "0.08em",
+              color: "rgba(255,255,255,0.5)",
+              fontSize: 12,
+              fontFamily: "'DM Mono', monospace",
+              fontWeight: 500,
+              letterSpacing: "0.12em",
               textTransform: "uppercase",
             }}
           >
@@ -138,50 +143,47 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
       style={{
         position: "fixed",
         inset: 0,
-        background: "rgba(0,0,0,0.62)",
+        background: "rgba(0,0,0,0.72)",
         zIndex: 100,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         padding: 20,
+        backdropFilter: "blur(4px)",
       }}
       onClick={onClose}
     >
       <div
         style={{
-          background: "#f4eee3",
-          border: "4px solid #111",
-          boxShadow: "10px 10px 0 #111",
+          background: "#0f0f1a",
+          border: "1px solid rgba(255,255,255,0.1)",
+          boxShadow: "0 40px 80px rgba(0,0,0,0.6)",
           maxWidth: 780,
           width: "100%",
           maxHeight: "90vh",
           overflowY: "auto",
           position: "relative",
-          color: "#111",
+          color: "#e8e8f0",
+          borderRadius: 24,
         }}
         onClick={(e) => e.stopPropagation()}
       >
         <style>{`
-          .brandcard-paper {
+          .brandcard-shell {
             position: relative;
             overflow: hidden;
             background:
-              radial-gradient(circle at 18% 16%, rgba(0,0,0,0.06) 0 1px, transparent 1px),
-              radial-gradient(circle at 82% 32%, rgba(0,0,0,0.05) 0 1px, transparent 1px),
-              radial-gradient(circle at 58% 78%, rgba(0,0,0,0.05) 0 1px, transparent 1px),
-              #f4eee3;
-            background-size: 14px 14px, 16px 16px, 12px 12px, auto;
-          }
-          .brandcard-paper::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.018) 0 1px, transparent 1px 3px);
-            opacity: 0.45;
+              radial-gradient(circle at top left, rgba(99,202,183,0.05), transparent 28%),
+              radial-gradient(circle at bottom right, rgba(255,255,255,0.03), transparent 22%),
+              #0f0f1a;
           }
           .brandcard-link:hover {
-            background: rgba(0,0,0,0.05) !important;
+            background: rgba(255,255,255,0.04) !important;
+          }
+          .brandcard-btn:hover {
+            background: rgba(99,202,183,0.15) !important;
+            border-color: rgba(99,202,183,0.3) !important;
+            color: #63CAB7 !important;
           }
           @media (max-width: 760px) {
             .brandcard-top {
@@ -193,25 +195,26 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
           }
         `}</style>
 
-        <div className="brandcard-paper" style={{ padding: 24 }}>
+        <div className="brandcard-shell" style={{ padding: 24 }}>
           <button
             onClick={onClose}
             style={{
               position: "absolute",
               top: 16,
               right: 16,
-              background: "#111",
-              border: "3px solid #111",
-              color: "#f4eee3",
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              color: "rgba(255,255,255,0.6)",
               width: 38,
               height: 38,
               cursor: "pointer",
-              fontSize: 26,
+              fontSize: 24,
               lineHeight: 1,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               zIndex: 2,
+              borderRadius: 99,
             }}
           >
             ×
@@ -219,37 +222,46 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
 
           <div
             style={{
-              borderBottom: "6px solid #111",
-              paddingBottom: 16,
-              marginBottom: 18,
+              borderBottom: "1px solid rgba(255,255,255,0.08)",
+              paddingBottom: 18,
+              marginBottom: 20,
               paddingRight: 52,
             }}
           >
             <div
               style={{
-                fontFamily: "Arial, Helvetica, sans-serif",
-                fontSize: 13,
-                fontWeight: 900,
-                letterSpacing: "0.08em",
+                fontFamily: "'DM Mono', monospace",
+                fontSize: 11,
+                fontWeight: 500,
+                letterSpacing: "0.18em",
                 textTransform: "uppercase",
-                color: "rgba(0,0,0,0.7)",
-                marginBottom: 8,
+                color: "rgba(99,202,183,0.65)",
+                marginBottom: 10,
               }}
             >
               {b.sector || "Brand"}
             </div>
 
-            <div className="brandcard-top" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 20, alignItems: "start" }}>
+            <div
+              className="brandcard-top"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr auto",
+                gap: 20,
+                alignItems: "start",
+              }}
+            >
               <div>
                 <div
                   style={{
-                    fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-                    fontSize: "clamp(42px, 7vw, 72px)",
-                    lineHeight: 0.9,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.01em",
-                    marginBottom: 10,
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: "clamp(34px, 6vw, 56px)",
+                    lineHeight: 0.95,
+                    letterSpacing: "-0.03em",
+                    marginBottom: 12,
                     maxWidth: 520,
+                    fontWeight: 600,
+                    color: "#e8e8f0",
                   }}
                 >
                   {b.name}
@@ -257,11 +269,13 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
 
                 <div
                   style={{
-                    fontFamily: "Georgia, 'Times New Roman', serif",
-                    fontSize: "clamp(18px, 2.5vw, 28px)",
-                    lineHeight: 1.08,
-                    marginBottom: 10,
-                    maxWidth: 520,
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: "clamp(16px, 2.5vw, 22px)",
+                    lineHeight: 1.35,
+                    marginBottom: 12,
+                    maxWidth: 560,
+                    color: "rgba(255,255,255,0.72)",
+                    fontWeight: 300,
                   }}
                 >
                   {displayLabel || (lang === "it" ? "Profilo etico del brand" : "Ethical brand profile")}
@@ -269,10 +283,10 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
 
                 <div
                   style={{
-                    fontFamily: "Arial, Helvetica, sans-serif",
+                    fontFamily: "'DM Sans', sans-serif",
                     fontSize: 13,
-                    color: "rgba(0,0,0,0.72)",
-                    fontWeight: 700,
+                    color: "rgba(255,255,255,0.42)",
+                    fontWeight: 400,
                   }}
                 >
                   {t.parent}: {b.parent || "—"}
@@ -285,47 +299,50 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                   justifySelf: "end",
                   width: 158,
                   minHeight: 158,
-                  background: displayScore === null || b.insufficient_data
-                  ? "#e7bb3a"
-                  : displayScore >= 70
-                  ? "#4a9e5c"
-                  : displayScore >= 50
-                  ? "#e7bb3a"
-                  : "#c4432c",
-                color: displayScore !== null && !b.insufficient_data && displayScore >= 50 && displayScore < 70
-                  ? "#111"
-                  : "#fff",
-                  border: "6px solid #111",
-                  boxShadow: "6px 6px 0 #111",
-                  transform: "rotate(-3deg)",
+                  background:
+                    b.insufficient_data || displayScore === null
+                      ? "rgba(255,214,102,0.12)"
+                      : `${color}16`,
+                  color:
+                    b.insufficient_data || displayScore === null
+                      ? "#f1d37a"
+                      : color,
+                  border: `1px solid ${
+                    b.insufficient_data || displayScore === null
+                      ? "rgba(255,214,102,0.22)"
+                      : `${color}33`
+                  }`,
+                  borderRadius: 24,
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
-                  padding: 14,
+                  padding: 16,
                   textAlign: "center",
+                  boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.02)",
                 }}
               >
                 {b.insufficient_data || displayScore === null ? (
                   <>
                     <div
                       style={{
-                        fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-                        fontSize: 28,
+                        fontFamily: "'DM Mono', monospace",
+                        fontSize: 34,
                         lineHeight: 0.95,
-                        textTransform: "uppercase",
+                        fontWeight: 500,
                       }}
                     >
                       —
                     </div>
                     <div
                       style={{
-                        marginTop: 8,
-                        fontFamily: "Arial, Helvetica, sans-serif",
+                        marginTop: 10,
+                        fontFamily: "'DM Sans', sans-serif",
                         fontSize: 12,
-                        fontWeight: 800,
+                        fontWeight: 600,
                         textTransform: "uppercase",
-                        lineHeight: 1.1,
+                        lineHeight: 1.2,
+                        color: "#f1d37a",
                       }}
                     >
                       {t.insufficient}
@@ -335,22 +352,33 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                   <>
                     <div
                       style={{
-                        fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-                        fontSize: 54,
+                        fontFamily: "'DM Mono', monospace",
+                        fontSize: 46,
                         lineHeight: 0.9,
+                        fontWeight: 700,
                       }}
                     >
                       {displayScore}
-                      <span style={{ fontSize: 24 }}>/100</span>
                     </div>
                     <div
                       style={{
-                        marginTop: 8,
-                        fontFamily: "Arial, Helvetica, sans-serif",
-                        fontSize: 11,
-                        fontWeight: 900,
+                        marginTop: 3,
+                        fontFamily: "'DM Mono', monospace",
+                        fontSize: 12,
+                        color: "rgba(255,255,255,0.28)",
+                      }}
+                    >
+                      /100
+                    </div>
+                    <div
+                      style={{
+                        marginTop: 10,
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 12,
+                        fontWeight: 600,
                         textTransform: "uppercase",
                         letterSpacing: "0.06em",
+                        color: "rgba(255,255,255,0.75)",
                       }}
                     >
                       {t.score}
@@ -358,17 +386,15 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                     {b.criteria_published > 0 && (
                       <div
                         style={{
-                          marginTop: 5,
-                          fontFamily: "Arial, Helvetica, sans-serif",
+                          marginTop: 6,
+                          fontFamily: "'DM Mono', monospace",
                           fontSize: 10,
-                          fontWeight: 700,
-                          opacity: 0.8,
+                          color: "rgba(255,255,255,0.35)",
                         }}
                       >
                         {b.criteria_published} {t.criteria}
                       </div>
                     )}
-   
                   </>
                 )}
               </div>
@@ -378,14 +404,15 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
           {b.impact_summary && (
             <div
               style={{
-                border: "4px solid #111",
-                background: "#111",
-                color: "#f4eee3",
+                border: "1px solid rgba(99,202,183,0.18)",
+                background: "rgba(99,202,183,0.08)",
+                color: "#e8e8f0",
                 padding: "14px 16px",
                 marginBottom: 20,
-                fontFamily: "Georgia, 'Times New Roman', serif",
-                fontSize: 18,
-                lineHeight: 1.35,
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 15,
+                lineHeight: 1.55,
+                borderRadius: 16,
               }}
             >
               {b.impact_summary}
@@ -395,28 +422,38 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
           <div style={{ marginBottom: 22 }}>
             <div
               style={{
-                background: "#dd4a2f",
-                color: "#fff",
-                border: "4px solid #111",
+                background: "rgba(255,107,107,0.08)",
+                color: "#ff9a9a",
+                border: "1px solid rgba(255,107,107,0.18)",
                 borderBottom: "none",
-                padding: "12px 16px 10px",
-                fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-                fontSize: 26,
+                padding: "14px 16px",
+                fontFamily: "'DM Mono', monospace",
+                fontSize: 11,
                 lineHeight: 1,
                 textTransform: "uppercase",
+                letterSpacing: 3,
+                borderTopLeftRadius: 18,
+                borderTopRightRadius: 18,
               }}
             >
               {lang === "it" ? "Breakdown per categoria" : "Category breakdown"}
             </div>
 
-            <div style={{ border: "4px solid #111", background: "#efe7d8", padding: 16 }}>
+            <div
+              style={{
+                border: "1px solid rgba(255,255,255,0.08)",
+                background: "rgba(255,255,255,0.03)",
+                padding: 16,
+                borderBottomLeftRadius: 18,
+                borderBottomRightRadius: 18,
+              }}
+            >
               {categories.map((cat) => {
                 const conf = b.confidence?.[cat.key] || {};
                 const criteria_met = conf.criteria_met;
                 const rawScore = b.scores?.[cat.key];
                 const publicCategoryScore = criteria_met ? rawCategoryScoreToPublic(rawScore) : null;
-        console.log(cat.key, { conf, criteria_met, rawScore, publicCategoryScore });
-                const catColor = criteria_met ? getDisplayScoreColor(publicCategoryScore) : "#b8aa90";
+                const catColor = criteria_met ? getDisplayScoreColor(publicCategoryScore) : "rgba(255,255,255,0.22)";
                 const t1 = conf.tier1 ?? conf.t1 ?? 0;
                 const t2 = conf.tier2 ?? conf.t2 ?? 0;
                 const t3 = conf.tier3 ?? conf.t3 ?? 0;
@@ -428,18 +465,25 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                     style={{
                       marginBottom: 14,
                       paddingBottom: 14,
-                      borderBottom: "2px solid rgba(0,0,0,0.15)",
+                      borderBottom: "1px solid rgba(255,255,255,0.06)",
                       opacity: criteria_met ? 1 : 0.72,
                     }}
                   >
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: 12, marginBottom: 8, alignItems: "baseline" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: 12,
+                        marginBottom: 10,
+                        alignItems: "baseline",
+                      }}
+                    >
                       <span
                         style={{
-                          fontFamily: "Arial, Helvetica, sans-serif",
+                          fontFamily: "'DM Sans', sans-serif",
                           fontSize: 14,
-                          fontWeight: 900,
-                          textTransform: "uppercase",
-                          color: "#111",
+                          fontWeight: 600,
+                          color: "#e8e8f0",
                         }}
                       >
                         {cat.icon} {getCatLabel(cat, lang)}
@@ -447,22 +491,44 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
 
                       {criteria_met ? (
                         <div style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
-                          <span style={{ fontSize: 24, fontWeight: 900, color: "#111", fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif" }}>
+                          <span
+                            style={{
+                              fontSize: 22,
+                              fontWeight: 700,
+                              color: catColor,
+                              fontFamily: "'DM Mono', monospace",
+                            }}
+                          >
                             {publicCategoryScore}
                           </span>
-                          <span style={{ fontSize: 11, color: "rgba(0,0,0,0.55)", fontWeight: 800 }}>
+                          <span
+                            style={{
+                              fontSize: 11,
+                              color: "rgba(255,255,255,0.28)",
+                              fontFamily: "'DM Mono', monospace",
+                            }}
+                          >
                             /100
                           </span>
                         </div>
                       ) : (
-                        <span style={{ fontSize: 11, color: "#9c4f1f", fontWeight: 800, textTransform: "uppercase" }}>
+                        <span
+                          style={{
+                            fontSize: 11,
+                            color: "rgba(255,214,102,0.8)",
+                            fontWeight: 500,
+                            textTransform: "uppercase",
+                            fontFamily: "'DM Mono', monospace",
+                            letterSpacing: "0.04em",
+                          }}
+                        >
                           {hasAnySources
                             ? lang === "it"
                               ? "fonti insufficienti"
                               : "insufficient sources"
                             : lang === "it"
-                              ? "nessuna fonte"
-                              : "no sources"}
+                            ? "nessuna fonte"
+                            : "no sources"}
                         </span>
                       )}
                     </div>
@@ -480,21 +546,32 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
           <div style={{ marginBottom: 22 }}>
             <div
               style={{
-                background: "#111",
-                color: "#f4eee3",
-                border: "4px solid #111",
+                background: "rgba(255,255,255,0.04)",
+                color: "rgba(255,255,255,0.78)",
+                border: "1px solid rgba(255,255,255,0.08)",
                 borderBottom: "none",
-                padding: "12px 16px 10px",
-                fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-                fontSize: 24,
+                padding: "14px 16px",
+                fontFamily: "'DM Mono', monospace",
+                fontSize: 11,
                 lineHeight: 1,
                 textTransform: "uppercase",
+                letterSpacing: 3,
+                borderTopLeftRadius: 18,
+                borderTopRightRadius: 18,
               }}
             >
               {t.notes_title}
             </div>
 
-            <div style={{ border: "4px solid #111", background: "#f4eee3", padding: 16 }}>
+            <div
+              style={{
+                border: "1px solid rgba(255,255,255,0.08)",
+                background: "rgba(255,255,255,0.03)",
+                padding: 16,
+                borderBottomLeftRadius: 18,
+                borderBottomRightRadius: 18,
+              }}
+            >
               {categories.map((cat) => {
                 const catSources = b.sources?.[cat.key] || [];
                 const hasNote = b.notes?.[cat.key];
@@ -508,7 +585,7 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                     style={{
                       marginBottom: 18,
                       paddingBottom: 14,
-                      borderBottom: "2px solid rgba(0,0,0,0.12)",
+                      borderBottom: "1px solid rgba(255,255,255,0.06)",
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
@@ -516,10 +593,11 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                       <span
                         style={{
                           fontSize: 12,
-                          fontWeight: 900,
-                          color: "#111",
+                          fontWeight: 600,
+                          color: "rgba(255,255,255,0.78)",
                           textTransform: "uppercase",
                           letterSpacing: "0.05em",
+                          fontFamily: "'DM Mono', monospace",
                         }}
                       >
                         {getCatLabel(cat, lang)}
@@ -530,10 +608,10 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                       <div
                         style={{
                           fontSize: 14,
-                          color: "rgba(0,0,0,0.8)",
-                          lineHeight: 1.5,
+                          color: "rgba(255,255,255,0.72)",
+                          lineHeight: 1.6,
                           marginBottom: 8,
-                          fontFamily: "Georgia, 'Times New Roman', serif",
+                          fontFamily: "'DM Sans', sans-serif",
                         }}
                       >
                         {b.notes?.[cat.key]}
@@ -542,20 +620,30 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
 
                     {conf && (
                       <div style={{ marginBottom: catSources.length ? 10 : 0 }}>
-                        <span style={{ fontSize: 11, color: "rgba(0,0,0,0.6)", fontWeight: 800, textTransform: "uppercase" }}>
-                          ◆ {conf.count} {lang === "it"
+                        <span
+                          style={{
+                            fontSize: 11,
+                            color: "rgba(255,255,255,0.38)",
+                            fontWeight: 500,
+                            textTransform: "uppercase",
+                            fontFamily: "'DM Mono', monospace",
+                            letterSpacing: "0.04em",
+                          }}
+                        >
+                          ◆ {conf.count}{" "}
+                          {lang === "it"
                             ? conf.count === 1
                               ? "fonte verificata"
                               : "fonti verificate"
                             : conf.count === 1
-                              ? "verified source"
-                              : "verified sources"}
+                            ? "verified source"
+                            : "verified sources"}
                         </span>
                       </div>
                     )}
 
                     {catSources.length > 0 && (
-                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                         {catSources.map((src, i) => (
                           <a
                             key={i}
@@ -565,21 +653,30 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                             className="brandcard-link"
                             style={{
                               fontSize: 12,
-                              color: "#111",
+                              color: "#e8e8f0",
                               textDecoration: "none",
                               display: "inline-flex",
                               alignItems: "center",
                               gap: 6,
-                              border: "2px solid #111",
-                              background: "#efe7d8",
-                              padding: "8px 10px",
+                              border: "1px solid rgba(255,255,255,0.08)",
+                              background: "rgba(255,255,255,0.03)",
+                              padding: "10px 12px",
                               width: "fit-content",
-                              fontWeight: 800,
+                              fontWeight: 500,
+                              borderRadius: 12,
+                              fontFamily: "'DM Sans', sans-serif",
+                              transition: "background 0.15s ease",
                             }}
                           >
                             ↗ {src.title || src.publisher || "Source"}
                             {src.publisher && src.title && (
-                              <span style={{ color: "rgba(0,0,0,0.58)", fontSize: 11, fontWeight: 700 }}>
+                              <span
+                                style={{
+                                  color: "rgba(255,255,255,0.35)",
+                                  fontSize: 11,
+                                  fontWeight: 400,
+                                }}
+                              >
                                 — {src.publisher}
                               </span>
                             )}
@@ -596,80 +693,129 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
           <div>
             <div
               style={{
-                background: "#e7bb3a",
-                color: "#111",
-                border: "4px solid #111",
+                background: "rgba(99,202,183,0.1)",
+                color: "#63CAB7",
+                border: "1px solid rgba(99,202,183,0.18)",
                 borderBottom: "none",
-                padding: "12px 16px 10px",
-                fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-                fontSize: 24,
+                padding: "14px 16px",
+                fontFamily: "'DM Mono', monospace",
+                fontSize: 11,
                 lineHeight: 1,
                 textTransform: "uppercase",
+                letterSpacing: 3,
+                borderTopLeftRadius: 18,
+                borderTopRightRadius: 18,
               }}
             >
               {t.alternatives_label}
             </div>
 
-            <div style={{ border: "4px solid #111", background: "#efe7d8", padding: 16 }}>
+            <div
+              style={{
+                border: "1px solid rgba(255,255,255,0.08)",
+                background: "rgba(255,255,255,0.03)",
+                padding: 16,
+                borderBottomLeftRadius: 18,
+                borderBottomRightRadius: 18,
+              }}
+            >
               {b.alternatives && b.alternatives.length > 0 ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {b.alternatives.map((alt) => (
-                    <div
-                      key={alt.id}
-                      onClick={() => onSelectAlt(alt)}
-                      className="brandcard-link"
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "auto 1fr auto auto",
-                        alignItems: "center",
-                        gap: 12,
-                        background: "#f4eee3",
-                        border: "3px solid #111",
-                        padding: "10px 12px",
-                        cursor: "pointer",
-                      }}
-                    >
+                  {b.alternatives.map((alt) => {
+                    const altColor = getDisplayScoreColor(alt.score);
+
+                    return (
                       <div
+                        key={alt.id}
+                        onClick={() => onSelectAlt(alt)}
+                        className="brandcard-link"
                         style={{
-                          width: 34,
-                          height: 34,
-                          border: "3px solid #111",
-                          background: getColor(alt.score),
-                          display: "flex",
+                          display: "grid",
+                          gridTemplateColumns: "auto 1fr auto auto",
                           alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: 14,
-                          flexShrink: 0,
+                          gap: 12,
+                          background: "rgba(255,255,255,0.03)",
+                          border: "1px solid rgba(255,255,255,0.08)",
+                          padding: "12px 14px",
+                          cursor: "pointer",
+                          borderRadius: 14,
+                          transition: "background 0.15s ease",
                         }}
                       >
-                        {alt.logo}
-                      </div>
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ fontSize: 16, fontWeight: 900, color: "#111", lineHeight: 1 }}>
-                          {alt.name}
+                        <div
+                          style={{
+                            width: 36,
+                            height: 36,
+                            borderRadius: 12,
+                            background: `${altColor}22`,
+                            border: `1px solid ${altColor}44`,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: 14,
+                            flexShrink: 0,
+                            color: altColor,
+                            fontWeight: 700,
+                          }}
+                        >
+                          {alt.logo}
                         </div>
-                        <div style={{ fontSize: 12, color: "rgba(0,0,0,0.62)", fontWeight: 700, marginTop: 4 }}>
-                          {alt.sector}
+                        <div style={{ minWidth: 0 }}>
+                          <div
+                            style={{
+                              fontSize: 16,
+                              fontWeight: 600,
+                              color: "#e8e8f0",
+                              lineHeight: 1,
+                              fontFamily: "'DM Sans', sans-serif",
+                            }}
+                          >
+                            {alt.name}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: 12,
+                              color: "rgba(255,255,255,0.35)",
+                              fontWeight: 400,
+                              marginTop: 4,
+                              fontFamily: "'DM Sans', sans-serif",
+                            }}
+                          >
+                            {alt.sector}
+                          </div>
+                        </div>
+                        <div
+                          style={{
+                            fontSize: 22,
+                            fontWeight: 700,
+                            color: altColor,
+                            fontFamily: "'DM Mono', monospace",
+                          }}
+                        >
+                          {alt.score}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: 16,
+                            color: "rgba(255,255,255,0.35)",
+                            fontWeight: 700,
+                          }}
+                        >
+                          →
                         </div>
                       </div>
-                      <div
-                        style={{
-                          fontSize: 24,
-                          fontWeight: 900,
-                          color: "#111",
-                          fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-                        }}
-                      >
-                        {alt.score}
-                      </div>
-                      <div style={{ fontSize: 18, color: "#111", fontWeight: 900 }}>
-                        →
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               ) : (
-                <div style={{ fontSize: 14, color: "rgba(0,0,0,0.78)", fontFamily: "Georgia, 'Times New Roman', serif" }}>
+                <div
+                  style={{
+                    fontSize: 14,
+                    color: "rgba(255,255,255,0.68)",
+                    fontFamily: "'DM Sans', sans-serif",
+                    lineHeight: 1.55,
+                  }}
+                >
                   {t.noAlt}
                 </div>
               )}
