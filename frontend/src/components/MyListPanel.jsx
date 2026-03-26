@@ -899,13 +899,13 @@ export default function MyListPanel({
             <div
               style={{
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: "clamp(28px, 5vw, 42px)",
-                lineHeight: 0.98,
+                fontSize: "clamp(26px, 4vw, 34px)",
+                lineHeight: 1.05,
                 color: "#e8e8f0",
                 maxWidth: 640,
                 marginBottom: 14,
                 whiteSpace: "pre-line",
-                fontWeight: 600,
+                fontWeight: 700,
               }}
             >
               {headlineText}
