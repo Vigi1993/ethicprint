@@ -199,7 +199,7 @@ export default function App() {
             }}>
               {lang === "it" ? (
                 <>
-                  Scopri l'impatto etico dei brand che usi.
+                  Scopri l'impatto etico dei brand che utilizzi.
                   <br />
                   Trova alternative migliori.
                 </>
