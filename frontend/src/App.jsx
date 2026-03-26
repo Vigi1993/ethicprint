@@ -477,7 +477,7 @@ export default function App() {
             }}>
               <div style={{
                 display: "flex", alignItems: "center", justifyContent: "space-between",
-                gap: 16, marginBottom: 18, position: "sticky", top: 0,
+                gap: 16, marginBottom: 18,
                 background: "#0f0f1a", zIndex: 2, paddingBottom: 16,
                 borderBottom: "1px solid rgba(255,255,255,0.06)",
               }}>
