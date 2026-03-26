@@ -27,24 +27,6 @@ export default function BrandRow({
       }}
     >
       <div style={{ minWidth: 0, display: "flex", alignItems: "center", gap: 12 }}>
-        <div
-          style={{
-            width: 34,
-            height: 34,
-            borderRadius: 10,
-            background: `${scoreColor}22`,
-            border: `1px solid ${scoreColor}44`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: scoreColor,
-            fontSize: 13,
-            fontWeight: 700,
-            flexShrink: 0,
-          }}
-        >
-          {brand.logo || brand.name?.[0]}
-        </div>
 
         <div style={{ minWidth: 0 }}>
           <div
