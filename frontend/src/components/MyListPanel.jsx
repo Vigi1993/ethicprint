@@ -926,7 +926,7 @@ export default function MyListPanel({
             {ethicalStatusMsg && (
               <div
                 style={{
-                  marginTop: 16,
+                  marginTop: 24,
                   padding: "12px 14px",
                   border: `1px solid ${
                     majorityCritical
