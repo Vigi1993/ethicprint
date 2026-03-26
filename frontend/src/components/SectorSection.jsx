@@ -235,24 +235,6 @@ export default function SectorSection({
               }}
               onClick={() => onSelect(best)}
             >
-              <div
-                style={{
-                  width: 38,
-                  height: 38,
-                  borderRadius: 12,
-                  background: `${bestScoreColor}22`,
-                  border: `1px solid ${bestScoreColor}44`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: bestScoreColor,
-                  fontSize: 14,
-                  fontWeight: 700,
-                  flexShrink: 0,
-                }}
-              >
-                {best.logo || best.name?.[0]}
-              </div>
 
               <div style={{ minWidth: 0 }}>
                 <div
