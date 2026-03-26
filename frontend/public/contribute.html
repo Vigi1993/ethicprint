@@ -8,81 +8,406 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #08080f; --surface: #0f0f1a; --border: rgba(255,255,255,0.06);
-      --text: #e8e8f0; --muted: rgba(255,255,255,0.35); --accent: #5ecf8a;
-      --accent-dim: rgba(94,207,138,0.1); --green: #4ade80; --red: #ef4444;
+      --bg: #08080f;
+      --panel: #0f0f1a;
+      --panel-soft: rgba(255,255,255,0.03);
+      --panel-strong: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.1);
+      --text: #e8e8f0;
+      --text-soft: rgba(255,255,255,0.72);
+      --text-muted: rgba(255,255,255,0.45);
+      --text-faint: rgba(255,255,255,0.28);
+      --accent: #63CAB7;
+      --accent-soft: rgba(99,202,183,0.1);
+      --accent-border: rgba(99,202,183,0.28);
+      --danger: #ff9a9a;
+      --danger-soft: rgba(255,107,107,0.1);
+      --danger-border: rgba(255,107,107,0.22);
+      --warning: #f1d37a;
+      --warning-soft: rgba(255,214,102,0.1);
+      --warning-border: rgba(255,214,102,0.22);
+      --success: #63CAB7;
+      --success-soft: rgba(99,202,183,0.1);
+      --success-border: rgba(99,202,183,0.22);
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; }
 
-    .topbar { position: fixed; top: 0; left: 0; right: 0; height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; z-index: 100; background: rgba(8,8,15,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
-    .back { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); text-decoration: none; letter-spacing: 1px; transition: color .2s; }
-    .back:hover { color: var(--accent); }
-    .lang-toggle { display: flex; gap: 2px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
-    .lang-btn { font-family: 'DM Mono', monospace; font-size: 11px; padding: 4px 10px; border-radius: 5px; border: none; background: transparent; color: var(--muted); cursor: pointer; transition: all .2s; letter-spacing: 1px; }
-    .lang-btn.active { background: rgba(94,207,138,0.15); color: var(--accent); }
+    html, body {
+      background: var(--bg);
+    }
 
-    .wrap { max-width: 620px; margin: 0 auto; padding: 80px 24px 80px; }
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(99,202,183,0.04), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.03), transparent 18%),
+        var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
 
-    .hero { padding: 32px 0 40px; }
-    .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; margin-bottom: 16px; }
-    .hero-title { font-size: clamp(26px, 5vw, 40px); font-weight: 500; line-height: 1.1; letter-spacing: -0.5px; margin-bottom: 14px; }
+    ::selection { background: rgba(99,202,183,0.3); }
+
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
+
+    .topbar {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .topbar > * { pointer-events: auto; }
+
+    .back {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border: 1px solid var(--border-strong);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      line-height: 1;
+      letter-spacing: 0.04em;
+      transition: all 0.15s ease;
+    }
+
+    .back:hover {
+      color: var(--accent);
+      border-color: var(--accent-border);
+      background: var(--accent-soft);
+    }
+
+    .lang-toggle {
+      display: flex;
+      gap: 4px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 99px;
+      padding: 4px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: rgba(255,255,255,0.35);
+      padding: 4px 12px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      border-radius: 99px;
+      transition: all 0.15s ease;
+    }
+
+    .lang-btn.active {
+      background: rgba(99,202,183,0.2);
+      border-color: rgba(99,202,183,0.4);
+      color: var(--accent);
+    }
+
+    .wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 96px 24px 72px;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at top left, rgba(99,202,183,0.04), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.02), transparent 22%);
+    }
+
+    .panel-inner {
+      position: relative;
+      z-index: 1;
+      padding: 24px 24px 26px;
+    }
+
+    .hero {
+      padding-top: 4px;
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: rgba(99,202,183,0.6);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .hero-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(34px, 7vw, 62px);
+      line-height: 0.92;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      margin-bottom: 14px;
+      max-width: 760px;
+      color: var(--text);
+    }
+
     .hero-title span { color: var(--accent); }
-    .hero-desc { font-size: 13px; color: var(--muted); line-height: 1.8; }
 
-    /* TAB SWITCHER */
-    .tabs { display: flex; gap: 6px; margin-bottom: 32px; }
-    .tab { flex: 1; padding: 10px 8px; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; transition: all .2s; text-align: center; }
-    .tab.active { background: var(--accent-dim); border-color: rgba(94,207,138,0.25); color: var(--accent); }
-    .tab:hover:not(.active) { border-color: rgba(255,255,255,0.1); color: var(--text); }
+    .hero-desc {
+      font-size: 18px;
+      line-height: 1.5;
+      max-width: 660px;
+      color: var(--text-soft);
+      font-weight: 300;
+    }
 
-    /* FORM */
+    .note-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      padding: 16px 18px;
+      border-radius: 14px;
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      flex: 1;
+      min-width: 160px;
+      border: 1px solid var(--border-strong);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.62);
+      padding: 11px 14px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1;
+      border-radius: 12px;
+      transition: all 0.15s ease;
+    }
+
+    .tab.active {
+      background: rgba(99,202,183,0.12);
+      border-color: rgba(99,202,183,0.28);
+      color: var(--accent);
+    }
+
+    .tab:hover:not(.active) {
+      background: rgba(255,255,255,0.08);
+    }
+
     .form-section { display: none; }
     .form-section.active { display: block; }
 
     .field { margin-bottom: 18px; }
-    .field label { display: block; font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; font-family: 'DM Mono', monospace; margin-bottom: 8px; }
-    .field input, .field select, .field textarea {
-      width: 100%; background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; padding: 12px 16px; color: var(--text);
-      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 300;
-      outline: none; transition: border-color .2s; resize: none;
+
+    .field label {
+      display: block;
+      font-size: 11px;
+      color: rgba(99,202,183,0.7);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-family: 'DM Mono', monospace;
+      font-weight: 500;
+      margin-bottom: 8px;
     }
-    .field input:focus, .field select:focus, .field textarea:focus { border-color: rgba(94,207,138,0.35); }
-    .field input::placeholder, .field textarea::placeholder { color: rgba(255,255,255,0.15); }
-    .field select option { background: #0f0f1a; }
-    .field .hint { font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 6px; line-height: 1.6; }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border-strong);
+      padding: 13px 14px;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      outline: none;
+      resize: none;
+      border-radius: 14px;
+      transition: all 0.2s ease;
+      appearance: none;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: rgba(99,202,183,0.3);
+      box-shadow: 0 0 0 3px rgba(99,202,183,0.08);
+      background: rgba(255,255,255,0.07);
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder { color: rgba(255,255,255,0.25); }
+
+    .field select option {
+      background: #0f0f1a;
+      color: #fff;
+    }
+
+    .field .hint {
+      font-size: 12px;
+      color: var(--text-faint);
+      margin-top: 8px;
+      line-height: 1.55;
+    }
 
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
 
     .submit-btn {
-      width: 100%; padding: 14px; border-radius: 12px;
-      background: var(--accent-dim); border: 1px solid rgba(94,207,138,0.3);
-      color: var(--accent); font-family: 'DM Sans', sans-serif; font-size: 13px;
-      font-weight: 600; cursor: pointer; transition: all .2s; margin-top: 8px;
-      letter-spacing: 0.5px;
+      width: 100%;
+      padding: 13px 14px 12px;
+      background: rgba(99,202,183,0.1);
+      border: 1px solid rgba(99,202,183,0.22);
+      color: var(--accent);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1;
+      cursor: pointer;
+      border-radius: 12px;
+      margin-top: 8px;
+      transition: all 0.15s ease;
     }
-    .submit-btn:hover { background: rgba(94,207,138,0.2); }
-    .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    .note-box { background: var(--accent-dim); border: 1px solid rgba(94,207,138,0.12); border-radius: 12px; padding: 16px 20px; font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.8; margin-bottom: 28px; }
+    .submit-btn:hover:not(:disabled) {
+      background: rgba(99,202,183,0.15);
+      border-color: rgba(99,202,183,0.3);
+    }
 
-    .success-msg { display: none; background: rgba(74,222,128,0.07); border: 1px solid rgba(74,222,128,0.2); border-radius: 12px; padding: 20px 24px; text-align: center; }
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .success-msg {
+      display: none;
+      background: rgba(99,202,183,0.08);
+      border: 1px solid rgba(99,202,183,0.22);
+      padding: 18px 20px;
+      text-align: center;
+      margin-top: 14px;
+      border-radius: 14px;
+    }
+
     .success-msg.show { display: block; }
-    .success-icon { font-size: 28px; margin-bottom: 10px; }
-    .success-title { font-size: 15px; font-weight: 600; color: var(--green); margin-bottom: 6px; }
-    .success-sub { font-size: 12px; color: rgba(255,255,255,0.3); }
-    .success-again { margin-top: 14px; font-size: 12px; color: var(--accent); cursor: pointer; text-decoration: underline; }
 
-    .error-msg { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); border-radius: 10px; padding: 12px 16px; font-size: 12px; color: #f87171; margin-top: 10px; display: none; }
+    .success-icon { font-size: 24px; margin-bottom: 10px; }
+
+    .success-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--success);
+      margin-bottom: 6px;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .success-sub {
+      font-size: 14px;
+      color: var(--text-soft);
+      line-height: 1.55;
+    }
+
+    .success-again {
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--accent);
+      cursor: pointer;
+      text-decoration: none;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.03em;
+    }
+
+    .error-msg {
+      background: rgba(255,107,107,0.08);
+      border: 1px solid rgba(255,107,107,0.22);
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--danger);
+      margin-top: 10px;
+      display: none;
+      line-height: 1.5;
+      border-radius: 12px;
+    }
+
     .error-msg.show { display: block; }
 
-    .loading-select { font-size: 11px; color: var(--muted); font-style: italic; }
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 24px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 42px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.28);
+    }
 
-    footer { border-top: 1px solid var(--border); padding: 24px 0 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 48px; }
-    footer a { font-size: 11px; color: var(--muted); text-decoration: none; font-family: 'DM Mono', monospace; transition: color .2s; }
-    footer a:hover { color: var(--accent); }
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.03em;
+    }
+
+    @media (max-width: 640px) {
+      .topbar {
+        top: 12px;
+        left: 12px;
+        right: 12px;
+      }
+
+      .back {
+        padding: 9px 10px 8px;
+        font-size: 11px;
+      }
+
+      .panel-inner { padding: 18px 18px 20px; }
+
+      .field-row { grid-template-columns: 1fr; }
+
+      .tabs { flex-direction: column; }
+    }
   </style>
 </head>
 <body>
@@ -97,158 +422,160 @@
 
 <div class="wrap">
 
-  <div class="hero">
-    <div class="hero-eyebrow" data-en="Open Source · Community" data-it="Open Source · Community">Open Source · Community</div>
-    <h1 class="hero-title" data-en="Help us<br><span>improve</span>" data-it="Aiutaci a<br><span>migliorare</span>">Help us<br><span>improve</span></h1>
-    <p class="hero-desc" data-en="EthicPrint is a community project. Every contribution — a missing brand, a relevant source, or a data correction — is reviewed manually before going live."
-       data-it="EthicPrint è un progetto comunitario. Ogni contributo — un brand mancante, una fonte rilevante o una correzione — viene revisionato manualmente prima di essere pubblicato.">
-      EthicPrint is a community project. Every contribution — a missing brand, a relevant source, or a data correction — is reviewed manually before going live.
-    </p>
-  </div>
-
-  <div class="note-box" data-en="All submissions go through manual review. Nothing is published automatically. Thank you for helping make EthicPrint more accurate and complete."
-     data-it="Tutte le segnalazioni passano per una revisione manuale. Nulla viene pubblicato automaticamente. Grazie per aiutarci a rendere EthicPrint più accurato e completo.">
-    All submissions go through manual review. Nothing is published automatically. Thank you for helping make EthicPrint more accurate and complete.
-  </div>
-
-  <!-- TABS -->
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('brand')" id="tab-brand" data-en="➕ Propose brand" data-it="➕ Proponi brand">➕ Propose brand</button>
-    <button class="tab" onclick="switchTab('source')" id="tab-source" data-en="🔗 Add source" data-it="🔗 Aggiungi fonte">🔗 Add source</button>
-    <button class="tab" onclick="switchTab('error')" id="tab-error" data-en="⚠️ Report error" data-it="⚠️ Segnala errore">⚠️ Report error</button>
-  </div>
-
-  <!-- FORM: PROPOSE BRAND -->
-  <div class="form-section active" id="section-brand">
-    <div class="field">
-      <label data-en="Brand name *" data-it="Nome brand *">Brand name *</label>
-      <input type="text" id="brand-name" placeholder="e.g. Patagonia" maxlength="200" />
+  <div class="panel">
+    <div class="panel-inner hero">
+      <div class="hero-eyebrow" data-en="Open Source · Community" data-it="Open Source · Community">Open Source · Community</div>
+      <h1 class="hero-title" data-en="Help us<br><span>improve</span>" data-it="Aiutaci a<br><span>migliorare</span>">Help us<br><span>improve</span></h1>
+      <p class="hero-desc" data-en="EthicPrint is a community project. Every contribution — a missing brand, a relevant source, or a data correction — is reviewed manually before going live."
+         data-it="EthicPrint è un progetto comunitario. Ogni contributo — un brand mancante, una fonte rilevante o una correzione — viene revisionato manualmente prima di essere pubblicato.">
+        EthicPrint is a community project. Every contribution — a missing brand, a relevant source, or a data correction — is reviewed manually before going live.
+      </p>
     </div>
-    <div class="field-row">
-      <div class="field">
-        <label data-en="Sector" data-it="Settore">Sector</label>
-        <select id="brand-sector">
-          <option value="" data-en="— Select sector —" data-it="— Seleziona settore —">— Select sector —</option>
-        </select>
+  </div>
+
+  <div class="panel">
+    <div class="panel-inner">
+      <div class="note-box" data-en="All submissions go through manual review. Nothing is published automatically. Thank you for helping make EthicPrint more accurate and complete."
+         data-it="Tutte le segnalazioni passano per una revisione manuale. Nulla viene pubblicato automaticamente. Grazie per aiutarci a rendere EthicPrint più accurato e completo.">
+        All submissions go through manual review. Nothing is published automatically. Thank you for helping make EthicPrint more accurate and complete.
       </div>
-      <div class="field">
-        <label data-en="Website" data-it="Sito web">Website</label>
-        <input type="url" id="brand-website" placeholder="https://..." />
-      </div>
-    </div>
-    <div class="field">
-      <label data-en="Why should we add it?" data-it="Perché dovremmo aggiungerlo?">Why should we add it?</label>
-      <textarea id="brand-reason" rows="3" placeholder="This brand is widely used in Italy and has significant ethical concerns around..."></textarea>
-    </div>
-    <div class="field">
-      <label data-en="Your email (optional)" data-it="La tua email (opzionale)">Your email (optional)</label>
-      <input type="email" id="brand-submitter" placeholder="you@example.com" />
-      <div class="hint" data-en="Only used to notify you when the brand is added. Never shared." data-it="Solo per avvisarti quando il brand viene aggiunto. Non condivisa con nessuno.">Only used to notify you when the brand is added. Never shared.</div>
-    </div>
-    <div class="error-msg" id="error-brand"></div>
-    <button class="submit-btn" onclick="submitBrand()" id="submit-brand" data-en="Submit proposal →" data-it="Invia proposta →">Submit proposal →</button>
-    <div class="success-msg" id="success-brand">
-      <div class="success-icon">✅</div>
-      <div class="success-title" data-en="Proposal received!" data-it="Proposta ricevuta!">Proposal received!</div>
-      <div class="success-sub" data-en="We'll review it and add the brand if it meets our criteria." data-it="La esamineremo e aggiungeremo il brand se soddisfa i nostri criteri.">We'll review it and add the brand if it meets our criteria.</div>
-      <div class="success-again" onclick="resetForm('brand')" data-en="Submit another →" data-it="Invia un'altra →">Submit another →</div>
-    </div>
-  </div>
 
-  <!-- FORM: ADD SOURCE -->
-  <div class="form-section" id="section-source">
-    <div class="field">
-      <label data-en="Brand *" data-it="Brand *">Brand *</label>
-      <select id="source-brand">
-        <option value="" data-en="— Select brand —" data-it="— Seleziona brand —">— Select brand —</option>
-      </select>
-    </div>
-    <div class="field">
-      <label data-en="Category *" data-it="Categoria *">Category *</label>
-      <select id="source-category">
-        <option value="" data-en="— Select category —" data-it="— Seleziona categoria —">— Select categoria —</option>
-        <option value="armi" data-en="⚔️ Conflicts & Arms" data-it="⚔️ Conflitti & Armi">⚔️ Conflicts & Arms</option>
-        <option value="ambiente" data-en="🌿 Environment & CO₂" data-it="🌿 Ambiente & CO₂">🌿 Environment & CO₂</option>
-        <option value="diritti" data-en="🤝 Human Rights" data-it="🤝 Diritti Umani">🤝 Human Rights</option>
-        <option value="fisco" data-en="💰 Tax & Transparency" data-it="💰 Fisco & Trasparenza">💰 Tax & Transparency</option>
-      </select>
-    </div>
-    <div class="field">
-      <label data-en="Source URL *" data-it="URL della fonte *">Source URL *</label>
-      <input type="url" id="source-url" placeholder="https://..." />
-      <div class="hint" data-en="Must be from a reputable publisher — news outlet, NGO, research institution, government body." data-it="Deve provenire da una fonte affidabile — media, ONG, istituto di ricerca, ente governativo.">Must be from a reputable publisher — news outlet, NGO, research institution, government body.</div>
-    </div>
-    <div class="field-row">
-      <div class="field">
-        <label data-en="Title" data-it="Titolo">Title</label>
-        <input type="text" id="source-title" placeholder="Article title" maxlength="300" />
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('brand')" id="tab-brand" data-en="➕ Propose brand" data-it="➕ Proponi brand">➕ Propose brand</button>
+        <button class="tab" onclick="switchTab('source')" id="tab-source" data-en="🔗 Add source" data-it="🔗 Aggiungi fonte">🔗 Add source</button>
+        <button class="tab" onclick="switchTab('error')" id="tab-error" data-en="⚠️ Report error" data-it="⚠️ Segnala errore">⚠️ Report error</button>
       </div>
-      <div class="field">
-        <label data-en="Publisher" data-it="Publisher">Publisher</label>
-        <input type="text" id="source-publisher" placeholder="e.g. The Guardian" maxlength="200" />
-      </div>
-    </div>
-    <div class="field">
-      <label data-en="Why is this relevant?" data-it="Perché è rilevante?">Why is this relevant?</label>
-      <textarea id="source-summary" rows="3" placeholder="This source documents..."></textarea>
-    </div>
-    <div class="field">
-      <label data-en="Your email (optional)" data-it="La tua email (opzionale)">Your email (optional)</label>
-      <input type="email" id="source-submitter" placeholder="you@example.com" />
-    </div>
-    <div class="error-msg" id="error-source"></div>
-    <button class="submit-btn" onclick="submitSource()" id="submit-source" data-en="Submit source →" data-it="Invia fonte →">Submit source →</button>
-    <div class="success-msg" id="success-source">
-      <div class="success-icon">✅</div>
-      <div class="success-title" data-en="Source received!" data-it="Fonte ricevuta!">Source received!</div>
-      <div class="success-sub" data-en="We'll review it and add it if it meets our credibility criteria." data-it="La esamineremo e la aggiungeremo se soddisfa i nostri criteri di credibilità.">We'll review it and add it if it meets our credibility criteria.</div>
-      <div class="success-again" onclick="resetForm('source')" data-en="Submit another →" data-it="Invia un'altra →">Submit another →</div>
-    </div>
-  </div>
 
-  <!-- FORM: REPORT ERROR -->
-  <div class="form-section" id="section-error">
-    <div class="field">
-      <label data-en="Brand *" data-it="Brand *">Brand *</label>
-      <select id="error-brand">
-        <option value="" data-en="— Select brand —" data-it="— Seleziona brand —">— Select brand —</option>
-      </select>
-    </div>
-    <div class="field">
-      <label data-en="Category (if applicable)" data-it="Categoria (se applicabile)">Category (if applicable)</label>
-      <select id="error-category">
-        <option value="" data-en="— All / Not sure —" data-it="— Tutte / Non so —">— All / Not sure —</option>
-        <option value="armi">⚔️ Conflicts & Arms</option>
-        <option value="ambiente">🌿 Environment & CO₂</option>
-        <option value="diritti">🤝 Human Rights</option>
-        <option value="fisco">💰 Tax & Transparency</option>
-      </select>
-    </div>
-    <div class="field">
-      <label data-en="Describe the error *" data-it="Descrivi l'errore *">Describe the error *</label>
-      <textarea id="error-description" rows="4" placeholder="The score for X seems incorrect because..."></textarea>
-    </div>
-    <div class="field">
-      <label data-en="Source supporting your correction (optional)" data-it="Fonte a supporto della correzione (opzionale)">Source supporting your correction (optional)</label>
-      <input type="url" id="error-source-url" placeholder="https://..." />
-    </div>
-    <div class="field">
-      <label data-en="Your email (optional)" data-it="La tua email (opzionale)">Your email (optional)</label>
-      <input type="email" id="error-submitter" placeholder="you@example.com" />
-    </div>
-    <div class="error-msg" id="error-error"></div>
-    <button class="submit-btn" onclick="submitError()" id="submit-error" data-en="Submit report →" data-it="Invia segnalazione →">Submit report →</button>
-    <div class="success-msg" id="success-error">
-      <div class="success-icon">✅</div>
-      <div class="success-title" data-en="Report received!" data-it="Segnalazione ricevuta!">Report received!</div>
-      <div class="success-sub" data-en="We'll investigate and correct the data if your report is accurate." data-it="Verificheremo e correggeremo i dati se la tua segnalazione è accurata.">We'll investigate and correct the data if your report is accurate.</div>
-      <div class="success-again" onclick="resetForm('error')" data-en="Submit another →" data-it="Invia un'altra →">Submit another →</div>
+      <div class="form-section active" id="section-brand">
+        <div class="field">
+          <label data-en="Brand name *" data-it="Nome brand *">Brand name *</label>
+          <input type="text" id="brand-name" placeholder="e.g. Patagonia" maxlength="200" />
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label data-en="Sector" data-it="Settore">Sector</label>
+            <select id="brand-sector">
+              <option value="" data-en="— Select sector —" data-it="— Seleziona settore —">— Select sector —</option>
+            </select>
+          </div>
+          <div class="field">
+            <label data-en="Website" data-it="Sito web">Website</label>
+            <input type="url" id="brand-website" placeholder="https://..." />
+          </div>
+        </div>
+        <div class="field">
+          <label data-en="Why should we add it?" data-it="Perché dovremmo aggiungerlo?">Why should we add it?</label>
+          <textarea id="brand-reason" rows="3" placeholder="This brand is widely used in Italy and has significant ethical concerns around..."></textarea>
+        </div>
+        <div class="field">
+          <label data-en="Your email (optional)" data-it="La tua email (opzionale)">Your email (optional)</label>
+          <input type="email" id="brand-submitter" placeholder="you@example.com" />
+          <div class="hint" data-en="Only used to notify you when the brand is added. Never shared." data-it="Solo per avvisarti quando il brand viene aggiunto. Non condivisa con nessuno.">Only used to notify you when the brand is added. Never shared.</div>
+        </div>
+        <div class="error-msg" id="error-brand"></div>
+        <button class="submit-btn" onclick="submitBrand()" id="submit-brand" data-en="Submit proposal →" data-it="Invia proposta →">Submit proposal →</button>
+        <div class="success-msg" id="success-brand">
+          <div class="success-icon">✅</div>
+          <div class="success-title" data-en="Proposal received!" data-it="Proposta ricevuta!">Proposal received!</div>
+          <div class="success-sub" data-en="We'll review it and add the brand if it meets our criteria." data-it="La esamineremo e aggiungeremo il brand se soddisfa i nostri criteri.">We'll review it and add the brand if it meets our criteria.</div>
+          <div class="success-again" onclick="resetForm('brand')" data-en="Submit another →" data-it="Invia un'altra →">Submit another →</div>
+        </div>
+      </div>
+
+      <div class="form-section" id="section-source">
+        <div class="field">
+          <label data-en="Brand *" data-it="Brand *">Brand *</label>
+          <select id="source-brand">
+            <option value="" data-en="— Select brand —" data-it="— Seleziona brand —">— Select brand —</option>
+          </select>
+        </div>
+        <div class="field">
+          <label data-en="Category *" data-it="Categoria *">Category *</label>
+          <select id="source-category">
+            <option value="" data-en="— Select category —" data-it="— Seleziona categoria —">— Select categoria —</option>
+            <option value="armi" data-en="⚔️ Conflicts & Arms" data-it="⚔️ Conflitti & Armi">⚔️ Conflicts & Arms</option>
+            <option value="ambiente" data-en="🌿 Environment & CO₂" data-it="🌿 Ambiente & CO₂">🌿 Environment & CO₂</option>
+            <option value="diritti" data-en="🤝 Human Rights" data-it="🤝 Diritti Umani">🤝 Human Rights</option>
+            <option value="fisco" data-en="💰 Tax & Transparency" data-it="💰 Fisco & Trasparenza">💰 Tax & Transparency</option>
+          </select>
+        </div>
+        <div class="field">
+          <label data-en="Source URL *" data-it="URL della fonte *">Source URL *</label>
+          <input type="url" id="source-url" placeholder="https://..." />
+          <div class="hint" data-en="Must be from a reputable publisher — news outlet, NGO, research institution, government body." data-it="Deve provenire da una fonte affidabile — media, ONG, istituto di ricerca, ente governativo.">Must be from a reputable publisher — news outlet, NGO, research institution, government body.</div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label data-en="Title" data-it="Titolo">Title</label>
+            <input type="text" id="source-title" placeholder="Article title" maxlength="300" />
+          </div>
+          <div class="field">
+            <label data-en="Publisher" data-it="Publisher">Publisher</label>
+            <input type="text" id="source-publisher" placeholder="e.g. The Guardian" maxlength="200" />
+          </div>
+        </div>
+        <div class="field">
+          <label data-en="Why is this relevant?" data-it="Perché è rilevante?">Why is this relevant?</label>
+          <textarea id="source-summary" rows="3" placeholder="This source documents..."></textarea>
+        </div>
+        <div class="field">
+          <label data-en="Your email (optional)" data-it="La tua email (opzionale)">Your email (optional)</label>
+          <input type="email" id="source-submitter" placeholder="you@example.com" />
+        </div>
+        <div class="error-msg" id="error-source"></div>
+        <button class="submit-btn" onclick="submitSource()" id="submit-source" data-en="Submit source →" data-it="Invia fonte →">Submit source →</button>
+        <div class="success-msg" id="success-source">
+          <div class="success-icon">✅</div>
+          <div class="success-title" data-en="Source received!" data-it="Fonte ricevuta!">Source received!</div>
+          <div class="success-sub" data-en="We'll review it and add it if it meets our credibility criteria." data-it="La esamineremo e la aggiungeremo se soddisfa i nostri criteri di credibilità.">We'll review it and add it if it meets our credibility criteria.</div>
+          <div class="success-again" onclick="resetForm('source')" data-en="Submit another →" data-it="Invia un'altra →">Submit another →</div>
+        </div>
+      </div>
+
+      <div class="form-section" id="section-error">
+        <div class="field">
+          <label data-en="Brand *" data-it="Brand *">Brand *</label>
+          <select id="error-brand">
+            <option value="" data-en="— Select brand —" data-it="— Seleziona brand —">— Select brand —</option>
+          </select>
+        </div>
+        <div class="field">
+          <label data-en="Category (if applicable)" data-it="Categoria (se applicabile)">Category (if applicable)</label>
+          <select id="error-category">
+            <option value="" data-en="— All / Not sure —" data-it="— Tutte / Non so —">— All / Not sure —</option>
+            <option value="armi">⚔️ Conflicts & Arms</option>
+            <option value="ambiente">🌿 Environment & CO₂</option>
+            <option value="diritti">🤝 Human Rights</option>
+            <option value="fisco">💰 Tax & Transparency</option>
+          </select>
+        </div>
+        <div class="field">
+          <label data-en="Describe the error *" data-it="Descrivi l'errore *">Describe the error *</label>
+          <textarea id="error-description" rows="4" placeholder="The score for X seems incorrect because..."></textarea>
+        </div>
+        <div class="field">
+          <label data-en="Source supporting your correction (optional)" data-it="Fonte a supporto della correzione (opzionale)">Source supporting your correction (optional)</label>
+          <input type="url" id="error-source-url" placeholder="https://..." />
+        </div>
+        <div class="field">
+          <label data-en="Your email (optional)" data-it="La tua email (opzionale)">Your email (optional)</label>
+          <input type="email" id="error-submitter" placeholder="you@example.com" />
+        </div>
+        <div class="error-msg" id="error-error"></div>
+        <button class="submit-btn" onclick="submitError()" id="submit-error" data-en="Submit report →" data-it="Invia segnalazione →">Submit report →</button>
+        <div class="success-msg" id="success-error">
+          <div class="success-icon">✅</div>
+          <div class="success-title" data-en="Report received!" data-it="Segnalazione ricevuta!">Report received!</div>
+          <div class="success-sub" data-en="We'll investigate and correct the data if your report is accurate." data-it="Verificheremo e correggeremo i dati se la tua segnalazione è accurata.">We'll investigate and correct the data if your report is accurate.</div>
+          <div class="success-again" onclick="resetForm('error')" data-en="Submit another →" data-it="Invia un'altra →">Submit another →</div>
+        </div>
+      </div>
     </div>
   </div>
 
   <footer>
     <a href="/">&#8592; EthicPrint</a>
-    <div style="display:flex;gap:20px">
+    <div style="display:flex;gap:20px;flex-wrap:wrap">
       <a href="/sources.html" data-en="Methodology" data-it="Metodologia">Methodology</a>
       <a href="https://github.com/Vigi1993/ethicprint" target="_blank">GitHub</a>
     </div>
@@ -437,7 +764,6 @@ async function submitError() {
   }
 }
 
-// Init
 setLang(currentLang);
 loadBrands();
 </script>

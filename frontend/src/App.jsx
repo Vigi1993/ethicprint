@@ -7,11 +7,10 @@ import { CategoriesContext } from "./context/categoriesContext";
 import { useInitialData } from "./hooks/useInitialData";
 import { useSourcesCount } from "./hooks/useSourcesCount";
 import { useBrandSearch } from "./hooks/useBrandSearch";
+import RecentSourcesPanel from "./components/RecentSourcesPanel";
+import { useRecentSourceUpdates } from "./hooks/useRecentSourceUpdates";
 import {
-  getScore,
-  getColor,
   getSectorAvgScore,
-  getCatLabel,
   getDisplayScore,
   getDisplayScoreColor,
 } from "./utils/brandHelpers";
@@ -20,42 +19,32 @@ import { UI } from "./constants/uiText";
 const THRESHOLD = 50;
 const MY_BRANDS_STORAGE_KEY = "ethicprint_my_brands_v1";
 
+const QUICK_SECTORS = [
+  { en: "Tech Software & Cloud", it: "Tech Software & Cloud" },
+  { en: "Social Media",          it: "Social Media" },
+  { en: "Fashion & Apparel",     it: "Moda & Abbigliamento" },
+  { en: "Food & Beverages",      it: "Alimentare & Bevande" },
+  { en: "Retail & Supermarkets", it: "Grande Distribuzione" },
+];
+
 function LangToggle({ lang, setLang }) {
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: 20,
-        right: 20,
-        zIndex: 200,
-        display: "flex",
-        gap: 4,
-        background: "rgba(255,255,255,0.06)",
-        border: "1px solid rgba(255,255,255,0.12)",
-        borderRadius: 99,
-        padding: "4px",
-      }}
-    >
+    <div style={{
+      position: "fixed", top: 20, right: 20, zIndex: 300,
+      display: "flex", gap: 4,
+      background: "rgba(255,255,255,0.06)",
+      border: "1px solid rgba(255,255,255,0.12)",
+      borderRadius: 99, padding: 4,
+    }}>
       {["en", "it"].map((l) => (
-        <button
-          key={l}
-          onClick={() => setLang(l)}
-          style={{
-            background: lang === l ? "rgba(99,202,183,0.2)" : "transparent",
-            border:
-              lang === l
-                ? "1px solid rgba(99,202,183,0.4)"
-                : "1px solid transparent",
-            color: lang === l ? "#63CAB7" : "rgba(255,255,255,0.35)",
-            padding: "4px 12px",
-            borderRadius: 99,
-            cursor: "pointer",
-            fontSize: 12,
-            fontWeight: 600,
-            fontFamily: "'DM Sans', sans-serif",
-            transition: "all 0.15s",
-          }}
-        >
+        <button key={l} onClick={() => setLang(l)} style={{
+          background: lang === l ? "rgba(99,202,183,0.2)" : "transparent",
+          border: lang === l ? "1px solid rgba(99,202,183,0.4)" : "1px solid transparent",
+          color: lang === l ? "#63CAB7" : "rgba(255,255,255,0.35)",
+          padding: "4px 12px", borderRadius: 99, cursor: "pointer",
+          fontSize: 12, fontWeight: 600, fontFamily: "'DM Sans', sans-serif",
+          transition: "all 0.15s",
+        }}>
           {l.toUpperCase()}
         </button>
       ))}
@@ -69,20 +58,23 @@ export default function App() {
   const [query, setQuery] = useState("");
   const results = useBrandSearch(query, db);
   const [selected, setSelected] = useState(null);
-   const [myBrands, setMyBrands] = useState(() => {
+
+  const [myBrands, setMyBrands] = useState(() => {
     try {
       const raw = localStorage.getItem(MY_BRANDS_STORAGE_KEY);
       if (!raw) return [];
-  
       const parsed = JSON.parse(raw);
       return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
+    } catch { return []; }
   });
-  const sourcesCount = useSourcesCount();
-  const inputRef = useRef(null);
 
+  const [showAllSectors, setShowAllSectors] = useState(false);
+  const [isSectorModalOpen, setIsSectorModalOpen] = useState(false);
+  const [modalSectorFilter, setModalSectorFilter] = useState(null);
+
+  const sourcesCount = useSourcesCount();
+  const recentSourceUpdates = useRecentSourceUpdates();
+  const searchRef = useRef(null);
   const t = UI[lang] || UI.en;
 
   useEffect(() => {
@@ -91,43 +83,29 @@ export default function App() {
     link.href =
       "https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap";
     document.head.appendChild(link);
+    return () => { if (document.head.contains(link)) document.head.removeChild(link); };
   }, []);
 
   useEffect(() => {
-  try {
-    localStorage.setItem(
-      MY_BRANDS_STORAGE_KEY,
-      JSON.stringify(myBrands)
-    );
-  } catch {
-    // ignore storage errors
-  }
-}, [myBrands]);
+    try { localStorage.setItem(MY_BRANDS_STORAGE_KEY, JSON.stringify(myBrands)); } catch {}
+  }, [myBrands]);
 
   useEffect(() => {
-  if (!Array.isArray(db) || db.length === 0) return;
-
-  setMyBrands((prev) => {
-    if (!Array.isArray(prev) || prev.length === 0) return prev;
-
-    let changed = false;
-
-    const next = prev.map((savedBrand) => {
-      const freshBrand = db.find(
-        (brand) =>
-          String(brand.name || "").toLowerCase() ===
-          String(savedBrand.name || "").toLowerCase()
-      );
-
-      if (!freshBrand) return savedBrand;
-
-      if (freshBrand !== savedBrand) changed = true;
-      return freshBrand;
+    if (!Array.isArray(db) || db.length === 0) return;
+    setMyBrands((prev) => {
+      if (!Array.isArray(prev) || prev.length === 0) return prev;
+      let changed = false;
+      const next = prev.map((savedBrand) => {
+        const freshBrand = db.find(
+          (brand) => String(brand.name || "").toLowerCase() === String(savedBrand.name || "").toLowerCase()
+        );
+        if (!freshBrand) return savedBrand;
+        if (freshBrand !== savedBrand) changed = true;
+        return freshBrand;
+      });
+      return changed ? next : prev;
     });
-
-    return changed ? next : prev;
-  });
-}, [db]);
+  }, [db]);
 
   const addToList = (brand) => {
     if (!myBrands.find((b) => b.name === brand.name)) {
@@ -151,25 +129,24 @@ export default function App() {
     })
     .sort((a, b) => (b.avgScore ?? -9999) - (a.avgScore ?? -9999));
 
+  const modalFilteredSectors = modalSectorFilter
+    ? brandsBySector.filter((s) => s.sector === modalSectorFilter)
+    : brandsBySector;
+
+  const modalVisibleSectors = showAllSectors
+    ? modalFilteredSectors
+    : modalFilteredSectors.slice(0, 6);
+
+  const openSectorModal = (sectorKey = null) => {
+    setModalSectorFilter(sectorKey);
+    setShowAllSectors(false);
+    setIsSectorModalOpen(true);
+  };
+
   if (loading) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#08080f",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div
-          style={{
-            color: "rgba(255,255,255,0.3)",
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 14,
-            letterSpacing: 2,
-          }}
-        >
+      <div style={{ minHeight: "100vh", background: "#08080f", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ color: "rgba(255,255,255,0.3)", fontFamily: "'DM Sans', sans-serif", fontSize: 14, letterSpacing: 2 }}>
           {t.loading}
         </div>
       </div>
@@ -180,343 +157,380 @@ export default function App() {
     <CategoriesContext.Provider value={categories}>
       <LangToggle lang={lang} setLang={setLang} />
 
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#08080f",
-          fontFamily: "'DM Sans', sans-serif",
-          color: "#e8e8f0",
-        }}
-      >
+      <div style={{ minHeight: "100vh", background: "#08080f", color: "#e8e8f0", fontFamily: "'DM Sans', sans-serif" }}>
         <style>{`
           * { box-sizing: border-box; margin: 0; padding: 0; }
+          html, body, #root { background: #08080f; }
           ::selection { background: rgba(99,202,183,0.3); }
           input:focus { outline: none; }
           ::-webkit-scrollbar { width: 4px; }
           ::-webkit-scrollbar-track { background: transparent; }
           ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
-          .brand-row:hover { background: rgba(255,255,255,0.05) !important; }
-          .add-btn:hover { background: rgba(99,202,183,0.2) !important; color: #63cab7 !important; }
+          .search-result-row:hover { background: rgba(255,255,255,0.04) !important; }
+          .ep-search::placeholder { color: rgba(255,255,255,0.25); }
+          .sector-btn:hover { background: rgba(99,202,183,0.1) !important; border-color: rgba(99,202,183,0.3) !important; color: #63CAB7 !important; }
+          .add-btn:hover { background: rgba(99,202,183,0.15) !important; color: #63CAB7 !important; }
         `}</style>
 
-        <div style={{ maxWidth: 720, margin: "0 auto", padding: "48px 20px 80px" }}>
-          <div style={{ textAlign: "center", marginBottom: 52 }}>
-            <div
-              style={{
-                fontSize: 11,
-                letterSpacing: 4,
-                color: "rgba(99,202,183,0.7)",
-                textTransform: "uppercase",
-                marginBottom: 16,
-              }}
-            >
-              {t.tagline}
+        <div style={{ maxWidth: 860, margin: "0 auto", padding: "48px 24px 80px" }}>
+
+          {/* ── HERO ── */}
+            <div style={{
+              background: "transparent",
+              borderRadius: 20,
+              padding: "36px 32px 32px",
+              marginBottom: 20,
+            
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",    
+            }}>
+            <div style={{
+              fontSize: 11, letterSpacing: 3, color: "rgba(99,202,183,0.6)",
+              textTransform: "uppercase", marginBottom: 16, fontFamily: "'DM Mono', monospace",
+            }}>
+              Open Source · Community Driven · No Profit
             </div>
 
-            <div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}>
-              <img
-                src={logoSrc}
-                alt="EthicPrint"
-                style={{
-                  height: "clamp(48px, 10vw, 80px)",
-                  width: "auto",
-                  filter:
-                    "brightness(1.05) drop-shadow(0 0 18px rgba(99,202,183,0.25))",
-                  mixBlendMode: "normal",
-                }}
-              />
-            </div>
+            <img src={logoSrc} alt="EthicPrint" style={{
+              display: "block", height: "clamp(40px, 6vw, 60px)", width: "auto",
+              filter: "brightness(1.05) drop-shadow(0 0 18px rgba(99,202,183,0.2))",
+              marginBottom: 20,
+            }} />
 
-            <p
-              style={{
-                color: "rgba(255,255,255,0.4)",
-                fontSize: 16,
-                maxWidth: 440,
-                margin: "0 auto",
-                lineHeight: 1.6,
-              }}
-            >
-              {t.subtitle}
-              <br />
-              <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 14 }}>
-                {categories.map((c) => getCatLabel(c, lang).split(" ")[0]).join(" · ")}
-              </span>
-            </p>
-          </div>
-
-              <MyListPanel
-                myBrands={myBrands}
-                db={db}
-                onAdd={addToList}
-                onReplace={(oldBrand, newBrand) => {
-                  setMyBrands((prev) => {
-                    const withoutOld = prev.filter((b) => b.name !== oldBrand.name);
-                    const alreadyPresent = withoutOld.some((b) => b.name === newBrand.name);
-                    return alreadyPresent ? withoutOld : [...withoutOld, newBrand];
-                  });
-                }}
-                onRemove={(name) =>
-                  setMyBrands((prev) => prev.filter((b) => b.name !== name))
-                }
-                onClear={() => setMyBrands([])}
-                onSelect={setSelected}
-                lang={lang}
-                ui={UI}
-                threshold={THRESHOLD}
-              />
-              
-              <div style={{ marginTop: 28, marginBottom: 10 }}>
-                <div
-                  style={{
-                    fontSize: 12,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.08em",
-                    color: "rgba(255,255,255,0.45)",
-                    marginBottom: 8,
-                    fontFamily: "'DM Mono', monospace",
-                  }}
-                >
-                  {lang === "it" ? "Database brand" : "Brand database"}
-                </div>
-              
-                <div
-                  style={{
-                    color: "rgba(255,255,255,0.62)",
-                    fontSize: 14,
-                    marginBottom: 14,
-                    fontFamily: "'DM Sans', sans-serif",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {lang === "it"
-                    ? "Esplora tutti i brand e confrontali per settore."
-                    : "Explore all brands and compare them by sector."}
-                </div>
-              
-                <div style={{ position: "relative", marginBottom: 8 }}>
-                  
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                background: "rgba(255,255,255,0.06)",
-                border: "1px solid rgba(255,255,255,0.12)",
-                borderRadius: 14,
-                padding: "14px 18px",
-                boxShadow: query ? "0 0 0 2px rgba(99,202,183,0.15)" : "none",
-              }}
-            >
-              <svg
-                width="16"
-                height="16"
-                fill="none"
-                stroke="rgba(255,255,255,0.3)"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.35-4.35" />
-              </svg>
-
-              <input
-                ref={inputRef}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={t.search_placeholder}
-                style={{
-                  flex: 1,
-                  background: "transparent",
-                  border: "none",
-                  color: "#fff",
-                  fontSize: 16,
-                  fontFamily: "'DM Sans', sans-serif",
-                }}
-              />
-
-              {query && (
-                <button
-                  onClick={() => {
-                    setQuery("");
-                  }}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: "rgba(255,255,255,0.3)",
-                    cursor: "pointer",
-                    fontSize: 18,
-                  }}
-                >
-                  ×
-                </button>
+            <div style={{
+              fontSize: "clamp(17px, 2.4vw, 22px)", lineHeight: 1.5,
+              color: "rgba(255,255,255,0.7)", maxWidth: 620, marginBottom: 18, fontWeight: 300,
+            }}>
+              {lang === "it" ? (
+                <>
+                  Scopri l'impatto etico dei brand che utilizzi.
+                  <br />
+                  Trova alternative migliori.
+                </>
+              ) : (
+                <>
+                  Learn the ethical impact of the brands you use.
+                  <br />
+                  Find better options.
+                </>
               )}
             </div>
 
-            {results.length > 0 && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "calc(100% + 8px)",
-                  left: 0,
-                  right: 0,
-                  background: "#0f0f1a",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  borderRadius: 14,
-                  overflow: "hidden",
-                  zIndex: 50,
-                  boxShadow: "0 20px 40px rgba(0,0,0,0.5)",
-                }}
-              >
-                {results.map((brand) => {
-                  const score = getDisplayScore(brand);
-                  const rawScore = getScore(brand);
-                  const inList = myBrands.find((b) => b.name === brand.name);
+<div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", marginBottom: 28 }}>
+  {[
+    { href: "/sources.html", en: "How we score brands", it: "Come valutiamo i brand" },
+    { href: "/mission.html", en: "Our mission ",  it: "La nostra missione " },
+  ].map((link, i, arr) => (
+    <span key={i} style={{ display: "flex", alignItems: "center" }}>
+      
+      <a
+        href={link.href}
+        style={{
+          fontSize: 12,
+          color: "#63CAB7",
+          textDecoration: "none",
+          fontFamily: "'DM Mono', monospace",
+          letterSpacing: "0.05em",
+          borderBottom: "1px solid rgba(99,202,183,0.3)",
+          paddingBottom: 1,
+        }}
+      >
+        {lang === "it" ? link.it : link.en}
+      </a>
 
-                  return (
-                    <div
-                      key={brand.name}
-                      className="brand-row"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 14,
-                        padding: "12px 16px",
-                        cursor: "pointer",
-                        borderBottom: "1px solid rgba(255,255,255,0.04)",
-                        transition: "background 0.15s",
-                      }}
-                    >
-                      <div
+      {/* Pallino */}
+      {i < arr.length - 1 && (
+        <span style={{
+          margin: "0 10px",
+          color: "#63CAB7",
+          fontSize: 8,
+          transform: "translateY(-1px)",
+        }}>
+          ·
+        </span>
+      )}
+
+    </span>
+  ))}
+</div>
+
+            {/* Search bar */}
+            <div style={{
+              position: "relative",
+              display: "flex", alignItems: "center", gap: 12,
+              width: "80%",  
+              background: "rgba(255,255,255,0.06)",
+              border: `1px solid ${query ? "rgba(99,202,183,0.3)" : "rgba(255,255,255,0.1)"}`,
+              borderRadius: 14, padding: "14px 18px",
+              boxShadow: query ? "0 0 0 3px rgba(99,202,183,0.08)" : "none",
+              transition: "all 0.2s",
+            }}>
+              <svg width="16" height="16" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+              <input
+                ref={searchRef} className="ep-search" value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={lang === "it"
+                  ? "Cerca un brand e cliccalo per vedere dettagli e fonti"
+                  : "Search a brand and click it to see details and sources"}
+                style={{
+                  flex: 1, background: "transparent", border: "none",
+                  color: "#fff", fontSize: 16, fontFamily: "'DM Sans', sans-serif",
+                }}
+              />
+              {query && (
+                <button onClick={() => setQuery("")} style={{
+                  background: "none", border: "none", color: "rgba(255,255,255,0.3)",
+                  cursor: "pointer", fontSize: 20, lineHeight: 1,
+                }}>×</button>
+              )}
+            </div>
+
+            {/* Search results */}
+            {query.length >= 2 && (
+              <div style={{
+                marginTop: 8, background: "#0f0f1a",
+                border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14,
+                width: "80%",
+                overflow: "hidden", boxShadow: "0 20px 40px rgba(0,0,0,0.5)",
+              }}>
+                {results.length === 0 ? (
+                  <div style={{ padding: "14px 18px", color: "rgba(255,255,255,0.3)", fontSize: 14 }}>
+                    {lang === "it" ? "Nessun brand trovato." : "No brands found."}
+                  </div>
+                ) : (
+                  results.slice(0, 6).map((brand) => {
+                    const score = getDisplayScore(brand);
+                    const inList = myBrands.find((b) => b.name === brand.name);
+                    const scoreColor = getDisplayScoreColor(score);
+                    return (
+                      <div key={brand.name} className="search-result-row" onClick={() => setSelected(brand)}
                         style={{
-                          width: 36,
-                          height: 36,
-                          borderRadius: 10,
-                          background: `${getDisplayScoreColor(score)}22`,
-                          border: `1px solid ${getDisplayScoreColor(score)}44`,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: 14,
-                          fontWeight: 700,
-                          color: getDisplayScoreColor(score),
+                          display: "flex", alignItems: "center", gap: 14,
+                          padding: "12px 18px", cursor: "pointer",
+                          borderBottom: "1px solid rgba(255,255,255,0.04)",
                         }}
                       >
-                        {brand.logo}
-                      </div>
-
-                      <div style={{ textAlign: "right", marginRight: 8 }} onClick={() => setSelected(brand)}>
-                        <div style={{ fontSize: 18, fontWeight: 700, color: getDisplayScoreColor(score) }}>
-                          {score ?? "—"}
+                        <div style={{ flex: 1, textAlign: "left", minWidth: 0 }}>
+                          <div style={{ fontSize: 15, fontWeight: 600, color: "#e8e8f0", lineHeight: 1, marginBottom: 3 }}>
+                            {brand.name}
+                          </div>
+                          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>{brand.sector || ""}</div>
                         </div>
-                        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)" }}>/ 100</div>
-                      </div>
-
-                      <button
-                        className="add-btn"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            addToList(brand);
-                          }}
-                        style={{
-                          background: inList
-                            ? "rgba(99,202,183,0.1)"
-                            : "rgba(255,255,255,0.06)",
+                        <div style={{ textAlign: "right", marginRight: 8 }}>
+                          <div style={{ fontSize: 18, fontWeight: 700, color: scoreColor, fontFamily: "'DM Mono', monospace" }}>
+                            {score ?? "—"}
+                          </div>
+                          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)" }}>/100</div>
+                        </div>
+                        <button className="add-btn" onClick={(e) => { e.stopPropagation(); addToList(brand); }} style={{
+                          background: inList ? "rgba(99,202,183,0.1)" : "rgba(255,255,255,0.06)",
                           border: "1px solid rgba(255,255,255,0.1)",
                           color: inList ? "#63CAB7" : "rgba(255,255,255,0.5)",
-                          padding: "6px 12px",
-                          borderRadius: 8,
-                          cursor: "pointer",
-                          fontSize: 11,
-                          fontFamily: "'DM Sans', sans-serif",
-                          transition: "all 0.15s",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {inList ? "✓" : "+ List"}
-                      </button>
-                    </div>
-                  );
-                })}
+                          padding: "6px 12px", borderRadius: 8, cursor: "pointer",
+                          fontSize: 11, fontFamily: "'DM Sans', sans-serif",
+                          transition: "all 0.15s", whiteSpace: "nowrap",
+                        }}>
+                          {inList ? "✓" : lang === "it" ? "+ Aggiungi" : "+ Add"}
+                        </button>
+                      </div>
+                    );
+                  })
+                )}
               </div>
+            )}
+
+            {/* Quick sectors + contribute */}
+            {!query && (
+              <>
+                <div style={{ marginTop: 16, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", fontFamily: "'DM Mono', monospace", marginRight: 4 }}>
+                    {lang === "it" ? "Sfoglia:" : "Browse:"}
+                  </span>
+                  {QUICK_SECTORS.map((s, i) => (
+                    <button key={i} className="sector-btn"
+                      onClick={() => openSectorModal(lang === "it" ? s.it : s.en)}
+                      style={{
+                        background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
+                        color: "rgba(255,255,255,0.6)", padding: "6px 12px", borderRadius: 99,
+                        cursor: "pointer", fontSize: 12, fontFamily: "'DM Sans', sans-serif",
+                        transition: "all 0.15s",
+                      }}
+                    >
+                      {lang === "it" ? s.it.split(" ")[0] : s.en.split(" ")[0]}
+                    </button>
+                  ))}
+                  <button className="sector-btn" onClick={() => openSectorModal(null)} style={{
+                    background: "transparent", border: "1px solid rgba(99,202,183,0.3)",
+                    color: "#63CAB7", padding: "6px 12px", borderRadius: 99,
+                    cursor: "pointer", fontSize: 12, fontFamily: "'DM Mono', monospace",
+                    transition: "all 0.15s",
+                  }}>
+                    {lang === "it" ? "Tutti i settori →" : "All sectors →"}
+                  </button>
+                </div>
+
+<div style={{ marginTop: 12, display: "flex", alignItems: "center", flexWrap: "wrap" }}>
+  {[
+    { href: "/contribute.html", en: "Contribute ", it: "Contribuisci " },
+    { href: "/contribute.html", en: "Report an error ", it: "Segnala un errore " },
+    { href: "/contribute.html", en: "Add a brand ", it: "Aggiungi un brand " },
+  ].map((link, i, arr) => (
+    <span key={i} style={{ display: "flex", alignItems: "center" }}>
+      
+      <a
+        href={link.href}
+        style={{
+          fontSize: 12,
+          color: "#63CAB7", // stesso colore di "How we score"
+          textDecoration: "none",
+          fontFamily: "'DM Mono', monospace",
+          letterSpacing: "0.05em",
+          borderBottom: "1px solid rgba(99,202,183,0.3)",
+          paddingBottom: 1,
+        }}
+      >
+        {lang === "it" ? link.it : link.en}
+      </a>
+
+      {/* Pallino separatore */}
+      {i < arr.length - 1 && (
+        <span style={{
+          margin: "0 10px",
+          color: "#63CAB7",
+          fontSize: 10,
+        }}>
+          ·
+        </span>
+      )}
+
+    </span>
+  ))}
+</div>
+              </>
             )}
           </div>
 
-          <div
-            style={{
-              fontSize: 12,
-              color: "rgba(255,255,255,0.2)",
-              marginBottom: 8,
-              paddingLeft: 4,
+          {/* ── RECENT SOURCES ── */}
+          <RecentSourcesPanel
+            updates={recentSourceUpdates}
+            lang={lang}
+            onSelectBrand={(brandRef) => {
+              const found = db.find((b) => b.name === brandRef.name || b.id === brandRef.id);
+              if (found) setSelected(found);
             }}
-          >
-            {t.db_info(db.length, sectors.length, sourcesCount)}
+          />
+
+          {/* ── MY LIST PANEL ── */}
+          <div style={{ marginTop: 20 }}>
+            <MyListPanel
+              myBrands={myBrands}
+              db={db}
+              onAdd={addToList}
+              onReplace={(oldBrand, newBrand) => {
+                setMyBrands((prev) => {
+                  const withoutOld = prev.filter((b) => b.name !== oldBrand.name);
+                  const alreadyPresent = withoutOld.some((b) => b.name === newBrand.name);
+                  return alreadyPresent ? withoutOld : [...withoutOld, newBrand];
+                });
+              }}
+              onRemove={(name) => setMyBrands((prev) => prev.filter((b) => b.name !== name))}
+              onClear={() => setMyBrands([])}
+              onSelect={setSelected}
+              lang={lang}
+              ui={UI}
+              threshold={THRESHOLD}
+              totalBrands={db.length}
+              totalSectors={[...new Set(db.map((b) => b.sector).filter(Boolean))].length}
+              totalSources={sourcesCount}
+            />
+          </div>
+
+          {/* ── FOOTER ── */}
+          <div style={{
+            marginTop: 64, paddingTop: 24,
+            borderTop: "1px solid rgba(255,255,255,0.06)", textAlign: "center",
+          }}>
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", lineHeight: 1.8, fontFamily: "'DM Sans', sans-serif" }}>
+              {t.footer.split("\n").map((line, i) => <span key={i}>{line}{i === 0 && <br />}</span>)}
+            </div>
           </div>
         </div>
 
-          <div style={{ marginTop: 52 }}>
-            <div
-              style={{
-                fontSize: 11,
-                letterSpacing: 2,
-                color: "rgba(255,255,255,0.3)",
-                textTransform: "uppercase",
-                marginBottom: 32,
-              }}
-            >
-              {t.ranking_title}
-            </div>
+        {/* ── SECTOR MODAL ── */}
+        {isSectorModalOpen && (
+          <div onClick={() => setIsSectorModalOpen(false)} style={{
+            position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)",
+            zIndex: 500, display: "flex", alignItems: "center",
+            justifyContent: "center", padding: 20,
+          }}>
+            <div onClick={(e) => e.stopPropagation()} style={{
+              width: "min(1100px, 100%)", maxHeight: "85vh", overflowY: "auto",
+              background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: 20, padding: "24px 22px 20px",
+              boxShadow: "0 40px 80px rgba(0,0,0,0.6)",
+            }}>
+              <div style={{
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+                gap: 16, marginBottom: 18,
+                background: "#0f0f1a", zIndex: 2, paddingBottom: 16,
+                borderBottom: "1px solid rgba(255,255,255,0.06)",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                  <div style={{
+                    fontSize: 11, letterSpacing: 3, color: "rgba(99,202,183,0.7)",
+                    textTransform: "uppercase", fontFamily: "'DM Mono', monospace",
+                  }}>
+                    {modalSectorFilter
+                      ? `${t.ranking_title} · ${modalFilteredSectors[0]?.sector || ""}`
+                      : t.ranking_title}
+                  </div>
+                  {modalSectorFilter && (
+                    <button onClick={() => { setModalSectorFilter(null); setShowAllSectors(false); }} style={{
+                      background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
+                      color: "rgba(255,255,255,0.5)", padding: "4px 12px", borderRadius: 99,
+                      cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif",
+                    }}>
+                      {lang === "it" ? "Tutti i settori" : "All sectors"}
+                    </button>
+                  )}
+                </div>
+                <button onClick={() => setIsSectorModalOpen(false)} style={{
+                  background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
+                  color: "rgba(255,255,255,0.5)", padding: "6px 14px", borderRadius: 99,
+                  cursor: "pointer", fontSize: 12, fontFamily: "'DM Sans', sans-serif",
+                }}>
+                  ✕ {lang === "it" ? "Chiudi" : "Close"}
+                </button>
+              </div>
 
-            {brandsBySector.map(({ sector, sectorIcon, brands }) => (
-              <SectorSection
-                key={sector}
-                sector={sector}
-                sectorIcon={sectorIcon}
-                brands={brands}
-                myBrands={myBrands}
-                onAdd={addToList}
-                onSelect={setSelected}
-                lang={lang}
-                defaultOpen={true}
-              />
-            ))}
-          </div>
-
-          <div
-            style={{
-              marginTop: 64,
-              textAlign: "center",
-              borderTop: "1px solid rgba(255,255,255,0.04)",
-              paddingTop: 32,
-            }}
-          >
-            <div
-              style={{
-                fontSize: 12,
-                color: "rgba(255,255,255,0.2)",
-                lineHeight: 1.8,
-              }}
-            >
-              {t.footer.split("\n").map((line, i) => (
-                <span key={i}>
-                  {line}
-                  {i === 0 && <br />}
-                </span>
+              {modalVisibleSectors.map(({ sector, sectorIcon, brands }) => (
+                <SectorSection
+                  key={sector} sector={sector} sectorIcon={sectorIcon}
+                  brands={brands} myBrands={myBrands} onAdd={addToList}
+                  onSelect={setSelected} lang={lang} defaultOpen={true}
+                />
               ))}
-              <br />
-              <a
-                href="/contribute.html"
-                style={{
-                  color: "rgba(99,202,183,0.5)",
-                  textDecoration: "none",
-                }}
-              >
-                {lang === "it"
-                  ? "➕ Contribuisci · Segnala un errore · Aggiungi un brand"
-                  : "➕ Contribute · Report an error · Add a brand"}
-              </a>
+
+              {modalFilteredSectors.length > 6 && (
+                <div style={{ marginTop: 12 }}>
+                  <button onClick={() => setShowAllSectors((prev) => !prev)} style={{
+                    background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
+                    color: "rgba(255,255,255,0.5)", padding: "8px 18px", borderRadius: 99,
+                    cursor: "pointer", fontSize: 12, fontFamily: "'DM Sans', sans-serif",
+                  }}>
+                    {showAllSectors
+                      ? lang === "it" ? "Nascondi" : "Hide"
+                      : lang === "it" ? `Mostra altri ${modalFilteredSectors.length - 6}` : `Show ${modalFilteredSectors.length - 6} more`}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
-        </div>
+        )}
 
         {selected && (
           <BrandCard

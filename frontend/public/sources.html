@@ -8,100 +8,543 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #08080f; --surface: #0f0f1a; --border: rgba(255,255,255,0.06);
-      --text: #e8e8f0; --muted: rgba(255,255,255,0.35); --accent: #63CAB7;
-      --accent-dim: rgba(99,202,183,0.1);
-      --gold: #f0c060; --gold-dim: rgba(240,192,96,0.08);
-      --silver: #a0b4c8; --silver-dim: rgba(160,180,200,0.07);
-      --bronze: #c08060; --bronze-dim: rgba(192,128,96,0.06);
+      --bg: #08080f;
+      --panel: #0f0f1a;
+      --panel-soft: rgba(255,255,255,0.03);
+      --panel-strong: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.1);
+      --text: #e8e8f0;
+      --text-soft: rgba(255,255,255,0.72);
+      --text-muted: rgba(255,255,255,0.45);
+      --text-faint: rgba(255,255,255,0.28);
+      --accent: #63CAB7;
+      --accent-soft: rgba(99,202,183,0.1);
+      --accent-border: rgba(99,202,183,0.28);
+      --danger: #ff9a9a;
+      --danger-soft: rgba(255,107,107,0.1);
+      --danger-border: rgba(255,107,107,0.22);
+      --warning: #f1d37a;
+      --warning-soft: rgba(255,214,102,0.1);
+      --warning-border: rgba(255,214,102,0.22);
+      --success: #63CAB7;
+      --success-soft: rgba(99,202,183,0.1);
+      --success-border: rgba(99,202,183,0.22);
+      --line: rgba(255,255,255,0.06);
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.6; min-height: 100vh; }
+    html { scroll-behavior: smooth; background: var(--bg); }
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(99,202,183,0.04), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.03), transparent 18%),
+        var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
 
-    .topbar { position: fixed; top: 0; left: 0; right: 0; height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; z-index: 100; background: rgba(8,8,15,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
-    .back { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); text-decoration: none; letter-spacing: 1px; transition: color .2s; }
-    .back:hover { color: var(--accent); }
-    .lang-toggle { display: flex; gap: 2px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
-    .lang-btn { font-family: 'DM Mono', monospace; font-size: 11px; padding: 4px 10px; border-radius: 5px; border: none; background: transparent; color: var(--muted); cursor: pointer; transition: all .2s; letter-spacing: 1px; }
-    .lang-btn.active { background: rgba(99,202,183,0.15); color: var(--accent); }
+    ::selection { background: rgba(99,202,183,0.3); }
+    a { color: inherit; }
 
-    .wrap { max-width: 680px; margin: 0 auto; padding: 80px 24px 64px; }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
 
-    .hero { padding: 32px 0 48px; opacity: 0; animation: fadeUp .5s .1s forwards; }
-    .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; margin-bottom: 16px; }
-    .hero-title { font-size: clamp(28px, 5vw, 44px); font-weight: 500; line-height: 1.1; letter-spacing: -1px; margin-bottom: 16px; }
+    .topbar {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .topbar > * { pointer-events: auto; }
+
+    .back {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border: 1px solid var(--border-strong);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      line-height: 1;
+      letter-spacing: 0.04em;
+      transition: all 0.15s ease;
+    }
+
+    .back:hover {
+      color: var(--accent);
+      border-color: var(--accent-border);
+      background: var(--accent-soft);
+    }
+
+    .lang-toggle {
+      display: flex;
+      gap: 4px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 99px;
+      padding: 4px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: rgba(255,255,255,0.35);
+      padding: 4px 12px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      font-family: 'DM Sans', sans-serif;
+      border-radius: 99px;
+      transition: all 0.15s ease;
+    }
+
+    .lang-btn.active {
+      background: rgba(99,202,183,0.2);
+      border-color: rgba(99,202,183,0.4);
+      color: var(--accent);
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 96px 24px 72px;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at top left, rgba(99,202,183,0.04), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.02), transparent 22%);
+    }
+
+    .panel-inner {
+      position: relative;
+      z-index: 1;
+      padding: 24px 24px 26px;
+    }
+
+    .hero {
+      padding-top: 4px;
+    }
+
+    .hero-eyebrow,
+    .section-label,
+    .mini-label {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: rgba(99,202,183,0.6);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .hero-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(34px, 7vw, 62px);
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      margin-bottom: 14px;
+      max-width: 760px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
     .hero-title span { color: var(--accent); }
-    .hero-desc { font-size: 14px; color: var(--muted); max-width: 500px; line-height: 1.8; }
 
-    .section { margin-bottom: 56px; opacity: 0; animation: fadeUp .5s .2s forwards; }
-    .section-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 20px; }
+    .hero-desc,
+    .section-intro,
+    .note-box,
+    .tier3-note {
+      font-size: 15px;
+      line-height: 1.6;
+      max-width: 720px;
+      color: var(--text-soft);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+    }
 
-    .tier-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    @media (max-width: 520px) { .tier-cards { grid-template-columns: 1fr; } }
-    .tier-card { border-radius: 12px; padding: 18px 20px; border: 1px solid var(--border); position: relative; overflow: hidden; }
-    .tier-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
-    .tier-card.t1 { background: var(--gold-dim); } .tier-card.t1::before { background: var(--gold); }
-    .tier-card.t2 { background: var(--silver-dim); } .tier-card.t2::before { background: var(--silver); }
-    .tier-card.t3 { background: var(--bronze-dim); } .tier-card.t3::before { background: var(--bronze); }
-    .tier-num { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; margin-bottom: 2px; }
-    .tier-card.t1 .tier-num { color: var(--gold); } .tier-card.t2 .tier-num { color: var(--silver); } .tier-card.t3 .tier-num { color: var(--bronze); }
-    .tier-name { font-size: 11px; font-weight: 500; margin-bottom: 6px; }
-    .tier-desc { font-size: 11px; color: var(--muted); line-height: 1.6; }
+    .tier-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
 
-    .tier-block { margin-bottom: 12px; }
-    .tier-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; user-select: none; transition: border-color .2s; }
-    .tier-header:hover { border-color: rgba(255,255,255,0.1); }
-    .tier-header.open { border-radius: 10px 10px 0 0; border-bottom-color: transparent; }
-    .tier-badge { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; padding: 3px 9px; border-radius: 100px; border: 1px solid; text-transform: uppercase; flex-shrink: 0; }
-    .tier-badge.t1 { color: var(--gold); border-color: rgba(240,192,96,0.3); background: var(--gold-dim); }
-    .tier-badge.t2 { color: var(--silver); border-color: rgba(160,180,200,0.25); background: var(--silver-dim); }
-    .tier-badge.t3 { color: var(--bronze); border-color: rgba(192,128,96,0.25); background: var(--bronze-dim); }
-    .tier-hcount { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-left: auto; }
-    .tier-chevron { color: var(--muted); font-size: 11px; transition: transform .25s; flex-shrink: 0; }
-    .tier-chevron.open { transform: rotate(180deg); }
-    .tier-body { overflow: hidden; transition: max-height .35s ease; background: var(--surface); border: 1px solid var(--border); border-top: none; border-radius: 0 0 10px 10px; }
-    .pub-scroll { max-height: 240px; overflow-y: auto; padding: 8px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.08) transparent; }
-    .pub-scroll::-webkit-scrollbar { width: 4px; }
-    .pub-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
-    .pub-card { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 9px 12px; border-radius: 6px; text-decoration: none; transition: background .15s; }
-    .pub-card:hover { background: rgba(255,255,255,0.03); }
-    .pub-name { font-size: 12px; color: var(--text); }
-    .pub-topic { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; }
-    .pub-arrow { font-size: 12px; color: rgba(255,255,255,0.15); flex-shrink: 0; transition: color .2s; }
-    .pub-card:hover .pub-arrow { color: var(--accent); }
-    .tier3-note { padding: 16px; font-size: 12px; color: var(--muted); line-height: 1.7; }
+    @media (max-width: 760px) {
+      .tier-cards { grid-template-columns: 1fr; }
+    }
 
-    .scale-box { display: flex; flex-direction: column; gap: 7px; margin-bottom: 28px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; }
-    .scale-row { display: flex; align-items: center; gap: 12px; }
+    .tier-card {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      padding: 16px 16px 14px;
+      min-height: 140px;
+      border-radius: 16px;
+    }
 
-    .cat-block { margin-bottom: 12px; }
-    .cat-header-row { display: flex; align-items: center; gap: 10px; padding: 13px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; user-select: none; transition: border-color .2s; }
-    .cat-header-row:hover { border-color: rgba(255,255,255,0.1); }
-    .cat-header-row.open { border-radius: 10px 10px 0 0; border-bottom-color: transparent; }
-    .cat-icon { font-size: 15px; flex-shrink: 0; }
-    .cat-title { font-size: 13px; font-weight: 500; flex: 1; }
-    .cat-count { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
-    .cat-chev { color: var(--muted); font-size: 11px; transition: transform .25s; flex-shrink: 0; }
+    .tier-card.t1 { background: rgba(99,202,183,0.06); }
+    .tier-card.t2 { background: rgba(255,255,255,0.03); }
+    .tier-card.t3 { background: rgba(255,214,102,0.06); }
+
+    .tier-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 24px;
+      line-height: 1;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .tier-name {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .tier-desc {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+
+    .tier-block,
+    .cat-block {
+      margin-bottom: 12px;
+    }
+
+    .tier-header,
+    .cat-header-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+      transition: background .15s ease, border-color .15s ease;
+      border-radius: 16px;
+    }
+
+    .tier-header:hover,
+    .cat-header-row:hover {
+      background: rgba(255,255,255,0.05);
+    }
+
+    .tier-header.open,
+    .cat-header-row.open {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-bottom-color: transparent;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .tier-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      padding: 6px 10px 5px;
+      border: 1px solid var(--border);
+      text-transform: uppercase;
+      flex-shrink: 0;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      color: var(--text-soft);
+    }
+
+    .tier-badge.t1 {
+      background: rgba(99,202,183,0.1);
+      border-color: rgba(99,202,183,0.22);
+      color: var(--accent);
+    }
+
+    .tier-badge.t2 {
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.6);
+    }
+
+    .tier-badge.t3 {
+      background: rgba(255,214,102,0.1);
+      border-color: rgba(255,214,102,0.22);
+      color: var(--warning);
+    }
+
+    .tier-hcount,
+    .cat-count,
+    .criterion-num,
+    .pub-topic,
+    .page-footer a {
+      font-family: 'DM Mono', monospace;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-size: 11px;
+      color: var(--text-faint);
+    }
+
+    .tier-hcount { margin-left: auto; }
+
+    .tier-chevron,
+    .cat-chev {
+      color: rgba(255,255,255,0.5);
+      font-size: 14px;
+      transition: transform .25s;
+      flex-shrink: 0;
+      font-weight: 700;
+    }
+
+    .tier-chevron.open,
     .cat-chev.open { transform: rotate(180deg); }
-    .cat-body { overflow: hidden; transition: max-height .35s ease; background: var(--surface); border: 1px solid var(--border); border-top: none; border-radius: 0 0 10px 10px; }
-    .criterion-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+
+    .tier-body,
+    .cat-body {
+      overflow: hidden;
+      transition: max-height .35s ease;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-top: none;
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+    }
+
+    .pub-scroll {
+      max-height: 280px;
+      overflow-y: auto;
+      padding: 0;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.1) transparent;
+    }
+
+    .pub-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      text-decoration: none;
+      transition: background .15s;
+    }
+
+    .pub-card:last-child { border-bottom: none; }
+    .pub-card:hover { background: rgba(255,255,255,0.04); }
+
+    .pub-name {
+      font-size: 15px;
+      color: var(--text);
+      font-weight: 600;
+      line-height: 1.2;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .pub-topic {
+      margin-top: 4px;
+    }
+
+    .pub-arrow {
+      font-size: 16px;
+      color: var(--text-faint);
+      flex-shrink: 0;
+      transition: color .2s;
+      font-weight: 700;
+    }
+
+    .pub-card:hover .pub-arrow { color: var(--accent); }
+
+    .tier3-note {
+      padding: 16px;
+    }
+
+    .scale-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: 16px;
+    }
+
+    .scale-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .metric-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:10px;
+      margin-bottom:4px;
+    }
+
+    @media (max-width: 760px) {
+      .metric-grid { grid-template-columns: 1fr; }
+    }
+
+    .metric-box {
+      border: 1px solid var(--border);
+      padding: 12px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 14px;
+    }
+
+    .metric-box.t1 { background: rgba(99,202,183,0.06); }
+    .metric-box.t2 { background: rgba(255,255,255,0.03); }
+    .metric-box.t3 { background: rgba(255,214,102,0.06); }
+
+    .cat-title {
+      font-size: 16px;
+      font-weight: 600;
+      flex: 1;
+      line-height: 1.1;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .criterion-row {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
     .criterion-row:last-child { border-bottom: none; }
-    .criterion-num { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.15); width: 16px; padding-top: 2px; flex-shrink: 0; }
-    .criterion-label { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.5; }
-    .criterion-desc { font-size: 11px; color: rgba(255,255,255,0.25); line-height: 1.6; margin-top: 3px; }
 
-    .note-section { margin-bottom: 64px; opacity: 0; animation: fadeUp .5s .4s forwards; }
-    .note-box { background: var(--accent-dim); border: 1px solid rgba(99,202,183,0.15); border-radius: 12px; padding: 18px 22px; font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.8; }
-    .note-box strong { color: var(--accent); font-weight: 500; }
-    .note-box a { color: var(--accent); }
+    .criterion-label {
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.45;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+    }
 
-    .page-footer { border-top: 1px solid var(--border); padding: 24px 0 48px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-    .page-footer a { font-size: 11px; color: var(--muted); text-decoration: none; font-family: 'DM Mono', monospace; transition: color .2s; }
-    .page-footer a:hover { color: var(--accent); }
+    .criterion-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-top: 4px;
+      font-family: 'DM Sans', sans-serif;
+    }
 
-    .pub-loading { padding: 16px; font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .note-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      padding: 18px 20px;
+      border-radius: 16px;
+    }
+
+    .note-box strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .note-box a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.03em;
+    }
+
+    .page-footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 22px 0 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .page-footer a {
+      text-decoration: none;
+      color: var(--accent);
+    }
+
+    .page-footer a:hover { color: var(--accent); opacity: 0.9; }
+
+    .pub-loading {
+      padding: 16px;
+      font-size: 12px;
+      color: var(--text-faint);
+      font-family: 'DM Mono', monospace;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    code {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--text-soft);
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+    }
+
+    @media (max-width: 640px) {
+      .topbar {
+        top: 12px;
+        left: 12px;
+        right: 12px;
+      }
+
+      .back {
+        padding: 9px 10px 8px;
+        font-size: 11px;
+      }
+
+      .panel-inner { padding: 18px 18px 20px; }
+
+      .hero-title {
+        font-size: clamp(34px, 11vw, 56px);
+      }
+
+      .hero-eyebrow,
+      .section-label,
+      .mini-label {
+        font-size: 11px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -116,159 +559,218 @@
 
 <div class="wrap">
 
-  <div class="hero">
-    <div class="hero-eyebrow" data-en="Transparency · Methodology" data-it="Trasparenza · Metodologia">Transparency · Methodology</div>
-    <h1 class="hero-title" data-en="Sources &amp;<br><span>Methodology</span>" data-it="Fonti &amp;<br><span>Metodologia</span>">Sources &amp;<br><span>Methodology</span></h1>
-    <p class="hero-desc"
-      data-en="EthicPrint scores brands using verified, publicly available sources. Not all sources carry the same weight — here's exactly how we decide which publishers we trust and how much."
-      data-it="EthicPrint valuta i brand usando fonti verificate e pubblicamente disponibili. Non tutte le fonti hanno lo stesso peso — ecco come decidiamo di quali publisher fidarci e quanto.">
-      EthicPrint scores brands using verified, publicly available sources. Not all sources carry the same weight — here's exactly how we decide which publishers we trust and how much.
-    </p>
-  </div>
-
-  <!-- TIER SYSTEM -->
-  <div class="section">
-    <div class="section-label" data-en="The source tier system" data-it="Il sistema a tier delle fonti">The source tier system</div>
-    <div class="tier-cards">
-      <div class="tier-card t1">
-        <div class="tier-num">T1</div>
-        <div class="tier-name" data-en="Primary sources" data-it="Fonti primarie">Primary sources</div>
-        <div class="tier-desc" data-en="International NGOs, investigative media, and recognized research institutes." data-it="ONG internazionali, media investigativi e istituti di ricerca riconosciuti.">International NGOs, investigative media, and recognized research institutes.</div>
-      </div>
-      <div class="tier-card t2">
-        <div class="tier-num">T2</div>
-        <div class="tier-name" data-en="Verified sources" data-it="Fonti verificate">Verified sources</div>
-        <div class="tier-desc" data-en="National media, official government data, institutional and certified reports." data-it="Media nazionali, dati governativi ufficiali, report istituzionali e certificazioni.">National media, official government data, institutional and certified reports.</div>
-      </div>
-      <div class="tier-card t3">
-        <div class="tier-num">T3</div>
-        <div class="tier-name" data-en="Supporting sources" data-it="Fonti di supporto">Supporting sources</div>
-        <div class="tier-desc" data-en="Blogs and secondary publications. Valid only as supporting evidence." data-it="Blog e pubblicazioni secondarie. Valide solo come evidenza di supporto.">Blogs and secondary publications. Valid only as supporting evidence.</div>
-      </div>
+  <div class="panel">
+    <div class="panel-inner hero">
+      <div class="hero-eyebrow" data-en="Transparency · Methodology" data-it="Trasparenza · Metodologia">Transparency · Methodology</div>
+      <h1 class="hero-title" data-en="Sources &amp;<br><span>Methodology</span>" data-it="Fonti &amp;<br><span>Metodologia</span>">Sources &amp;<br><span>Methodology</span></h1>
+      <p class="hero-desc"
+        data-en="EthicPrint scores brands using verified, publicly available sources. Not all sources carry the same weight — here's exactly how we decide which publishers we trust and how much."
+        data-it="EthicPrint valuta i brand usando fonti verificate e pubblicamente disponibili. Non tutte le fonti hanno lo stesso peso — ecco come decidiamo di quali publisher fidarci e quanto.">
+        EthicPrint scores brands using verified, publicly available sources. Not all sources carry the same weight — here's exactly how we decide which publishers we trust and how much.
+      </p>
     </div>
   </div>
 
-  <!-- PUBLISHERS -->
-  <div class="section" style="animation-delay:.25s">
-    <div class="section-label" data-en="Trusted publishers" data-it="Publisher di riferimento">Trusted publishers</div>
-    <div class="tier-block">
-      <div class="tier-header" id="hdr-t1" onclick="toggleTier('t1')">
-        <span class="tier-badge t1">Tier 1</span>
-        <span class="tier-hcount" id="count-t1">loading...</span>
-        <span class="tier-chevron" id="chev-t1">&#9660;</span>
-      </div>
-      <div class="tier-body" id="body-t1" style="max-height:0">
-        <div class="pub-scroll" id="scroll-t1"><div class="pub-loading">Loading...</div></div>
-      </div>
-    </div>
-    <div class="tier-block">
-      <div class="tier-header" id="hdr-t2" onclick="toggleTier('t2')">
-        <span class="tier-badge t2">Tier 2</span>
-        <span class="tier-hcount" id="count-t2">loading...</span>
-        <span class="tier-chevron" id="chev-t2">&#9660;</span>
-      </div>
-      <div class="tier-body" id="body-t2" style="max-height:0">
-        <div class="pub-scroll" id="scroll-t2"><div class="pub-loading">Loading...</div></div>
-      </div>
-    </div>
-    <div class="tier-block">
-      <div class="tier-header" id="hdr-t3" onclick="toggleTier('t3')">
-        <span class="tier-badge t3">Tier 3</span>
-        <span class="tier-hcount" id="count-t3">—</span>
-        <span class="tier-chevron" id="chev-t3">&#9660;</span>
-      </div>
-      <div class="tier-body" id="body-t3" style="max-height:0">
-        <div class="tier3-note"
-          data-en="Tier 3 includes blogs, specialist publications, and secondary sources. Used only as supporting evidence alongside higher-tier sources — never as the sole basis for a score. Evaluated case-by-case, no fixed whitelist."
-          data-it="Il Tier 3 include blog, pubblicazioni specialistiche e fonti secondarie. Usate solo come supporto alle fonti di tier superiore — mai come unica base per un punteggio. Valutate caso per caso, nessuna whitelist fissa.">
-          Tier 3 includes blogs, specialist publications, and secondary sources. Used only as supporting evidence alongside higher-tier sources — never as the sole basis for a score. Evaluated case-by-case, no fixed whitelist.
+  <div class="panel section">
+    <div class="panel-inner">
+      <div class="section-label" data-en="The source tier system" data-it="Il sistema a tier delle fonti">The source tier system</div>
+      <div class="tier-cards">
+        <div class="tier-card t1">
+          <div class="tier-num">T1</div>
+          <div class="tier-name" data-en="Primary sources" data-it="Fonti primarie">Primary sources</div>
+          <div class="tier-desc" data-en="International NGOs, investigative media, and recognized research institutes." data-it="ONG internazionali, media investigativi e istituti di ricerca riconosciuti.">International NGOs, investigative media, and recognized research institutes.</div>
+        </div>
+        <div class="tier-card t2">
+          <div class="tier-num">T2</div>
+          <div class="tier-name" data-en="Verified sources" data-it="Fonti verificate">Verified sources</div>
+          <div class="tier-desc" data-en="National media, official government data, institutional and certified reports." data-it="Media nazionali, dati governativi ufficiali, report istituzionali e certificazioni.">National media, official government data, institutional and certified reports.</div>
+        </div>
+        <div class="tier-card t3">
+          <div class="tier-num">T3</div>
+          <div class="tier-name" data-en="Supporting sources" data-it="Fonti di supporto">Supporting sources</div>
+          <div class="tier-desc" data-en="Blogs and secondary publications. Valid only as supporting evidence." data-it="Blog e pubblicazioni secondarie. Valide solo come evidenza di supporto.">Blogs and secondary publications. Valid only as supporting evidence.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SCORING FRAMEWORK -->
-  <div class="section" style="animation-delay:.35s">
-    <div class="section-label" data-en="How we score brands" data-it="Come valutiamo i brand">How we score brands</div>
-    <p style="font-size:13px;color:rgba(255,255,255,0.4);line-height:1.8;margin-bottom:24px"
-      data-en="Each brand is evaluated on 20 criteria across 4 categories. Each criterion receives an absolute score based on the tier of available sources. The total score ranges from -400 (worst) to +400 (best). A criterion only contributes if it meets the minimum source threshold."
-      data-it="Ogni brand viene valutato su 20 criteri in 4 categorie. Ogni criterio riceve un punteggio assoluto basato sul tier delle fonti disponibili. Il punteggio totale va da -400 (peggiore) a +400 (migliore). Un criterio contribuisce solo se raggiunge la soglia minima di fonti.">
-      Each brand is evaluated on 20 criteria across 4 categories. Each criterion receives an absolute score based on the tier of available sources. The total score ranges from -400 (worst) to +400 (best). A criterion only contributes if it meets the minimum source threshold.
-    </p>
-
-    <div class="scale-box" style="margin-bottom:16px">
-      <div style="font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:12px" data-en="Source values by tier" data-it="Valori per tier di fonte">Source values by tier</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:4px">
-        <div style="background:rgba(240,192,96,0.06);border:1px solid rgba(240,192,96,0.15);border-radius:10px;padding:12px">
-          <div style="font-family:'DM Mono',monospace;font-size:11px;color:#f0c060;margin-bottom:8px">Tier 1</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.5);line-height:2">
-            <span style="color:#4ade80">+20</span> Positive<br>
-            <span style="color:#86efac">+10</span> Prev. positive<br>
-            <span style="color:#fb923c">−10</span> Prev. negative<br>
-            <span style="color:#ef4444">−20</span> Negative
-          </div>
+  <div class="panel section">
+    <div class="panel-inner">
+      <div class="section-label" data-en="Trusted publishers" data-it="Publisher di riferimento">Trusted publishers</div>
+      <div class="tier-block">
+        <div class="tier-header" id="hdr-t1" onclick="toggleTier('t1')">
+          <span class="tier-badge t1">Tier 1</span>
+          <span class="tier-hcount" id="count-t1">loading...</span>
+          <span class="tier-chevron" id="chev-t1">&#9660;</span>
         </div>
-        <div style="background:rgba(160,180,200,0.06);border:1px solid rgba(160,180,200,0.15);border-radius:10px;padding:12px">
-          <div style="font-family:'DM Mono',monospace;font-size:11px;color:#a0b4c8;margin-bottom:8px">Tier 2</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.5);line-height:2">
-            <span style="color:#4ade80">+10</span> Positive<br>
-            <span style="color:#86efac">+5</span> Prev. positive<br>
-            <span style="color:#fb923c">−5</span> Prev. negative<br>
-            <span style="color:#ef4444">−10</span> Negative
-          </div>
+        <div class="tier-body" id="body-t1" style="max-height:0">
+          <div class="pub-scroll" id="scroll-t1"><div class="pub-loading">Loading...</div></div>
         </div>
-        <div style="background:rgba(192,128,96,0.06);border:1px solid rgba(192,128,96,0.15);border-radius:10px;padding:12px">
-          <div style="font-family:'DM Mono',monospace;font-size:11px;color:#c08060;margin-bottom:8px">Tier 3</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.5);line-height:2">
-            <span style="color:#4ade80">+2</span> Positive<br>
-            <span style="color:#86efac">+1</span> Prev. positive<br>
-            <span style="color:#fb923c">−1</span> Prev. negative<br>
-            <span style="color:#ef4444">−2</span> Negative
+      </div>
+      <div class="tier-block">
+        <div class="tier-header" id="hdr-t2" onclick="toggleTier('t2')">
+          <span class="tier-badge t2">Tier 2</span>
+          <span class="tier-hcount" id="count-t2">loading...</span>
+          <span class="tier-chevron" id="chev-t2">&#9660;</span>
+        </div>
+        <div class="tier-body" id="body-t2" style="max-height:0">
+          <div class="pub-scroll" id="scroll-t2"><div class="pub-loading">Loading...</div></div>
+        </div>
+      </div>
+      <div class="tier-block">
+        <div class="tier-header" id="hdr-t3" onclick="toggleTier('t3')">
+          <span class="tier-badge t3">Tier 3</span>
+          <span class="tier-hcount" id="count-t3">—</span>
+          <span class="tier-chevron" id="chev-t3">&#9660;</span>
+        </div>
+        <div class="tier-body" id="body-t3" style="max-height:0">
+          <div class="tier3-note"
+            data-en="Tier 3 includes blogs, specialist publications, and secondary sources. Used only as supporting evidence alongside higher-tier sources — never as the sole basis for a score. Evaluated case-by-case, no fixed whitelist."
+            data-it="Il Tier 3 include blog, pubblicazioni specialistiche e fonti secondarie. Usate solo come supporto alle fonti di tier superiore — mai come unica base per un punteggio. Valutate caso per caso, nessuna whitelist fissa.">
+            Tier 3 includes blogs, specialist publications, and secondary sources. Used only as supporting evidence alongside higher-tier sources — never as the sole basis for a score. Evaluated case-by-case, no fixed whitelist.
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="scale-box" style="margin-bottom:16px">
-      <div style="font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px" data-en="Minimum threshold per criterion" data-it="Soglia minima per criterio">Minimum threshold per criterion</div>
-      <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:2.2">
-        <span style="color:#f0c060;font-family:'DM Mono',monospace">T1</span>
-        &nbsp;<span data-en="At least 1 Tier 1 source → uses the average of all T1 sources" data-it="Almeno 1 fonte Tier 1 → usa la media delle fonti T1">At least 1 Tier 1 source → uses the average of all T1 sources</span><br>
-        <span style="color:#a0b4c8;font-family:'DM Mono',monospace">T2</span>
-        &nbsp;<span data-en="No T1, at least 2 Tier 2 sources → uses the average of T2 sources" data-it="Nessun T1, almeno 2 fonti Tier 2 → usa la media delle T2">No T1, at least 2 Tier 2 sources → uses the average of T2 sources</span><br>
-        <span style="color:#c08060;font-family:'DM Mono',monospace">T3</span>
-        &nbsp;<span data-en="No T1, 1 T2 + at least 3 T3 → T2 value + average of T3 (summed, capped at ±20)" data-it="Nessun T1, 1 T2 + almeno 3 T3 → valore T2 + media T3 (sommati, cap ±20)">No T1, 1 T2 + at least 3 T3 → T2 value + average of T3 (summed, capped at ±20)</span>
+  <div class="panel section">
+    <div class="panel-inner">
+      <div class="section-label" data-en="How we score brands" data-it="Come valutiamo i brand">How we score brands</div>
+      <p class="section-intro" style="margin-bottom:24px"
+        data-en="Each brand is evaluated on 20 criteria across 4 categories. Each criterion receives an absolute score based on the tier of available sources. The total score ranges from -400 (worst) to +400 (best). A criterion only contributes if it meets the minimum source threshold."
+        data-it="Ogni brand viene valutato su 20 criteri in 4 categorie. Ogni criterio riceve un punteggio assoluto basato sul tier delle fonti disponibili. Il punteggio totale va da -400 (peggiore) a +400 (migliore). Un criterio contribuisce solo se raggiunge la soglia minima di fonti.">
+        Each brand is evaluated on 20 criteria across 4 categories. Each criterion receives an absolute score based on the tier of available sources. The total score ranges from -400 (worst) to +400 (best). A criterion only contributes if it meets the minimum source threshold.
+      </p>
+
+      <div class="scale-box" style="margin-bottom:16px">
+        <div class="mini-label" data-en="Source values by tier" data-it="Valori per tier di fonte">Source values by tier</div>
+        <div class="metric-grid">
+          <div class="metric-box t1">
+            <div style="font-family:'DM Sans',sans-serif;font-size:14px;color:#e8e8f0;margin-bottom:8px;font-weight:600">Tier 1</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.62);line-height:2">
+              <span style="color:#63CAB7;font-weight:600">+20</span> Positive<br>
+              <span style="color:#89d9ca;font-weight:600">+10</span> Prev. positive<br>
+              <span style="color:#f1d37a;font-weight:600">−10</span> Prev. negative<br>
+              <span style="color:#ff9a9a;font-weight:600">−20</span> Negative
+            </div>
+          </div>
+          <div class="metric-box t2">
+            <div style="font-family:'DM Sans',sans-serif;font-size:14px;color:#e8e8f0;margin-bottom:8px;font-weight:600">Tier 2</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.62);line-height:2">
+              <span style="color:#63CAB7;font-weight:600">+10</span> Positive<br>
+              <span style="color:#89d9ca;font-weight:600">+5</span> Prev. positive<br>
+              <span style="color:#f1d37a;font-weight:600">−5</span> Prev. negative<br>
+              <span style="color:#ff9a9a;font-weight:600">−10</span> Negative
+            </div>
+          </div>
+          <div class="metric-box t3">
+            <div style="font-family:'DM Sans',sans-serif;font-size:14px;color:#e8e8f0;margin-bottom:8px;font-weight:600">Tier 3</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.62);line-height:2">
+              <span style="color:#63CAB7;font-weight:600">+2</span> Positive<br>
+              <span style="color:#89d9ca;font-weight:600">+1</span> Prev. positive<br>
+              <span style="color:#f1d37a;font-weight:600">−1</span> Prev. negative<br>
+              <span style="color:#ff9a9a;font-weight:600">−2</span> Negative
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="scale-box">
-      <div style="font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px" data-en="Score bands (−400 / +400)" data-it="Fasce di punteggio (−400 / +400)">Score bands (−400 / +400)</div>
-      <div class="scale-row"><span style="color:#6dbb7a;font-family:'DM Mono',monospace;font-size:11px;width:100px">+200 → +400</span><span style="color:#6dbb7a" data-en="Deeply Ethical" data-it="Profondamente Etico">Deeply Ethical</span></div>
-      <div class="scale-row"><span style="color:#a8c5a0;font-family:'DM Mono',monospace;font-size:11px;width:100px">+50 → +199</span><span style="color:#a8c5a0" data-en="Fairly Ethical" data-it="Abbastanza Etico">Fairly Ethical</span></div>
-      <div class="scale-row"><span style="color:#facc15;font-family:'DM Mono',monospace;font-size:11px;width:100px">−49 → +49</span><span style="color:#facc15" data-en="Partially Ethical" data-it="Parzialmente Etico">Partially Ethical</span></div>
-      <div class="scale-row"><span style="color:#fb923c;font-family:'DM Mono',monospace;font-size:11px;width:100px">−199 → −50</span><span style="color:#fb923c" data-en="Scarcely Ethical" data-it="Scarsamente Etico">Scarcely Ethical</span></div>
-      <div class="scale-row"><span style="color:#ef4444;font-family:'DM Mono',monospace;font-size:11px;width:100px">−400 → −200</span><span style="color:#ef4444" data-en="Ethically Compromised" data-it="Eticamente Inadeguato">Ethically Compromised</span></div>
-    </div>
+      <div class="scale-box" style="margin-bottom:16px">
+        <div class="mini-label" data-en="Minimum threshold per criterion" data-it="Soglia minima per criterio">Minimum threshold per criterion</div>
+        <div style="font-size:13px;color:var(--text-soft);line-height:2.1">
+          <span style="color:#63CAB7;font-family:'DM Mono',monospace">T1</span>
+          &nbsp;<span data-en="At least 1 Tier 1 source → uses the average of all T1 sources" data-it="Almeno 1 fonte Tier 1 → usa la media delle fonti T1">At least 1 Tier 1 source → uses the average of all T1 sources</span><br>
+          <span style="color:#63CAB7;font-family:'DM Mono',monospace">T2</span>
+          &nbsp;<span data-en="No T1, at least 2 Tier 2 sources → uses the average of T2 sources" data-it="Nessun T1, almeno 2 fonti Tier 2 → usa la media delle T2">No T1, at least 2 Tier 2 sources → uses the average of T2 sources</span><br>
+          <span style="color:#63CAB7;font-family:'DM Mono',monospace">T3</span>
+          &nbsp;<span data-en="No T1, 1 T2 + at least 3 T3 → T2 value + average of T3 (summed, capped at ±20)" data-it="Nessun T1, 1 T2 + almeno 3 T3 → valore T2 + media T3 (sommati, cap ±20)">No T1, 1 T2 + at least 3 T3 → T2 value + average of T3 (summed, capped at ±20)</span>
+        </div>
+      </div>
 
-    <div id="criteria-container">
-      <div class="pub-loading">Loading criteria...</div>
+      <div class="scale-box">
+        <div class="mini-label" data-en="From raw score to visible score" data-it="Dal punteggio grezzo al punteggio visibile">From raw score to visible score</div>
+
+        <div style="margin-bottom:14px">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.7)"
+            data-en="Step 1 — Category score (raw: −100 / +100)"
+            data-it="Step 1 — Punteggio per categoria (grezzo: −100 / +100)">
+            Step 1 — Category score (raw: −100 / +100)
+          </div>
+          <div style="font-size:12px;color:var(--text-soft);line-height:1.8"
+            data-en="Each category has 5 criteria, each worth up to ±20 (Tier 1). The raw category score is the sum of all published criteria scores, ranging from −100 to +100."
+            data-it="Ogni categoria ha 5 criteri, ognuno vale fino a ±20 (Tier 1). Il punteggio grezzo di categoria è la somma dei criteri pubblicati, da −100 a +100.">
+            Each category has 5 criteria, each worth up to ±20 (Tier 1). The raw category score is the sum of all published criteria scores, ranging from −100 to +100.
+          </div>
+          <div style="margin-top:8px;font-size:12px;color:var(--text-soft)"
+            data-en="Converted to 0–100 scale: (raw + 100) / 200 × 100"
+            data-it="Convertito in scala 0–100: (grezzo + 100) / 200 × 100">
+            Converted to 0–100 scale: <code>(raw + 100) / 200 × 100</code>
+          </div>
+        </div>
+
+        <div style="margin-bottom:16px">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.7)"
+            data-en="Step 2 — Total score (visible: 0 / 100)"
+            data-it="Step 2 — Punteggio totale (visibile: 0 / 100)">
+            Step 2 — Total score (visible: 0 / 100)
+          </div>
+          <div style="font-size:12px;color:var(--text-soft);line-height:1.8"
+            data-en="The total visible score is the average of the category scores (0–100) for categories with sufficient sources."
+            data-it="Il punteggio totale visibile è la media dei punteggi di categoria (0–100) per le categorie con fonti sufficienti.">
+            The total visible score is the average of the category scores (0–100) for categories with sufficient sources.
+          </div>
+        </div>
+
+        <div style="font-family:'DM Mono',monospace;font-size:11px;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.7)"
+          data-en="Score bands (visible 0–100)"
+          data-it="Fasce di punteggio (visibile 0–100)">
+          Score bands (visible 0–100)
+        </div>
+
+        <div class="scale-row">
+          <span style="background:rgba(99,202,183,0.14);border:1px solid rgba(99,202,183,0.24);color:#63CAB7;font-family:'DM Mono',monospace;font-size:11px;padding:4px 8px;min-width:80px;text-align:center;border-radius:999px">75 → 100</span>
+          <span style="color:#63CAB7;font-weight:600" data-en="Deeply Ethical" data-it="Profondamente Etico">Deeply Ethical</span>
+        </div>
+        <div class="scale-row">
+          <span style="background:rgba(99,202,183,0.08);border:1px solid rgba(99,202,183,0.18);color:#89d9ca;font-family:'DM Mono',monospace;font-size:11px;padding:4px 8px;min-width:80px;text-align:center;border-radius:999px">55 → 74</span>
+          <span style="color:#89d9ca;font-weight:600" data-en="Fairly Ethical" data-it="Abbastanza Etico">Fairly Ethical</span>
+        </div>
+        <div class="scale-row">
+          <span style="background:rgba(255,214,102,0.1);border:1px solid rgba(255,214,102,0.2);color:#f1d37a;font-family:'DM Mono',monospace;font-size:11px;padding:4px 8px;min-width:80px;text-align:center;border-radius:999px">45 → 54</span>
+          <span style="color:#f1d37a;font-weight:600" data-en="Partially Ethical" data-it="Parzialmente Etico">Partially Ethical</span>
+        </div>
+        <div class="scale-row">
+          <span style="background:rgba(255,214,102,0.07);border:1px solid rgba(255,214,102,0.16);color:#dcb86c;font-family:'DM Mono',monospace;font-size:11px;padding:4px 8px;min-width:80px;text-align:center;border-radius:999px">25 → 44</span>
+          <span style="color:#dcb86c;font-weight:600" data-en="Scarcely Ethical" data-it="Scarsamente Etico">Scarcely Ethical</span>
+        </div>
+        <div class="scale-row">
+          <span style="background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.22);color:#ff9a9a;font-family:'DM Mono',monospace;font-size:11px;padding:4px 8px;min-width:80px;text-align:center;border-radius:999px">0 → 24</span>
+          <span style="color:#ff9a9a;font-weight:600" data-en="Ethically Compromised" data-it="Eticamente Inadeguato">Ethically Compromised</span>
+        </div>
+      </div>
+
+      <div id="criteria-container" style="margin-top:16px">
+        <div class="pub-loading">Loading criteria...</div>
+      </div>
     </div>
   </div>
 
-  <!-- NOTE -->
-  <div class="note-section">
-    <div class="note-box">
-      <strong data-en="Every score change requires human review." data-it="Ogni modifica al punteggio richiede revisione umana.">Every score change requires human review.</strong>
-      <span data-en=" AI automatically finds sources and proposes an ethical judgment for each one. A human editor then reviews every proposal before it affects any brand score — approving, rejecting, or correcting the AI suggestion. If you know a reliable source we're missing, " data-it=" IA trova automaticamente le fonti e propone una valutazione etica per ognuna. Un editor umano rivede ogni proposta prima che influenzi il punteggio di un brand — approvando, rifiutando o correggendo il suggerimento dell'IA. Se conosci una fonte affidabile che non abbiamo, "> AI automatically finds sources and proposes an ethical judgment for each one. A human editor then reviews every proposal before it affects any brand score — approving, rejecting, or correcting the AI suggestion. If you know a reliable source we're missing, </span>
-      <a href="mailto:info@ethicprint.org" data-en="write to us." data-it="scrivici.">write to us.</a>
+  <div class="panel note-section">
+    <div class="panel-inner">
+      <div class="note-box">
+        <strong data-en="Every score change requires human review." data-it="Ogni modifica al punteggio richiede revisione umana.">Every score change requires human review.</strong>
+        <span data-en=" AI automatically finds sources and proposes an ethical judgment for each one. A human editor then reviews every proposal before it affects any brand score — approving, rejecting, or correcting the AI suggestion. If you know a reliable source we're missing, " data-it=" IA trova automaticamente le fonti e propone una valutazione etica per ognuna. Un editor umano rivede ogni proposta prima che influenzi il punteggio di un brand — approvando, rifiutando o correggendo il suggerimento dell'IA. Se conosci una fonte affidabile che non abbiamo, "> AI automatically finds sources and proposes an ethical judgment for each one. A human editor then reviews every proposal before it affects any brand score — approving, rejecting, or correcting the AI suggestion. If you know a reliable source we're missing, </span>
+        <a href="mailto:info@ethicprint.org" data-en="write to us." data-it="scrivici.">write to us.</a>
+      </div>
     </div>
   </div>
 
   <footer class="page-footer">
     <a href="/">&#8592; EthicPrint</a>
-    <div style="display:flex;gap:20px">
+    <div style="display:flex;gap:20px;flex-wrap:wrap">
       <a href="https://github.com/Vigi1993/ethicprint" target="_blank">GitHub</a>
-      <a href="mailto:info@ethicprint.org" data-en="Suggest a source" data-it="Suggerisci una fonte">Suggest a source</a>
+      <a href="/contribute.html" class="cta-secondary" data-en="Suggest a source" data-it="Suggerisci una fonte">Suggest a source</a>
     </div>
   </footer>
 
@@ -345,7 +847,6 @@ function renderCriteria(grouped) {
     var displayTitle = currentLang === 'it' ? meta.it : meta.en;
     html += '<div class="cat-block">' +
       '<div class="cat-header-row" id="cat-hdr-' + cat + '" onclick="toggleCat(\'' + cat + '\')">' +
-        '<span class="cat-icon">' + meta.icon + '</span>' +
         '<span class="cat-title" data-en="' + meta.en + '" data-it="' + meta.it + '">' + displayTitle + '</span>' +
         '<span class="cat-count">' + criteria.length + '</span>' +
         '<span class="cat-chev" id="cat-chev-' + cat + '">&#9660;</span>' +
@@ -372,7 +873,6 @@ function renderCriteria(grouped) {
     html += '</div></div>';
   });
   container.innerHTML = html;
-  // Apri la prima categoria di default
   toggleCat('armi');
 }
 
@@ -396,7 +896,6 @@ async function load() {
 
     var critRes = await fetch(API + '/scoring-criteria');
     var critData = await critRes.json();
-    // Il backend ritorna { criteria: [...], grouped: {...} } — usiamo grouped
     renderCriteria(critData.grouped || critData);
 
   } catch(e) {
