@@ -213,7 +213,7 @@ export default function App() {
                 <>
                   Learn the ethical impact of the brands you use.
                   <br />
-                  Find better options!!!!.
+                  Find better options???.
                 </>
               )}
             </div>
