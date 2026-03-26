@@ -308,7 +308,7 @@ export default function App() {
                           borderBottom: "1px solid rgba(255,255,255,0.04)",
                         }}
                       >
-                        <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ flex: 1, textAlign: "left", minWidth: 0 }}>
                           <div style={{ fontSize: 15, fontWeight: 600, color: "#e8e8f0", lineHeight: 1, marginBottom: 3 }}>
                             {brand.name}
                           </div>
