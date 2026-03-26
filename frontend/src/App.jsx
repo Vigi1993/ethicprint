@@ -369,7 +369,7 @@ export default function App() {
       {i < arr.length - 1 && (
         <span style={{
           margin: "0 10px",
-          color: "rgba(255,255,255,0.25)",
+          color: "#63CAB7",
           fontSize: 10,
         }}>
           ·
