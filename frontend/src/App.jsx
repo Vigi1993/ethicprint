@@ -342,20 +342,43 @@ export default function App() {
                   </button>
                 </div>
 
-                <div style={{ marginTop: 12, display: "flex", gap: 16, flexWrap: "wrap" }}>
-                  {[
-                    { href: "/contribute.html", en: "Contribute ",      it: "Contribuisci " },
-                    { href: "/contribute.html", en: "Report an error ", it: "Segnala un errore " },
-                    { href: "/contribute.html", en: "Add a brand ",     it: "Aggiungi un brand " },
-                  ].map((link, i) => (
-                    <a key={i} href={link.href} style={{
-                      fontSize: 12,  color: "#63CAB7", textDecoration: "none",
-                      fontFamily: "'DM Mono', monospace", letterSpacing: "0.03em",
-                    }}>
-                      {lang === "it" ? link.it : link.en}
-                    </a>
-                  ))}
-                </div>
+<div style={{ marginTop: 12, display: "flex", alignItems: "center", flexWrap: "wrap" }}>
+  {[
+    { href: "/contribute.html", en: "Contribute ", it: "Contribuisci " },
+    { href: "/contribute.html", en: "Report an error ", it: "Segnala un errore " },
+    { href: "/contribute.html", en: "Add a brand ", it: "Aggiungi un brand " },
+  ].map((link, i, arr) => (
+    <span key={i} style={{ display: "flex", alignItems: "center" }}>
+      
+      <a
+        href={link.href}
+        style={{
+          fontSize: 12,
+          color: "#63CAB7", // stesso colore di "How we score"
+          textDecoration: "none",
+          fontFamily: "'DM Mono', monospace",
+          letterSpacing: "0.05em",
+          borderBottom: "1px solid rgba(99,202,183,0.3)",
+          paddingBottom: 1,
+        }}
+      >
+        {lang === "it" ? link.it : link.en}
+      </a>
+
+      {/* Pallino separatore */}
+      {i < arr.length - 1 && (
+        <span style={{
+          margin: "0 10px",
+          color: "rgba(255,255,255,0.25)",
+          fontSize: 10,
+        }}>
+          ·
+        </span>
+      )}
+
+    </span>
+  ))}
+</div>
               </>
             )}
           </div>
