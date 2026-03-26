@@ -169,10 +169,17 @@ export default function App() {
         <div style={{ maxWidth: 860, margin: "0 auto", padding: "48px 24px 80px" }}>
 
           {/* ── HERO ── */}
-          <div style={{
-            background: "transparent",
-            borderRadius: 20, padding: "36px 32px 32px", marginBottom: 20,
-          }}>
+            <div style={{
+              background: "transparent",
+              borderRadius: 20,
+              padding: "36px 32px 32px",
+              marginBottom: 20,
+            
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",    
+            }}>
             <div style={{
               fontSize: 11, letterSpacing: 3, color: "rgba(99,202,183,0.6)",
               textTransform: "uppercase", marginBottom: 16, fontFamily: "'DM Mono', monospace",
