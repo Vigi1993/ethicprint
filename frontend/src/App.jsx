@@ -202,20 +202,43 @@ export default function App() {
                 : "Discover the impact on the world made by the brands you use every day to help you switch to better options."}
             </div>
 
-            <div style={{ display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center", marginBottom: 28 }}>
-              {[
-                { href: "/sources.html", en: "How we score ", it: "Come valutiamo " },
-                { href: "/sources.html", en: "Our mission ",  it: "La nostra missione " },
-              ].map((link, i) => (
-                <a key={i} href={link.href} style={{
-                  fontSize: 12, color: "#63CAB7", textDecoration: "none",
-                  fontFamily: "'DM Mono', monospace", letterSpacing: "0.05em",
-                  borderBottom: "1px solid rgba(99,202,183,0.3)", paddingBottom: 1,
-                }}>
-                  {lang === "it" ? link.it : link.en}
-                </a>
-              ))}
-            </div>
+<div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", marginBottom: 28 }}>
+  {[
+    { href: "/sources.html", en: "How we score brands", it: "Come valutiamo i brand" },
+    { href: "/sources.html", en: "Our mission ",  it: "La nostra missione " },
+  ].map((link, i, arr) => (
+    <span key={i} style={{ display: "flex", alignItems: "center" }}>
+      
+      <a
+        href={link.href}
+        style={{
+          fontSize: 12,
+          color: "#63CAB7",
+          textDecoration: "none",
+          fontFamily: "'DM Mono', monospace",
+          letterSpacing: "0.05em",
+          borderBottom: "1px solid rgba(99,202,183,0.3)",
+          paddingBottom: 1,
+        }}
+      >
+        {lang === "it" ? link.it : link.en}
+      </a>
+
+      {/* Pallino */}
+      {i < arr.length - 1 && (
+        <span style={{
+          margin: "0 10px",
+          color: "#63CAB7",
+          fontSize: 8,
+          transform: "translateY(-1px)",
+        }}>
+          ·
+        </span>
+      )}
+
+    </span>
+  ))}
+</div>
 
             {/* Search bar */}
             <div style={{
