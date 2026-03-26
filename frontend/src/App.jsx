@@ -290,7 +290,7 @@ export default function App() {
             </div>
 
             {/* Search results */}
-            {query.length >= 2 && (
+            {query.trim().length >= 1 && (
               <div style={{
                 marginTop: 8, background: "#0f0f1a",
                 border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14,
@@ -344,7 +344,7 @@ export default function App() {
             )}
 
             {/* Quick sectors + contribute */}
-            {!query && (
+            {query.trim().length === 0 && (
               <>
                 <div style={{ marginTop: 16, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
                   <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", fontFamily: "'DM Mono', monospace", marginRight: 4 }}>
