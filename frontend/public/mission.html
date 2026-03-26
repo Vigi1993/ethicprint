@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Mission — EthicPrint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #08080f;
+      --surface: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.08);
+      --border-mid: rgba(255,255,255,0.12);
+      --text: #e8e8f0;
+      --muted: rgba(255,255,255,0.4);
+      --faint: rgba(255,255,255,0.18);
+      --accent: #63CAB7;
+      --accent-dim: rgba(99,202,183,0.6);
+      --accent-glow: rgba(99,202,183,0.08);
+      --red: #e44723;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    ::selection { background: rgba(99,202,183,0.25); }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background: rgba(8,8,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      text-decoration: none;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: var(--accent); }
+
+    .topbar-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent-dim);
+    }
+
+    /* ── LAYOUT ── */
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 120px 24px 100px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      margin-bottom: 72px;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--accent-dim);
+      margin-bottom: 28px;
+    }
+
+    .hero-quote {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    .hero-quote em {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 48px;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0.4;
+      margin: 56px 0;
+    }
+
+    /* ── MANIFESTO BLOCK ── */
+    .manifesto {
+      margin-bottom: 64px;
+    }
+
+    .manifesto-section {
+      margin-bottom: 52px;
+      padding-left: 24px;
+      border-left: 1px solid var(--border-mid);
+      position: relative;
+    }
+
+    .manifesto-section::before {
+      content: "";
+      position: absolute;
+      left: -1px;
+      top: 0;
+      width: 1px;
+      height: 40px;
+      background: var(--accent);
+      opacity: 0.6;
+    }
+
+    .manifesto-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent-dim);
+      margin-bottom: 14px;
+    }
+
+    .manifesto-heading {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(22px, 3vw, 30px);
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .manifesto-body {
+      font-size: 16px;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.6);
+      font-weight: 300;
+      max-width: 640px;
+    }
+
+    .manifesto-body strong {
+      color: rgba(255,255,255,0.85);
+      font-weight: 500;
+    }
+
+    /* ── PRINCIPLES GRID ── */
+    .principles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 64px;
+    }
+
+    @media (max-width: 600px) {
+      .principles { grid-template-columns: 1fr; }
+    }
+
+    .principle-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .principle-card:hover {
+      border-color: var(--border-mid);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .principle-icon {
+      font-size: 22px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .principle-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .principle-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* ── CLOSING ── */
+    .closing {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px 36px;
+      margin-bottom: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .closing::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.4;
+    }
+
+    .closing-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(18px, 2.5vw, 24px);
+      line-height: 1.5;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 20px;
+    }
+
+    .closing-text em {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .closing-author {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--faint);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── CTA ── */
+    .cta-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .cta-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(99,202,183,0.1);
+      border: 1px solid rgba(99,202,183,0.3);
+      color: var(--accent);
+      padding: 12px 24px;
+      border-radius: 99px;
+      text-decoration: none;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .cta-primary:hover {
+      background: rgba(99,202,183,0.18);
+      border-color: rgba(99,202,183,0.5);
+    }
+
+    .cta-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+
+    .cta-secondary:hover { color: var(--text); }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.05em;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ── FADE IN ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .fade-in-1 { animation-delay: 0.1s; }
+    .fade-in-2 { animation-delay: 0.25s; }
+    .fade-in-3 { animation-delay: 0.4s; }
+    .fade-in-4 { animation-delay: 0.55s; }
+  </style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a href="/" class="back-link">← EthicPrint</a>
+  <span class="topbar-label">Our Mission</span>
+</nav>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero fade-in fade-in-1">
+    <div class="hero-eyebrow">EthicPrint · Manifesto</div>
+    <h1 class="hero-quote">
+      We don't always choose<br>
+      the consequences<br>
+      of our actions.<br>
+      <em>But we still create them.</em>
+    </h1>
+    <p class="hero-sub">
+      This is why EthicPrint exists. Not to judge. Not to preach.
+      To make visible what is usually invisible.
+    </p>
+  </div>
+
+  <div class="divider fade-in fade-in-2"></div>
+
+  <!-- MANIFESTO -->
+  <div class="manifesto fade-in fade-in-2">
+
+    <div class="manifesto-section">
+      <div class="manifesto-label">The problem</div>
+      <h2 class="manifesto-heading">Every purchase is a vote</h2>
+      <p class="manifesto-body">
+        The companies we support every day use our money, our data, and our time
+        to shape the world around us. They fund conflicts, damage ecosystems,
+        exploit workers, and avoid the taxes that pay for public services.
+        <br><br>
+        Not always out of malice. Often simply because
+        <strong>no one is watching closely enough</strong>.
+        And because we, as consumers, rarely have the tools to see what we're really supporting.
+      </p>
+    </div>
+
+    <div class="manifesto-section">
+      <div class="manifesto-label">What we do</div>
+      <h2 class="manifesto-heading">Sources. Evidence. Transparency.</h2>
+      <p class="manifesto-body">
+        EthicPrint collects verified public sources — investigative journalism, NGO reports,
+        regulatory decisions, academic research — and uses them to evaluate brands across
+        four dimensions: <strong>conflicts & arms, environment, human rights, tax & transparency</strong>.
+        <br><br>
+        Every score is traceable. Every change is documented.
+        Every source is open to scrutiny. There are no hidden sponsors,
+        no paid placements, no conflicts of interest.
+        <strong>No profit. Ever.</strong>
+      </p>
+    </div>
+
+    <div class="manifesto-section">
+      <div class="manifesto-label">What we don't do</div>
+      <h2 class="manifesto-heading">We don't judge people</h2>
+      <p class="manifesto-body">
+        We understand that not everyone can afford to make different choices every time.
+        Economic constraints, availability, habit — these are real factors.
+        EthicPrint doesn't pretend otherwise.
+        <br><br>
+        Our goal isn't to make you feel guilty. It's to give you
+        <strong>the information you need to choose</strong>, when you can.
+        Because awareness is the precondition of change — not its substitute.
+      </p>
+    </div>
+
+    <div class="manifesto-section">
+      <div class="manifesto-label">Why it matters</div>
+      <h2 class="manifesto-heading">Awareness is where change begins</h2>
+      <p class="manifesto-body">
+        Individual choices alone won't solve systemic problems. We know that.
+        But collective awareness — millions of people understanding what they're
+        actually funding — creates pressure that companies and governments cannot ignore.
+        <br><br>
+        EthicPrint is a small tool for a large shift:
+        <strong>from passive consumption to informed choice</strong>.
+        From convenience to consciousness.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- PRINCIPLES -->
+  <div class="fade-in fade-in-3">
+    <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent-dim);margin-bottom:20px">
+      Our principles
+    </div>
+    <div class="principles">
+      <div class="principle-card">
+        <span class="principle-icon">🔍</span>
+        <div class="principle-title">Radical transparency</div>
+        <p class="principle-desc">Every score is documented with sources. Every change is public, dated and signed. Nothing happens behind closed doors.</p>
+      </div>
+      <div class="principle-card">
+        <span class="principle-icon">🤝</span>
+        <div class="principle-title">Community driven</div>
+        <p class="principle-desc">Anyone can propose corrections or new brands. But every change requires verified sources and passes human review before going live.</p>
+      </div>
+      <div class="principle-card">
+        <span class="principle-icon">⚖️</span>
+        <div class="principle-title">Methodological honesty</div>
+        <p class="principle-desc">We don't claim to have the final word. Scores reflect the best available evidence and are updated as new information emerges.</p>
+      </div>
+      <div class="principle-card">
+        <span class="principle-icon">🚫</span>
+        <div class="principle-title">No profit. No ads.</div>
+        <p class="principle-desc">EthicPrint will never be monetised. No ads, no paid placements, no sponsored scores. If it ever changes, fork the repo and start over.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLOSING -->
+  <div class="closing fade-in fade-in-4">
+    <p class="closing-text">
+      "EthicPrint collects sources, evaluates behavior,
+      and suggests better alternatives.<br>
+      Not to make us feel better —
+      but to make us <em>aware</em>.<br>
+      Because awareness is where change begins."
+    </p>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-row fade-in fade-in-4">
+    <a href="/" class="cta-primary">
+      Explore brands →
+    </a>
+    <a href="/sources.html" class="cta-secondary">
+      How we score brands
+    </a>
+    <a href="/contribute.html" class="cta-secondary">
+      Contribute
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="page-footer" style="margin-top:64px">
+    <div class="footer-copy">EthicPrint · Open source · No profit</div>
+    <div class="footer-links">
+      <a href="https://github.com/Vigi1993/ethicprint" target="_blank">GitHub</a>
+      <a href="/contribute.html">Contribute</a>
+      <a href="/sources.html">Methodology</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
