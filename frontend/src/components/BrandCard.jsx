@@ -186,8 +186,6 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
             justifyContent: "space-between",
             gap: 16,
             marginBottom: 18,
-            position: "sticky",
-            top: 0,
             background: "#0f0f1a",
             zIndex: 2,
             paddingBottom: 16,
