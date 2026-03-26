@@ -308,14 +308,6 @@ export default function App() {
                           borderBottom: "1px solid rgba(255,255,255,0.04)",
                         }}
                       >
-                        <div style={{
-                          width: 36, height: 36, borderRadius: 10,
-                          background: `${scoreColor}22`, border: `1px solid ${scoreColor}44`,
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                          fontSize: 14, fontWeight: 700, color: scoreColor, flexShrink: 0,
-                        }}>
-                          {brand.logo || brand.name?.[0]}
-                        </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ fontSize: 15, fontWeight: 600, color: "#e8e8f0", lineHeight: 1, marginBottom: 3 }}>
                             {brand.name}
