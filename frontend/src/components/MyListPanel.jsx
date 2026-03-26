@@ -412,8 +412,8 @@ export default function MyListPanel({
 
   const deckLine =
     lang === "it"
-      ? "Cerca un brand nella barra sopra oppure sfoglia tra i settori. Clicca su un brand per vederne i dettagli e leggere direttamente le fonti — poi aggiungilo per vedere il quadro d'insieme."
-      : "Search for a brand using the bar above or browse by sectors. Click on any brand to explore its details and read the sources yourself — then add it to see the bigger picture.";
+      ? "Cerca un brand nella barra sopra oppure sfoglia tra i settori. Clicca su un brand per vederne i dettagli e leggere direttamente le fonti — poi aggiungilo per vedere il quadro d'insieme e trovare soluzioni migliori."
+      : "Search for a brand using the bar above or browse by sectors. Click on any brand to explore its details and read the sources yourself — then add it to see the bigger picture and find better solutions.";
 
   const sectionStyle = {
     background: "rgba(255,255,255,0.03)",
