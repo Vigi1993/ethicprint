@@ -204,8 +204,8 @@ export default function App() {
 
             <div style={{ display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center", marginBottom: 28 }}>
               {[
-                { href: "/sources.html", en: "How we score →", it: "Come valutiamo " },
-                { href: "/sources.html", en: "Our mission →",  it: "La nostra missione " },
+                { href: "/sources.html", en: "How we score ", it: "Come valutiamo " },
+                { href: "/sources.html", en: "Our mission ",  it: "La nostra missione " },
               ].map((link, i) => (
                 <a key={i} href={link.href} style={{
                   fontSize: 12, color: "#63CAB7", textDecoration: "none",
