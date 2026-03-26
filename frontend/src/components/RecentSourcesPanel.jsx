@@ -50,8 +50,6 @@ export default function RecentSourcesPanel({
       .slice(0, 12);
   }, [updates]);
 
-  if (!items.length) return null;
-
   return (
     <div
       style={{
@@ -125,135 +123,152 @@ export default function RecentSourcesPanel({
             scrollSnapType: "x proximity",
           }}
         >
-          {items.map((item, idx) => {
-            const impact = getImpactMeta(item, lang);
-            const categoryLabel = getCategoryLabel(item.category_key, lang);
+          {items.length === 0 ? (
+            <div
+              style={{
+                padding: "8px 2px 6px",
+                fontFamily: "'DM Mono', monospace",
+                fontSize: 11,
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.32)",
+              }}
+            >
+              {lang === "it"
+                ? "Nessuna nuova fonte per ora."
+                : "No new sources for now."}
+            </div>
+          ) : (
+            items.map((item, idx) => {
+              const impact = getImpactMeta(item, lang);
+              const categoryLabel = getCategoryLabel(item.category_key, lang);
 
-            return (
-              <div
-                key={`${item.brand_name}-${item.url}-${idx}`}
-                style={{
-                  minWidth: 300,
-                  maxWidth: 300,
-                  flex: "0 0 300px",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  background: "rgba(255,255,255,0.03)",
-                  borderRadius: 16,
-                  padding: "14px 14px 13px",
-                  scrollSnapAlign: "start",
-                }}
-              >
-                <div style={{ marginBottom: 10 }}>
-                  <div
-                    style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 18,
-                      fontWeight: 600,
-                      color: "#e8e8f0",
-                      lineHeight: 1.1,
-                      marginBottom: 6,
-                      cursor: onSelectBrand ? "pointer" : "default",
-                    }}
-                    onClick={() => {
-                      if (onSelectBrand && item.brand_name) {
-                        onSelectBrand({ name: item.brand_name, id: item.brand_id });
-                      }
-                    }}
-                  >
-                    {item.brand_name}
-                  </div>
-
-                  <div
-                    style={{
-                      fontFamily: "'DM Mono', monospace",
-                      fontSize: 11,
-                      color: "rgba(255,255,255,0.32)",
-                      fontWeight: 500,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    {categoryLabel}
-                  </div>
-                </div>
-
+              return (
                 <div
+                  key={`${item.brand_name}-${item.url}-${idx}`}
                   style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    border: `1px solid ${impact.border}`,
-                    background: impact.bg,
-                    color: impact.tone,
-                    padding: "6px 10px",
-                    marginBottom: 12,
-                    borderRadius: 99,
-                    fontFamily: "'DM Mono', monospace",
-                    fontSize: 11,
-                    textTransform: "uppercase",
-                    lineHeight: 1,
-                    letterSpacing: "0.04em",
+                    minWidth: 300,
+                    maxWidth: 300,
+                    flex: "0 0 300px",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    background: "rgba(255,255,255,0.03)",
+                    borderRadius: 16,
+                    padding: "14px 14px 13px",
+                    scrollSnapAlign: "start",
                   }}
                 >
-                  {impact.arrow} {impact.label}
-                </div>
+                  <div style={{ marginBottom: 10 }}>
+                    <div
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 18,
+                        fontWeight: 600,
+                        color: "#e8e8f0",
+                        lineHeight: 1.1,
+                        marginBottom: 6,
+                        cursor: onSelectBrand ? "pointer" : "default",
+                      }}
+                      onClick={() => {
+                        if (onSelectBrand && item.brand_name) {
+                          onSelectBrand({ name: item.brand_name, id: item.brand_id });
+                        }
+                      }}
+                    >
+                      {item.brand_name}
+                    </div>
 
-                <div
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 14,
-                    lineHeight: 1.5,
-                    color: "rgba(255,255,255,0.72)",
-                    marginBottom: 12,
-                    minHeight: 64,
-                  }}
-                >
-                  {item.title || item.publisher || item.url}
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: 10,
-                  }}
-                >
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{
-                      fontWeight: 500,
-                      color: "#63CAB7",
-                      textDecoration: "none",
-                      fontSize: 12,
-                      fontFamily: "'DM Mono', monospace",
-                      letterSpacing: "0.03em",
-                    }}
-                  >
-                    {lang === "it" ? "Apri la fonte →" : "Open source →"}
-                  </a>
-
-                  {item.created_at && (
                     <div
                       style={{
                         fontFamily: "'DM Mono', monospace",
-                        fontSize: 10,
+                        fontSize: 11,
+                        color: "rgba(255,255,255,0.32)",
+                        fontWeight: 500,
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
-                        color: "rgba(255,255,255,0.28)",
-                        whiteSpace: "nowrap",
                       }}
                     >
-                      {new Date(item.created_at).toLocaleDateString(
-                        lang === "it" ? "it-IT" : "en-GB"
-                      )}
+                      {categoryLabel}
                     </div>
-                  )}
+                  </div>
+
+                  <div
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      border: `1px solid ${impact.border}`,
+                      background: impact.bg,
+                      color: impact.tone,
+                      padding: "6px 10px",
+                      marginBottom: 12,
+                      borderRadius: 99,
+                      fontFamily: "'DM Mono', monospace",
+                      fontSize: 11,
+                      textTransform: "uppercase",
+                      lineHeight: 1,
+                      letterSpacing: "0.04em",
+                    }}
+                  >
+                    {impact.arrow} {impact.label}
+                  </div>
+
+                  <div
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 14,
+                      lineHeight: 1.5,
+                      color: "rgba(255,255,255,0.72)",
+                      marginBottom: 12,
+                      minHeight: 64,
+                    }}
+                  >
+                    {item.title || item.publisher || item.url}
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: 10,
+                    }}
+                  >
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{
+                        fontWeight: 500,
+                        color: "#63CAB7",
+                        textDecoration: "none",
+                        fontSize: 12,
+                        fontFamily: "'DM Mono', monospace",
+                        letterSpacing: "0.03em",
+                      }}
+                    >
+                      {lang === "it" ? "Apri la fonte →" : "Open source →"}
+                    </a>
+
+                    {item.created_at && (
+                      <div
+                        style={{
+                          fontFamily: "'DM Mono', monospace",
+                          fontSize: 10,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          color: "rgba(255,255,255,0.28)",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {new Date(item.created_at).toLocaleDateString(
+                          lang === "it" ? "it-IT" : "en-GB"
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
       </div>
     </div>
