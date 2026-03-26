@@ -661,7 +661,7 @@ export default function MyListPanel({
             </div>
           )}
 
-          {issueLabel && (
+          {issueLabel && !b.insufficient_data &&(
             <div
               style={{
                 display: "inline-flex",
