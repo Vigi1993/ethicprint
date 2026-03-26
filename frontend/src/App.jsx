@@ -197,9 +197,19 @@ export default function App() {
               fontSize: "clamp(17px, 2.4vw, 22px)", lineHeight: 1.5,
               color: "rgba(255,255,255,0.7)", maxWidth: 620, marginBottom: 18, fontWeight: 300,
             }}>
-              {lang === "it"
-                ? "Scopri l'impatto etico dei brand che usi e passa ad alternative migliori."
-                : "Learn the ethical impact of the brands you use and switch to better options."}
+              {lang === "it" ? (
+                <>
+                  Scopri l'impatto etico dei brand che usi.
+                  <br />
+                  Passa ad alternative migliori.
+                </>
+              ) : (
+                <>
+                  Learn the ethical impact of the brands you use.
+                  <br />
+                  Switch to better options.
+                </>
+              )}
             </div>
 
 <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", marginBottom: 28 }}>
