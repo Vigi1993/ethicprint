@@ -204,8 +204,8 @@ export default function App() {
 
             <div style={{ display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center", marginBottom: 28 }}>
               {[
-                { href: "/sources.html", en: "How we score →", it: "Come valutiamo →" },
-                { href: "/sources.html", en: "Our mission →",  it: "La nostra missione →" },
+                { href: "/sources.html", en: "How we score →", it: "Come valutiamo " },
+                { href: "/sources.html", en: "Our mission →",  it: "La nostra missione " },
               ].map((link, i) => (
                 <a key={i} href={link.href} style={{
                   fontSize: 12, color: "#63CAB7", textDecoration: "none",
@@ -342,12 +342,12 @@ export default function App() {
 
                 <div style={{ marginTop: 12, display: "flex", gap: 16, flexWrap: "wrap" }}>
                   {[
-                    { href: "/contribute.html", en: "Contribute →",      it: "Contribuisci →" },
-                    { href: "/contribute.html", en: "Report an error →", it: "Segnala un errore →" },
-                    { href: "/contribute.html", en: "Add a brand →",     it: "Aggiungi un brand →" },
+                    { href: "/contribute.html", en: "Contribute ",      it: "Contribuisci " },
+                    { href: "/contribute.html", en: "Report an error ", it: "Segnala un errore " },
+                    { href: "/contribute.html", en: "Add a brand ",     it: "Aggiungi un brand " },
                   ].map((link, i) => (
                     <a key={i} href={link.href} style={{
-                      fontSize: 12, color: "rgba(255,255,255,0.35)", textDecoration: "none",
+                      fontSize: 12,  color: "#63CAB7", textDecoration: "none",
                       fontFamily: "'DM Mono', monospace", letterSpacing: "0.03em",
                     }}>
                       {lang === "it" ? link.it : link.en}
