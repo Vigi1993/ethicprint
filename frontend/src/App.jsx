@@ -347,7 +347,21 @@ export default function App() {
   )}
 </div>
 
-
+<div
+  style={{
+    fontFamily: "Arial, Helvetica, sans-serif",
+    fontSize: 11,
+    color: "rgba(0,0,0,0.5)",
+    fontWeight: 800,
+    textTransform: "uppercase",
+    letterSpacing: "0.06em",
+    marginBottom: 8,
+  }}
+>
+	{lang === "it"
+	  ? `${db.length} brand analizzati · ${sourcesCount} fonti`
+	  : `${db.length} brands analyzed · ${sourcesCount} sources`}
+</div>
 
               
             {/* Quick sectors + contribute */}
