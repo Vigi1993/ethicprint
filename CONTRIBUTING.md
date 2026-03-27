@@ -27,7 +27,7 @@ You want to:
 
 ---
 
-## Data contributions: how they work now
+## Data contributions
 
 
 The current contribution flow is based on the project interface and review process.
