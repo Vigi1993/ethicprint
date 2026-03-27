@@ -14,6 +14,7 @@ import {
   getDisplayScore,
   getDisplayScoreColor,
 } from "./utils/brandHelpers";
+import { UI } from "./constants/uiText";
 
 const THRESHOLD = 50;
 const MY_BRANDS_STORAGE_KEY = "ethicprint_my_brands_v1";
