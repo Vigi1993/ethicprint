@@ -256,93 +256,100 @@ export default function App() {
   ))}
 </div>
 
-            {/* Search bar */}
-            <div style={{
-              position: "relative",
-              display: "flex", alignItems: "center", gap: 12,
-              width: "80%",  
-              background: "rgba(255,255,255,0.06)",
-              border: `1px solid ${query ? "rgba(99,202,183,0.3)" : "rgba(255,255,255,0.1)"}`,
-              borderRadius: 14, padding: "14px 18px",
-              boxShadow: query ? "0 0 0 3px rgba(99,202,183,0.08)" : "none",
-              transition: "all 0.2s",
-            }}>
-              <svg width="16" height="16" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-              </svg>
-              <input
-                ref={searchRef} className="ep-search" value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={lang === "it"
-                  ? "Cerca un brand e cliccalo per vedere dettagli e fonti"
-                  : "Search a brand and click it to see details and sources"}
-                style={{
-                  flex: 1, background: "transparent", border: "none",
-                  color: "#fff", fontSize: 16, fontFamily: "'DM Sans', sans-serif",
-                }}
-              />
-              {query && (
-                <button onClick={() => setQuery("")} style={{
-                  background: "none", border: "none", color: "rgba(255,255,255,0.3)",
-                  cursor: "pointer", fontSize: 20, lineHeight: 1,
-                }}>×</button>
-              )}
-            </div>
+{/* Search bar */}
+<div style={{ position: "relative", width: "80%" }}>
+  <div style={{
+    display: "flex", alignItems: "center", gap: 12,
+    background: "rgba(255,255,255,0.06)",
+    border: `1px solid ${query ? "rgba(99,202,183,0.3)" : "rgba(255,255,255,0.1)"}`,
+    borderRadius: 14, padding: "14px 18px",
+    boxShadow: query ? "0 0 0 3px rgba(99,202,183,0.08)" : "none",
+    transition: "all 0.2s",
+  }}>
+    <svg width="16" height="16" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input
+      ref={searchRef} className="ep-search" value={query}
+      onChange={(e) => setQuery(e.target.value)}
+      placeholder={lang === "it"
+        ? "Cerca un brand e cliccalo per vedere dettagli e fonti"
+        : "Search a brand and click it to see details and sources"}
+      style={{
+        flex: 1, background: "transparent", border: "none",
+        color: "#fff", fontSize: 16, fontFamily: "'DM Sans', sans-serif",
+      }}
+    />
+    {query && (
+      <button onClick={() => setQuery("")} style={{
+        background: "none", border: "none", color: "rgba(255,255,255,0.3)",
+        cursor: "pointer", fontSize: 20, lineHeight: 1,
+      }}>×</button>
+    )}
+  </div>
 
-            {/* Search results */}
-            {query.trim().length >= 1 && (
-              <div style={{
-                marginTop: 8, background: "#0f0f1a",
-                border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14,
-                width: "80%",
-                overflow: "hidden", boxShadow: "0 20px 40px rgba(0,0,0,0.5)",
-              }}>
-                {results.length === 0 ? (
-                  <div style={{ padding: "14px 18px", color: "rgba(255,255,255,0.3)", fontSize: 14 }}>
-                    {lang === "it" ? "Nessun brand trovato." : "No brands found."}
-                  </div>
-                ) : (
-                  results.slice(0, 6).map((brand) => {
-                    const score = getDisplayScore(brand);
-                    const inList = myBrands.find((b) => b.name === brand.name);
-                    const scoreColor = getDisplayScoreColor(score);
-                    return (
-                      <div key={brand.name} className="search-result-row" onClick={() => setSelected(brand)}
-                        style={{
-                          display: "flex", alignItems: "center", gap: 14,
-                          padding: "12px 18px", cursor: "pointer",
-                          borderBottom: "1px solid rgba(255,255,255,0.04)",
-                        }}
-                      >
-                        <div style={{ flex: 1, textAlign: "left", minWidth: 0 }}>
-                          <div style={{ fontSize: 15, fontWeight: 600, color: "#e8e8f0", lineHeight: 1, marginBottom: 3 }}>
-                            {brand.name}
-                          </div>
-                          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>{brand.sector || ""}</div>
-                        </div>
-                        <div style={{ textAlign: "right", marginRight: 8 }}>
-                          <div style={{ fontSize: 18, fontWeight: 700, color: scoreColor, fontFamily: "'DM Mono', monospace" }}>
-                            {score ?? "—"}
-                          </div>
-                          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)" }}>/100</div>
-                        </div>
-                        <button className="add-btn" onClick={(e) => { e.stopPropagation(); addToList(brand); }} style={{
-                          background: inList ? "rgba(99,202,183,0.1)" : "rgba(255,255,255,0.06)",
-                          border: "1px solid rgba(255,255,255,0.1)",
-                          color: inList ? "#63CAB7" : "rgba(255,255,255,0.5)",
-                          padding: "6px 12px", borderRadius: 8, cursor: "pointer",
-                          fontSize: 11, fontFamily: "'DM Sans', sans-serif",
-                          transition: "all 0.15s", whiteSpace: "nowrap",
-                        }}>
-                          {inList ? "✓" : lang === "it" ? "+ Aggiungi" : "+ Add"}
-                        </button>
-                      </div>
-                    );
-                  })
-                )}
+  {/* Search results — ABSOLUTE, non sposta il layout */}
+  {query.trim().length >= 1 && (
+    <div style={{
+      position: "absolute",
+      top: "calc(100% + 8px)",
+      left: 0,
+      right: 0,
+      zIndex: 200,
+      background: "#0f0f1a",
+      border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14,
+      overflow: "hidden", boxShadow: "0 20px 40px rgba(0,0,0,0.5)",
+    }}>
+      {results.length === 0 ? (
+        <div style={{ padding: "14px 18px", color: "rgba(255,255,255,0.3)", fontSize: 14 }}>
+          {lang === "it" ? "Nessun brand trovato." : "No brands found."}
+        </div>
+      ) : (
+        results.slice(0, 6).map((brand) => {
+          const score = getDisplayScore(brand);
+          const inList = myBrands.find((b) => b.name === brand.name);
+          const scoreColor = getDisplayScoreColor(score);
+          return (
+            <div key={brand.name} className="search-result-row" onClick={() => setSelected(brand)}
+              style={{
+                display: "flex", alignItems: "center", gap: 14,
+                padding: "12px 18px", cursor: "pointer",
+                borderBottom: "1px solid rgba(255,255,255,0.04)",
+              }}
+            >
+              <div style={{ flex: 1, textAlign: "left", minWidth: 0 }}>
+                <div style={{ fontSize: 15, fontWeight: 600, color: "#e8e8f0", lineHeight: 1, marginBottom: 3 }}>
+                  {brand.name}
+                </div>
+                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>{brand.sector || ""}</div>
               </div>
-            )}
+              <div style={{ textAlign: "right", marginRight: 8 }}>
+                <div style={{ fontSize: 18, fontWeight: 700, color: scoreColor, fontFamily: "'DM Mono', monospace" }}>
+                  {score ?? "—"}
+                </div>
+                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)" }}>/100</div>
+              </div>
+              <button className="add-btn" onClick={(e) => { e.stopPropagation(); addToList(brand); }} style={{
+                background: inList ? "rgba(99,202,183,0.1)" : "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                color: inList ? "#63CAB7" : "rgba(255,255,255,0.5)",
+                padding: "6px 12px", borderRadius: 8, cursor: "pointer",
+                fontSize: 11, fontFamily: "'DM Sans', sans-serif",
+                transition: "all 0.15s", whiteSpace: "nowrap",
+              }}>
+                {inList ? "✓" : lang === "it" ? "+ Aggiungi" : "+ Add"}
+              </button>
+            </div>
+          );
+        })
+      )}
+    </div>
+  )}
+</div>
 
+
+
+              
             {/* Quick sectors + contribute */}
             {query.trim().length === 0 && (
               <>
