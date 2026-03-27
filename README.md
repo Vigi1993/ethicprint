@@ -23,8 +23,6 @@ EthicPrint is a free, open source, community-driven tool that lets you measure t
 
 For each brand, EthicPrint aggregates public evidence and turns it into a readable score across four core dimensions:
 
-| Dimension |
-|---|---|
 | ⚔️ Conflicts & Arms |
 | 🌿 Environment & CO₂ |
 | ✊ Human Rights |
