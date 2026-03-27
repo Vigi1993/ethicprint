@@ -1,18 +1,19 @@
 # EthicPrint
 
-**Discover the ethical impact of the brands you use every day.**
+**Learn the ethical impact of the brands you use.
+Make better choices.**
 
 ---
 
 ## Why this exists
 
-After watching the film *The Voice of Hind Rajab*. After the massacre at the school in Minab. After yet more innocent victims of war.
+EthicPrint was created from a simple idea:
 
-Not just the helplessness in front of these facts — but the idea of being complicit. Of using brands out of convenience, brands that with the money earned from my convenience sponsor or even directly participate in these massacres.
+using a brand is not always neutral.
 
-That's why I decided to try to do something. Not to change the world. But at least to change my world.
+Many companies shape the world through supply chains, lobbying, contracts, labour practices, environmental impact, tax behaviour, and relationships with governments or military systems. Most of that information is technically public, but too fragmented and too difficult to compare.
 
-— *Marco Viglianti, 2025*
+EthicPrint exists to make that information easier to access, easier to understand, and harder to ignore.
 
 ---
 
@@ -20,16 +21,16 @@ That's why I decided to try to do something. Not to change the world. But at lea
 
 EthicPrint is a free, open source, community-driven tool that lets you measure the ethical impact of the brands, platforms, and services you use every day.
 
-For each brand, EthicPrint assigns a score across four dimensions:
+For each brand, EthicPrint aggregates public evidence and turns it into a readable score across four core dimensions:
 
-| Dimension | What it measures |
+| Dimension |
 |---|---|
-| ⚔️ Conflicts & Arms | Contracts with military, arms exports, operations in conflict zones |
-| 🌿 Environment & CO₂ | Emissions, climate commitments, energy transition |
-| ✊ Human Rights | Labour conditions, supply chain, operations under authoritarian regimes |
-| ⚖️ Tax & Transparency | Tax avoidance, offshore structures, fiscal transparency |
+| ⚔️ Conflicts & Arms |
+| 🌿 Environment & CO₂ |
+| ✊ Human Rights |
+| ⚖️ Tax & Transparency 
 
-You can build your personal list of brands and get an aggregated ethical score — your **EthicPrint** — along with suggestions for more ethical alternatives where your score falls below the threshold.
+Users can search brands, open a detailed view with sources, build a personal list, and get more ethical alternatives when a brand falls below the threshold.
 
 ---
 
@@ -55,51 +56,100 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full guide on how to propose ne
 All contributions are reviewed before being merged. No change enters the project without verified sources and explicit approval.
 
 ---
+## How it works
+
+At a high level, the project is split into two repositories:
+
+### Frontend
+This repository contains the public web app:
+- React
+- Vite
+- brand search
+- brand detail view
+- personal brand list
+- sector browsing
+- recent source updates
+- multilingual UI
+
+### Backend
+The API and data workflows live in the separate backend repository:
+
+`ethicprint-api`
+
+The backend is responsible for:
+- serving public brand data
+- serving brand detail pages and sources
+- categories and metadata endpoints
+- contribution workflows
+- source maintenance
+- scoring-related services
+- scheduled jobs for source discovery and checking
+
+---
+
+## Repositories
+
+- Frontend: `ethicprint`
+- Backend API: `ethicprint-api`
+
+If you are setting up the full project locally, you will usually want both repositories.
+
+---
 
 ## Tech stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | React + Vite |
-| Backend | Python FastAPI |
-| Database | PostgreSQL (Supabase) |
-| Hosting | Vercel (frontend) + Railway (backend) |
+### Frontend
+- React
+- Vite
+- JavaScript
+
+### Backend
+- FastAPI
+- Python
+- Supabase / PostgreSQL
+
+### Hosting
+- Vercel for the frontend
+- Railway for the backend and scheduled jobs
 
 ---
 
 ## Run locally
 
-```bash
-# Clone the repository
-git clone https://github.com/Vigi1993/ethicprint.git
-cd ethicprint
+### 1. Clone the frontend
 
-# Frontend
-cd frontend
+```bash
+git clone https://github.com/Vigi1993/ethicprint.git
+cd ethicprint/frontend
 npm install
 npm run dev
-
-# Backend
-cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload
 ```
+### 2. Clone the backend in a separate folder
+
+```bash
+git clone https://github.com/Vigi1993/ethicprint-api.git
+cd ethicprint-api
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+### 3. Confgure enviroment variables
+
+You will need the appropriate environment variables for:
+
+Supabase
+any API keys used by backend jobs/services
+frontend API base URL
+
+Document these in the backend and frontend env files used in your setup.
 
 ---
+## Current status
 
-## Data sources
+EthicPrint is actively evolving.
 
-Scores are built from publicly available data including:
-
-- [SIPRI Arms Transfers Database](https://www.sipri.org/databases/armstransfers)
-- [CDP Climate Scores](https://www.cdp.net)
-- [KnowTheChain](https://knowthechain.org)
-- [Oxfam Tax Responsibility Ranking](https://www.oxfam.org)
-- [Ethical Consumer](https://www.ethicalconsumer.org)
-- Investigative journalism and verified public reports
+The methodology, UX, contribution flow, and internal tooling are still being refined. The project already works as a public tool, but it should still be considered an evolving open-source system rather than a finished institutional database.
 
 ---
-
 ## License
 
 This project is licensed under the **MIT License** — you are free to use, copy, modify and distribute it, as long as you keep attribution and the same license.
