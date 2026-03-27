@@ -207,13 +207,13 @@ export default function App() {
                 <>
                   Scopri l'impatto etico dei brand che utilizzi.
                   <br />
-                  Trova alternative migliori.
+                  Scegli alternative migliori.
                 </>
               ) : (
                 <>
                   Learn the ethical impact of the brands you use.
                   <br />
-                  Find better options.
+                  Make better choices.
                 </>
               )}
             </div>
