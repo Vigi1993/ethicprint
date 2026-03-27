@@ -1,161 +1,208 @@
+
 # Contributing to EthicPrint
 
-First of all — thank you. EthicPrint only works if people who care contribute to making it more accurate, more complete, and more honest. Every contribution matters.
+Thank you for contributing to EthicPrint.
 
-This document explains how to contribute, what is expected, and how decisions are made.
-
----
-
-## Two types of contribution
-
-### 1. Contributions to the data (brand scores)
-Proposing a new brand, correcting an existing score, or adding sources.
-
-### 2. Contributions to the code
-Improving the interface, fixing bugs, adding features.
-
-Both go through **GitHub Pull Requests**. No change enters the project without review and explicit approval.
+The project depends on people who care about accuracy, transparency, and public accountability. Contributions are welcome, but because EthicPrint makes factual claims about real companies, contributions must meet a higher standard than in a typical UI-only project.
 
 ---
 
-## Contributing to the data
+## Two ways to contribute
 
-This is the most important type of contribution — and the one with the strictest rules, because accuracy is the project's credibility.
+### 1. Data contributions
+You want to:
+- propose a new brand
+- report an error
+- suggest better alternatives
+- add or improve sources
+- challenge an existing score or note
 
-### Rules for data contributions
-
-**Every score change or new brand must include at least two verified sources.**
-
-A verified source is:
-- A report from a recognised NGO (Amnesty International, Human Rights Watch, Oxfam, Greenpeace, etc.)
-- Investigative journalism from an established outlet
-- A regulatory decision, court ruling, or official document
-- A specialised database entry (SIPRI, CDP, KnowTheChain, Fair Tax Mark)
-- An academic study
-
-**Not accepted as sole sources:**
-- Anonymous claims or unverified social media posts
-- Press releases from the brand being scored
-- Sources from organisations with a documented conflict of interest
-
-### How to propose a new brand
-
-1. Fork the repository
-2. Edit `data/brands.json`
-3. Add the new brand following the existing structure exactly
-4. In the Pull Request description, fill in the template (see below)
-5. Submit the Pull Request
-
-**Pull Request template for new brands:**
-
-```
-## New brand: [Brand Name]
-
-**Parent company:** 
-**Sector:** 
-**Category:** 
-
-### Proposed scores
-- Arms & Conflicts: XX/100
-- Environment & CO₂: XX/100
-- Human Rights: XX/100
-- Tax & Transparency: XX/100
-
-### Sources
-- Arms: [URL] — [brief description]
-- Environment: [URL] — [brief description]
-- Human Rights: [URL] — [brief description]
-- Tax: [URL] — [brief description]
-
-### Notes (shown to users)
-- Arms note: 
-- Environment note: 
-- Human Rights note: 
-- Tax note: 
-
-### Suggested alternatives (if score < 50)
-- 
-```
-
-### How to correct an existing score
-
-1. Fork the repository
-2. Edit `data/brands.json`
-3. In the Pull Request description, explain:
-   - What you are changing and why
-   - What the current score gets wrong
-   - Your sources (minimum two)
-4. Submit the Pull Request
-
-**Pull Requests without sources will be closed without review.**
+### 2. Code contributions
+You want to:
+- fix a bug
+- improve the frontend
+- improve the API or internal tooling
+- improve performance or maintainability
+- add a non-breaking feature
 
 ---
 
-## Contributing to the code
+## Data contributions: how they work now
 
-If you want to improve the interface, fix a bug, or add a feature:
 
-1. Open an **Issue** first describing what you want to do — this avoids duplicate work
-2. Wait for feedback before starting to code
-3. Fork the repository and create a branch with a descriptive name (e.g. `feature/sector-filter` or `fix/search-dropdown`)
-4. Make your changes
-5. Submit a Pull Request referencing the original Issue
+The current contribution flow is based on the project interface and review process.
 
-### Code standards
-- Keep components small and single-purpose
-- Comment non-obvious logic
-- Do not introduce new dependencies without discussion
-- Test your changes in at least one browser before submitting
+Use the public contribution/report flow to:
+- submit a new brand
+- report an error
+- suggest a correction
+- provide missing sources
 
----
+If needed, a maintainer may later translate accepted proposals into backend/database changes.
 
-## Review process
+### What to include in a data contribution
 
-All Pull Requests are reviewed by Marco Viglianti (project maintainer).
+Every factual contribution should include:
 
-**For data contributions:**
-- Sources are verified independently
-- Scores are checked against the methodology in `METHODOLOGY.md`
-- Feedback is given within 7 days
-- If a contribution is rejected, a reason is always provided
+- the brand name
+- what should change
+- why it should change
+- at least two solid public sources when possible
+- a short explanation of how the sources support the change
 
-**For code contributions:**
-- Code is reviewed for quality and consistency
-- Large changes may require discussion before being accepted
-- Feedback is given within 14 days
+### Accepted sources
 
----
+Examples of acceptable sources:
 
-## What will be rejected
+- recognised NGOs
+- major investigative journalism outlets
+- court decisions
+- regulatory findings
+- academic research
+- specialised databases
+- official company disclosures, only when not used as the sole source for contested claims
 
-To be completely transparent, these are the types of contributions that will always be rejected:
+### Usually not accepted on their own
 
-- Score changes without verified sources
-- Changes that appear to be motivated by commercial interests (improving a brand's score without evidence)
-- Code that introduces tracking, ads, or monetisation of any kind
-- Changes that contradict the principles in `README.md`
-- Contributions from accounts with no history that propose significant score improvements for specific brands
-
-If you believe a rejection was unfair, open an Issue to discuss it publicly.
+- anonymous claims
+- unverified social posts
+- screenshots without provenance
+- petitions
+- opinion pieces without evidence
+- brand PR statements used alone for positive claims
 
 ---
 
-## A note on pressure from companies
+## How to report a brand issue
 
-EthicPrint has no commercial relationships with any brand. If a company contacts you asking you to improve their score through a contribution, please report it by opening an Issue. Transparency is the only protection this project has.
+Use the project’s public contribution/report interface when available.
+
+A good report should answer:
+
+- **What is wrong?**
+- **What should be changed?**
+- **Which sources support the change?**
+- **Is this about one score, multiple scores, or the overall label?**
+
+Examples:
+- a source is outdated
+- a score is too high or too low
+- a note is incomplete
+- a brand is missing
+- an alternative is misleading
+- a source link is broken
 
 ---
 
-## Code of Conduct
+## How to propose a new brand
 
-This project follows a simple principle: **good faith and honesty**.
+Use the contribution flow provided by the project.
 
-Contributions made in good faith, even if imperfect, are always welcome. Contributions made to manipulate data or undermine the project's integrity are not.
+Include as much of the following as possible:
+
+- brand name
+- parent company
+- sector
+- country or main market
+- why the brand should be included
+- relevant public sources
+- possible ethical concerns by dimension
+- possible ethical alternatives, if known
+
+Submitting a brand does **not** guarantee inclusion. A proposal may be declined if the evidence is too weak, too incomplete, or too difficult to verify.
 
 ---
 
-## Questions?
+## Code contributions
 
-Open an Issue or contact Marco Viglianti directly via GitHub.
+For code contributions:
 
-*Thank you for helping make this project more useful and more honest.*
+1. Open an issue first for larger changes
+2. Fork the relevant repository
+3. Create a focused branch
+4. Keep the change small and reviewable
+5. Open a pull request with a clear explanation
+
+Examples of good branch names:
+
+- `fix/search-dropdown-overflow`
+- `feature/recent-sources-empty-state`
+- `refactor/api-normalization`
+- `docs/update-contribution-flow`
+
+---
+
+## Repositories
+
+EthicPrint currently uses separate repositories for frontend and backend.
+
+- frontend app: `ethicprint`
+- backend API and jobs: `ethicprint-api`
+
+Make sure you open the PR in the correct repository.
+
+---
+
+## Code standards
+
+Please try to keep contributions aligned with the existing structure:
+
+- keep components small and readable
+- avoid unnecessary dependencies
+- prefer simple data flow
+- keep naming consistent
+- do not mix unrelated refactors into one PR
+- preserve transparency in any score-related logic
+- test changes locally before submitting
+
+If you change user-facing behavior, include:
+- a short explanation
+- screenshots for UI changes when relevant
+- any migration notes if applicable
+
+---
+
+## What will likely be rejected
+
+The following are likely to be rejected:
+
+- factual changes without sources
+- score changes that are not evidence-based
+- contributions clearly motivated by brand reputation management
+- code that adds tracking, ads, dark patterns, or monetisation
+- large unscoped rewrites without discussion
+- silent methodology changes without documentation
+
+---
+
+## Review principles
+
+Contributions are reviewed with these priorities:
+
+1. factual accuracy
+2. transparency
+3. methodological consistency
+4. code clarity
+5. maintainability
+
+Not every correct contribution will be accepted immediately. Some may require:
+- more evidence
+- a narrower scope
+- restructuring
+- discussion first
+
+---
+
+## If you are contacted by a company
+
+If a company or agency asks you to manipulate a score, hide evidence, or submit a reputation-driven correction, please report it publicly to the maintainer.
+
+EthicPrint should remain independent from commercial pressure.
+
+---
+
+## Questions
+
+Open an issue in the relevant repository, or contact the maintainer through GitHub.
+
+Thank you for helping make EthicPrint more accurate, more transparent, and more useful.
