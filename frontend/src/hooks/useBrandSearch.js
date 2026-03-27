@@ -5,7 +5,7 @@ export function useBrandSearch(query, db) {
   const [results, setResults] = useState([]);
 
   useEffect(() => {
-    if (query.length < 2) {
+    if (query.length < 1) {
       setResults([]);
       return;
     }
