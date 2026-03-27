@@ -26,7 +26,7 @@ For each brand, EthicPrint aggregates public evidence and turns it into a readab
 | ⚔️ Conflicts & Arms |
 | 🌿 Environment & CO₂ |
 | ✊ Human Rights |
-| ⚖️ Tax & Transparency 
+| ⚖️ Tax & Transparency |
 
 Users can search brands, open a detailed view with sources, build a personal list, and get more ethical alternatives when a brand falls below the threshold.
 
