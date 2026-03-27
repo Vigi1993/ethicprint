@@ -23,8 +23,8 @@ function normalizeAlternative(alt) {
           ? alt.total_score
           : null,
     public_score:
-    typeof brand.public_score === "number" ? brand.public_score : null,
-    public_label: brand.public_label ?? "",
+      typeof alt.public_score === "number" ? alt.public_score : null,
+    public_label: alt.public_label ?? "",
     logo: alt.logo ?? alt.sector_icon ?? "🏢",
     scores:
       alt.scores && typeof alt.scores === "object" ? alt.scores : {},
