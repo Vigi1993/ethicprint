@@ -179,7 +179,6 @@ If you believe a score is wrong or outdated, please open an issue with sources. 
 
 | Version | Date | Changes |
 |---|---|---|
-| 1.0 | 2025 | Initial methodology, 4 dimensions, equal weighting |
-| 1.1 | 2026 | New scoring system: tier-weighted criteria, raw score (−100/+100) normalized to 0–100, 5 score bands |
+| 1.0 | 2026 | New scoring system: tier-weighted criteria, raw score (−100/+100) normalized to 0–100, 5 score bands |
 
 *Every change to this document is tracked in the Git history.*
