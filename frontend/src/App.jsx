@@ -349,18 +349,19 @@ export default function App() {
 
 <div
   style={{
-    fontFamily: "Arial, Helvetica, sans-serif",
+    fontFamily: "'DM Mono', monospace",
     fontSize: 11,
-    color: "rgba(0,0,0,0.5)",
-    fontWeight: 800,
+    color: "rgba(255,255,255,0.25)",
+    fontWeight: 500,
     textTransform: "uppercase",
     letterSpacing: "0.06em",
+    marginTop: 10,
     marginBottom: 8,
   }}
 >
-	{lang === "it"
-	  ? `${db.length} brand analizzati · ${sourcesCount} fonti`
-	  : `${db.length} brands analyzed · ${sourcesCount} sources`}
+  {lang === "it"
+    ? `${db.length} brand analizzati · ${sourcesCount} fonti`
+    : `${db.length} brands analyzed · ${sourcesCount} sources`}
 </div>
 
               
