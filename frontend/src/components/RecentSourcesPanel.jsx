@@ -40,7 +40,7 @@ export default function RecentSourcesPanel({
   onSelectBrand,
 }) {
   
-  console.log("sample item:", updates[0]); /
+  console.log("sample item:", updates[0]); 
   const items = useMemo(() => {
     // Deduplica per URL: tieni solo la prima occorrenza (la più recente dopo il sort)
     const sorted = [...updates]
