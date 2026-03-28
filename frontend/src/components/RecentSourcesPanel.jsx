@@ -39,8 +39,6 @@ export default function RecentSourcesPanel({
   lang = "en",
   onSelectBrand,
 }) {
-  
-  console.log("sample item:", updates[0]); 
   const items = useMemo(() => {
     // Deduplica per URL: tieni solo la prima occorrenza (la più recente dopo il sort)
     const sorted = [...updates]
@@ -249,6 +247,22 @@ export default function RecentSourcesPanel({
                     }}
                   >
                     <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                      {tier != null && (
+                        <div
+                          style={{
+                            fontFamily: "'DM Mono', monospace",
+                            fontSize: 10,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.06em",
+                            color:
+                              tier === 3
+                                ? "rgba(255,255,255,0.32)"
+                                : "rgba(99,202,183,0.7)",
+                          }}
+                        >
+                          T{tier} {lang === "it" ? "fonte" : "source"}
+                        </div>
+                      )}
                       <a
                         href={item.url}
                         target="_blank"
@@ -264,23 +278,6 @@ export default function RecentSourcesPanel({
                       >
                         {lang === "it" ? "Apri la fonte →" : "Open source →"}
                       </a>
-
-                      {tier != null && (
-                        <div
-                          style={{
-                            fontFamily: "'DM Mono', monospace",
-                            fontSize: 10,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.06em",
-                            color:
-                              tier === 1
-                                ? "rgba(99,202,183,0.7)"
-                                : "rgba(255,255,255,0.32)",
-                          }}
-                        >
-                          T{tier} {lang === "it" ? "fonte" : "source"}
-                        </div>
-                      )}
                     </div>
 
                     {item.created_at && (
