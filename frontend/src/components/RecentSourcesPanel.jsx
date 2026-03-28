@@ -254,10 +254,7 @@ export default function RecentSourcesPanel({
                             fontSize: 10,
                             textTransform: "uppercase",
                             letterSpacing: "0.06em",
-                            color:
-                              tier === 3
-                                ? "rgba(255,255,255,0.32)"
-                                : "rgba(99,202,183,0.7)",
+                            color: "rgba(99,202,183,0.7)"
                           }}
                         >
                           T{tier} {lang === "it" ? "fonte" : "source"}
