@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getBrandDetail } from "../api/brands";
 import { useCategories } from "../context/categoriesContext";
 import {
@@ -64,6 +64,16 @@ const UI = {
     noAlt: "Questo brand è tra le opzioni più forti del suo settore.",
   },
 };
+
+// Deduplica un array di fonti per URL
+function dedupeByUrl(sources) {
+  const seen = new Set();
+  return (sources || []).filter((src) => {
+    if (!src.url || seen.has(src.url)) return false;
+    seen.add(src.url);
+    return true;
+  });
+}
 
 export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
   const categories = useCategories();
@@ -518,7 +528,8 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
             }}
           >
             {categories.map((cat) => {
-              const catSources = b.sources?.[cat.key] || [];
+              const rawSources = b.sources?.[cat.key] || [];
+              const catSources = dedupeByUrl(rawSources); // ← deduplicazione
               const hasNote = b.notes?.[cat.key];
               const conf = b.confidence?.[cat.key];
 
