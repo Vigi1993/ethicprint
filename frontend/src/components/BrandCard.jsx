@@ -586,12 +586,12 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                           letterSpacing: "0.04em",
                         }}
                       >
-                        ◆ {conf.count}{" "}
+                        ◆ {catSources.length}{" "}
                         {lang === "it"
-                          ? conf.count === 1
+                          ? catSources.length === 1
                             ? "fonte verificata"
                             : "fonti verificate"
-                          : conf.count === 1
+                          : catSources.length === 1
                             ? "verified source"
                             : "verified sources"}
                       </span>
