@@ -40,14 +40,25 @@ export default function RecentSourcesPanel({
   onSelectBrand,
 }) {
   const items = useMemo(() => {
-    return [...updates]
+    // Deduplica per URL: tieni solo la prima occorrenza (la più recente dopo il sort)
+    const sorted = [...updates]
       .filter((item) => item?.brand_name && item?.url)
       .sort((a, b) => {
         const aDate = new Date(a.created_at || a.date || 0).getTime();
         const bDate = new Date(b.created_at || b.date || 0).getTime();
         return bDate - aDate;
-      })
-      .slice(0, 12);
+      });
+
+    const seen = new Set();
+    const deduped = [];
+    for (const item of sorted) {
+      if (!seen.has(item.url)) {
+        seen.add(item.url);
+        deduped.push(item);
+      }
+    }
+
+    return deduped.slice(0, 12);
   }, [updates]);
 
   return (
@@ -144,6 +155,7 @@ export default function RecentSourcesPanel({
             items.map((item, idx) => {
               const impact = getImpactMeta(item, lang);
               const categoryLabel = getCategoryLabel(item.category_key, lang);
+              const tier = item.tier ?? item.publisher_tier ?? null;
 
               return (
                 <div
@@ -234,21 +246,40 @@ export default function RecentSourcesPanel({
                       gap: 10,
                     }}
                   >
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{
-                        fontWeight: 500,
-                        color: "#63CAB7",
-                        textDecoration: "none",
-                        fontSize: 12,
-                        fontFamily: "'DM Mono', monospace",
-                        letterSpacing: "0.03em",
-                      }}
-                    >
-                      {lang === "it" ? "Apri la fonte →" : "Open source →"}
-                    </a>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{
+                          fontWeight: 500,
+                          color: "#63CAB7",
+                          textDecoration: "none",
+                          fontSize: 12,
+                          fontFamily: "'DM Mono', monospace",
+                          letterSpacing: "0.03em",
+                        }}
+                      >
+                        {lang === "it" ? "Apri la fonte →" : "Open source →"}
+                      </a>
+
+                      {tier != null && (
+                        <div
+                          style={{
+                            fontFamily: "'DM Mono', monospace",
+                            fontSize: 10,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.06em",
+                            color:
+                              tier === 1
+                                ? "rgba(99,202,183,0.7)"
+                                : "rgba(255,255,255,0.32)",
+                          }}
+                        >
+                          T{tier} {lang === "it" ? "fonte" : "source"}
+                        </div>
+                      )}
+                    </div>
 
                     {item.created_at && (
                       <div
