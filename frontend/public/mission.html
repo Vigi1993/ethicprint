@@ -22,7 +22,6 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -35,7 +34,6 @@
     }
 
     ::selection { background: rgba(99,202,183,0.25); }
-
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
@@ -43,16 +41,18 @@
     /* ── TOPBAR ── */
     .topbar {
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 20px;
+      left: 20px;
+      right: 20px;
       z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 32px;
-      background: rgba(8,8,15,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
+      gap: 12px;
+      pointer-events: none;
     }
+
+    .topbar > * { pointer-events: auto; }
 
     .back-link {
       text-decoration: none;
@@ -61,7 +61,7 @@
       gap: 8px;
       background: rgba(255,255,255,0.06);
       color: var(--text);
-      border: 1px solid var(--border-strong);
+      border: 1px solid rgba(255,255,255,0.1);
       padding: 10px 14px;
       border-radius: 999px;
       font-family: 'DM Mono', monospace;
@@ -71,18 +71,38 @@
       transition: all 0.15s ease;
     }
 
-    .back-link:hover { 
+    .back-link:hover {
       color: var(--accent);
-      border-color: var(--accent-border);
-      background: var(--accent-soft);
-      }
+      border-color: rgba(99,202,183,0.28);
+      background: rgba(99,202,183,0.1);
+    }
 
-    .topbar-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--accent-dim);
+    .lang-toggle {
+      display: flex;
+      gap: 4px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 99px;
+      padding: 4px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: rgba(255,255,255,0.35);
+      padding: 4px 12px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      border-radius: 99px;
+      transition: all 0.15s ease;
+    }
+
+    .lang-btn.active {
+      background: rgba(99,202,183,0.2);
+      border-color: rgba(99,202,183,0.4);
+      color: var(--accent);
     }
 
     /* ── LAYOUT ── */
@@ -93,9 +113,7 @@
     }
 
     /* ── HERO ── */
-    .hero {
-      margin-bottom: 72px;
-    }
+    .hero { margin-bottom: 72px; }
 
     .hero-eyebrow {
       font-family: 'DM Mono', monospace;
@@ -138,9 +156,7 @@
     }
 
     /* ── MANIFESTO BLOCK ── */
-    .manifesto {
-      margin-bottom: 64px;
-    }
+    .manifesto { margin-bottom: 64px; }
 
     .manifesto-section {
       margin-bottom: 52px;
@@ -215,11 +231,7 @@
       background: rgba(255,255,255,0.05);
     }
 
-    .principle-icon {
-      font-size: 22px;
-      margin-bottom: 12px;
-      display: block;
-    }
+    .principle-icon { font-size: 22px; margin-bottom: 12px; display: block; }
 
     .principle-title {
       font-family: 'DM Mono', monospace;
@@ -277,49 +289,6 @@
       letter-spacing: 0.05em;
     }
 
-    /* ── CTA ── */
-    .cta-row {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .cta-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(99,202,183,0.1);
-      border: 1px solid rgba(99,202,183,0.3);
-      color: var(--accent);
-      padding: 12px 24px;
-      border-radius: 99px;
-      text-decoration: none;
-      font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 500;
-      transition: all 0.2s;
-    }
-
-    .cta-primary:hover {
-      background: rgba(99,202,183,0.18);
-      border-color: rgba(99,202,183,0.5);
-    }
-
-    .cta-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 13px;
-      font-family: 'DM Mono', monospace;
-      letter-spacing: 0.04em;
-      transition: color 0.2s;
-    }
-
-    .cta-secondary:hover { color: var(--text); }
-
     /* ── FOOTER ── */
     .page-footer {
       border-top: 1px solid var(--border);
@@ -338,10 +307,7 @@
       letter-spacing: 0.05em;
     }
 
-    .footer-links {
-      display: flex;
-      gap: 20px;
-    }
+    .footer-links { display: flex; gap: 20px; }
 
     .footer-links a {
       font-family: 'DM Mono', monospace;
@@ -359,36 +325,46 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .fade-in {
-      animation: fadeUp 0.7s ease both;
-    }
-
+    .fade-in { animation: fadeUp 0.7s ease both; }
     .fade-in-1 { animation-delay: 0.1s; }
     .fade-in-2 { animation-delay: 0.25s; }
     .fade-in-3 { animation-delay: 0.4s; }
     .fade-in-4 { animation-delay: 0.55s; }
+
+    @media (max-width: 640px) {
+      .topbar { top: 12px; left: 12px; right: 12px; }
+      .back-link { padding: 9px 10px 8px; font-size: 11px; }
+    }
   </style>
 </head>
 <body>
 
 <nav class="topbar">
   <a href="/" class="back-link">← EthicPrint</a>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('en')" id="btn-en">EN</button>
+    <button class="lang-btn" onclick="setLang('it')" id="btn-it">IT</button>
+  </div>
 </nav>
 
 <div class="wrap">
 
   <!-- HERO -->
   <div class="hero fade-in fade-in-1">
-    <div class="hero-eyebrow">EthicPrint · Manifesto</div>
+    <div class="hero-eyebrow"
+      data-en="EthicPrint · Manifesto"
+      data-it="EthicPrint · Manifesto">EthicPrint · Manifesto</div>
     <h1 class="hero-quote">
-      We don't always choose<br>
-      the consequences<br>
-      of our actions.<br>
-      <em>But we still create them.</em>
+      <span
+        data-en="We don't always choose<br>the consequences<br>of our actions.<br><em>But we still create them.</em>"
+        data-it="Non sempre scegliamo<br>le conseguenze<br>delle nostre azioni.<br><em>Ma le creiamo comunque.</em>">
+        We don't always choose<br>the consequences<br>of our actions.<br><em>But we still create them.</em>
+      </span>
     </h1>
-    <p class="hero-sub">
-      This is why EthicPrint exists. Not to judge. Not to preach.
-      To make visible what is usually invisible.
+    <p class="hero-sub"
+      data-en="This is why EthicPrint exists. Not to judge. Not to preach. To make visible what is usually invisible."
+      data-it="Per questo esiste EthicPrint. Non per giudicare. Non per predicare. Per rendere visibile ciò che di solito è invisibile.">
+      This is why EthicPrint exists. Not to judge. Not to preach. To make visible what is usually invisible.
     </p>
   </div>
 
@@ -398,59 +374,58 @@
   <div class="manifesto fade-in fade-in-2">
 
     <div class="manifesto-section">
-      <div class="manifesto-label">The problem</div>
-      <h2 class="manifesto-heading">Every purchase is a vote</h2>
-      <p class="manifesto-body">
-        The companies we support every day use our money, our data, and our time
-        to shape the world around us. They fund conflicts, damage ecosystems,
-        exploit workers, and avoid the taxes that pay for public services.
-        <br><br>
-        Not always out of malice. Often simply because
-        <strong>what they do is widely known but not always easy to verify</strong>.
-        And because we, as consumers, rarely have an easy tool to see what we're really supporting.
+      <div class="manifesto-label"
+        data-en="The problem"
+        data-it="Il problema">The problem</div>
+      <h2 class="manifesto-heading"
+        data-en="Every purchase is a vote"
+        data-it="Ogni acquisto è un voto">Every purchase is a vote</h2>
+      <p class="manifesto-body"
+        data-en="The companies we support every day use our money, our data, and our time to shape the world around us. They fund conflicts, damage ecosystems, exploit workers, and avoid the taxes that pay for public services.<br><br>Not always out of malice. Often simply because <strong>what they do is widely known but not always easy to verify</strong>. And because we, as consumers, rarely have an easy tool to see what we're really supporting."
+        data-it="Le aziende che supportiamo ogni giorno usano il nostro denaro, i nostri dati e il nostro tempo per plasmare il mondo intorno a noi. Finanziano conflitti, danneggiano ecosistemi, sfruttano lavoratori ed evadono le tasse che finanziano i servizi pubblici.<br><br>Non sempre per malizia. Spesso semplicemente perché <strong>ciò che fanno è ampiamente noto ma non sempre facile da verificare</strong>. E perché noi, come consumatori, raramente abbiamo uno strumento facile per vedere cosa stiamo davvero supportando.">
+        The companies we support every day use our money, our data, and our time to shape the world around us. They fund conflicts, damage ecosystems, exploit workers, and avoid the taxes that pay for public services.<br><br>Not always out of malice. Often simply because <strong>what they do is widely known but not always easy to verify</strong>. And because we, as consumers, rarely have an easy tool to see what we're really supporting.
       </p>
     </div>
 
     <div class="manifesto-section">
-      <div class="manifesto-label">What we do</div>
-      <h2 class="manifesto-heading">Sources. Evidence. Transparency.</h2>
-      <p class="manifesto-body">
-        EthicPrint collects verified public sources — investigative journalism, NGO reports,
-        regulatory decisions, academic research — and uses them to evaluate brands across
-        four dimensions: <strong>conflicts & arms, environment, human rights, tax & transparency</strong>.
-        <br><br>
-        Every score is traceable. Every change is documented.
-        Every source is open to scrutiny. There are no hidden sponsors,
-        no paid placements, no conflicts of interest.
-        <strong>No profit. Ever.</strong>
+      <div class="manifesto-label"
+        data-en="What we do"
+        data-it="Cosa facciamo">What we do</div>
+      <h2 class="manifesto-heading"
+        data-en="Sources. Evidence. Transparency."
+        data-it="Fonti. Prove. Trasparenza.">Sources. Evidence. Transparency.</h2>
+      <p class="manifesto-body"
+        data-en="EthicPrint collects verified public sources — investigative journalism, NGO reports, regulatory decisions, academic research — and uses them to evaluate brands across four dimensions: <strong>conflicts &amp; arms, environment, human rights, tax &amp; transparency</strong>.<br><br>Every score is traceable. Every change is documented. Every source is open to scrutiny. There are no hidden sponsors, no paid placements, no conflicts of interest. <strong>No profit. Ever.</strong>"
+        data-it="EthicPrint raccoglie fonti pubbliche verificate — giornalismo investigativo, rapporti di ONG, decisioni regolamentari, ricerca accademica — e le utilizza per valutare i brand su quattro dimensioni: <strong>conflitti &amp; armi, ambiente, diritti umani, fisco &amp; trasparenza</strong>.<br><br>Ogni punteggio è tracciabile. Ogni modifica è documentata. Ogni fonte è aperta allo scrutinio. Non ci sono sponsor nascosti, inserzioni a pagamento, conflitti di interesse. <strong>Nessun profitto. Mai.</strong>">
+        EthicPrint collects verified public sources — investigative journalism, NGO reports, regulatory decisions, academic research — and uses them to evaluate brands across four dimensions: <strong>conflicts &amp; arms, environment, human rights, tax &amp; transparency</strong>.<br><br>Every score is traceable. Every change is documented. Every source is open to scrutiny. There are no hidden sponsors, no paid placements, no conflicts of interest. <strong>No profit. Ever.</strong>
       </p>
     </div>
 
     <div class="manifesto-section">
-      <div class="manifesto-label">What we don't do</div>
-      <h2 class="manifesto-heading">We don't judge people</h2>
-      <p class="manifesto-body">
-        We understand that not everyone can afford to make different choices every time.
-        Economic constraints, availability, habit — these are real factors.
-        EthicPrint doesn't pretend otherwise.
-        <br><br>
-        Our goal isn't to make you feel guilty. It's to give you
-        <strong>the information you need to choose</strong>, when you can.
+      <div class="manifesto-label"
+        data-en="What we don't do"
+        data-it="Cosa non facciamo">What we don't do</div>
+      <h2 class="manifesto-heading"
+        data-en="We don't judge people"
+        data-it="Non giudichiamo le persone">We don't judge people</h2>
+      <p class="manifesto-body"
+        data-en="We understand that not everyone can afford to make different choices every time. Economic constraints, availability, habit — these are real factors. EthicPrint doesn't pretend otherwise.<br><br>Our goal isn't to make you feel guilty. It's to give you <strong>the information you need to choose</strong>, when you can."
+        data-it="Capiamo che non tutti possono permettersi di fare scelte diverse ogni volta. Vincoli economici, disponibilità, abitudine — questi sono fattori reali. EthicPrint non finge il contrario.<br><br>Il nostro obiettivo non è farti sentire in colpa. È darti <strong>le informazioni di cui hai bisogno per scegliere</strong>, quando puoi.">
+        We understand that not everyone can afford to make different choices every time. Economic constraints, availability, habit — these are real factors. EthicPrint doesn't pretend otherwise.<br><br>Our goal isn't to make you feel guilty. It's to give you <strong>the information you need to choose</strong>, when you can.
       </p>
     </div>
 
     <div class="manifesto-section">
-      <div class="manifesto-label">Why it matters</div>
-      <h2 class="manifesto-heading">Awareness is where change begins</h2>
-      <p class="manifesto-body">
-        Individual choices alone won't solve systemic problems. We know that.
-        But collective awareness —  people understanding what they're
-        actually funding — creates pressure that companies and governments cannot ignore.
-        But to be honest, if even one person changes for the better, that alone fulfills our purpose.
-        <br><br>
-        EthicPrint is a small tool for a large shift:
-        <strong>from passive consumption to informed choice</strong>.
-        From convenience to consciousness.
+      <div class="manifesto-label"
+        data-en="Why it matters"
+        data-it="Perché è importante">Why it matters</div>
+      <h2 class="manifesto-heading"
+        data-en="Awareness is where change begins"
+        data-it="La consapevolezza è dove inizia il cambiamento">Awareness is where change begins</h2>
+      <p class="manifesto-body"
+        data-en="Individual choices alone won't solve systemic problems. We know that. But collective awareness — people understanding what they're actually funding — creates pressure that companies and governments cannot ignore. But to be honest, if even one person changes for the better, that alone fulfills our purpose.<br><br>EthicPrint is a small tool for a large shift: <strong>from passive consumption to informed choice</strong>. From convenience to consciousness."
+        data-it="Le scelte individuali da sole non risolveranno i problemi sistemici. Lo sappiamo. Ma la consapevolezza collettiva — le persone che capiscono cosa stanno davvero finanziando — crea una pressione che le aziende e i governi non possono ignorare. Ma per essere onesti, se anche solo una persona cambia in meglio, questo da solo compie il nostro scopo.<br><br>EthicPrint è uno strumento piccolo per un cambiamento grande: <strong>dal consumo passivo alla scelta consapevole</strong>. Dalla comodità alla coscienza.">
+        Individual choices alone won't solve systemic problems. We know that. But collective awareness — people understanding what they're actually funding — creates pressure that companies and governments cannot ignore. But to be honest, if even one person changes for the better, that alone fulfills our purpose.<br><br>EthicPrint is a small tool for a large shift: <strong>from passive consumption to informed choice</strong>. From convenience to consciousness.
       </p>
     </div>
 
@@ -458,55 +433,93 @@
 
   <!-- PRINCIPLES -->
   <div class="fade-in fade-in-3">
-    <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent-dim);margin-bottom:20px">
-      Our principles
-    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent-dim);margin-bottom:20px"
+      data-en="Our principles"
+      data-it="I nostri principi">Our principles</div>
     <div class="principles">
       <div class="principle-card">
         <span class="principle-icon">🔍</span>
-        <div class="principle-title">Radical transparency</div>
-        <p class="principle-desc">Every score is documented with sources. Every change is public, dated and signed. Nothing happens behind closed doors.</p>
+        <div class="principle-title"
+          data-en="Radical transparency"
+          data-it="Trasparenza radicale">Radical transparency</div>
+        <p class="principle-desc"
+          data-en="Every score is documented with sources. Every change is public, dated and signed. Nothing happens behind closed doors."
+          data-it="Ogni punteggio è documentato con fonti. Ogni modifica è pubblica, datata e firmata. Nulla accade dietro porte chiuse.">Every score is documented with sources. Every change is public, dated and signed. Nothing happens behind closed doors.</p>
       </div>
       <div class="principle-card">
         <span class="principle-icon">🤝</span>
-        <div class="principle-title">Community driven</div>
-        <p class="principle-desc">Anyone can propose corrections or new brands. But every change requires verified sources and passes human review before going live.</p>
+        <div class="principle-title"
+          data-en="Community driven"
+          data-it="Guidato dalla community">Community driven</div>
+        <p class="principle-desc"
+          data-en="Anyone can propose corrections or new brands. But every change requires verified sources and passes human review before going live."
+          data-it="Chiunque può proporre correzioni o nuovi brand. Ma ogni modifica richiede fonti verificate e supera una revisione umana prima di essere pubblicata.">Anyone can propose corrections or new brands. But every change requires verified sources and passes human review before going live.</p>
       </div>
       <div class="principle-card">
         <span class="principle-icon">⚖️</span>
-        <div class="principle-title">Methodological honesty</div>
-        <p class="principle-desc">We don't claim to have the final word. Scores reflect the best available evidence and are updated as new information emerges.</p>
+        <div class="principle-title"
+          data-en="Methodological honesty"
+          data-it="Onestà metodologica">Methodological honesty</div>
+        <p class="principle-desc"
+          data-en="We don't claim to have the final word. Scores reflect the best available evidence and are updated as new information emerges."
+          data-it="Non pretendiamo di avere l'ultima parola. I punteggi riflettono le migliori prove disponibili e vengono aggiornati man mano che emergono nuove informazioni.">We don't claim to have the final word. Scores reflect the best available evidence and are updated as new information emerges.</p>
       </div>
       <div class="principle-card">
         <span class="principle-icon">🚫</span>
-        <div class="principle-title">No profit. No ads.</div>
-        <p class="principle-desc">EthicPrint will never be monetised. No ads, no paid placements, no sponsored scores. If it ever changes, fork the repo and start over.</p>
+        <div class="principle-title"
+          data-en="No profit. No ads."
+          data-it="Nessun profitto. Nessuna pubblicità.">No profit. No ads.</div>
+        <p class="principle-desc"
+          data-en="EthicPrint will never be monetised. No ads, no paid placements, no sponsored scores. If it ever changes, fork the repo and start over."
+          data-it="EthicPrint non sarà mai monetizzato. Nessuna pubblicità, nessuna inserzione a pagamento, nessun punteggio sponsorizzato. Se mai cambiasse, fai un fork del repo e ricomincia da capo.">EthicPrint will never be monetised. No ads, no paid placements, no sponsored scores. If it ever changes, fork the repo and start over.</p>
       </div>
     </div>
   </div>
 
   <!-- CLOSING -->
   <div class="closing fade-in fade-in-4">
-    <p class="closing-text">
-      "EthicPrint collects sources, evaluates behavior,
-      and suggests better alternatives.<br>
-      Not to make us feel better —
-      but to make us <em>aware</em>.<br>
-      Because awareness is where change begins."
+    <p class="closing-text"
+      data-en='"EthicPrint collects sources, evaluates behavior, and suggests better alternatives.<br>Not to make us feel better — but to make us <em>aware</em>.<br>Because awareness is where change begins."'
+      data-it='"EthicPrint raccoglie fonti, valuta i comportamenti e suggerisce alternative migliori.<br>Non per farci sentire meglio — ma per renderci <em>consapevoli</em>.<br>Perché la consapevolezza è dove inizia il cambiamento."'>
+      "EthicPrint collects sources, evaluates behavior, and suggests better alternatives.<br>Not to make us feel better — but to make us <em>aware</em>.<br>Because awareness is where change begins."
     </p>
   </div>
 
   <!-- FOOTER -->
   <div class="page-footer" style="margin-top:64px">
-    <div class="footer-copy">EthicPrint · Open source · No profit</div>
+    <div class="footer-copy"
+      data-en="EthicPrint · Open source · No profit"
+      data-it="EthicPrint · Open source · Nessun profitto">EthicPrint · Open source · No profit</div>
     <div class="footer-links">
       <a href="https://github.com/Vigi1993/ethicprint" target="_blank">GitHub</a>
-      <a href="/contribute.html">Contribute</a>
-      <a href="/sources.html">Methodology</a>
+      <a href="/contribute.html"
+        data-en="Contribute"
+        data-it="Contribuisci">Contribute</a>
+      <a href="/sources.html"
+        data-en="Methodology"
+        data-it="Metodologia">Methodology</a>
     </div>
   </div>
 
 </div>
+
+<script>
+  let currentLang = localStorage.getItem('ep_lang') || 'en';
+
+  function setLang(lang) {
+    currentLang = lang;
+    localStorage.setItem('ep_lang', lang);
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.getElementById('btn-it').classList.toggle('active', lang === 'it');
+    document.querySelectorAll('[data-en]').forEach(el => {
+      const val = el.getAttribute(`data-${lang}`);
+      if (val !== null) el.innerHTML = val;
+    });
+  }
+
+  // Init on load
+  setLang(currentLang);
+</script>
 
 </body>
 </html>
