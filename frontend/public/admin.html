@@ -85,7 +85,7 @@
   .tier-2 { background: rgba(160,180,200,0.15); color: #a0b4c8; }
   .tier-3 { background: rgba(192,128,96,0.15);  color: #c08060; }
 
-  .proposal-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+  .proposal-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; min-width: 160px; }
   .btn { padding: 7px 14px; border-radius: 8px; border: 1px solid; cursor: pointer; font-size: 12px; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: all 0.15s; white-space: nowrap; }
   .btn-approve { background: rgba(74,222,128,0.1);   border-color: rgba(74,222,128,0.25);  color: var(--green); }
   .btn-approve:hover { background: rgba(74,222,128,0.2); }
@@ -103,6 +103,23 @@
   .job-badge       { font-size: 9px; padding: 2px 7px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.5px; }
   .job-new         { background: rgba(99,202,183,0.1);  color: var(--accent); }
   .job-replacement { background: rgba(251,146,60,0.12); color: var(--orange); }
+
+  .cat-selector { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+  .cat-selector-label { font-size: 10px; color: rgba(255,255,255,0.25); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+  .cat-check-label {
+    display: inline-flex; align-items: center; gap: 5px; cursor: pointer;
+    font-size: 11px; color: rgba(255,255,255,0.45);
+    padding: 4px 8px; border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: transparent; transition: all 0.15s;
+    user-select: none;
+  }
+  .cat-check-label.checked {
+    background: rgba(99,202,183,0.1);
+    border-color: rgba(99,202,183,0.3);
+    color: rgba(255,255,255,0.85);
+  }
+  .cat-check-label input { display: none; }
 
   .empty      { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 14px; }
   .empty-icon { font-size: 32px; margin-bottom: 12px; }
@@ -249,7 +266,7 @@ let v2CriteriaPub = 0;
 let selectedBrand = null;
 let activeCat     = 'armi';
 let localExclusions  = new Set();
-let localAssignments = new Map(); // criterionId → [{ source_id, tier, value, label_en }, ...]
+let localAssignments = new Map();
 
 // ══════════════════════════════════════════════════
 // UTILS
@@ -355,6 +372,7 @@ function renderProposalCard(p) {
   const cat=p.category_key;
   const jobClass=p.job_type==='replacement'?'job-replacement':'job-new';
   const jobLabel=p.job_type==='replacement'?'replacement':'new';
+
   let aiHtml='';
   if (p.ai_judgment) {
     const jColors={'Positive':'#4ade80','Predominantly positive':'#a8c5a0','Predominantly negative':'#fb923c','Negative':'#ef4444'};
@@ -371,9 +389,23 @@ function renderProposalCard(p) {
   } else {
     aiHtml=`<div style="margin:8px 0 4px;font-size:11px;color:rgba(255,255,255,0.25);font-style:italic">No AI judgment</div>`;
   }
+
   let actions='';
   if (currentTab==='pending') {
+    const allCats = ['armi','ambiente','diritti','fisco'];
+    const checkboxes = allCats.map(c => {
+      const isMain = c === cat;
+      return `<label class="cat-check-label${isMain?' checked':''}">
+        <input type="checkbox" data-cat="${c}" ${isMain?'checked':''} onchange="toggleCatLabel(this)">
+        ${CAT_ICONS[c]} ${c}
+      </label>`;
+    }).join('');
+
     actions=`<div class="proposal-actions">
+      <div class="cat-selector">
+        <div class="cat-selector-label">Categories</div>
+        <div id="cats-${p.id}" style="display:flex;flex-direction:column;gap:4px">${checkboxes}</div>
+      </div>
       <button class="btn btn-approve" onclick="approveProposal(${p.id})">✓ Approve</button>
       <button class="btn btn-reject"  onclick="rejectProposal(${p.id})">✗ Reject</button>
       <button class="btn btn-open"    onclick="window.open('${p.url}','_blank')">↗ Open</button>
@@ -385,6 +417,7 @@ function renderProposalCard(p) {
       <button class="btn btn-open"   onclick="window.open('${p.url}','_blank')" style="margin-top:4px">↗ Open</button>
     </div>`;
   }
+
   return `<div class="proposal-card ${p.status}" id="card-${p.id}">
     <span class="cat-badge cat-${cat}">${CAT_ICONS[cat]} ${CAT_LABELS[cat]}</span>
     <div class="proposal-body">
@@ -397,26 +430,70 @@ function renderProposalCard(p) {
     </div>${actions}</div>`;
 }
 
+function toggleCatLabel(checkbox) {
+  const label = checkbox.closest('label');
+  if (checkbox.checked) {
+    label.classList.add('checked');
+  } else {
+    label.classList.remove('checked');
+  }
+}
+
 async function approveProposal(id) {
-  const card=document.getElementById(`card-${id}`);
-  card.querySelectorAll('button').forEach(b=>b.disabled=true);
+  const card = document.getElementById(`card-${id}`);
+  card.querySelectorAll('button').forEach(b => b.disabled = true);
+
+  // Leggi le categorie selezionate
+  const checkboxes = card.querySelectorAll(`#cats-${id} input[type=checkbox]`);
+  const selectedCats = Array.from(checkboxes).filter(c => c.checked).map(c => c.dataset.cat);
+
+  if (!selectedCats.length) {
+    showToast('Select at least one category', true);
+    card.querySelectorAll('button').forEach(b => b.disabled = false);
+    return;
+  }
+
+  // La categoria principale è quella originale della proposal (gestita dal backend)
+  // Le extra sono tutte le altre selezionate
+  const proposal = allProposals.pending.find(p => p.id === id);
+  const mainCat  = proposal?.category_key;
+  const extraCats = selectedCats.filter(c => c !== mainCat);
+
+  const body = {};
+  if (extraCats.length) body.extra_categories = extraCats;
+
   try {
-    await fetch(`${API}/source-proposals/${id}/approve`,{method:'POST',headers:{'Content-Type':'application/json'}});
+    await fetch(`${API}/source-proposals/${id}/approve`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
     card.classList.add('approved');
-    card.querySelector('.proposal-actions').innerHTML=`<span class="status-chip status-approved">✓ Approved</span>`;
-    counts.pending--;counts.approved++;
-    document.getElementById('badge-pending').textContent =counts.pending;
-    document.getElementById('badge-approved').textContent=counts.approved;
-    document.getElementById('s-pending').textContent =counts.pending;
-    document.getElementById('s-approved').textContent=counts.approved;
-   const approvedProposal = allProposals.pending.find(p => p.id === id);
-    allProposals.pending = allProposals.pending.filter(p => p.id !== id);
-    if (approvedProposal) {
-      approvedProposal.status = 'approved';
-      allProposals.approved.unshift(approvedProposal);
+    card.querySelector('.proposal-actions').innerHTML =
+      `<span class="status-chip status-approved">✓ Approved</span>`;
+
+    counts.pending--;
+    counts.approved++;
+    document.getElementById('badge-pending').textContent  = counts.pending;
+    document.getElementById('badge-approved').textContent = counts.approved;
+    document.getElementById('s-pending').textContent  = counts.pending;
+    document.getElementById('s-approved').textContent = counts.approved;
+
+    if (proposal) {
+      proposal.status = 'approved';
+      allProposals.pending   = allProposals.pending.filter(p => p.id !== id);
+      allProposals.approved.unshift(proposal);
     }
-    showToast('✓ Source approved');
-  } catch(e){showToast('✗ Error',true);card.querySelectorAll('button').forEach(b=>b.disabled=false);}
+
+    const catLabel = selectedCats.length > 1
+      ? ` (${selectedCats.map(c => CAT_ICONS[c]+' '+c).join(', ')})`
+      : '';
+    showToast(`✓ Source approved${catLabel}`);
+  } catch(e) {
+    showToast('✗ Error', true);
+    card.querySelectorAll('button').forEach(b => b.disabled = false);
+  }
 }
 
 async function rejectProposal(id) {
@@ -481,7 +558,7 @@ async function loadScoreV2() {
 }
 
 function renderScoreV2Shell() {
-  const sorted=[ ...v2Brands].sort((a,b)=>a.name.localeCompare(b.name));
+  const sorted=[...v2Brands].sort((a,b)=>a.name.localeCompare(b.name));
   const options=sorted.map(b=>`<option value="${b.id}">${b.logo||''} ${b.name} · ${b.sector||''}</option>`).join('');
   document.getElementById('content').innerHTML=`
   <div class="v2-grid">
@@ -522,7 +599,6 @@ async function onBrandSelect(brandId) {
         source_id:s.source_id, tier:s.tier, value:s.value, label_en:s.label_en,
       }));
       if(arr.length) localAssignments.set(c.criterion_id,arr);
-      // marca le fonti gia' salvate come escluse dalla tendina di questo criterio
       arr.forEach(a=>localExclusions.add(`${a.source_id}_${c.criterion_id}`));
     }
   });
@@ -605,8 +681,6 @@ function renderCriteriaList() {
     const critId=crit.id;
     const assignedList=localAssignments.get(critId)||[];
 
-    // Fonti disponibili: solo quelle escluse per questo criterio specifico vengono rimosse.
-    // Una fonte puo' essere usata su piu' criteri anche della stessa categoria.
     const available=catSources.filter(s=>{
       if(localExclusions.has(`${s.id}_${critId}`)) return false;
       return true;
@@ -630,12 +704,11 @@ function renderCriteriaList() {
             <span style="color:rgba(255,255,255,0.3);font-size:10px">${assigned.label_en||''}</span>
           </div>
         </div>
-        <button class="btn-unassign" onclick="unassignSource(${selectedBrand.id},${critId},${assigned.source_id})">\u21a9 Remove</button>
+        <button class="btn-unassign" onclick="unassignSource(${selectedBrand.id},${critId},${assigned.source_id})">↩ Remove</button>
       </div>`;
     });
     if(assignedList.length) html+=`<div style="margin-bottom:14px"></div>`;
 
-    // Il form appare sempre, anche se c'e' gia' un assegnamento (per aggiungerne altri o cambiarlo)
     html+=renderCriterionForm(critId,available);
     html+=`</div>`;
   });
@@ -710,10 +783,8 @@ async function excludeSource(critId) {
   if(!proposalId){showToast('No proposal linked to this source',true);return;}
   if(!confirm('Exclude this source? The proposal will be moved to Rejected.')) return;
   try {
-    // revert to pending then reject
     await fetch(`${API}/source-proposals/${proposalId}/revert`,{method:'PATCH'});
     await fetch(`${API}/source-proposals/${proposalId}/reject`,{method:'POST'});
-    // rimuovi dalle fonti locali
     v2Sources=v2Sources.filter(s=>s.id!==sourceId);
     localExclusions.add(`${sourceId}_${critId}`);
     counts.approved=Math.max(0,counts.approved-1);
@@ -745,18 +816,14 @@ async function saveScore(brandId,critId) {
     });
     if(!res.ok) throw new Error(await res.text());
     const data=await res.json();
-    // Aggiorna stato locale
     const value=TIER_VALUES[tier][judgment];
     if(sourceId){
       const entry={source_id:sourceId,tier,value,label_en:JUDGMENT_LABELS[judgment]?.en||judgment};
       const existing=localAssignments.get(critId)||[];
-      // evita duplicati per stessa fonte
       const filtered=existing.filter(e=>e.source_id!==sourceId);
       localAssignments.set(critId,[...filtered,entry]);
-      // escludi questa fonte dalla tendina di questo criterio
       localExclusions.add(`${sourceId}_${critId}`);
     }
-    // Ricarica scores
     const scoresRes=await fetch(`${API}/scoring/criterion-scores/${brandId}`).then(r=>r.json());
     v2Scores={};v2BrandTotal=scoresRes.total_score_v2;v2CriteriaPub=scoresRes.criteria_published||0;
     (scoresRes.criteria||[]).forEach(c=>{v2Scores[c.criterion_id]=c;});
@@ -776,11 +843,9 @@ async function unassignSource(brandId,critId,sourceId) {
       method:'DELETE',headers:{'x-admin-key':ADMIN_KEY}
     });
     if(!res.ok) throw new Error();
-    // Rimuovi solo questa fonte dall'array del criterio
     const remaining=(localAssignments.get(critId)||[]).filter(e=>e.source_id!==sourceId);
     if(remaining.length) localAssignments.set(critId,remaining);
     else localAssignments.delete(critId);
-    // Rimetti la fonte disponibile nella tendina
     localExclusions.delete(`${sourceId}_${critId}`);
     const scoresRes=await fetch(`${API}/scoring/criterion-scores/${brandId}`).then(r=>r.json());
     v2Scores={};v2BrandTotal=scoresRes.total_score_v2;v2CriteriaPub=scoresRes.criteria_published||0;
