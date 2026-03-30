@@ -279,6 +279,15 @@ function showToast(msg, error=false) {
   setTimeout(() => t.classList.add('hide'), 3000);
 }
 function fmtDate(d) { return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
+  
+  function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 function scoreColor(v) {
   if (v===null||v===undefined) return 'rgba(255,255,255,0.3)';
   return v>=0 ? '#63CAB7' : '#ef4444';
@@ -418,17 +427,21 @@ function renderProposalCard(p) {
     </div>`;
   }
 
-  return `<div class="proposal-card ${p.status}" id="card-${p.id}">
-    <span class="cat-badge cat-${cat}">${CAT_ICONS[cat]} ${CAT_LABELS[cat]}</span>
-    <div class="proposal-body">
-      <div class="proposal-title">${p.title||p.url}</div>
-      <div class="proposal-pub">${p.publisher||'—'} <span class="job-badge ${jobClass}">${jobLabel}</span></div>
-      ${p.summary?`<div class="proposal-summary">${p.summary}</div>`:''}
-      ${aiHtml}
-      <a class="proposal-url" href="${p.url}" target="_blank">${p.url}</a>
-      <div class="proposal-meta">${fmtDate(p.created_at)}</div>
-    </div>${actions}</div>`;
-}
+const safeTitle = escapeHtml(p.title || p.url || '');
+const safePublisher = escapeHtml(p.publisher || '—');
+const safeSummary = escapeHtml(p.summary || '');
+const safeUrl = escapeHtml(p.url || '');
+
+return `<div class="proposal-card ${p.status}" id="card-${p.id}">
+  <span class="cat-badge cat-${cat}">${CAT_ICONS[cat]} ${CAT_LABELS[cat]}</span>
+  <div class="proposal-body">
+    <div class="proposal-title">${safeTitle}</div>
+    <div class="proposal-pub">${safePublisher} <span class="job-badge ${jobClass}">${jobLabel}</span></div>
+    ${p.summary ? `<div class="proposal-summary">${safeSummary}</div>` : ''}
+    ${aiHtml}
+    <a class="proposal-url" href="${safeUrl}" target="_blank" rel="noopener noreferrer">${safeUrl}</a>
+    <div class="proposal-meta">${fmtDate(p.created_at)}</div>
+  </div>${actions}</div>`;
 
 function toggleCatLabel(checkbox) {
   const label = checkbox.closest('label');
@@ -927,12 +940,18 @@ function renderContributions(data){
   if(brand_proposals.length){
     html+=`<div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:12px">➕ Brand Proposals</div>`;
     brand_proposals.forEach(p=>{
-      html+=`<div class="proposal-card" style="margin-bottom:8px"><div class="proposal-body">
-        <div class="proposal-title">${p.name}</div>
-        <div class="proposal-pub">${p.sector_key||'—'}${p.website?` · <a href="${p.website}" target="_blank" style="color:#63CAB7">${p.website}</a>`:''}</div>
-        ${p.reason?`<div class="proposal-summary">${p.reason}</div>`:''}
-        <div class="proposal-meta">${p.submitter||'Anonymous'} · ${new Date(p.created_at).toLocaleDateString()}</div>
-      </div><div class="proposal-actions">
+const safeName = escapeHtml(p.name || '');
+const safeSector = escapeHtml(p.sector_key || '—');
+const safeWebsite = escapeHtml(p.website || '');
+const safeReason = escapeHtml(p.reason || '');
+const safeSubmitter = escapeHtml(p.submitter || 'Anonymous');
+
+html+=`<div class="proposal-card" style="margin-bottom:8px"><div class="proposal-body">
+  <div class="proposal-title">${safeName}</div>
+  <div class="proposal-pub">${safeSector}${p.website ? ` · <a href="${safeWebsite}" target="_blank" rel="noopener noreferrer" style="color:#63CAB7">${safeWebsite}</a>` : ''}</div>
+  ${p.reason ? `<div class="proposal-summary">${safeReason}</div>` : ''}
+  <div class="proposal-meta">${safeSubmitter} · ${new Date(p.created_at).toLocaleDateString()}</div>
+</div><div class="proposal-actions">
         <button class="btn btn-approve" onclick="resolveContrib('brand-proposal',${p.id},'approved',this)">✓ Approve</button>
         <button class="btn btn-reject"  onclick="resolveContrib('brand-proposal',${p.id},'rejected',this)">✗ Reject</button>
       </div></div>`;
@@ -941,13 +960,17 @@ function renderContributions(data){
   if(error_reports.length){
     html+=`<div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:12px;margin-top:24px">⚠️ Error Reports</div>`;
     error_reports.forEach(r=>{
-      const bn=r.brands?.name||`Brand #${r.brand_id}`;
-      html+=`<div class="proposal-card" style="margin-bottom:8px"><div class="proposal-body">
-        <div class="proposal-title">${bn}${r.category_key?` · <span class="cat-badge cat-${r.category_key}">${r.category_key}</span>`:''}</div>
-        <div class="proposal-summary" style="margin-top:6px">${r.description}</div>
-        ${r.source_url?`<a href="${r.source_url}" target="_blank" class="proposal-url">${r.source_url}</a>`:''}
-        <div class="proposal-meta">${r.submitter||'Anonymous'} · ${new Date(r.created_at).toLocaleDateString()}</div>
-      </div><div class="proposal-actions">
+const bn = escapeHtml(r.brands?.name || `Brand #${r.brand_id}`);
+const safeDescription = escapeHtml(r.description || '');
+const safeSourceUrl = escapeHtml(r.source_url || '');
+const safeSubmitter = escapeHtml(r.submitter || 'Anonymous');
+
+html+=`<div class="proposal-card" style="margin-bottom:8px"><div class="proposal-body">
+  <div class="proposal-title">${bn}${r.category_key ? ` · <span class="cat-badge cat-${r.category_key}">${r.category_key}</span>` : ''}</div>
+  <div class="proposal-summary" style="margin-top:6px">${safeDescription}</div>
+  ${r.source_url ? `<a href="${safeSourceUrl}" target="_blank" rel="noopener noreferrer" class="proposal-url">${safeSourceUrl}</a>` : ''}
+  <div class="proposal-meta">${safeSubmitter} · ${new Date(r.created_at).toLocaleDateString()}</div>
+</div><div class="proposal-actions">
         <button class="btn btn-approve" onclick="resolveContrib('error-report',${r.id},'resolved',this)">✓ Resolved</button>
         <button class="btn btn-reject"  onclick="resolveContrib('error-report',${r.id},'rejected',this)">✗ Ignore</button>
       </div></div>`;
