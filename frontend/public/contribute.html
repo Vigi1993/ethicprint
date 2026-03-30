@@ -472,6 +472,10 @@
           <input type="email" id="brand-submitter" placeholder="you@example.com" />
           <div class="hint" data-en="Only used to notify you when the brand is added. Never shared." data-it="Solo per avvisarti quando il brand viene aggiunto. Non condivisa con nessuno.">Only used to notify you when the brand is added. Never shared.</div>
         </div>
+        <div style="position:absolute;left:-9999px;opacity:0;pointer-events:none;height:0;overflow:hidden" aria-hidden="true">
+          <label for="source-hp">Leave this field empty</label>
+          <input type="text" id="source-hp" name="company_website" tabindex="-1" autocomplete="off" />
+        </div>
         <div class="error-msg" id="error-brand"></div>
         <button class="submit-btn" onclick="submitBrand()" id="submit-brand" data-en="Submit proposal →" data-it="Invia proposta →">Submit proposal →</button>
         <div class="success-msg" id="success-brand">
@@ -703,9 +707,11 @@ async function submitSource() {
   const brandId = document.getElementById('source-brand').value;
   const cat = document.getElementById('source-category').value;
   const url = document.getElementById('source-url').value.trim();
+  const honeypot = document.getElementById('source-hp')?.value?.trim();
   if (!brandId) return showError('source', currentLang === 'it' ? 'Seleziona un brand.' : 'Please select a brand.');
   if (!cat) return showError('source', currentLang === 'it' ? 'Seleziona una categoria.' : 'Please select a category.');
   if (!url || !url.startsWith('http')) return showError('source', currentLang === 'it' ? 'Inserisci un URL valido.' : 'Please enter a valid URL.');
+  if (honeypot) return showError('source', currentLang === 'it' ? 'Invio non valido.' : 'Invalid submission.');
   const btn = document.getElementById('submit-source');
   btn.disabled = true;
   btn.textContent = '…';
@@ -721,6 +727,7 @@ async function submitSource() {
         publisher: document.getElementById('source-publisher').value || null,
         summary: document.getElementById('source-summary').value || null,
         submitter: document.getElementById('source-submitter').value || null,
+         honeypot: honeypot || null,
       })
     });
     if (res.status === 409) return showError('source', currentLang === 'it' ? 'Questa fonte è già presente nel database.' : 'This source is already in the database.');
