@@ -1010,82 +1010,81 @@ function renderIssues(issues){
     <div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:2px;text-transform:uppercase">${issues.length} source issues</div>
     <button onclick="loadIssues()" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);padding:6px 14px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px">↻ Refresh</button>
   </div>`;
-  issues.forEach(s=>{
-    const bg=s.broken?'rgba(239,68,68,0.12)':'rgba(250,204,21,0.1)';
-    const br=s.broken?'rgba(239,68,68,0.2)':'rgba(250,204,21,0.2)';
-    html+=`<div id="issue-${s.id}" style="background:${bg};border:1px solid ${br};border-radius:12px;padding:16px;margin-bottom:10px">
-      <div style="display:flex;align-items:flex-start;gap:14px">
-        <div style="flex:1;min-width:0">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-            <span style="font-size:11px;color:rgba(255,255,255,0.3)">${s.broken?'🔴 Broken':'🟡 Missing'}</span>
-            ${s.category_key?`<span class="cat-badge cat-${s.category_key}">${CAT_ICONS[s.category_key]||''} ${s.category_key}</span>`:''}
-          </div>
-          <div style="font-size:13px;font-weight:500;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.title||'Untitled'}</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:6px">${s.publisher||'—'} · Brand #${s.brand_id}</div>
-          <a href="${s.url}" target="_blank" style="font-size:11px;font-family:'DM Mono',monospace;color:rgba(99,202,183,0.4);display:block;max-width:380px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.url}</a>
-          <div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:4px">Last checked: ${s.last_checked?new Date(s.last_checked).toLocaleDateString():'—'}</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
-          <button class="btn" style="background:rgba(99,202,183,0.1);border-color:rgba(99,202,183,0.25);color:#63CAB7;font-size:11px" onclick="findReplacement(${s.id},this)">🔍 Find replacement</button>
-          <button class="btn btn-reject" style="font-size:11px" onclick="markResolved(${s.id},this)">✓ Mark resolved</button>
-        </div>
-      </div>
-      <div id="candidates-${s.id}" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06)"></div>
-    </div>`;
-  });
-  el.innerHTML=html;
-}
-async function findReplacement(sourceId,btn){
-  btn.disabled=true;const orig=btn.textContent;btn.textContent='⏳ Searching…';
-  const candEl=document.getElementById(`candidates-${sourceId}`);
-  candEl.style.display='block';
-  candEl.innerHTML=`<div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace">Searching…</div>`;
-  try{
-    const data=await fetch(`${API}/sources/${sourceId}/find-replacement`,{method:'POST',headers:{'x-admin-key':ADMIN_KEY}}).then(r=>r.json());
-    renderCandidates(sourceId,data);
-  }catch{candEl.innerHTML=`<div style="color:#f87171;font-size:12px">Search failed.</div>`;}
-  finally{btn.disabled=false;btn.textContent=orig;}
-}
-function renderCandidates(sourceId,data){
-  const el=document.getElementById(`candidates-${sourceId}`);
-  if(!data.candidates?.length){el.innerHTML=`<div style="font-size:12px;color:rgba(255,255,255,0.2)">No candidates for: <em>${data.query}</em></div>`;return;}
-  let html=`<div style="font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:2px;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:10px">${data.candidates.length} candidates</div>`;
-  data.candidates.forEach(c=>{
-    const tc=TIER_COLORS[c.tier]||TIER_COLORS[3];
-    html+=`<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start">
+issues.forEach(s=>{
+  const bg = s.broken ? 'rgba(239,68,68,0.12)' : 'rgba(250,204,21,0.1)';
+  const br = s.broken ? 'rgba(239,68,68,0.2)' : 'rgba(250,204,21,0.2)';
+
+  const safeTitle = escapeHtml(s.title || 'Untitled');
+  const safePublisher = escapeHtml(s.publisher || '—');
+  const safeUrl = escapeHtml(s.url || '');
+  const safeBrandId = escapeHtml(String(s.brand_id ?? '—'));
+
+  html+=`<div id="issue-${s.id}" style="background:${bg};border:1px solid ${br};border-radius:12px;padding:16px;margin-bottom:10px">
+    <div style="display:flex;align-items:flex-start;gap:14px">
       <div style="flex:1;min-width:0">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-          <span style="font-family:'DM Mono',monospace;font-size:10px;color:${tc};border:1px solid ${tc}44;border-radius:4px;padding:1px 6px">T${c.tier}</span>
-          <span style="font-size:12px;font-weight:500">${c.publisher||'—'}</span>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span style="font-size:11px;color:rgba(255,255,255,0.3)">${s.broken ? '🔴 Broken' : '🟡 Missing'}</span>
+          ${s.category_key ? `<span class="cat-badge cat-${s.category_key}">${CAT_ICONS[s.category_key] || ''} ${s.category_key}</span>` : ''}
         </div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:4px">${c.title||'No title'}</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:6px;line-height:1.5">${c.summary||''}</div>
-        <a href="${c.url}" target="_blank" style="font-size:10px;font-family:'DM Mono',monospace;color:rgba(99,202,183,0.4);display:block;max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.url}</a>
+        <div style="font-size:13px;font-weight:500;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${safeTitle}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:6px">${safePublisher} · Brand #${safeBrandId}</div>
+        <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" style="font-size:11px;font-family:'DM Mono',monospace;color:rgba(99,202,183,0.4);display:block;max-width:380px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${safeUrl}</a>
+        <div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:4px">Last checked: ${s.last_checked ? new Date(s.last_checked).toLocaleDateString() : '—'}</div>
       </div>
-      <button class="btn btn-approve" style="font-size:11px;flex-shrink:0"
-        onclick="proposeReplacement(${sourceId},'${c.url.replace(/'/g,"\\'")}','${(c.title||'').replace(/'/g,"\\'")}','${(c.publisher||'').replace(/'/g,"\\'")}','${(c.summary||'').replace(/'/g,"\\'")}',this)">
-        ✓ Propose
-      </button>
-    </div>`;
-  });
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+        <button class="btn" style="background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.25);color:#4ade80;font-size:11px" onclick="markResolved(${s.id},this)">✓ Mark resolved</button>
+        <button class="btn btn-reject" style="font-size:11px" onclick="ignoreIssue(${s.id},this)">🚫 Ignore</button>
+      </div>
+    </div>
+  </div>`;
+});
   el.innerHTML=html;
 }
-async function proposeReplacement(sourceId,url,title,publisher,summary,btn){
-  btn.disabled=true;btn.textContent='…';
-  try{
-    const res=await fetch(`${API}/sources/${sourceId}/propose-replacement`,{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':ADMIN_KEY},body:JSON.stringify({url,title,publisher,summary})});
-    if(!res.ok) throw new Error();
-    btn.textContent='✅ Proposed';btn.style.color='#4ade80';
-    showToast('✓ Proposed — check Pending tab');
-  }catch{btn.disabled=false;btn.textContent='✓ Propose';showToast('Error',true);}
-}
+
 async function markResolved(sourceId,btn){
-  btn.disabled=true;btn.textContent='…';
+  btn.disabled = true;
+  btn.textContent = '…';
+
   try{
-    await fetch(`${API}/sources/${sourceId}/mark-resolved`,{method:'POST',headers:{'x-admin-key':ADMIN_KEY}});
-    document.getElementById(`issue-${sourceId}`).style.opacity='0.3';
+    const res = await fetch(`${API}/sources/${sourceId}/mark-resolved`, {
+      method:'POST',
+      headers:{ 'x-admin-key': ADMIN_KEY }
+    });
+
+    if(!res.ok) throw new Error();
+
+    document.getElementById(`issue-${sourceId}`).style.opacity = '0.3';
     showToast('✓ Resolved');
-  }catch{btn.disabled=false;btn.textContent='✓ Mark resolved';showToast('Error',true);}
+    setTimeout(() => loadIssues(), 500);
+  }catch{
+    btn.disabled = false;
+    btn.textContent = '✓ Mark resolved';
+    showToast('Error', true);
+  }
+}
+
+  async function ignoreIssue(sourceId, btn){
+  if(!confirm('Ignore this issue? The checker will stop flagging this source.')) return;
+
+  btn.disabled = true;
+  btn.textContent = '…';
+
+  try{
+    const res = await fetch(`${API}/sources/${sourceId}/ignore`, {
+      method: 'POST',
+      headers: { 'x-admin-key': ADMIN_KEY }
+    });
+
+    if(!res.ok) throw new Error();
+
+    document.getElementById(`issue-${sourceId}`).style.opacity = '0.3';
+    showToast('🚫 Issue ignored');
+    setTimeout(() => loadIssues(), 500);
+  }catch{
+    btn.disabled = false;
+    btn.textContent = '🚫 Ignore';
+    showToast('Error', true);
+  }
 }
 </script>
 </body>
