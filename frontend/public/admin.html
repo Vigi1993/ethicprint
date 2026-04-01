@@ -442,6 +442,7 @@ return `<div class="proposal-card ${p.status}" id="card-${p.id}">
     <a class="proposal-url" href="${safeUrl}" target="_blank" rel="noopener noreferrer">${safeUrl}</a>
     <div class="proposal-meta">${fmtDate(p.created_at)}</div>
   </div>${actions}</div>`;
+}
 
 function toggleCatLabel(checkbox) {
   const label = checkbox.closest('label');
